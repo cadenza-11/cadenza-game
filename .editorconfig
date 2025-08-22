@@ -1,0 +1,50 @@
+# .editorconfig
+root = true
+
+[*.cs]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+# ===== C# style preferences =====
+# using directives (place outside namespace)
+csharp_using_directive_placement = outside_namespace:warning
+
+# expression-bodied members
+csharp_style_expression_bodied_methods = when_possible:suggestion
+csharp_style_expression_bodied_properties = when_possible:suggestion
+
+# pattern matching, null checks, etc.
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_prefer_switch_expression = true:suggestion
+csharp_style_prefer_null_check_over_type_check = true:suggestion
+csharp_style_prefer_simple_using_statement = true:suggestion
+
+# qualification
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# usings & imports
+dotnet_separate_import_directive_groups = true
+dotnet_sort_system_directives_first = true
+
+# ===== Naming rules =====
+dotnet_naming_rule.private_fields_should_be__camel.severity = warning
+dotnet_naming_rule.private_fields_should_be__camel.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be__camel.style = underscore_camel_case
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_fields.required_modifiers =
+
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+
+# ===== Analyzer severities (promote to warnings/errors if you like) =====
+dotnet_diagnostic.IDE0005.severity = warning   # remove unnecessary usings
+dotnet_diagnostic.IDE0060.severity = suggestion # remove unused parameter
