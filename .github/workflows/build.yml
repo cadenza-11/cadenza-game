@@ -21,6 +21,7 @@ env:
   UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
   UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  REPO_NAME: ${{ github.event.repository.name }}
 
 jobs:
   buildForAllSupportedPlatforms:
@@ -74,7 +75,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildName: YourGameName
+          buildName: ${{ env.REPO_NAME }}
           buildsPath: build
 
       # Upload artifact
@@ -115,16 +116,16 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Release version: $VERSION"
 
-      # Create zip files for each platform
+      # Create archive files for each platform
       - name: Create Windows zip
         run: |
           cd builds/Build-StandaloneWindows64
-          zip -r ../../YourGameName-Windows.zip .
+          zip -r ../../${{ env.REPO_NAME }}-Windows.zip .
 
-      - name: Create macOS zip
+      - name: Create macOS tar
         run: |
           cd builds/Build-StandaloneOSX
-          zip -r ../../YourGameName-macOS.zip .
+          tar -czf ../../${{ env.REPO_NAME }}-macOS.tar.gz .
 
       # Create Release
       - name: Create Release
@@ -134,18 +135,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.version.outputs.version }}
-          release_name: Release ${{ steps.version.outputs.version }}
+          release_name: ${{ steps.version.outputs.version }}
           body: |
             ## Release ${{ steps.version.outputs.version }}
 
-            **Manual build triggered by:** ${{ github.actor }}
-            **Build from commit:** ${{ github.sha }}
-            **Build run:** #${{ github.run_number }}
-            **Platforms built:** ${{ github.event.inputs.platforms }}
+            Manual build triggered by: ${{ github.actor }}
+            Build from commit: ${{ github.sha }}
+            Build run: #${{ github.run_number }}
 
-            ### Downloads:
-            ${{ github.event.inputs.platforms != 'mac-only' && '- **Windows**: YourGameName-' || '' }}${{ github.event.inputs.platforms != 'mac-only' && steps.version.outputs.version || '' }}${{ github.event.inputs.platforms != 'mac-only' && '-Windows.zip' || '' }}
-            ${{ github.event.inputs.platforms != 'windows-only' && '- **macOS**: YourGameName-' || '' }}${{ github.event.inputs.platforms != 'windows-only' && steps.version.outputs.version || '' }}${{ github.event.inputs.platforms != 'windows-only' && '-macOS.zip' || '' }}
           draft: false
           prerelease: false
 
@@ -156,8 +153,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./YourGameName-Windows.zip
-          asset_name: YourGameName-Windows.zip
+          asset_path: ./${{ env.REPO_NAME }}-Windows.zip
+          asset_name: ${{ env.REPO_NAME }}-Windows.zip
           asset_content_type: application/zip
 
       - name: Upload macOS Build
@@ -166,6 +163,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./YourGameName-macOS.zip
-          asset_name: YourGameName-macOS.zip
-          asset_content_type: application/zip
+          asset_path: ./${{ env.REPO_NAME }}-macOS.tar
+          asset_name: ${{ env.REPO_NAME }}-macOS.tar
+          asset_content_type: application/tar
