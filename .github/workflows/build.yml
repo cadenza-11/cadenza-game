@@ -6,7 +6,7 @@ on:
       create_release:
         description: 'Create a release after build'
         required: false
-        default: 'false'
+        default: 'true'
         type: choice
         options:
         - 'true'
@@ -21,6 +21,7 @@ env:
   UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
   UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  REPO_NAME: ${{ github.event.repository.name }}
 
 jobs:
   buildForAllSupportedPlatforms:
@@ -74,98 +75,108 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildName: YourGameName
+          buildName: ${{ env.REPO_NAME }}
           buildsPath: build
 
-      # Upload artifact
-      - uses: actions/upload-artifact@v4
+      # Create archive files for each platform
+      - name: Create Windows zip
+        if: matrix.targetPlatform == 'StandaloneWindows64'
+        run: |
+          cd build/${{ matrix.targetPlatform }}
+          zip -r ../../${{ env.REPO_NAME }}-Windows.zip .
+
+      - name: Create macOS tar
+        if: matrix.targetPlatform == 'StandaloneOSX'
+        run: |
+          cd build/${{ matrix.targetPlatform }}
+          tar -czf ../../${{ env.REPO_NAME }}-macOS.tar.gz .
+
+      # Upload compressed archives
+      - name: Upload Windows Archive
+        if: matrix.targetPlatform == 'StandaloneWindows64'
+        uses: actions/upload-artifact@v4
         with:
-          name: Build-${{ matrix.targetPlatform }}
-          path: build/${{ matrix.targetPlatform }}
+          name: ${{ env.REPO_NAME }}-Windows.zip
+          path: ${{ env.REPO_NAME }}-Windows.zip
+
+      - name: Upload macOS Archive
+        if: matrix.targetPlatform == 'StandaloneOSX'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.REPO_NAME }}-macOS.tar.gz
+          path: ${{ env.REPO_NAME }}-macOS.tar.gz
 
   release:
-    needs: buildForAllSupportedPlatforms
-    name: Create Release
-    runs-on: ubuntu-latest
-    if: github.event.inputs.create_release == 'true'
-    steps:
-      # Checkout for version info
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      needs: buildForAllSupportedPlatforms
+      name: Create Release
+      runs-on: ubuntu-latest
+      if: github.event.inputs.create_release == 'true'
+      steps:
+        # Checkout for version info
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
 
-      # Download all build artifacts
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: builds/
+        # Download compressed archives
+        - name: Download Archive Artifacts
+          uses: actions/download-artifact@v4
+          with:
+            pattern: ${{ env.REPO_NAME }}-*
+            path: releases/
+            merge-multiple: true
 
-      # List downloaded artifacts for debugging
-      - name: List downloaded artifacts
-        run: |
-          echo "Downloaded artifacts:"
-          find builds/ -type f -name "*" | head -20
+        # List downloaded files
+        - name: List downloaded archives
+          run: |
+            echo "Downloaded release files:"
+            ls -la releases/
+            find releases/ -name "*.zip" -o -name "*.tar.gz"
 
-      # Get version info from user input
-      - name: Get Version Info
-        id: version
-        run: |
-          VERSION="${{ github.event.inputs.release_tag }}"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Release version: $VERSION"
+        # Get version info from user input
+        - name: Get Version Info
+          id: version
+          run: |
+            VERSION="${{ github.event.inputs.release_tag }}"
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "Release version: $VERSION"
 
-      # Create zip files for each platform
-      - name: Create Windows zip
-        run: |
-          cd builds/Build-StandaloneWindows64
-          zip -r ../../YourGameName-Windows.zip .
+        # Create Release
+        - name: Create Release
+          uses: actions/create-release@v1
+          id: create_release
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: ${{ steps.version.outputs.version }}
+            release_name: Release ${{ steps.version.outputs.version }}
+            body: |
+              ## Release ${{ steps.version.outputs.version }}
 
-      - name: Create macOS zip
-        run: |
-          cd builds/Build-StandaloneOSX
-          zip -r ../../YourGameName-macOS.zip .
+              **Manual build triggered by:** ${{ github.actor }}
+              **Build from commit:** ${{ github.sha }}
+              **Build run:** #${{ github.run_number }}
 
-      # Create Release
-      - name: Create Release
-        uses: actions/create-release@v1
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.version.outputs.version }}
-          release_name: Release ${{ steps.version.outputs.version }}
-          body: |
-            ## Release ${{ steps.version.outputs.version }}
+            draft: false
+            prerelease: false
 
-            **Manual build triggered by:** ${{ github.actor }}
-            **Build from commit:** ${{ github.sha }}
-            **Build run:** #${{ github.run_number }}
-            **Platforms built:** ${{ github.event.inputs.platforms }}
+        # Upload Release Assets
+        - name: Upload Windows Build
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: releases/${{ env.REPO_NAME }}-Windows.zip
+            asset_name: ${{ env.REPO_NAME }}-Windows.zip
+            asset_content_type: application/zip
 
-            ### Downloads:
-            ${{ github.event.inputs.platforms != 'mac-only' && '- **Windows**: YourGameName-' || '' }}${{ github.event.inputs.platforms != 'mac-only' && steps.version.outputs.version || '' }}${{ github.event.inputs.platforms != 'mac-only' && '-Windows.zip' || '' }}
-            ${{ github.event.inputs.platforms != 'windows-only' && '- **macOS**: YourGameName-' || '' }}${{ github.event.inputs.platforms != 'windows-only' && steps.version.outputs.version || '' }}${{ github.event.inputs.platforms != 'windows-only' && '-macOS.zip' || '' }}
-          draft: false
-          prerelease: false
-
-      # Upload Release Assets
-      - name: Upload Windows Build
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./YourGameName-Windows.zip
-          asset_name: YourGameName-Windows.zip
-          asset_content_type: application/zip
-
-      - name: Upload macOS Build
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./YourGameName-macOS.zip
-          asset_name: YourGameName-macOS.zip
-          asset_content_type: application/zip
+        - name: Upload macOS Build
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: releases/${{ env.REPO_NAME }}-macOS.tar.gz
+            asset_name: ${{ env.REPO_NAME }}-macOS.tar.gz
+            asset_content_type: application/gzip
