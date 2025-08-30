@@ -242,7 +242,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 22a76f440dacf438f8459f7e5ccfc0c6, type: 3}
   - {fileID: 8300000, guid: 8548553fee2cb4861a9f8104aaaa7d0f, type: 3}
   - {fileID: 8300000, guid: fc8cb65f4d00e4e1cb6ca91b7fbbdcd3, type: 3}
-  cooldownSeconds: 0
+  metronomeSound: {fileID: 8300000, guid: e0a6f2c0548ad46b5a617b2d5a519c02, type: 3}
 --- !u!82 &4243176604249596535
 AudioSource:
   m_ObjectHideFlags: 0
