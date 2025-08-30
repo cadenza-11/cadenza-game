@@ -5,16 +5,17 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(AudioSource))]
 public class NetworkedSoundEmitter : NetworkBehaviour
 {
-    [SerializeField] private AudioClip oneShotClip;
-    [SerializeField] private AudioClip loopClip;
+    [SerializeField] private Key[] oneShotTriggerKeys;
+    [SerializeField] private AudioClip[] oneShotClips;
+    [SerializeField] private AudioClip[] ownerUniqueSound;
     [SerializeField] private float cooldownSeconds = 0.2f;
 
     private AudioSource _source;
 
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         _source = GetComponent<AudioSource>();
-        _source.playOnAwake = false;
     }
 
     private void Update()
@@ -22,46 +23,58 @@ public class NetworkedSoundEmitter : NetworkBehaviour
         if (!IsOwner || !IsClient)
             return;
 
-        if (Keyboard.current.gKey.wasPressedThisFrame)
+        // One-shot clip palette
+        for (int i = 0; i < this.oneShotTriggerKeys.Length; i++)
         {
-            RequestPlaySoundServerRpc(true);
+            Key key = this.oneShotTriggerKeys[i];
+            if (Keyboard.current[key].wasPressedThisFrame)
+                RequestPlayOneShotServerRpc(i);
         }
+
+        // Loop clip
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            RequestPlaySoundServerRpc(false);
-        }
+            RequestPlaySoundServerRpc();
+
         else if (Keyboard.current.spaceKey.wasReleasedThisFrame)
-        {
             RequestStopSoundServerRpc();
-        }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestPlaySoundServerRpc(bool oneShot, ServerRpcParams rpcParams = default)
+    [ServerRpc]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void RequestPlayOneShotServerRpc(int index)
     {
-        PlaySoundClientRpc(oneShot);
+        PlayOneShotClientRpc(index);
     }
 
-    [ClientRpc]
-    private void PlaySoundClientRpc(bool oneShot, ClientRpcParams rpcParams = default)
+    [Rpc(SendTo.ClientsAndHost)]
+    private void PlayOneShotClientRpc(int index)
     {
-        if (oneShot)
-            _source.PlayOneShot(oneShotClip);
-        else
-        {
-            _source.clip = loopClip;
-            _source.Play();
-        }
+        if (index < this.oneShotClips.Length)
+            _source.PlayOneShot(this.oneShotClips[index]);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestStopSoundServerRpc(ServerRpcParams rpcParams = default)
+    [ServerRpc]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void RequestPlaySoundServerRpc()
+    {
+        PlaySoundClientRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void PlaySoundClientRpc()
+    {
+        _source.clip = this.ownerUniqueSound[this.OwnerClientId];
+        _source.Play();
+    }
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void RequestStopSoundServerRpc()
     {
         StopSoundClientRpc();
     }
 
-    [ClientRpc]
-    private void StopSoundClientRpc(ClientRpcParams rpcParams = default)
+    [Rpc(SendTo.ClientsAndHost)]
+    private void StopSoundClientRpc()
     {
         _source.Stop();
     }

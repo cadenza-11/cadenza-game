@@ -225,10 +225,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  oneShotClip: {fileID: 8300000, guid: 633abb9b7bbc84ab2aaa8a95458719b7, type: 3}
-  oneShotTriggerKey: 32
-  loopClip: {fileID: 8300000, guid: 260133ec8a78f46bcbca9203d8978b05, type: 3}
-  loopTriggerKey: 103
+  oneShotTriggerKeys: 290000002a0000002b0000002c0000002d0000002e0000002f000000300000003100000032000000
+  oneShotClips:
+  - {fileID: 8300000, guid: 48687126c8e9b4f068d15ccde734657f, type: 3}
+  - {fileID: 8300000, guid: 633abb9b7bbc84ab2aaa8a95458719b7, type: 3}
+  - {fileID: 8300000, guid: 2073cfd2007174d33aee7bd60da554ac, type: 3}
+  - {fileID: 8300000, guid: df4adb527d033483aa744ae4ca30112f, type: 3}
+  - {fileID: 8300000, guid: 94a8ba9ad2a9648b4ba8127f97ce49df, type: 3}
+  - {fileID: 8300000, guid: 99d6842f6982d49219b2e0008fd7a01b, type: 3}
+  - {fileID: 8300000, guid: 3ce2f51af3b364871b82ce19a03eccdc, type: 3}
+  - {fileID: 8300000, guid: 691fbecf163cc49bfa439ecc6fc43583, type: 3}
+  - {fileID: 8300000, guid: e42f12cb675f441bf9af2f0056ac1295, type: 3}
+  - {fileID: 8300000, guid: 41256f8ec4f2e42249f614c3a9a9f9f8, type: 3}
+  ownerUniqueSound:
+  - {fileID: 8300000, guid: 25fac63bd37754ed5aa2ad5f1c5462d2, type: 3}
+  - {fileID: 8300000, guid: 22a76f440dacf438f8459f7e5ccfc0c6, type: 3}
+  - {fileID: 8300000, guid: 8548553fee2cb4861a9f8104aaaa7d0f, type: 3}
+  - {fileID: 8300000, guid: fc8cb65f4d00e4e1cb6ca91b7fbbdcd3, type: 3}
   cooldownSeconds: 0
 --- !u!82 &4243176604249596535
 AudioSource:
@@ -243,7 +256,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.8
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -287,7 +300,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
