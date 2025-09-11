@@ -107,6 +107,8 @@ jobs:
           path: ${{ env.REPO_NAME }}-macOS.tar.gz
 
   release:
+      permissions:
+        contents: write
       needs: buildForAllSupportedPlatforms
       name: Create Release
       runs-on: ubuntu-latest
