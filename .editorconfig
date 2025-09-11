@@ -34,10 +34,6 @@ dotnet_separate_import_directive_groups = true
 dotnet_sort_system_directives_first = true
 
 # ===== Naming rules =====
-dotnet_naming_rule.private_fields_should_be__camel.severity = warning
-dotnet_naming_rule.private_fields_should_be__camel.symbols = private_fields
-dotnet_naming_rule.private_fields_should_be__camel.style = underscore_camel_case
-
 dotnet_naming_symbols.private_fields.applicable_kinds = field
 dotnet_naming_symbols.private_fields.applicable_accessibilities = private
 dotnet_naming_symbols.private_fields.required_modifiers =
