@@ -21,17 +21,12 @@ csharp_style_expression_bodied_properties = when_possible:suggestion
 csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
 csharp_style_prefer_switch_expression = true:suggestion
 csharp_style_prefer_null_check_over_type_check = true:suggestion
-csharp_style_prefer_simple_using_statement = true:suggestion
 
 # qualification
 dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_event = false:suggestion
-
-# usings & imports
-dotnet_separate_import_directive_groups = true
-dotnet_sort_system_directives_first = true
 
 # ===== Naming rules =====
 dotnet_naming_symbols.private_fields.applicable_kinds = field
