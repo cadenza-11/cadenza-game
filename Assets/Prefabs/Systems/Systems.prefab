@@ -40,6 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 566073836337621362}
+  - component: {fileID: 2494765009811005930}
   m_Layer: 0
   m_Name: Audio
   m_TagString: Untagged
@@ -62,6 +63,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 998623984157454871}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2494765009811005930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3514728107697371918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c16f9a4729e12471ea722d186071cd74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MUS_Background:
+    Guid:
+      Data1: 1008500032
+      Data2: 1228811763
+      Data3: -483844989
+      Data4: -535732464
+    Path: event:/MUS_Background
+  SFX_OneShot:
+    Guid:
+      Data1: -693979677
+      Data2: 1301383516
+      Data3: 458353597
+      Data4: 1110049035
+    Path: event:/SFX_OneShot
 --- !u!1 &4467513024789239533
 GameObject:
   m_ObjectHideFlags: 0
