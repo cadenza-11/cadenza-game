@@ -1,28 +1,22 @@
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.InputSystem;
+using FMODUnity;
+using Cadenza;
+using FMOD.Studio;
 
-[RequireComponent(typeof(AudioSource))]
 public class NetworkedSoundEmitter : NetworkBehaviour
 {
-    [Header("One Shots")]
+    private const string FMODParam_ID = "ID";
+    [SerializeField] private EventReference oneShotEvent;
+    [SerializeField] private EventReference playerUniqueEvent;
+
+    [Header("Input Keys")]
     [SerializeField] private Key[] oneShotTriggerKeys;
-    [SerializeField] private AudioClip[] oneShotClips;
 
-    [Header("Loop Sound (play with spacebar)")]
-    [SerializeField] private AudioClip[] ownerUniqueSound;
-
-    [Header("Metronome Sound (play with enter)")]
-    [SerializeField] private AudioClip metronomeSound;
-
-    private AudioSource _source;
-    private bool isMetronomeEnabled;
-
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        _source = GetComponent<AudioSource>();
-    }
+    private bool created;
+    private EventInstance instance;
+    private bool isPlaying;
 
     private void Update()
     {
@@ -43,21 +37,6 @@ public class NetworkedSoundEmitter : NetworkBehaviour
 
         else if (Keyboard.current.spaceKey.wasReleasedThisFrame)
             RequestStopSoundServerRpc();
-
-        // Metronome
-        if (Keyboard.current.enterKey.wasPressedThisFrame)
-        {
-            if (!this.isMetronomeEnabled)
-            {
-                RequestPlayMetronomeServerRpc();
-                this.isMetronomeEnabled = true;
-            }
-            else
-            {
-                RequestStopSoundServerRpc();
-                this.isMetronomeEnabled = false;
-            }
-        }
     }
 
     [ServerRpc]
@@ -70,8 +49,7 @@ public class NetworkedSoundEmitter : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     private void PlayOneShotClientRpc(int index)
     {
-        if (index < this.oneShotClips.Length)
-            _source.PlayOneShot(this.oneShotClips[index]);
+        AudioSystem.PlayOneShotWithParameter(this.oneShotEvent, FMODParam_ID, index);
     }
 
     [ServerRpc]
@@ -84,8 +62,19 @@ public class NetworkedSoundEmitter : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     private void PlaySoundClientRpc()
     {
-        _source.clip = this.ownerUniqueSound[this.OwnerClientId];
-        _source.Play();
+        if (!this.created)
+        {
+            this.instance = RuntimeManager.CreateInstance(this.playerUniqueEvent);
+            RuntimeManager.AttachInstanceToGameObject(this.instance, this.transform, GetComponent<Rigidbody>());
+            this.instance.setParameterByName("PlayerID", this.OwnerClientId);
+            this.created = true;
+        }
+
+        if (!this.isPlaying)
+        {
+            this.instance.start();
+            this.isPlaying = true;
+        }
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
@@ -97,21 +86,10 @@ public class NetworkedSoundEmitter : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     private void StopSoundClientRpc()
     {
-        _source.Stop();
-    }
-
-    // Metronome
-    [ServerRpc]
-    [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void RequestPlayMetronomeServerRpc()
-    {
-        PlayMetronomeClientRpc();
-    }
-
-    [Rpc(SendTo.ClientsAndHost)]
-    private void PlayMetronomeClientRpc()
-    {
-        _source.clip = this.metronomeSound;
-        _source.Play();
+        if (created && isPlaying)
+        {
+            instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            isPlaying = false;
+        }
     }
 }

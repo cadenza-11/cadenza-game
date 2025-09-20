@@ -17,8 +17,8 @@ namespace Cadenza
             public float currentTempo;
         }
 
-        [SerializeField] private EventReference MUS_Background;
-        [SerializeField] private EventReference SFX_OneShot;
+        [SerializeField] private EventReference globalBeatEvent;
+        [SerializeField] private EventReference beatCallbackDebugEvent;
         private EventInstance globalTrack;
         private TimelineInfo timelineInfo;
 
@@ -46,7 +46,7 @@ namespace Cadenza
             Debug.Log("Loaded all banks from FMOD.");
 
             // Start the global track.
-            this.globalTrack = RuntimeManager.CreateInstance(this.MUS_Background.Path);
+            this.globalTrack = RuntimeManager.CreateInstance(this.globalBeatEvent.Path);
             Debug.Log("Starting global music track.");
 
             // Get timeline information.
@@ -58,9 +58,18 @@ namespace Cadenza
             this.globalTrack.start();
         }
 
-        public void PlayOneShot(EventReference sound)
+        public static void PlayOneShot(EventReference sound)
         {
-            RuntimeManager.PlayOneShot(sound, transform.position);
+            RuntimeManager.PlayOneShot(sound);
+        }
+
+        public static void PlayOneShotWithParameter(EventReference sound, string parameterName, float value)
+        {
+            EventInstance instance = RuntimeManager.CreateInstance(sound);
+
+            instance.setParameterByName(parameterName, value);
+            instance.start();
+            instance.release();
         }
 
         [AOT.MonoPInvokeCallback(typeof(EVENT_CALLBACK))]
@@ -72,7 +81,7 @@ namespace Cadenza
                 var beatParam = (TIMELINE_BEAT_PROPERTIES)Marshal.PtrToStructure(parameterPtr, typeof(TIMELINE_BEAT_PROPERTIES));
 
                 // Test out FMOD round-trip time by playing a test sound whenever we receieve the beat
-                RuntimeManager.PlayOneShot(singleton.SFX_OneShot);
+                RuntimeManager.PlayOneShot(singleton.beatCallbackDebugEvent);
             }
             return FMOD.RESULT.OK;
         }

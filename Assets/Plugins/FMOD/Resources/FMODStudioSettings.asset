@@ -610,7 +610,7 @@ MonoBehaviour:
   HasSourceProject: 0
   HasPlatforms: 1
   sourceProjectPath: ../cadenza-fmod/cadenza-fmod.fspro
-  sourceBankPath: FMOD
+  sourceBankPath: Assets/StreamingAssets/FMOD
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1

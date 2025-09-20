@@ -75,20 +75,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c16f9a4729e12471ea722d186071cd74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MUS_Background:
+  globalBeatEvent:
     Guid:
       Data1: 1008500032
       Data2: 1228811763
       Data3: -483844989
       Data4: -535732464
-    Path: event:/MUS_Background
-  SFX_OneShot:
+    Path: event:/GLOBAL
+  beatCallbackDebugEvent:
     Guid:
       Data1: -693979677
       Data2: 1301383516
       Data3: 458353597
       Data4: 1110049035
-    Path: event:/SFX_OneShot
+    Path: event:/SFX_Metronome
 --- !u!1 &4467513024789239533
 GameObject:
   m_ObjectHideFlags: 0
