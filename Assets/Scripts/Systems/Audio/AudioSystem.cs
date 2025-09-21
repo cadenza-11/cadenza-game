@@ -46,7 +46,7 @@ namespace Cadenza
             Debug.Log("Loaded all banks from FMOD.");
 
             // Start the global track.
-            this.globalTrack = RuntimeManager.CreateInstance(this.globalBeatEvent.Path);
+            this.globalTrack = RuntimeManager.CreateInstance(this.globalBeatEvent);
             Debug.Log("Starting global music track.");
 
             // Get timeline information.
