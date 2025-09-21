@@ -38,7 +38,7 @@ namespace Cadenza
             {
                 yield return null;
             }
-            this.BanksLoaded();
+            // this.BanksLoaded();
         }
 
         private void BanksLoaded()
