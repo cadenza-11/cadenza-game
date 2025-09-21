@@ -1,3 +1,5 @@
+using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Cadenza
@@ -6,19 +8,27 @@ namespace Cadenza
         CadenzaActions.IPlayerActions,
         CadenzaActions.IUIActions
     {
+        private static InputSystem singleton;
+
         private CadenzaActions inputActions;
         private CadenzaActions.PlayerActions playerInputMap;
         private CadenzaActions.UIActions uiInputMap;
 
+        public static CadenzaActions.PlayerActions PlayerInputMap => singleton.playerInputMap;
+        public static CadenzaActions.UIActions UIInputMap => singleton.uiInputMap;
+
         public override void OnInitialize()
         {
+            Debug.Assert(singleton == null);
+            singleton = this;
+
             this.inputActions = new CadenzaActions();
 
             this.uiInputMap = inputActions.UI;
-            this.uiInputMap.AddCallbacks(this);
+            // this.uiInputMap.AddCallbacks(this);
 
             this.playerInputMap = inputActions.Player;
-            this.playerInputMap.AddCallbacks(this);
+            // this.playerInputMap.AddCallbacks(this);
 
             this.uiInputMap.Enable();
         }
@@ -106,6 +116,11 @@ namespace Cadenza
         public void OnTrackedDeviceOrientation(InputAction.CallbackContext context)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void OnToggleDebug(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
