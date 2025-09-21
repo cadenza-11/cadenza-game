@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Multiplayer.Tools.NetworkSimulator.Runtime;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -19,6 +20,7 @@ namespace Cadenza
         private ListView listView;
         private List<DebugLine> logs;
         private TextField textField;
+        private NetworkSimulator networkSimulator;
 
         public override void OnInitialize()
         {
@@ -47,7 +49,7 @@ namespace Cadenza
                     this.OnCommand(this.textField.text);
                     this.textField.value = string.Empty;
                 }
-            });
+            }, TrickleDown.TrickleDown);
 
             // Override logger.
             Application.logMessageReceived += this.OnLogMessageReceived;
@@ -61,14 +63,33 @@ namespace Cadenza
 
         private void OnCommand(string text)
         {
-            string[] args = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (args.Length <= 0)
+            if (text == null || text == string.Empty)
                 return;
 
-            switch (args[0])
+            string[] tokens = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string command = tokens[0];
+            string[] args = tokens.Length <= 1 ? Array.Empty<string>() : tokens[1..];
+
+            switch (command)
             {
+                case "lag":
+                    this.OnCommandLag(args);
+                    break;
+
                 default:
                     break;
+            }
+        }
+
+        private void OnCommandLag(string[] args)
+        {
+            if (args.Length > 0 && float.TryParse(args[0], out float timeMs))
+            {
+                if (this.networkSimulator == null)
+                    this.networkSimulator = FindFirstObjectByType<NetworkSimulator>();
+
+                this.networkSimulator.TriggerLagSpike(TimeSpan.FromMilliseconds(timeMs));
+                Debug.Log($"Triggering lag spike of {timeMs} milliseconds.");
             }
         }
 
