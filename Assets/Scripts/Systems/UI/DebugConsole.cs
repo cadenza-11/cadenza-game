@@ -75,7 +75,9 @@ namespace Cadenza
                 case "lag":
                     this.OnCommandLag(args);
                     break;
-
+                case "ant":
+                    this.OnCommandAnticipate(args);
+                    break;
                 default:
                     break;
             }
@@ -90,6 +92,15 @@ namespace Cadenza
 
                 this.networkSimulator.TriggerLagSpike(TimeSpan.FromMilliseconds(timeMs));
                 Debug.Log($"Triggering lag spike of {timeMs} milliseconds.");
+            }
+        }
+
+        private void OnCommandAnticipate(string[] args)
+        {
+            if (args.Length > 0 && int.TryParse(args[0], out int timeMs))
+            {
+                FMODTimelineNetworkSync.NetworkCompensationTimeMs = timeMs;
+                Debug.Log($"Set FMODSync's network compensation time to {timeMs}ms.");
             }
         }
 

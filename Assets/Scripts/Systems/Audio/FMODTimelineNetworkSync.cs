@@ -12,8 +12,16 @@ namespace Cadenza
     /// </summary>
     public struct TimelineSyncData : INetworkSerializable
     {
-        public int timelinePosition; // Position in milliseconds
-        public double timestamp; // Network time when this position was captured
+        /// <summary>
+        /// The position in the track timeline, in milliseconds.
+        /// This value may be anticipated before sending over the network.
+        /// </summary>
+        public int timelinePosition;
+
+        /// <summary>
+        /// Network time when the timeline position was captured.
+        /// </summary>
+        public double timestamp;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -32,13 +40,21 @@ namespace Cadenza
         [Header("FMOD Configuration")]
         [SerializeField] private EventReference timelineEventRef;
         [SerializeField] private float driftTolerance = 30f; // milliseconds
-        [SerializeField] private float networkAnticipation = 25f; // milliseconds - how early host sends
+
+        [Tooltip("How early the host should send data (in milliseconds)")]
+        [SerializeField] private int networkAncitipationMs = 25;
 
         [Header("Runtime Info (Read Only)")]
         [SerializeField] private bool isSynced = false;
         [SerializeField] private float lastDriftAmount = 0f;
         [SerializeField] private int currentBar = 0;
         [SerializeField] private int currentBeat = 0;
+
+        public static int NetworkCompensationTimeMs
+        {
+            get => singleton.networkAncitipationMs;
+            set => singleton.networkAncitipationMs = value;
+        }
 
         private EventInstance timelineInstance;
         private EVENT_CALLBACK beatCallback;
@@ -52,25 +68,31 @@ namespace Cadenza
         // Network messaging
         private const string SYNC_REQUEST_RPC = "RequestTimelineSync";
         private const string SYNC_BROADCAST_RPC = "ReceiveTimelineSync";
+        private const int FIRST_BEAT_INDEX = 1;
 
-        public override void OnNetworkSpawn()
+        void Start()
         {
             if (singleton == null)
+            {
                 singleton = this;
+            }
             else
+            {
                 Destroy(this);
+                return;
+            }
 
             // Initialize FMOD timeline instance
             InitializeTimeline();
 
-            Debug.Log($"[FMODSync] Sync initialized for player {this.OwnerClientId} [host={this.IsHost}, client={this.IsClient}]");
+            Debug.Log($"[FMODSync] Joined session as player #{this.OwnerClientId} [host={this.IsHost}]");
 
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsConnectedClient)
             {
                 if (IsHost)
-                    StartHostBroadcasting();
+                    SendSyncDataToClients();
                 else if (IsClient)
-                    RequestSyncFromHost();
+                    RequestSyncToHost();
             }
         }
 
@@ -90,6 +112,9 @@ namespace Cadenza
             timelineInstance = RuntimeManager.CreateInstance(timelineEventRef);
 
             // Set up beat callback
+
+            // Explicitly cache the delegate object so it doesn't
+            // get garbage collected as it's being used.
             beatCallback = new EVENT_CALLBACK(BeatCallbackHandler);
             timelineInstance.setCallback(beatCallback, EVENT_CALLBACK_TYPE.TIMELINE_BEAT);
 
@@ -107,17 +132,14 @@ namespace Cadenza
         [AOT.MonoPInvokeCallback(typeof(EVENT_CALLBACK))]
         private static FMOD.RESULT BeatCallbackHandler(EVENT_CALLBACK_TYPE type, IntPtr instancePtr, IntPtr parameterPtr)
         {
-            // Get the instance that triggered this callback
-            EventInstance instance = new EventInstance(instancePtr);
+            // (Assume the beat callback came from the global track, as
+            // only the global track should have registered this callback.)
 
             // Extract beat properties
             if (type == EVENT_CALLBACK_TYPE.TIMELINE_BEAT)
             {
-                var param = (TIMELINE_BEAT_PROPERTIES)System.Runtime.InteropServices.Marshal.PtrToStructure(
-                    parameterPtr, typeof(TIMELINE_BEAT_PROPERTIES));
-
-                if (singleton.timelineInstance.handle == instance.handle)
-                    singleton.OnBeatCallback(param.bar, param.beat, param.position);
+                var param = (TIMELINE_BEAT_PROPERTIES)System.Runtime.InteropServices.Marshal.PtrToStructure(parameterPtr, typeof(TIMELINE_BEAT_PROPERTIES));
+                singleton.OnBeatCallback(param.bar, param.beat, param.position);
             }
 
             return FMOD.RESULT.OK;
@@ -131,11 +153,9 @@ namespace Cadenza
             currentBar = bar;
             currentBeat = beat;
 
-            // Check if we're at a bar boundary (beat == 0)
-            if (beat == 0)
-            {
+            // Check if we're at a bar boundary (first beat)
+            if (beat == FIRST_BEAT_INDEX)
                 OnBarBoundary();
-            }
         }
 
         /// <summary>
@@ -143,74 +163,53 @@ namespace Cadenza
         /// </summary>
         private void OnBarBoundary()
         {
-            Debug.Log($"[FMODSync] Bar boundary reached. Bar: {currentBar}");
+            // Host broadcasts its position slightly before the actual boundary.
+            // Client applies pending sync if waiting.
 
-            // Host broadcasts its position slightly before the actual boundary
             if (IsHost)
-            {
-                BroadcastTimelinePosition();
-            }
-
-            // Client applies pending sync if waiting
-            if (IsClient && pendingSync)
-            {
+                SendSyncDataToClients();
+            else if (IsClient && pendingSync)
                 ApplyTimelineSync();
-            }
         }
 
         /// <summary>
-        /// Host-only: Start broadcasting timeline position every bar
+        /// If currently the host, broadcast current timeline position to all clients.
         /// </summary>
-        private void StartHostBroadcasting()
+        private void SendSyncDataToClients()
         {
-            if (!IsHost) return;
+            if (!IsHost)
+                return;
 
-            // Host immediately broadcasts when a client might be joining
-            BroadcastTimelinePosition();
-
-            Debug.Log("[FMODSync] Host broadcasting started");
-        }
-
-        /// <summary>
-        /// Host broadcasts current timeline position to all clients
-        /// </summary>
-        private void BroadcastTimelinePosition()
-        {
-            if (!IsHost) return;
-
-            // Get current timeline position
+            // Get current timeline position in milliseconds
             timelineInstance.getTimelinePosition(out int currentPosition);
 
-            // Adjust for network anticipation (send slightly early)
-            currentPosition += (int)networkAnticipation;
-
-            // Create sync data
-            TimelineSyncData syncData = new TimelineSyncData
+            // Adjust for network anticipation (sync to a slightly later time)
+            TimelineSyncData syncData = new()
             {
-                timelinePosition = currentPosition,
+                timelinePosition = currentPosition + networkAncitipationMs,
                 timestamp = NetworkManager.Singleton.NetworkTimeSystem.ServerTime
             };
 
             // Send to all clients
             BroadcastSyncDataClientRpc(syncData);
 
-            Debug.Log($"[FMODSync] Host broadcast position: {currentPosition}ms");
+            Debug.Log($"[FMODSync] Host broadcasted at time {syncData.timestamp}: sync to timeline position {syncData.timelinePosition}");
         }
 
         /// <summary>
         /// Client requests initial sync when joining lobby
         /// </summary>
-        private void RequestSyncFromHost()
+        private void RequestSyncToHost()
         {
             if (!IsClient || IsHost) return;
 
-            Debug.Log("[FMODSync] Requesting sync from host.");
+            Debug.Log($"[FMODSync] Player {this.OwnerClientId} requested a sync.");
 
             RequestSyncServerRpc();
         }
 
         /// <summary>
-        /// Server RPC - Client requests sync data
+        /// Server RPC - Tell host to send sync data to client
         /// </summary>
         [ServerRpc]
         [Rpc(SendTo.Server, RequireOwnership = false)]
@@ -219,15 +218,15 @@ namespace Cadenza
             // Get current position and send to requesting client
             timelineInstance.getTimelinePosition(out int currentPosition);
 
-            TimelineSyncData syncData = new TimelineSyncData
+            TimelineSyncData syncData = new()
             {
-                timelinePosition = currentPosition,
+                timelinePosition = currentPosition + this.networkAncitipationMs,
                 timestamp = NetworkManager.Singleton.NetworkTimeSystem.ServerTime
             };
 
             ReceiveSyncDataClientRpc(syncData);
 
-            Debug.Log($"[FMODSync] Host sent sync data to client");
+            Debug.Log($"[FMODSync] Host broadcasted at time {syncData.timestamp}: sync to timeline position {syncData.timelinePosition}");
         }
 
         /// <summary>
@@ -236,7 +235,8 @@ namespace Cadenza
         [Rpc(SendTo.NotMe)]
         private void ReceiveSyncDataClientRpc(TimelineSyncData syncData)
         {
-            if (IsHost) return; // Host doesn't need to sync to itself
+            if (IsHost)
+                return; // Host doesn't need to sync to itself
 
             ProcessReceivedSyncData(syncData, true);
         }
@@ -247,7 +247,8 @@ namespace Cadenza
         [Rpc(SendTo.NotMe)]
         private void BroadcastSyncDataClientRpc(TimelineSyncData syncData)
         {
-            if (IsHost) return; // Host doesn't need to sync to itself
+            if (IsHost)
+                return; // Host doesn't need to sync to itself
 
             ProcessReceivedSyncData(syncData, false);
         }
@@ -255,29 +256,24 @@ namespace Cadenza
         /// <summary>
         /// Process received sync data and determine if sync is needed
         /// </summary>
-        private void ProcessReceivedSyncData(TimelineSyncData syncData, bool isInitialSync)
+        private void ProcessReceivedSyncData(TimelineSyncData syncData, bool immediate)
         {
             // Calculate elapsed time since host captured position
             double currentNetworkTime = NetworkManager.Singleton.NetworkTimeSystem.ServerTime;
             double elapsedTicks = currentNetworkTime - syncData.timestamp;
             float elapsedMs = (float)(elapsedTicks / NetworkManager.Singleton.NetworkTimeSystem.TickLatency) * 1000f;
 
-            // Extrapolate host's current position
+            // Calculate drift
             int extrapolatedHostPosition = syncData.timelinePosition + (int)elapsedMs;
-
-            // Get our current position
             timelineInstance.getTimelinePosition(out int currentLocalPosition);
 
-            // Calculate drift
             float drift = Mathf.Abs(extrapolatedHostPosition - currentLocalPosition);
             lastDriftAmount = drift;
 
-            Debug.Log($"[FMODSync] Sync data received. Drift: {drift}ms, Tolerance: {driftTolerance}ms");
+            Debug.Log($"[FMODSync] Sync data received. Current timeline position: {currentLocalPosition} Drift: {drift}ms, Tolerance: {driftTolerance}ms");
 
-            // Determine if we need to sync
-            bool needsSync = isInitialSync || (drift > driftTolerance);
-
-            if (needsSync)
+            // Schedule sync for next bar boundary if needed
+            if (immediate || (drift > driftTolerance))
             {
                 // Schedule sync for next bar boundary
                 ScheduleSync(extrapolatedHostPosition);
@@ -354,7 +350,7 @@ namespace Cadenza
         {
             if (IsClient && !IsHost)
             {
-                RequestSyncFromHost();
+                RequestSyncToHost();
             }
         }
 
