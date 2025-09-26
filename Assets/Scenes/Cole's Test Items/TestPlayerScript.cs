@@ -13,12 +13,17 @@ public class TestPlayerScript : MonoBehaviour
     public Animator anim;
 
     public bool isMove;
-    public bool isAttacking;
-    public int attackEnd;
+
+    private GameObject attackArea = default;
+
+    private bool attacking = false;
+
+    private float timeToAttack = 0.25f;
+    private float timer = 0f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //Find player Rigidbody
+        attackArea = transform.GetChild(0).gameObject;
     }
 
     private void OnEnable()
@@ -26,7 +31,7 @@ public class TestPlayerScript : MonoBehaviour
         moveP.Enable();
         jumpP.Enable();
         attackP.Enable();
-        attackP.performed += Attack;
+        attackP.performed += AttackCommand;
     }
 
     private void OnDisable()
@@ -64,15 +69,29 @@ public class TestPlayerScript : MonoBehaviour
         }
 
         anim.SetBool("IsMove", isMove);
+
+        if (attacking)
+        {
+            timer += Time.deltaTime;
+
+            if (timer >= timeToAttack)
+            {
+                timer = 0;
+                attacking = false;
+                attackArea.SetActive(attacking);
+            }
+        }
     }
 
-    public void nextAnim(int next)
-    {
-        attackEnd = next;
-    }
-
-    private void Attack(InputAction.CallbackContext context)
+    private void AttackCommand(InputAction.CallbackContext context)
     {
         anim.SetTrigger("PlayerAttack");
+        Attack();
+    }
+
+    private void Attack()
+    {
+        attacking = true;
+        attackArea.SetActive(attacking);
     }
 }
