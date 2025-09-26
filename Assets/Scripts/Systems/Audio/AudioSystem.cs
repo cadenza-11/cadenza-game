@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using FMOD.Studio;
 using FMODUnity;
@@ -17,18 +18,55 @@ namespace Cadenza
             public float currentTempo;
         }
 
+        private struct AudioEvent : IEquatable<AudioEvent>
+        {
+            public EventInstance instance;
+            private EventReference reference;
+
+            public AudioEvent(EventReference eventReference)
+            {
+                this.reference = eventReference;
+                this.instance = RuntimeManager.CreateInstance(eventReference);
+                this.instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            }
+
+            public bool Equals(AudioEvent other)
+            {
+                return this.reference.Guid == other.reference.Guid;
+            }
+
+            public override int GetHashCode()
+            {
+                return this.reference.Guid.GetHashCode();
+            }
+        }
+
         [SerializeField] private EventReference globalBeatEvent;
         [SerializeField] private EventReference beatCallbackDebugEvent;
         private EventInstance globalTrack;
         private TimelineInfo timelineInfo;
+        private HashSet<AudioEvent> beatSetOneShot;
 
         public override void OnInitialize()
         {
             Debug.Assert(singleton == null);
             singleton = this;
 
+            this.beatSetOneShot = new();
+
             // Start loading all audio banks.
             this.StartCoroutine(LoadAllBanks());
+        }
+
+        public override void OnBeat()
+        {
+            // Dump (play) all queued one-shots.
+            foreach (var evt in this.beatSetOneShot)
+            {
+                evt.instance.start();
+                evt.instance.release();
+            }
+            this.beatSetOneShot.Clear();
         }
 
         private IEnumerator LoadAllBanks()
@@ -60,16 +98,14 @@ namespace Cadenza
 
         public static void PlayOneShot(EventReference sound)
         {
-            RuntimeManager.PlayOneShot(sound);
+            singleton.beatSetOneShot.Add(new AudioEvent(sound));
         }
 
         public static void PlayOneShotWithParameter(EventReference sound, string parameterName, float value)
         {
-            EventInstance instance = RuntimeManager.CreateInstance(sound);
-
-            instance.setParameterByName(parameterName, value);
-            instance.start();
-            instance.release();
+            var evt = new AudioEvent(sound);
+            singleton.beatSetOneShot.Add(evt);
+            evt.instance.setParameterByName(parameterName, value);
         }
 
         [AOT.MonoPInvokeCallback(typeof(EVENT_CALLBACK))]

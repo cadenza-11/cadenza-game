@@ -48,6 +48,15 @@ namespace Cadenza
         #endregion
         #region Public Static Methods
 
+        // This should be called only by the AudioSystem.
+        public static void PlayBeat()
+        {
+            foreach (var system in singleton.systems)
+            {
+                system.OnBeat();
+            }
+        }
+
         public static async Task SetSceneAsync(int sceneIndex)
         {
             // Shut down systems.

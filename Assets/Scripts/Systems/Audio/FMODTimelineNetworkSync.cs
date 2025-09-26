@@ -140,6 +140,7 @@ namespace Cadenza
             {
                 var param = (TIMELINE_BEAT_PROPERTIES)System.Runtime.InteropServices.Marshal.PtrToStructure(parameterPtr, typeof(TIMELINE_BEAT_PROPERTIES));
                 singleton.OnBeatCallback(param.bar, param.beat, param.position);
+                ApplicationController.PlayBeat();
             }
 
             return FMOD.RESULT.OK;
