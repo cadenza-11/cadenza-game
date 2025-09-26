@@ -9,10 +9,12 @@ public class TestPlayerScript : MonoBehaviour
     public LayerMask floorLayer;
     public Rigidbody rb;
     public SpriteRenderer sr;
-    public InputAction moveP, jumpP;
+    public InputAction moveP, jumpP, attackP;
     public Animator anim;
 
     public bool isMove;
+    public bool isAttacking;
+    public int attackEnd;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,11 +24,16 @@ public class TestPlayerScript : MonoBehaviour
     private void OnEnable()
     {
         moveP.Enable();
+        jumpP.Enable();
+        attackP.Enable();
+        attackP.performed += Attack;
     }
 
     private void OnDisable()
     {
         moveP.Disable();
+        jumpP.Disable();
+        attackP.Disable();
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -57,5 +64,15 @@ public class TestPlayerScript : MonoBehaviour
         }
 
         anim.SetBool("IsMove", isMove);
+    }
+
+    public void nextAnim(int next)
+    {
+        attackEnd = next;
+    }
+
+    private void Attack(InputAction.CallbackContext context)
+    {
+        anim.SetTrigger("PlayerAttack");
     }
 }
