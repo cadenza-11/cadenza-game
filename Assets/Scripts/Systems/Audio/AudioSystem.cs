@@ -27,7 +27,8 @@ namespace Cadenza
             {
                 this.reference = eventReference;
                 this.instance = RuntimeManager.CreateInstance(eventReference);
-                this.instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                this.instance.start();
+                this.instance.setPaused(true);
             }
 
             public bool Equals(AudioEvent other)
@@ -46,6 +47,10 @@ namespace Cadenza
         private EventInstance globalTrack;
         private TimelineInfo timelineInfo;
         private HashSet<AudioEvent> beatSetOneShot;
+        private bool firstBeatPlayed;
+
+        public static EventInstance GlobalTrack => singleton.globalTrack;
+        public static event Action<TIMELINE_BEAT_PROPERTIES> BeatPlayed;
 
         public override void OnInitialize()
         {
@@ -63,10 +68,21 @@ namespace Cadenza
             // Dump (play) all queued one-shots.
             foreach (var evt in this.beatSetOneShot)
             {
-                evt.instance.start();
+                evt.instance.setPaused(false);
                 evt.instance.release();
             }
             this.beatSetOneShot.Clear();
+
+            // Start a duplicate metronome track that is actually audible.
+            if (!singleton.firstBeatPlayed)
+            {
+                var instance = RuntimeManager.CreateInstance(singleton.globalBeatEvent);
+                instance.start();
+                singleton.firstBeatPlayed = true;
+            }
+
+            // Test out FMOD round-trip time by playing a test sound whenever we receieve the beat
+            RuntimeManager.PlayOneShot(singleton.beatCallbackDebugEvent);
         }
 
         private IEnumerator LoadAllBanks()
@@ -76,7 +92,7 @@ namespace Cadenza
             {
                 yield return null;
             }
-            // this.BanksLoaded();
+            this.BanksLoaded();
         }
 
         private void BanksLoaded()
@@ -93,6 +109,8 @@ namespace Cadenza
             this.globalTrack.setUserData(GCHandle.ToIntPtr(GCHandle.Alloc(timelineInfo)));
             this.globalTrack.setCallback(beatCallback, EVENT_CALLBACK_TYPE.TIMELINE_BEAT);
 
+            // Mute this track, since it's only meant to give beat callbacks.
+            this.globalTrack.setVolume(0.0f);
             this.globalTrack.start();
         }
 
@@ -116,8 +134,9 @@ namespace Cadenza
                 // Timeline properties reside in the beatParam variable
                 var beatParam = (TIMELINE_BEAT_PROPERTIES)Marshal.PtrToStructure(parameterPtr, typeof(TIMELINE_BEAT_PROPERTIES));
 
-                // Test out FMOD round-trip time by playing a test sound whenever we receieve the beat
-                RuntimeManager.PlayOneShot(singleton.beatCallbackDebugEvent);
+                // Notify systems.
+                ApplicationController.PlayBeat();
+                BeatPlayed?.Invoke(beatParam);
             }
             return FMOD.RESULT.OK;
         }

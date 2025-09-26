@@ -56,7 +56,6 @@ namespace Cadenza
             set => singleton.networkAncitipationMs = value;
         }
 
-        private EventInstance timelineInstance;
         private EVENT_CALLBACK beatCallback;
 
         // Sync state
@@ -82,8 +81,7 @@ namespace Cadenza
                 return;
             }
 
-            // Initialize FMOD timeline instance
-            InitializeTimeline();
+            AudioSystem.BeatPlayed += param => this.OnBeatCallback(param.bar, param.beat, param.position);
 
             Debug.Log($"[FMODSync] Joined session as player #{this.OwnerClientId} [host={this.IsHost}]");
 
@@ -94,36 +92,6 @@ namespace Cadenza
                 else if (IsClient)
                     RequestSyncToHost();
             }
-        }
-
-        public override void OnDestroy()
-        {
-            if (timelineInstance.isValid())
-            {
-                timelineInstance.setCallback(null, EVENT_CALLBACK_TYPE.TIMELINE_BEAT);
-                timelineInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-                timelineInstance.release();
-            }
-        }
-
-        private void InitializeTimeline()
-        {
-            // Create the timeline instance (assuming it's already playing from game start)
-            timelineInstance = RuntimeManager.CreateInstance(timelineEventRef);
-
-            // Set up beat callback
-
-            // Explicitly cache the delegate object so it doesn't
-            // get garbage collected as it's being used.
-            beatCallback = new EVENT_CALLBACK(BeatCallbackHandler);
-            timelineInstance.setCallback(beatCallback, EVENT_CALLBACK_TYPE.TIMELINE_BEAT);
-
-            // Play timeline if not already playing
-            timelineInstance.getPlaybackState(out PLAYBACK_STATE state);
-            if (state != PLAYBACK_STATE.PLAYING)
-                timelineInstance.start();
-
-            Debug.Log($"[FMODSync] Started global track.");
         }
 
         /// <summary>
@@ -140,7 +108,6 @@ namespace Cadenza
             {
                 var param = (TIMELINE_BEAT_PROPERTIES)System.Runtime.InteropServices.Marshal.PtrToStructure(parameterPtr, typeof(TIMELINE_BEAT_PROPERTIES));
                 singleton.OnBeatCallback(param.bar, param.beat, param.position);
-                ApplicationController.PlayBeat();
             }
 
             return FMOD.RESULT.OK;
@@ -182,7 +149,7 @@ namespace Cadenza
                 return;
 
             // Get current timeline position in milliseconds
-            timelineInstance.getTimelinePosition(out int currentPosition);
+            AudioSystem.GlobalTrack.getTimelinePosition(out int currentPosition);
 
             // Adjust for network anticipation (sync to a slightly later time)
             TimelineSyncData syncData = new()
@@ -217,7 +184,7 @@ namespace Cadenza
         private void RequestSyncServerRpc()
         {
             // Get current position and send to requesting client
-            timelineInstance.getTimelinePosition(out int currentPosition);
+            AudioSystem.GlobalTrack.getTimelinePosition(out int currentPosition);
 
             TimelineSyncData syncData = new()
             {
@@ -266,7 +233,7 @@ namespace Cadenza
 
             // Calculate drift
             int extrapolatedHostPosition = syncData.timelinePosition + (int)elapsedMs;
-            timelineInstance.getTimelinePosition(out int currentLocalPosition);
+            AudioSystem.GlobalTrack.getTimelinePosition(out int currentLocalPosition);
 
             float drift = Mathf.Abs(extrapolatedHostPosition - currentLocalPosition);
             lastDriftAmount = drift;
@@ -328,7 +295,7 @@ namespace Cadenza
             if (!pendingSync) return;
 
             // Set timeline to target position
-            timelineInstance.setTimelinePosition(targetSyncPosition);
+            AudioSystem.GlobalTrack.setTimelinePosition(targetSyncPosition);
 
             pendingSync = false;
             isSynced = true;
@@ -339,7 +306,7 @@ namespace Cadenza
                 syncCoroutine = null;
             }
 
-            timelineInstance.getTimelinePosition(out int newPosition);
+            AudioSystem.GlobalTrack.getTimelinePosition(out int newPosition);
             Debug.Log($"[FMODSync] Sync applied! Jumped to position: {newPosition}ms");
         }
 
