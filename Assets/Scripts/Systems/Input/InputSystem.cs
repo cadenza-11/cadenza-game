@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 namespace Cadenza
 {
@@ -28,9 +29,10 @@ namespace Cadenza
             // this.uiInputMap.AddCallbacks(this);
 
             this.playerInputMap = inputActions.Player;
-            // this.playerInputMap.AddCallbacks(this);
+            this.playerInputMap.AddCallbacks(this);
 
-            this.uiInputMap.Enable();
+            // this.uiInputMap.Enable();
+            this.playerInputMap.Enable();
         }
 
         public override void OnApplicationStop()
@@ -52,7 +54,7 @@ namespace Cadenza
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            Debug.Log($"{context.control.device.deviceId} moved {context.ReadValue<Vector2>()}");
         }
 
         public void OnAttack(InputAction.CallbackContext context)
