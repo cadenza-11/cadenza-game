@@ -66,7 +66,7 @@ namespace Cadenza
             // Set the scene.
             await singleton.SetSceneImplAsync(sceneIndex);
 
-            // Shut down systems.
+            // Restart systems.
             foreach (var system in singleton.systems)
                 system.OnGameStart();
         }

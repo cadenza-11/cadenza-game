@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.Multiplayer.Tools.NetworkSimulator.Runtime;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -20,7 +19,7 @@ namespace Cadenza
         private ListView listView;
         private List<DebugLine> logs;
         private TextField textField;
-        private NetworkSimulator networkSimulator;
+        private ConsoleCommands commandParser;
 
         public override void OnInitialize()
         {
@@ -41,12 +40,13 @@ namespace Cadenza
             this.listView.itemsSource = logs;
 
             // Trigger command via text field.
+            this.commandParser = new();
             this.textField = this.root.Q<TextField>();
             this.textField.RegisterCallback<KeyDownEvent>(evt =>
             {
                 if (evt.keyCode == KeyCode.Return)
                 {
-                    this.OnCommand(this.textField.text);
+                    this.commandParser.OnCommand(this.textField.text);
                     this.textField.value = string.Empty;
                 }
             }, TrickleDown.TrickleDown);
@@ -59,49 +59,6 @@ namespace Cadenza
         public override void OnApplicationStop()
         {
             Application.logMessageReceived -= this.OnLogMessageReceived;
-        }
-
-        private void OnCommand(string text)
-        {
-            if (text == null || text == string.Empty)
-                return;
-
-            string[] tokens = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            string command = tokens[0];
-            string[] args = tokens.Length <= 1 ? Array.Empty<string>() : tokens[1..];
-
-            switch (command)
-            {
-                case "lag":
-                    this.OnCommandLag(args);
-                    break;
-                case "ant":
-                    this.OnCommandAnticipate(args);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void OnCommandLag(string[] args)
-        {
-            if (args.Length > 0 && float.TryParse(args[0], out float timeMs))
-            {
-                if (this.networkSimulator == null)
-                    this.networkSimulator = FindFirstObjectByType<NetworkSimulator>();
-
-                this.networkSimulator.TriggerLagSpike(TimeSpan.FromMilliseconds(timeMs));
-                Debug.Log($"Triggering lag spike of {timeMs} milliseconds.");
-            }
-        }
-
-        private void OnCommandAnticipate(string[] args)
-        {
-            if (args.Length > 0 && int.TryParse(args[0], out int timeMs))
-            {
-                FMODTimelineNetworkSync.NetworkCompensationTimeMs = timeMs;
-                Debug.Log($"Set FMODSync's network compensation time to {timeMs}ms.");
-            }
         }
 
         private void ToggleVisibility()
