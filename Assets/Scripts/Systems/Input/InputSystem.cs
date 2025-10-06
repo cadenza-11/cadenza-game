@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
 
 namespace Cadenza
 {
@@ -50,21 +49,64 @@ namespace Cadenza
             this.playerInputMap.Disable();
         }
 
+        public static void RebindPlayerInputAction(int deviceID, string actionName)
+        {
+            var player = PlayerSystem.GetPlayerByID(deviceID);
+            var playerAction = player.actions.FindAction(actionName, throwIfNotFound: true);
+            var rebindOp = playerAction.PerformInteractiveRebinding()
+                .WithControlsExcluding("<Mouse>/position")
+                .WithControlsExcluding("<Mouse>/delta")
+                .WithControlsExcluding("<Gamepad>/Start")
+                .WithControlsExcluding("<Keyboard>/escape")
+                .OnMatchWaitForAnother(0.1f)
+            .OnComplete(operation => { });
+
+            rebindOp.Start();
+        }
+
+        public static void RestorePlayerInputActionToDefault(int deviceID, string actionName)
+        {
+            var player = PlayerSystem.GetPlayerByID(deviceID);
+            var playerAction = player.actions.FindAction(actionName, throwIfNotFound: true);
+            InputActionRebindingExtensions.RemoveAllBindingOverrides(playerAction);
+        }
+
         #region Player Interface Methods
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            Debug.Log($"{context.control.device.deviceId} moved {context.ReadValue<Vector2>()}");
-        }
-
-        public void OnAttack(InputAction.CallbackContext context)
-        {
-            throw new System.NotImplementedException();
+            var input = context.performed ? context.ReadValue<Vector2>() : Vector2.zero;
+            PlayerSystem.OnMove(context.control.device.deviceId, input);
         }
 
         public void OnInteract(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            if (context.performed)
+                PlayerSystem.OnInteract(context.control.device.deviceId);
+        }
+
+        public void OnAttackLight(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                PlayerSystem.OnInteract(context.control.device.deviceId);
+        }
+
+        public void OnAttackHeavy(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                PlayerSystem.OnInteract(context.control.device.deviceId);
+        }
+
+        public void OnAttackSpecial(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                PlayerSystem.OnInteract(context.control.device.deviceId);
+        }
+
+        public void OnAttackTeam(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                PlayerSystem.OnInteract(context.control.device.deviceId);
         }
 
         #endregion
@@ -106,16 +148,6 @@ namespace Cadenza
         }
 
         public void OnScrollWheel(InputAction.CallbackContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnTrackedDevicePosition(InputAction.CallbackContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnTrackedDeviceOrientation(InputAction.CallbackContext context)
         {
             throw new System.NotImplementedException();
         }

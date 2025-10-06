@@ -1,50 +1,74 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Cadenza
 {
-    public class PlayerSystem : ApplicationSystem, CadenzaActions.IPlayerActions
+    public class PlayerSystem : ApplicationSystem
     {
+        private static PlayerSystem singleton;
+
         [Header("Test values")]
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private float playerSpeed;
 
-        private Dictionary<int, GameObject> playersByID;
+        private Dictionary<int, PlayerInput> playersByID;
         private Dictionary<int, Vector3> playerFrameImpulsesByID;
 
         public override void OnInitialize()
         {
+            Debug.Assert(singleton == null);
+            singleton = this;
+
             this.playersByID = new();
             this.playerFrameImpulsesByID = new();
-
-            InputSystem.PlayerInputMap.AddCallbacks(this);
         }
 
-        public void OnAttack(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        public static void OnInteract(int id)
         {
         }
 
-        public void OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        public static void OnAttackLight(int id)
         {
         }
 
-        public void OnMove(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        public static void OnAttackHeavy(int id)
         {
-            int deviceID = context.control.device.deviceId;
-            if (!this.playersByID.ContainsKey(deviceID))
-            {
-                GameObject newPlayer = Instantiate(this.playerPrefab);
-                this.playersByID[deviceID] = newPlayer;
-            }
+        }
 
-            var input = context.performed ? context.ReadValue<Vector2>() : Vector2.zero;
-            this.playerFrameImpulsesByID[deviceID] = new Vector3(input.x, 0, input.y);
+        public static void OnAttackSpecial(int id)
+        {
+        }
+
+        public static void OnAttackTeam(int id)
+        {
+        }
+
+        public static void OnMove(int id, Vector2 input)
+        {
+            singleton.playerFrameImpulsesByID[id] = new Vector3(input.x, 0, input.y);
         }
 
         public override void OnUpdate()
         {
             foreach ((int id, var player) in this.playersByID)
                 player.transform.Translate(this.playerSpeed * Time.deltaTime * this.playerFrameImpulsesByID[id]);
+        }
+
+        public static PlayerInput GetPlayerByID(int deviceID)
+        {
+            if (!singleton.playersByID.ContainsKey(deviceID))
+                CreatePlayer(deviceID);
+
+            return singleton.playersByID[deviceID];
+        }
+
+        private static GameObject CreatePlayer(int id)
+        {
+            GameObject newPlayer = Instantiate(singleton.playerPrefab);
+            singleton.playersByID[id] = newPlayer.GetComponent<PlayerInput>();
+
+            return newPlayer;
         }
     }
 }
