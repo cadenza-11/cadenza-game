@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 namespace Cadenza
 {
@@ -13,7 +15,10 @@ namespace Cadenza
         [SerializeField] private float playerSpeed;
 
         private Dictionary<int, PlayerInput> playersByID;
+        public static IReadOnlyDictionary<int, PlayerInput> PlayersByID => singleton.playersByID;
         private Dictionary<int, Vector3> playerFrameImpulsesByID;
+
+        public static event Action<int> PlayerAdded;
 
         public override void OnInitialize()
         {
@@ -67,6 +72,8 @@ namespace Cadenza
         {
             GameObject newPlayer = Instantiate(singleton.playerPrefab);
             singleton.playersByID[id] = newPlayer.GetComponent<PlayerInput>();
+
+            PlayerAdded.Invoke(singleton.playersByID[id].playerIndex);
 
             return newPlayer;
         }
