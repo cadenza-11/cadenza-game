@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TestPlayerScript : MonoBehaviour
+public class TestPlayerScript : MonoBehaviour, ICharacter
 {
     //This is just taken fron the tutorial, can be adapted later
     public float speed;
+
+    public int currentHealth { get; set; }
+    public int specialMeter { get; set; }
+
 
     public LayerMask floorLayer;
     public Rigidbody rb;
@@ -13,6 +17,7 @@ public class TestPlayerScript : MonoBehaviour
     public Animator anim;
 
     public bool isMove;
+    public bool isGrounded;
 
     private GameObject attackArea = default;
 
@@ -43,7 +48,8 @@ public class TestPlayerScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //Shoot a line down to find the terrain, then set height just above terrain
+
+        rb.AddForce(Physics.gravity * 10f, ForceMode.Acceleration);
 
         //Move player and flip sprite
         Vector3 moveDir = moveP.ReadValue<Vector3>();
@@ -86,12 +92,32 @@ public class TestPlayerScript : MonoBehaviour
     private void AttackCommand(InputAction.CallbackContext context)
     {
         anim.SetTrigger("PlayerAttack");
-        Attack();
+        WeakAttack();
     }
 
-    private void Attack()
+    public void WeakAttack()
     {
         attacking = true;
         attackArea.SetActive(attacking);
+    }
+    public void StrongAttack()
+    {
+
+    }
+    public void SpecialAttack()
+    {
+
+    }
+    public void StartTeamAttk()
+    {
+
+    }
+    public void JoinTeamAttk()
+    {
+
+    }
+    public void DoDamage()
+    {
+
     }
 }
