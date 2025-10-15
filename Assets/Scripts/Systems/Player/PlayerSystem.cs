@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering.Universal;
 
 namespace Cadenza
 {
@@ -35,6 +34,9 @@ namespace Cadenza
 
         public static void OnAttackLight(int id)
         {
+            PlayerInput player = GetPlayerByID(id);
+            // AudioSystem.PlayOneShot(AudioSystem.PlayerOneShotsEvent);
+            AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 2);
         }
 
         public static void OnAttackHeavy(int id)
@@ -51,13 +53,18 @@ namespace Cadenza
 
         public static void OnMove(int id, Vector2 input)
         {
+            PlayerInput player = GetPlayerByID(id);
             singleton.playerFrameImpulsesByID[id] = new Vector3(input.x, 0, input.y);
         }
 
         public override void OnUpdate()
         {
             foreach ((int id, var player) in this.playersByID)
+            {
+                if (!this.playerFrameImpulsesByID.ContainsKey(id))
+                    return;
                 player.transform.Translate(this.playerSpeed * Time.deltaTime * this.playerFrameImpulsesByID[id]);
+            }
         }
 
         public static PlayerInput GetPlayerByID(int deviceID)
@@ -72,8 +79,9 @@ namespace Cadenza
         {
             GameObject newPlayer = Instantiate(singleton.playerPrefab);
             singleton.playersByID[id] = newPlayer.GetComponent<PlayerInput>();
+            Debug.Log($"Player joined with device ID {id}");
 
-            PlayerAdded.Invoke(singleton.playersByID[id].playerIndex);
+            PlayerAdded?.Invoke(singleton.playersByID[id].playerIndex);
 
             return newPlayer;
         }

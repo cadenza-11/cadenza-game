@@ -7,10 +7,10 @@ namespace Cadenza
     {
         protected CadenzaActions Inputs;
         protected InputActionMap UIActions;
-        protected TemplateContainer root; 
+        protected TemplateContainer root;
         public override void OnStart()
         {
-            UIActions = Inputs.UI;
+            UIActions = InputSystem.UIInputMap;
         }
         public virtual void Show()
         {
