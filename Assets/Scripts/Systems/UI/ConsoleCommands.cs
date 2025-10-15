@@ -33,8 +33,23 @@ namespace Cadenza
             {
                 case "offset":
                     if (int.TryParse(args[1], out int offsetMs))
+                    {
                         BeatSystem.SetDSPOffset(offsetMs);
-                    Debug.Log($"Setting DSP offset to {offsetMs}ms.");
+                        Debug.Log($"Setting DSP offset to {offsetMs}ms.");
+                    }
+                    break;
+
+                case "debug":
+                    if (string.Equals(args[1], "on"))
+                    {
+                        BeatSystem.PlayDebugSounds = true;
+                        Debug.Log("Turning on audio debug sounds.");
+                    }
+                    else if (string.Equals(args[1], "off"))
+                    {
+                        BeatSystem.PlayDebugSounds = false;
+                        Debug.Log("Turning off audio debug sounds.");
+                    }
                     break;
             }
         }

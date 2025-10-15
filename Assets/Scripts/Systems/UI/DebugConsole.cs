@@ -34,10 +34,10 @@ namespace Cadenza
             this.listView.bindItem = (element, i) =>
             {
                 var label = element.Q<Label>();
-                label.text = logs[i].message;
-                label.style.color = logs[i].color;
+                label.text = this.logs[i].message;
+                label.style.color = this.logs[i].color;
             };
-            this.listView.itemsSource = logs;
+            this.listView.itemsSource = this.logs;
 
             // Trigger command via text field.
             this.commandParser = new();
@@ -48,6 +48,14 @@ namespace Cadenza
                 {
                     this.commandParser.OnCommand(this.textField.text);
                     this.textField.value = string.Empty;
+                }
+                else if (evt.keyCode == KeyCode.UpArrow)
+                {
+                    this.commandParser.OnGetPreviousCommand(this.textField);
+                }
+                else if (evt.keyCode == KeyCode.DownArrow)
+                {
+                    this.commandParser.OnGetNextCommand(this.textField);
                 }
             }, TrickleDown.TrickleDown);
 
@@ -63,9 +71,16 @@ namespace Cadenza
 
         private void ToggleVisibility()
         {
-            this.root.style.display = this.root.style.display == DisplayStyle.Flex
-                ? DisplayStyle.None
-                : DisplayStyle.Flex;
+            if (this.root.style.display == DisplayStyle.Flex)
+            {
+                this.root.style.display = DisplayStyle.None;
+                InputSystem.PlayerInputMap.Enable();
+            }
+            else if (this.root.style.display == DisplayStyle.None)
+            {
+                this.root.style.display = DisplayStyle.Flex;
+                InputSystem.PlayerInputMap.Enable();
+            }
         }
 
         private void OnLogMessageReceived(string condition, string stackTrace, LogType type)
@@ -88,7 +103,7 @@ namespace Cadenza
 
             this.logs.Add(line);
             this.listView.RefreshItems();
-            this.listView.ScrollToItem(logs.Count - 1);
+            this.listView.ScrollToItem(this.logs.Count - 1);
         }
     }
 }

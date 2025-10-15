@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
@@ -31,6 +30,13 @@ namespace Cadenza
                 this.instance.setPaused(true);
             }
 
+            public AudioEvent(EventReference eventReference, params (string name, float value)[] parameters)
+                : this(eventReference)
+            {
+                foreach ((string name, float value) in parameters)
+                    this.instance.setParameterByName(name, value);
+            }
+
             public bool Equals(AudioEvent other)
             {
                 return this.reference.Guid == other.reference.Guid;
@@ -44,13 +50,9 @@ namespace Cadenza
 
         [SerializeField] private EventReference globalBeatEvent;
         [SerializeField] private EventReference beatCallbackDebugEvent;
-        private EventInstance globalTrack;
-        private TimelineInfo timelineInfo;
+        [SerializeField] private EventReference playerOneShotsEvent;
+        public static EventReference PlayerOneShotsEvent => singleton.playerOneShotsEvent;
         private HashSet<AudioEvent> beatSetOneShot;
-        private bool firstBeatPlayed;
-
-        public static EventInstance GlobalTrack => singleton.globalTrack;
-        public static event Action<TIMELINE_BEAT_PROPERTIES> BeatPlayed;
 
         public override void OnInitialize()
         {
@@ -60,29 +62,20 @@ namespace Cadenza
             this.beatSetOneShot = new();
 
             // Start loading all audio banks.
-            this.StartCoroutine(LoadAllBanks());
+            this.StartCoroutine(this.LoadAllBanks());
         }
 
         public override void OnBeat()
         {
             // Dump (play) all queued one-shots.
+            Debug.Log($"AudioSystem: Beat received, dumping {this.beatSetOneShot.Count} one-shots");
+
             foreach (var evt in this.beatSetOneShot)
             {
                 evt.instance.setPaused(false);
                 evt.instance.release();
             }
             this.beatSetOneShot.Clear();
-
-            // Start a duplicate metronome track that is actually audible.
-            if (!singleton.firstBeatPlayed)
-            {
-                var instance = RuntimeManager.CreateInstance(singleton.globalBeatEvent);
-                instance.start();
-                singleton.firstBeatPlayed = true;
-            }
-
-            // Test out FMOD round-trip time by playing a test sound whenever we receieve the beat
-            RuntimeManager.PlayOneShot(singleton.beatCallbackDebugEvent);
         }
 
         private IEnumerator LoadAllBanks()
@@ -98,20 +91,6 @@ namespace Cadenza
         private void BanksLoaded()
         {
             Debug.Log("Loaded all banks from FMOD.");
-
-            // Start the global track.
-            this.globalTrack = RuntimeManager.CreateInstance(this.globalBeatEvent);
-            Debug.Log("Starting global music track.");
-
-            // Get timeline information.
-            timelineInfo = new TimelineInfo();
-            EVENT_CALLBACK beatCallback = new(BeatEventCallback);
-            this.globalTrack.setUserData(GCHandle.ToIntPtr(GCHandle.Alloc(timelineInfo)));
-            this.globalTrack.setCallback(beatCallback, EVENT_CALLBACK_TYPE.TIMELINE_BEAT);
-
-            // Mute this track, since it's only meant to give beat callbacks.
-            this.globalTrack.setVolume(0.0f);
-            this.globalTrack.start();
         }
 
         public static void PlayOneShot(EventReference sound)
@@ -121,24 +100,8 @@ namespace Cadenza
 
         public static void PlayOneShotWithParameter(EventReference sound, string parameterName, float value)
         {
-            var evt = new AudioEvent(sound);
+            var evt = new AudioEvent(sound, parameters: (parameterName, value));
             singleton.beatSetOneShot.Add(evt);
-            evt.instance.setParameterByName(parameterName, value);
-        }
-
-        [AOT.MonoPInvokeCallback(typeof(EVENT_CALLBACK))]
-        private static FMOD.RESULT BeatEventCallback(EVENT_CALLBACK_TYPE type, IntPtr _event, IntPtr parameterPtr)
-        {
-            if (type == EVENT_CALLBACK_TYPE.TIMELINE_BEAT)
-            {
-                // Timeline properties reside in the beatParam variable
-                var beatParam = (TIMELINE_BEAT_PROPERTIES)Marshal.PtrToStructure(parameterPtr, typeof(TIMELINE_BEAT_PROPERTIES));
-
-                // Notify systems.
-                ApplicationController.PlayBeat();
-                BeatPlayed?.Invoke(beatParam);
-            }
-            return FMOD.RESULT.OK;
         }
     }
 }

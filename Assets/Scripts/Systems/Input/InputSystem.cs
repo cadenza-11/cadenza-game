@@ -88,25 +88,25 @@ namespace Cadenza
         public void OnAttackLight(InputAction.CallbackContext context)
         {
             if (context.performed)
-                PlayerSystem.OnInteract(context.control.device.deviceId);
+                PlayerSystem.OnAttackLight(context.control.device.deviceId);
         }
 
         public void OnAttackHeavy(InputAction.CallbackContext context)
         {
             if (context.performed)
-                PlayerSystem.OnInteract(context.control.device.deviceId);
+                PlayerSystem.OnAttackHeavy(context.control.device.deviceId);
         }
 
         public void OnAttackSpecial(InputAction.CallbackContext context)
         {
             if (context.performed)
-                PlayerSystem.OnInteract(context.control.device.deviceId);
+                PlayerSystem.OnAttackSpecial(context.control.device.deviceId);
         }
 
         public void OnAttackTeam(InputAction.CallbackContext context)
         {
             if (context.performed)
-                PlayerSystem.OnInteract(context.control.device.deviceId);
+                PlayerSystem.OnAttackTeam(context.control.device.deviceId);
         }
 
         #endregion

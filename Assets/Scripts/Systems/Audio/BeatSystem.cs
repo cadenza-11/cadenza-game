@@ -52,6 +52,15 @@ namespace Cadenza
         public static event MarkerListenerDelegate MarkerPassed;
 
         #endregion
+        #region Public Static Variables
+
+        public static bool PlayDebugSounds
+        {
+            get => singleton.doDebugSounds;
+            set => singleton.doDebugSounds = value;
+        }
+
+        #endregion
         #region Private Variables
 
         /// <summary>
