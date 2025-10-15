@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using FMODUnity;
 using System.Globalization;
 using FMOD.Studio;
+using UnityEngine.UI;
+using TMPro;
 
 namespace Cadenza
 {
@@ -37,6 +39,8 @@ namespace Cadenza
         [SerializeField] private bool doDebugSounds = false;
         [SerializeField] private StudioEventEmitter downbeatDebugSound;
         [SerializeField] private StudioEventEmitter upbeatDebugSound;
+        [SerializeField] private Slider playerPhaseSlider;
+        [SerializeField] private TMP_Text accuracyText;
 
         #endregion
         #region Events
@@ -105,7 +109,7 @@ namespace Cadenza
         private double lastBeatTimeDSP = -2;
 
         /// <summary>
-        /// The number of seconds should pass between each beat in the current tempo.
+        /// The number of seconds that pass between each beat in the current tempo.
         /// (Equivalent to 60 seconds / BPM)
         /// </summary>
         private double beatInterval = 0f;
@@ -117,7 +121,7 @@ namespace Cadenza
 
         /// <summary>
         /// A configurable amount of time (in seconds) that the system should
-        /// detect the beat earlier or later than estimated.
+        /// detect the beat as being earlier or later than estimated.
         /// </summary>
         private float offsetTime = 0f;
 
@@ -189,6 +193,37 @@ namespace Cadenza
         {
             float offset = Mathf.Repeat(offsetMs / 1000f, (float)singleton.beatInterval);
             singleton.offsetTime = offset;
+        }
+
+
+        public static float GetAccuracy()
+        {
+            // singleton.UpdateDSPClock();
+
+            // How many seconds are we into the track?
+            float currentTrackTime = (float)(singleton.currentTimeDSP - singleton.trackStartTimeDSP) - singleton.offsetTime;
+
+            // How many seconds away from the beat are we?
+            float beatInterval = (float)singleton.beatInterval;
+            float beatPhase = Mathf.Repeat(currentTrackTime, beatInterval);
+
+            // How far are we from the beat, as a fraction?
+            // (0 = exactly on beat, 1/2 = exactly off beat, 1 = exactly on next beat)
+            float swingPercentage = beatPhase / beatInterval;
+
+            // Map percentage -> accuracy:
+            // On beat:     0 -> 1
+            // Late:        (0, 0.5) -> (1, 0)
+            // Off beat:    0.5 -> 0
+            // Early:       (0.5, 1) -> (0, -1)
+            // On next beat: 1 -> -1
+            float accuracy = 1 - (2 * swingPercentage);
+            singleton.playerPhaseSlider.value = Math.Abs(accuracy);
+            singleton.accuracyText.text = accuracy < 0 ? "Early" : "Late";
+
+            Debug.Log($"Track time: {currentTrackTime} / Phase: {beatPhase:F2}/{beatInterval} / Swing: {swingPercentage:P0} / accuracy: {accuracy:P0}");
+
+            return accuracy;
         }
 
         #endregion
@@ -372,7 +407,7 @@ namespace Cadenza
         private bool CheckForNextUpBeat()
         {
             // How many seconds are we into the track?
-            float currentTrackTime = (float)(this.currentTimeDSP - this.trackStartTimeDSP) + this.offsetTime;
+            float currentTrackTime = (float)(this.currentTimeDSP - this.trackStartTimeDSP) - this.offsetTime;
 
             // How many seconds will we be into the track, one upbeat from now?
             float upBeatPosition = (float)(currentTrackTime + this.beatInterval * this.swingPercent);
