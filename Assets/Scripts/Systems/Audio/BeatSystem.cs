@@ -108,7 +108,7 @@ namespace Cadenza
         /// The number of seconds should pass between each beat in the current tempo.
         /// (Equivalent to 60 seconds / BPM)
         /// </summary>
-        private double beatInterval = 60 / 120f;
+        private double beatInterval = 0f;
 
         /// <summary>
         /// The number of seconds that have passed since the last DSP clock update.
@@ -116,10 +116,10 @@ namespace Cadenza
         private double deltaTimeDSP = 0f;
 
         /// <summary>
-        /// A user-defined amount of time (in seconds) to offset the expected DSP time
-        /// defined in <see cref="currentTimeDSP"/>.
+        /// A configurable amount of time (in seconds) that the system should
+        /// detect the beat earlier or later than estimated.
         /// </summary>
-        private float offsetTimeDSP = 0f;
+        private float offsetTime = 0f;
 
         private bool wasMarkerPassedThisFrame = false;
         private int markerTime;
@@ -187,7 +187,8 @@ namespace Cadenza
         /// <param name="offset">How much time (in milliseconds) to shift the time estimation.</param>
         public static void SetDSPOffset(int offsetMs)
         {
-            singleton.offsetTimeDSP = offsetMs / 1000f;
+            float offset = Mathf.Repeat(offsetMs / 1000f, (float)singleton.beatInterval);
+            singleton.offsetTime = offset;
         }
 
         #endregion
@@ -328,8 +329,6 @@ namespace Cadenza
             // Calculate the current DSP time in seconds.
             this.previousTimeDSP = this.currentTimeDSP;
             this.currentTimeDSP = (double)this.currentSamplesDSP / this.sampleRate;
-            this.currentTimeDSP += this.offsetTimeDSP;
-
             this.deltaTimeDSP = this.currentTimeDSP - this.previousTimeDSP;
         }
 
@@ -351,13 +350,12 @@ namespace Cadenza
         private bool CheckForNextBeat()
         {
             // How many seconds are we into the track?
-            float currentTrackTime = (float)(this.currentTimeDSP - this.trackStartTimeDSP);
+            float currentTrackTime = (float)(this.currentTimeDSP - this.trackStartTimeDSP) - this.offsetTime;
 
-            // How many seconds away the beat are we?
+            // How many seconds away from the beat are we?
             float beatPhase = Mathf.Repeat(currentTrackTime, (float)this.beatInterval);
 
             bool beatBoundaryPassed = currentTrackTime >= this.lastBeatTime + this.beatInterval;
-
             if (beatBoundaryPassed)
             {
                 this.lastBeatTime = currentTrackTime - beatPhase;
@@ -374,7 +372,7 @@ namespace Cadenza
         private bool CheckForNextUpBeat()
         {
             // How many seconds are we into the track?
-            float currentTrackTime = (float)(this.currentTimeDSP - this.trackStartTimeDSP);
+            float currentTrackTime = (float)(this.currentTimeDSP - this.trackStartTimeDSP) + this.offsetTime;
 
             // How many seconds will we be into the track, one upbeat from now?
             float upBeatPosition = (float)(currentTrackTime + this.beatInterval * this.swingPercent);

@@ -68,8 +68,6 @@ namespace Cadenza
         public override void OnBeat()
         {
             // Dump (play) all queued one-shots.
-            Debug.Log($"AudioSystem: Beat received, dumping {this.beatSetOneShot.Count} one-shots");
-
             foreach (var evt in this.beatSetOneShot)
             {
                 evt.instance.setPaused(false);
