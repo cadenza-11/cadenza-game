@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Cadenza
 {
@@ -25,6 +27,14 @@ namespace Cadenza
                 default:
                     break;
             }
+        }
+
+        public void OnGetNextCommand(TextField textField)
+        {
+        }
+
+        public void OnGetPreviousCommand(TextField textField)
+        {
         }
 
         private void OnCommandAudio(string[] args)
