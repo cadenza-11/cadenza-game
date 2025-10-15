@@ -10,83 +10,118 @@ using FMOD.Studio;
 
 namespace Cadenza
 {
+    /// <summary>
+    /// Communicates with the FMOD engine to perform Unity logic synced to an audio track.
+    /// Handles detection of musical beats and estimations of FMOD engine latency.
+    /// </summary>
     public class BeatSystem : ApplicationSystem
     {
         private static BeatSystem singleton;
 
-        #region Public Variables
-        public EventReference globalTrack;
+        #region Inspector Variables
 
-        [Header("DEBUG:")]
-        public bool doDebugSounds = false;
-        public StudioEventEmitter downBeatEvent;
-        public StudioEventEmitter upBeatEvent;
+        [SerializeField] private EventReference globalTrackReference;
 
-        [Header("OPTIONS:")]
-        public float swingPercent = 1 / 2f;
+        [Header("Options")]
+
+        /// <summary>
+        /// How far into the beat an upbeat be defined.
+        /// 50% (.5) means an upbeat should occur exactly at the middle
+        /// of two beats. 66% (.66) means an upbeat should occur 2/3 of
+        /// the way between two beats.
+        /// </summary>
+        [SerializeField, Range(0f, 1f)]
+        private float swingPercent = 1 / 2f;
+
+        [Header("Debug")]
+        [SerializeField] private bool doDebugSounds = false;
+        [SerializeField] private StudioEventEmitter downbeatDebugSound;
+        [SerializeField] private StudioEventEmitter upbeatDebugSound;
 
         #endregion
-
-        #region Private Static Variables
-        private int sampleRate;
-        private double currentSamples = 0;
-
-        private ulong dspClock;
-        private bool pendingTempoChange = false;
-        private double tempoTrackDSPStartTime;
-        private double lastUpBeatTime = -2;
-        #endregion
-
-
         #region Events
+
         public delegate void BeatEventDelegate();
-        public static event BeatEventDelegate OnFixedBeat;
-        public static event BeatEventDelegate OnUpBeat;
+        public static event BeatEventDelegate BeatPlayed;
+        public static event BeatEventDelegate UpBeatPlayed;
 
         public delegate void TempoUpdateDelegate(float beatInterval);
-        public static event TempoUpdateDelegate OnTempoChanged;
+        public static event TempoUpdateDelegate TempoChanged;
 
         public delegate void MarkerListenerDelegate(string markerName);
-        public static event MarkerListenerDelegate OnMarkerPassed;
-        #endregion
-
-        #region Private Static Variables
-        private static double lastFixedBeatTime = -2;
-        private static double lastFixedBeatDSPTime = -2;
-        private static double currentTime = 0f;
-        private static float currentPitch = 1f;
-        private static double beatInterval = 0f;
-        private static double dspDeltaTime = 0f;
-        private static double lastDSPTime = 0f;
-
-        private static bool wasMarkerPassedThisFrame = false;
-        private static int markerTime;
-
-        private static EventInstance musicTrack;
-        public static bool isPlayingMusic = false;
+        public static event MarkerListenerDelegate MarkerPassed;
 
         #endregion
+        #region Private Variables
 
+        /// <summary>
+        /// The constant number of samples-per-second that the system operates at.
+        /// Use this to convert samples to seconds and vice versa.
+        /// </summary>
+        private int sampleRate;
+
+        /// <summary>
+        /// The number of samples that have passed since system start.
+        /// </summary>
+        private ulong currentSamplesDSP;
+
+        /// <summary>
+        /// The number of seconds that have passed since system start.
+        /// </summary>
+        private double currentTimeDSP = 0f;
+
+        /// <summary>
+        /// The last updated timestamp, in seconds.
+        /// </summary>
+        private double previousTimeDSP = 0f;
+
+        /// <summary>
+        /// The DSP time that the current track started at, in seconds
+        /// </summary>
+        private double trackStartTimeDSP;
+
+        /// <summary>
+        /// The track-local timestamp (in seconds) at which the last-played upbeat occurred.
+        /// </summary>
+        private double lastUpBeatTime = -2;
+
+        /// <summary>
+        /// The track-local timestamp (in seconds) at which the last-played beat occurred.
+        /// </summary>
+        private double lastBeatTime = -2;
+
+        /// <summary>
+        /// The DSP-global timestamp (in seconds) at which the last-played beat occurred.
+        /// </summary>
+        private double lastBeatTimeDSP = -2;
+
+        /// <summary>
+        /// The number of seconds should pass between each beat in the current tempo.
+        /// (Equivalent to 60 seconds / BPM)
+        /// </summary>
+        private double beatInterval = 60 / 120f;
+
+        /// <summary>
+        /// The number of seconds that have passed since the last DSP clock update.
+        /// </summary>
+        private double deltaTimeDSP = 0f;
+
+        private bool wasMarkerPassedThisFrame = false;
+        private int markerTime;
+
+        private EventInstance globalTrack;
+
+        #endregion
         #region FMOD Variables
-        private PLAYBACK_STATE lastMusicPlayState;
 
-        [StructLayout(LayoutKind.Sequential)]
-        public class TimelineInfo
-        {
-            public int currentBeat = 0;
-            public int currentBar = 0;
-            public int beatPosition = 0;
-            public float currentTempo = 0;
-            public float lastTempo = 0;
-            public int currentPosition = 0;
-            public int songLengthInMS = 0;
-            public FMOD.StringWrapper lastMarker = new FMOD.StringWrapper();
-        }
-        public TimelineInfo timelineInfo = null;
+        private PLAYBACK_STATE globalPlayState;
+        private PLAYBACK_STATE lastGlobalPlayState;
+        private TimelineInfo timelineInfo = null;
         private GCHandle timelineHandle;
         private EVENT_CALLBACK beatCallback;
-        #endregion
+        private FMOD.ChannelGroup channelGroup;
 
+        #endregion
         #region Application Callbacks
 
         public override void OnInitialize()
@@ -94,20 +129,27 @@ namespace Cadenza
             Debug.Assert(singleton == null);
             singleton = this;
 
-            this.SetMusicTrack(this.globalTrack);
-            this.PlayMusicTrack();
+            this.SetGlobalTrack(this.globalTrackReference);
+            this.PlayGlobalTrack();
+        }
+
+        public override void OnApplicationStop()
+        {
+            this.timelineHandle.Free();
         }
 
         public override void OnUpdate()
         {
-            // Update playback state.
-            PLAYBACK_STATE currentState = this.UpdatePlaybackState();
-            if (currentState != PLAYBACK_STATE.PLAYING)
+            // Check if the track has just started playing from a stopped state.
+            // Also update the current play state.
+            this.CheckForTrackStarted();
+
+            if (this.globalPlayState != PLAYBACK_STATE.PLAYING)
                 return;
 
-            // Update values.
-            musicTrack.getTimelinePosition(out this.timelineInfo.currentPosition);
-            UpdateDSPClock();
+            // Update timing values.
+            this.globalTrack.getTimelinePosition(out this.timelineInfo.currentPosition);
+            this.UpdateDSPClock();
 
             // Check for tempo change. If so, update tempo.
             this.CheckForTempoChange();
@@ -120,261 +162,10 @@ namespace Cadenza
         }
 
         #endregion
-
-        public static void SetPitch(float newPitch)
-        {
-            musicTrack.setPitch(newPitch);
-            currentPitch = newPitch;
-        }
-
-        public static float GetPitch()
-        {
-            return currentPitch;
-        }
-
-        #region Public Static Methods
-
-        public static float GetBeatInterval()
-        {
-            return (float)beatInterval;
-        }
-
-        public static float GetLastFixedBeatDSPTime()
-        {
-            return (float)lastFixedBeatDSPTime;
-        }
-
-        public static float GetCurrentTime()
-        {
-            return (float)currentTime;
-        }
-
-        public static int GetCurrentTimeInMilliseconds()
-        {
-            return singleton.timelineInfo.currentPosition;
-        }
-
-        public static int GetTrackLengthInMilliseconds()
-        {
-            return singleton.timelineInfo.songLengthInMS;
-        }
-
-        public static float GetDSPDeltaTime()
-        {
-            return (float)dspDeltaTime;
-        }
-
-        public static float GetUpBeatPosition()
-        {
-            return (float)beatInterval * singleton.swingPercent;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// "Warms up" the music track by loading its sample data.
-        /// </summary>
-        public void SetMusicTrack(EventReference track)
-        {
-            EventDescription description;
-
-            if (isPlayingMusic)
-            {
-                isPlayingMusic = false;
-
-                musicTrack.getDescription(out description);
-                description.unloadSampleData();
-                musicTrack.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            }
-
-            // Load the track.
-            musicTrack = RuntimeManager.CreateInstance(track);
-            musicTrack.getDescription(out description);
-            description.loadSampleData();
-
-
-            // Setup beat callbacks.
-            singleton.timelineInfo = new TimelineInfo();
-            singleton.beatCallback = new EVENT_CALLBACK(BeatEventCallback);
-            singleton.timelineHandle = GCHandle.Alloc(singleton.timelineInfo, GCHandleType.Pinned);
-            musicTrack.setUserData(GCHandle.ToIntPtr(singleton.timelineHandle));
-            musicTrack.setCallback(singleton.beatCallback, EVENT_CALLBACK_TYPE.TIMELINE_BEAT | EVENT_CALLBACK_TYPE.TIMELINE_MARKER);
-
-            // Store song length.
-            description.getLength(out int length);
-            singleton.timelineInfo.songLengthInMS = length;
-            Debug.Log($"SONG LENGTH = {length}ms");
-
-            // Store sample rate.
-            RuntimeManager.CoreSystem.getSoftwareFormat(out singleton.sampleRate, out _, out _);
-        }
-
-        public void PlayMusicTrack()
-        {
-            if (!musicTrack.isValid())
-            {
-                Debug.LogWarning("BeatManager: Attempted to play an unloaded music track. Try calling SetMusicTrack() first.");
-                return;
-            }
-            musicTrack.start();
-            isPlayingMusic = true;
-        }
-
-        private void SetTrackStartInfo()
-        {
-            lastDSPTime = 0f;
-
-            UpdateDSPClock();
-
-            tempoTrackDSPStartTime = currentTime;
-            lastFixedBeatTime = 0f;
-            lastFixedBeatDSPTime = currentTime;
-        }
-
-        private void UpdateDSPClock()
-        {
-            musicTrack.getChannelGroup(out FMOD.ChannelGroup channelGroup);
-            channelGroup.getDSPClock(out this.dspClock, out _);
-
-            this.currentSamples = this.dspClock;
-            currentTime = this.currentSamples / this.sampleRate;
-            dspDeltaTime = currentTime - lastDSPTime;
-            lastDSPTime = currentTime;
-        }
-
-        private void CheckForTempoChange()
-        {
-            bool shouldSetTempo = timelineInfo.currentTempo != timelineInfo.lastTempo && !pendingTempoChange;
-            if (shouldSetTempo)
-                SetTrackTempo();
-        }
-
-        private void CheckForNextBeat()
-        {
-            float fixedSongPosition = (float)(currentTime - tempoTrackDSPStartTime);
-            float upBeatSongPosition = fixedSongPosition + GetUpBeatPosition();
-
-            // FIXED BEAT
-            if (fixedSongPosition >= lastFixedBeatTime + beatInterval)
-            {
-                float r = Mathf.Repeat(fixedSongPosition, (float)beatInterval);
-
-                DoFixedBeat();
-
-                lastFixedBeatTime = fixedSongPosition - r;
-                lastFixedBeatDSPTime = currentTime - r;
-
-                if (pendingTempoChange)
-                {
-                    SetTrackTempo();
-                    pendingTempoChange = false;
-                }
-            }
-
-            // UP BEAT
-            if (upBeatSongPosition >= lastUpBeatTime + beatInterval)
-            {
-                float r = Mathf.Repeat(upBeatSongPosition, (float)beatInterval);
-                DoUpBeat();
-                lastUpBeatTime = upBeatSongPosition - r;
-            }
-        }
-
-        private void CheckForMarkerHit()
-        {
-            if (!wasMarkerPassedThisFrame)
-                return;
-
-            wasMarkerPassedThisFrame = false;
-
-            if (lastFixedBeatDSPTime < currentTime - (beatInterval / 2f))
-                DoFixedBeat();
-
-            // SetTrackTempo()?
-            musicTrack.getTimelinePosition(out int currentTimelinePos);
-            float offset = (currentTimelinePos - markerTime) / 1000f;
-
-            tempoTrackDSPStartTime = currentTime - offset;
-            lastFixedBeatTime = 0f;
-            lastFixedBeatDSPTime = tempoTrackDSPStartTime;
-            lastUpBeatTime = 0f;
-
-            OnMarkerPassed?.Invoke(timelineInfo.lastMarker);
-        }
-
-        private PLAYBACK_STATE UpdatePlaybackState()
-        {
-            musicTrack.getPlaybackState(out PLAYBACK_STATE musicPlayState);
-
-            if (musicPlayState == PLAYBACK_STATE.PLAYING &&
-                this.lastMusicPlayState != PLAYBACK_STATE.PLAYING)
-                SetTrackStartInfo();
-
-            this.lastMusicPlayState = musicPlayState;
-            return musicPlayState;
-        }
-
-        private void DoFixedBeat()
-        {
-            OnFixedBeat?.Invoke();
-
-            if (doDebugSounds && this.downBeatEvent != null)
-                this.downBeatEvent.Play();
-        }
-
-        private void DoUpBeat()
-        {
-            OnUpBeat?.Invoke();
-
-            if (doDebugSounds && this.upBeatEvent != null)
-                this.upBeatEvent.Play();
-        }
-
-        private void SetSwingPercent(float swingPercent)
-        {
-            this.swingPercent = swingPercent;
-        }
-
-        private void SetTrackTempo()
-        {
-            musicTrack.getTimelinePosition(out int currentTimelinePos);
-
-            float offset = (currentTimelinePos - timelineInfo.beatPosition) / 1000f; // divided into seconds
-            tempoTrackDSPStartTime = currentTime - offset;
-            lastFixedBeatTime = 0f;
-            lastFixedBeatDSPTime = tempoTrackDSPStartTime;
-            lastUpBeatTime = 0f;
-            timelineInfo.lastTempo = timelineInfo.currentTempo;
-            beatInterval = 60f / timelineInfo.currentTempo;
-
-            OnTempoChanged?.Invoke((float)beatInterval);
-        }
-
-        /// <summary>
-        /// Detect if a marker has a special name that should perform some function
-        /// (e.g. "swing=value").
-        /// </summary>
-        /// <param name="markerName">The name of the marker as defined in FMOD.</param>
-        private void CheckHitSpecialMarker(string markerName)
-        {
-            string[] tokens = markerName.ToLower().Split('=', StringSplitOptions.RemoveEmptyEntries);
-
-            if (tokens.Length != 2)
-                return;
-
-            string specifier = tokens[0].Trim();
-            float.TryParse(tokens[1].Trim(), NumberStyles.Any, CultureInfo.InvariantCulture, out float value);
-
-            switch (specifier)
-            {
-                case "swing":
-                    this.SetSwingPercent(value);
-                    break;
-            }
-        }
+        #region Callback Methods
 
         [AOT.MonoPInvokeCallback(typeof(EVENT_CALLBACK))]
-        static FMOD.RESULT BeatEventCallback(EVENT_CALLBACK_TYPE type, IntPtr instancePtr, IntPtr parameterPtr)
+        private static FMOD.RESULT BeatEventCallback(EVENT_CALLBACK_TYPE type, IntPtr instancePtr, IntPtr parameterPtr)
         {
             // Retrieve the user data
             EventInstance instance = new(instancePtr);
@@ -403,14 +194,264 @@ namespace Cadenza
             else if (type == EVENT_CALLBACK_TYPE.TIMELINE_MARKER)
             {
                 var parameter = (TIMELINE_MARKER_PROPERTIES)Marshal.PtrToStructure(parameterPtr, typeof(TIMELINE_MARKER_PROPERTIES));
-                timelineInfo.lastMarker = parameter.name;
-                markerTime = parameter.position;
+                timelineInfo.lastMarkerName = parameter.name;
+                singleton.markerTime = parameter.position;
                 singleton.CheckHitSpecialMarker(parameter.name);
 
-                wasMarkerPassedThisFrame = true;
+                singleton.wasMarkerPassedThisFrame = true;
             }
 
             return FMOD.RESULT.OK;
         }
+
+        private void OnTrackStarted()
+        {
+            // Reset DSP time.
+            this.previousTimeDSP = 0f;
+            this.UpdateDSPClock();
+
+            this.trackStartTimeDSP = this.currentTimeDSP;
+            this.lastBeatTimeDSP = this.currentTimeDSP;
+            this.lastBeatTime = 0f;
+            this.lastUpBeatTime = 0f;
+        }
+
+        private void OnFixedBeat()
+        {
+            // Debug.Log($"Calculated time of beat: {this.lastBeatTime}sec \nFMOD time of beat: {this.timelineInfo.beatPosition / 1000f}sec \nDiff: {(float)this.lastBeatTime - (this.timelineInfo.beatPosition / 1000f)}");
+
+            // Notify systems.
+            ApplicationController.PlayBeat();
+            BeatPlayed?.Invoke();
+
+            // Play debug sound.
+            if (this.doDebugSounds && this.downbeatDebugSound != null)
+                this.downbeatDebugSound.Play();
+        }
+
+        private void OnUpBeat()
+        {
+            // Notify systems.
+            UpBeatPlayed?.Invoke();
+
+            // Play debug sound.
+            if (this.doDebugSounds && this.upbeatDebugSound != null)
+                this.upbeatDebugSound.Play();
+        }
+
+        #endregion
+        #region Private Methods
+
+        /// <summary>
+        /// "Warms up" the global track by loading its sample data.
+        /// Stops any currently-playing track and unloads its sample data.
+        /// </summary>
+        private void SetGlobalTrack(EventReference track)
+        {
+            EventDescription description;
+
+            // Stop any existing track.
+            if (this.globalPlayState == PLAYBACK_STATE.PLAYING)
+            {
+                this.globalTrack.getDescription(out description);
+                description.unloadSampleData();
+                this.globalTrack.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            }
+
+            // Load the track.
+            this.globalTrack = RuntimeManager.CreateInstance(track);
+            this.globalTrack.getDescription(out description);
+            description.loadSampleData();
+
+            // Setup beat callbacks.
+            this.timelineInfo = new TimelineInfo();
+            this.beatCallback = new EVENT_CALLBACK(BeatEventCallback);
+            this.timelineHandle = GCHandle.Alloc(this.timelineInfo, GCHandleType.Pinned);
+            this.globalTrack.setUserData(GCHandle.ToIntPtr(this.timelineHandle));
+            this.globalTrack.setCallback(this.beatCallback, EVENT_CALLBACK_TYPE.TIMELINE_BEAT | EVENT_CALLBACK_TYPE.TIMELINE_MARKER);
+
+            // Store song length.
+            description.getLength(out this.timelineInfo.trackLength);
+
+            // Store sample rate.
+            RuntimeManager.CoreSystem.getSoftwareFormat(out this.sampleRate, out _, out _);
+        }
+
+        /// <summary>
+        /// Plays the global track. Must be preceded by a call to <see cref="SetGlobalTrack"/>
+        /// </summary>
+        private void PlayGlobalTrack()
+        {
+            if (!this.globalTrack.isValid())
+            {
+                Debug.LogWarning("BeatManager: Attempted to play an unloaded global track. Try calling SetGlobalTrack() first.");
+                return;
+            }
+            this.globalTrack.start();
+        }
+
+        private void UpdateDSPClock()
+        {
+            // Get the current number of samples.
+            this.globalTrack.getChannelGroup(out this.channelGroup);
+            this.channelGroup.getDSPClock(out this.currentSamplesDSP, out _);
+
+            // Calculate the current DSP time in seconds.
+            this.previousTimeDSP = this.currentTimeDSP;
+            this.currentTimeDSP = (double)this.currentSamplesDSP / this.sampleRate;
+
+            this.deltaTimeDSP = this.currentTimeDSP - this.previousTimeDSP;
+        }
+
+        /// <summary>
+        /// Detects if the FMOD track tempo changed this frame, and adjusts DSP accordingly.
+        /// </summary>
+        private bool CheckForTempoChange()
+        {
+            bool shouldSetTempo = this.timelineInfo.currentTempo != this.timelineInfo.previousTempo;
+            if (shouldSetTempo)
+                this.SetTrackTempo();
+
+            return shouldSetTempo;
+        }
+
+        /// <summary>
+        /// Detects if a beat boundary has been passed this frame.
+        /// </summary>
+        private bool CheckForNextBeat()
+        {
+            // How many seconds are we into the track?
+            float currentTrackTime = (float)(this.currentTimeDSP - this.trackStartTimeDSP);
+
+            // How many seconds away the beat are we?
+            float beatPhase = Mathf.Repeat(currentTrackTime, (float)this.beatInterval);
+
+            bool beatBoundaryPassed = currentTrackTime >= this.lastBeatTime + this.beatInterval;
+
+            if (beatBoundaryPassed)
+            {
+                this.lastBeatTime = currentTrackTime - beatPhase;
+                this.lastBeatTimeDSP = this.currentTimeDSP - beatPhase;
+                this.OnFixedBeat();
+            }
+
+            return beatBoundaryPassed;
+        }
+
+        /// <summary>
+        /// Detects if an up-beat boundary has been passed this frame.
+        /// </summary>
+        private bool CheckForNextUpBeat()
+        {
+            // How many seconds are we into the track?
+            float currentTrackTime = (float)(this.currentTimeDSP - this.trackStartTimeDSP);
+
+            // How many seconds will we be into the track, one upbeat from now?
+            float upBeatPosition = (float)(currentTrackTime + this.beatInterval * this.swingPercent);
+
+            // How many seconds away from the upbeat are we?
+            float upbeatPhase = Mathf.Repeat(currentTrackTime, (float)this.beatInterval);
+
+            bool upbeatBoundaryPassed = upBeatPosition >= this.lastUpBeatTime + this.beatInterval;
+            if (upbeatBoundaryPassed)
+            {
+                this.lastUpBeatTime = upBeatPosition - upbeatPhase;
+                this.OnUpBeat();
+            }
+
+            return upbeatBoundaryPassed;
+        }
+
+        /// <summary>
+        /// Detects if an FMOD timeline marker has been passed this frame.
+        /// </summary>
+        private bool CheckForMarkerHit()
+        {
+            if (!this.wasMarkerPassedThisFrame)
+                return false;
+
+            this.wasMarkerPassedThisFrame = false;
+
+            // If the last beat is more than a half-beat old,
+            if (this.lastBeatTimeDSP < this.currentTimeDSP - (this.beatInterval / 2f))
+                this.OnFixedBeat();
+
+            this.globalTrack.getTimelinePosition(out int currentTimelinePos);
+            float offset = (currentTimelinePos - this.markerTime) / 1000f;
+
+            this.trackStartTimeDSP = this.currentTimeDSP - offset;
+            this.lastBeatTime = 0f;
+            this.lastBeatTimeDSP = this.trackStartTimeDSP;
+            this.lastUpBeatTime = 0f;
+
+            MarkerPassed?.Invoke(this.timelineInfo.lastMarkerName);
+            return true;
+        }
+
+        /// <summary>
+        /// Detects if the track has changed from a "not-playing" to a "playing" state this frame.
+        /// Also updates the play state.
+        /// </summary>
+        private bool CheckForTrackStarted()
+        {
+            this.globalTrack.getPlaybackState(out this.globalPlayState);
+
+            bool trackStartedThisFrame =
+                this.globalPlayState == PLAYBACK_STATE.PLAYING &&
+                this.lastGlobalPlayState != PLAYBACK_STATE.PLAYING;
+
+            if (trackStartedThisFrame)
+                this.OnTrackStarted();
+
+            this.lastGlobalPlayState = this.globalPlayState;
+            return trackStartedThisFrame;
+        }
+
+        private void SetTrackTempo()
+        {
+            this.globalTrack.getTimelinePosition(out int currentTimelinePos);
+
+            float offset = (currentTimelinePos - this.timelineInfo.beatPosition) / 1000f;
+
+            this.trackStartTimeDSP = this.currentTimeDSP - offset;
+            this.lastBeatTime = 0f;
+            this.lastBeatTimeDSP = this.trackStartTimeDSP;
+            this.lastUpBeatTime = 0f;
+
+            this.timelineInfo.previousTempo = this.timelineInfo.currentTempo;
+            this.beatInterval = 60f / this.timelineInfo.currentTempo;
+
+            TempoChanged?.Invoke((float)this.beatInterval);
+        }
+
+        /// <summary>
+        /// Detects if a marker has a special name that should perform some function
+        /// (e.g. "swing=value").
+        /// </summary>
+        /// <param name="markerName">The name of the marker as defined in FMOD.</param>
+        private void CheckHitSpecialMarker(string markerName)
+        {
+            string[] tokens = markerName.ToLower().Split('=', StringSplitOptions.RemoveEmptyEntries);
+
+            if (tokens.Length != 2)
+                return;
+
+            string specifier = tokens[0].Trim();
+            float.TryParse(tokens[1].Trim(), NumberStyles.Any, CultureInfo.InvariantCulture, out float value);
+
+            switch (specifier)
+            {
+                case "swing":
+                    this.SetSwingPercent(value);
+                    break;
+            }
+        }
+
+        private void SetSwingPercent(float swingPercent)
+        {
+            this.swingPercent = swingPercent;
+        }
+
+        #endregion
     }
 }
