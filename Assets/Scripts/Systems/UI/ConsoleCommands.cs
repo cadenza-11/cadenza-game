@@ -19,7 +19,22 @@ namespace Cadenza
                 case "level":
                     this.OnCommandLevel(args);
                     break;
+                case "audio":
+                    this.OnCommandAudio(args);
+                    break;
                 default:
+                    break;
+            }
+        }
+
+        private void OnCommandAudio(string[] args)
+        {
+            switch (args[0])
+            {
+                case "offset":
+                    if (int.TryParse(args[1], out int offsetMs))
+                        BeatSystem.SetDSPOffset(offsetMs);
+                    Debug.Log($"Setting DSP offset to {offsetMs}ms.");
                     break;
             }
         }

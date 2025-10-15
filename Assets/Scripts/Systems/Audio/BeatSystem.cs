@@ -106,6 +106,12 @@ namespace Cadenza
         /// </summary>
         private double deltaTimeDSP = 0f;
 
+        /// <summary>
+        /// A user-defined amount of time (in seconds) to offset the expected DSP time
+        /// defined in <see cref="currentTimeDSP"/>.
+        /// </summary>
+        private float offsetTimeDSP = 0f;
+
         private bool wasMarkerPassedThisFrame = false;
         private int markerTime;
 
@@ -159,6 +165,20 @@ namespace Cadenza
 
             // Check if the next beat passed. If so, trigger a beat.
             this.CheckForNextBeat();
+        }
+
+        #endregion
+        #region Public Static Methods
+
+        /// <summary>
+        /// Shifts the beat system's estimated DSP time forwards or backwards a certain interval.
+        /// A positive offset will shift the estimated beat to be later than expected.
+        /// A negative offset will shift the estimated beat to be earlier than expected.
+        /// </summary>
+        /// <param name="offset">How much time (in milliseconds) to shift the time estimation.</param>
+        public static void SetDSPOffset(int offsetMs)
+        {
+            singleton.offsetTimeDSP = offsetMs / 1000f;
         }
 
         #endregion
@@ -299,6 +319,7 @@ namespace Cadenza
             // Calculate the current DSP time in seconds.
             this.previousTimeDSP = this.currentTimeDSP;
             this.currentTimeDSP = (double)this.currentSamplesDSP / this.sampleRate;
+            this.currentTimeDSP += this.offsetTimeDSP;
 
             this.deltaTimeDSP = this.currentTimeDSP - this.previousTimeDSP;
         }
