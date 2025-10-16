@@ -15,7 +15,7 @@ namespace Cadenza
 
         [SerializeField] private UIDocument uiDocument;
 
-        private TemplateContainer root;
+        private VisualElement root;
         private ListView listView;
         private List<DebugLine> logs;
         private TextField textField;
@@ -24,7 +24,7 @@ namespace Cadenza
         public override void OnInitialize()
         {
             // Set up UI.
-            this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
+            this.root = this.uiDocument.rootVisualElement.Q("root");
 
             // Show Unity logs in console.
             this.listView = this.root.Q<ListView>();
@@ -42,22 +42,7 @@ namespace Cadenza
             // Trigger command via text field.
             this.commandParser = new();
             this.textField = this.root.Q<TextField>();
-            this.textField.RegisterCallback<KeyDownEvent>(evt =>
-            {
-                if (evt.keyCode == KeyCode.Return)
-                {
-                    this.commandParser.OnCommand(this.textField.text);
-                    this.textField.value = string.Empty;
-                }
-                else if (evt.keyCode == KeyCode.UpArrow)
-                {
-                    this.commandParser.OnGetPreviousCommand(this.textField);
-                }
-                else if (evt.keyCode == KeyCode.DownArrow)
-                {
-                    this.commandParser.OnGetNextCommand(this.textField);
-                }
-            }, TrickleDown.TrickleDown);
+            this.textField.RegisterCallback<KeyDownEvent>(this.OnKeyDown, TrickleDown.TrickleDown);
 
             // Override logger.
             Application.logMessageReceived += this.OnLogMessageReceived;
@@ -69,17 +54,36 @@ namespace Cadenza
             Application.logMessageReceived -= this.OnLogMessageReceived;
         }
 
-        private void ToggleVisibility()
+        public void ToggleVisibility()
         {
             if (this.root.style.display == DisplayStyle.Flex)
             {
                 this.root.style.display = DisplayStyle.None;
-                InputSystem.PlayerInputMap.Enable();
+                // InputSystem.PlayerInputMap.Enable();
             }
-            else if (this.root.style.display == DisplayStyle.None)
+            else
             {
                 this.root.style.display = DisplayStyle.Flex;
-                InputSystem.PlayerInputMap.Enable();
+                // InputSystem.PlayerInputMap.Disable();
+            }
+        }
+
+        private void OnKeyDown(KeyDownEvent evt)
+        {
+            evt.StopImmediatePropagation();
+
+            if (evt.keyCode == KeyCode.Return)
+            {
+                this.commandParser.OnCommand(this.textField.text);
+                this.textField.value = string.Empty;
+            }
+            else if (evt.keyCode == KeyCode.UpArrow)
+            {
+                this.commandParser.OnGetPreviousCommand(this.textField);
+            }
+            else if (evt.keyCode == KeyCode.DownArrow)
+            {
+                this.commandParser.OnGetNextCommand(this.textField);
             }
         }
 

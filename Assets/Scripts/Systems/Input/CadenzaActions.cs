@@ -469,6 +469,15 @@ namespace Cadenza
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Point"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""1a4d4158-e8d6-4668-876c-ef256f89e7ce"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -845,6 +854,17 @@ namespace Cadenza
                     ""action"": ""Toggle/Debug"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7a1a5ac8-6009-4157-a458-286d74fd260e"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -930,6 +950,7 @@ namespace Cadenza
             m_UI_MiddleClick = m_UI.FindAction("MiddleClick", throwIfNotFound: true);
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_ToggleDebug = m_UI.FindAction("Toggle/Debug", throwIfNotFound: true);
+            m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
         }
 
         ~@CadenzaActions()
@@ -1170,6 +1191,7 @@ namespace Cadenza
         private readonly InputAction m_UI_MiddleClick;
         private readonly InputAction m_UI_ScrollWheel;
         private readonly InputAction m_UI_ToggleDebug;
+        private readonly InputAction m_UI_Point;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
         /// </summary>
@@ -1213,6 +1235,10 @@ namespace Cadenza
             /// Provides access to the underlying input action "UI/ToggleDebug".
             /// </summary>
             public InputAction @ToggleDebug => m_Wrapper.m_UI_ToggleDebug;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/Point".
+            /// </summary>
+            public InputAction @Point => m_Wrapper.m_UI_Point;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1263,6 +1289,9 @@ namespace Cadenza
                 @ToggleDebug.started += instance.OnToggleDebug;
                 @ToggleDebug.performed += instance.OnToggleDebug;
                 @ToggleDebug.canceled += instance.OnToggleDebug;
+                @Point.started += instance.OnPoint;
+                @Point.performed += instance.OnPoint;
+                @Point.canceled += instance.OnPoint;
             }
 
             /// <summary>
@@ -1298,6 +1327,9 @@ namespace Cadenza
                 @ToggleDebug.started -= instance.OnToggleDebug;
                 @ToggleDebug.performed -= instance.OnToggleDebug;
                 @ToggleDebug.canceled -= instance.OnToggleDebug;
+                @Point.started -= instance.OnPoint;
+                @Point.performed -= instance.OnPoint;
+                @Point.canceled -= instance.OnPoint;
             }
 
             /// <summary>
@@ -1509,6 +1541,13 @@ namespace Cadenza
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnToggleDebug(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Point" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnPoint(InputAction.CallbackContext context);
         }
     }
 }

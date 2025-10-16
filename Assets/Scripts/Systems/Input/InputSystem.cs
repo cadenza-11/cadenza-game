@@ -24,14 +24,14 @@ namespace Cadenza
 
             this.inputActions = new CadenzaActions();
 
-            this.uiInputMap = inputActions.UI;
-            // this.uiInputMap.AddCallbacks(this);
+            this.uiInputMap = this.inputActions.UI;
+            this.uiInputMap.AddCallbacks(this);
 
-            this.playerInputMap = inputActions.Player;
+            this.playerInputMap = this.inputActions.Player;
             this.playerInputMap.AddCallbacks(this);
 
-            // this.uiInputMap.Enable();
-            this.playerInputMap.Enable();
+            this.uiInputMap.Enable();
+            this.playerInputMap.Disable();
         }
 
         public override void OnApplicationStop()
@@ -114,47 +114,38 @@ namespace Cadenza
 
         public void OnNavigate(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnSubmit(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnCancel(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnPoint(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnClick(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnRightClick(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnMiddleClick(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnScrollWheel(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnToggleDebug(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
         }
 
         #endregion

@@ -7,11 +7,21 @@ namespace Cadenza
 {
     public class ConsoleCommands
     {
+        private LinkedList<string> commandHistory = new();
+        private LinkedListNode<string> curr;
+
         public void OnCommand(string text)
         {
             if (text == null || text == string.Empty)
                 return;
 
+            // Add command to history.
+            if (this.commandHistory.First == null || this.commandHistory.First.Value != text)
+                this.commandHistory.AddFirst(text);
+
+            this.curr = null;
+
+            // Parse the command.
             string[] tokens = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             string command = tokens[0];
             string[] args = tokens.Length <= 1 ? Array.Empty<string>() : tokens[1..];
@@ -31,10 +41,32 @@ namespace Cadenza
 
         public void OnGetNextCommand(TextField textField)
         {
+            if (this.curr == null)
+            {
+                textField.value = string.Empty;
+                return;
+            }
+
+            if (this.curr.Previous != null)
+            {
+                this.curr = this.curr.Previous;
+                textField.value = this.curr.Value;
+            }
+            else
+            {
+                this.curr = null;
+                textField.value = string.Empty;
+            }
         }
 
         public void OnGetPreviousCommand(TextField textField)
         {
+            if (this.curr == null)
+                this.curr = this.commandHistory.First;
+            else if (this.curr.Next != null)
+                this.curr = this.curr.Next;
+
+            textField.value = this.curr?.Value ?? string.Empty;
         }
 
         private void OnCommandAudio(string[] args)

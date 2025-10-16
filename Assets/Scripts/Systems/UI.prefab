@@ -101,12 +101,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77fc7eb709455b6449109b6a5c0fb989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterSelect
-  InputUI:
-    m_Name: Input UI
-    m_Id: 8bd1fb95-9027-4579-a9c5-caff7470bd0a
-    m_Asset: {fileID: 0}
-    m_Actions: []
-    m_Bindings: []
   uiDocument: {fileID: 6410242120360780059}
 --- !u!1 &8024687789544267347
 GameObject:
@@ -153,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: efcdb72d311434ed7b918c7b0163b094, type: 2}
+  m_PanelSettings: {fileID: 11400000, guid: a9efd3a193903934489f7229d03c2959, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 96ebc76b6e06a4103934cb19c3e8c158, type: 3}
   m_SortingOrder: 0
