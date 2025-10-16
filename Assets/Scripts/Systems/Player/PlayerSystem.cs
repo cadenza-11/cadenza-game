@@ -35,7 +35,7 @@ namespace Cadenza
         public static void OnAttackLight(int id)
         {
             PlayerInput player = GetPlayerByID(id);
-            // AudioSystem.PlayOneShot(AudioSystem.PlayerOneShotsEvent);
+            BeatSystem.GetAccuracy(BeatSystem.CurrentTime);
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 2);
         }
 

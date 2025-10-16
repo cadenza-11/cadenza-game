@@ -46,6 +46,15 @@ namespace Cadenza
             {
                 return this.reference.Guid.GetHashCode();
             }
+
+            public void PlayOneShot()
+            {
+                if (this.instance.isValid())
+                {
+                    this.instance.setPaused(false);
+                    this.instance.release();
+                }
+            }
         }
 
         [SerializeField] private EventReference globalBeatEvent;
@@ -69,10 +78,7 @@ namespace Cadenza
         {
             // Dump (play) all queued one-shots.
             foreach (var evt in this.beatSetOneShot)
-            {
-                evt.instance.setPaused(false);
-                evt.instance.release();
-            }
+                evt.PlayOneShot();
             this.beatSetOneShot.Clear();
         }
 
@@ -91,15 +97,25 @@ namespace Cadenza
             Debug.Log("Loaded all banks from FMOD.");
         }
 
-        public static void PlayOneShot(EventReference sound)
+        public static void PlayOneShot(EventReference sound, bool immediate = false)
         {
-            singleton.beatSetOneShot.Add(new AudioEvent(sound));
+            var evt = new AudioEvent(sound);
+
+            if (immediate)
+                evt.PlayOneShot();
+            else
+                singleton.beatSetOneShot.Add(evt);
+
         }
 
-        public static void PlayOneShotWithParameter(EventReference sound, string parameterName, float value)
+        public static void PlayOneShotWithParameter(EventReference sound, string parameterName, float value, bool immediate = false)
         {
             var evt = new AudioEvent(sound, parameters: (parameterName, value));
-            singleton.beatSetOneShot.Add(evt);
+
+            if (immediate)
+                evt.PlayOneShot();
+            else
+                singleton.beatSetOneShot.Add(evt);
         }
     }
 }

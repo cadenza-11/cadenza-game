@@ -44,7 +44,7 @@ namespace Cadenza
                 case "offset":
                     if (int.TryParse(args[1], out int offsetMs))
                     {
-                        BeatSystem.SetDSPOffset(offsetMs);
+                        BeatSystem.SetOffset(offsetMs);
                         Debug.Log($"Setting DSP offset to {offsetMs}ms.");
                     }
                     break;
