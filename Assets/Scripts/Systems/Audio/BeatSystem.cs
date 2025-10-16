@@ -7,8 +7,6 @@ using System.Runtime.InteropServices;
 using FMODUnity;
 using System.Globalization;
 using FMOD.Studio;
-using UnityEngine.UI;
-using TMPro;
 
 namespace Cadenza
 {
@@ -39,8 +37,6 @@ namespace Cadenza
         [SerializeField] private bool doDebugSounds = false;
         [SerializeField] private StudioEventEmitter downbeatDebugSound;
         [SerializeField] private StudioEventEmitter upbeatDebugSound;
-        [SerializeField] private Slider playerPhaseSlider;
-        [SerializeField] private TMP_Text accuracyText;
 
         #endregion
         #region Events
@@ -49,7 +45,7 @@ namespace Cadenza
         public static event BeatEventDelegate BeatPlayed;
         public static event BeatEventDelegate UpBeatPlayed;
 
-        public delegate void TempoUpdateDelegate(float beatInterval);
+        public delegate void TempoUpdateDelegate(float bpm);
         public static event TempoUpdateDelegate TempoChanged;
 
         public delegate void MarkerListenerDelegate(string markerName);
@@ -64,6 +60,11 @@ namespace Cadenza
             set => singleton.doDebugSounds = value;
         }
 
+        /// <summary>
+        /// The number of seconds that have passed since system start.
+        /// </summary>
+        public static double CurrentTime => singleton.elapsedTimeDSP;
+
         #endregion
         #region Private Variables
 
@@ -76,12 +77,12 @@ namespace Cadenza
         /// <summary>
         /// The number of samples that have passed since system start.
         /// </summary>
-        private ulong currentSamplesDSP;
+        private ulong elapsedSamplesDSP;
 
         /// <summary>
         /// The number of seconds that have passed since system start.
         /// </summary>
-        private double currentTimeDSP = 0f;
+        private double elapsedTimeDSP = 0f;
 
         /// <summary>
         /// The last updated timestamp, in seconds.
@@ -96,23 +97,23 @@ namespace Cadenza
         /// <summary>
         /// The track-local timestamp (in seconds) at which the last-played upbeat occurred.
         /// </summary>
-        private double lastUpBeatTime = -2;
+        private double previousUpBeatTime = -2;
 
         /// <summary>
         /// The track-local timestamp (in seconds) at which the last-played beat occurred.
         /// </summary>
-        private double lastBeatTime = -2;
+        private double previousBeatTime = -2;
 
         /// <summary>
         /// The DSP-global timestamp (in seconds) at which the last-played beat occurred.
         /// </summary>
-        private double lastBeatTimeDSP = -2;
+        private double previousBeatTimeDSP = -2;
 
         /// <summary>
         /// The number of seconds that pass between each beat in the current tempo.
         /// (Equivalent to 60 seconds / BPM)
         /// </summary>
-        private double beatInterval = 0f;
+        private double beatPeriod = 0f;
 
         /// <summary>
         /// The number of seconds that have passed since the last DSP clock update.
@@ -184,45 +185,33 @@ namespace Cadenza
         #region Public Static Methods
 
         /// <summary>
-        /// Shifts the beat system's estimated DSP time forwards or backwards a certain interval.
+        /// Shifts the beat system's estimated time forwards or backwards a certain interval.
         /// A positive offset will shift the estimated beat to be later than expected.
         /// A negative offset will shift the estimated beat to be earlier than expected.
         /// </summary>
         /// <param name="offset">How much time (in milliseconds) to shift the time estimation.</param>
-        public static void SetDSPOffset(int offsetMs)
+        public static void SetOffset(int offsetMs)
         {
-            float offset = Mathf.Repeat(offsetMs / 1000f, (float)singleton.beatInterval);
+            float offset = Mathf.Repeat(offsetMs / 1000f, (float)singleton.beatPeriod);
             singleton.offsetTime = offset;
         }
 
-
-        public static float GetAccuracy()
+        /// <summary>
+        /// Calculates a measure between -1 to 1 of how on-beat the timestamp is compared to the current time.
+        /// An absolute value closer to 1 is more on-beat, while closer to 0 is more off-beat.
+        /// A positive value means the timestamp was "late" compared to the beat,
+        /// while a negative value means it was "early" compared to beat.
+        /// </summary>
+        public static float GetAccuracy(double timestamp)
         {
-            // singleton.UpdateDSPClock();
+            singleton.UpdateDSPClock();
 
-            // How many seconds are we into the track?
-            float currentTrackTime = (float)(singleton.currentTimeDSP - singleton.trackStartTimeDSP) - singleton.offsetTime;
+            float elapsedTrackTime = (float)(timestamp - singleton.trackStartTimeDSP) - singleton.offsetTime;
+            float beatPeriod = (float)singleton.beatPeriod;
+            float beatPhase = Mathf.Repeat(elapsedTrackTime, beatPeriod);
+            float normalizedPhase = beatPhase / beatPeriod;
 
-            // How many seconds away from the beat are we?
-            float beatInterval = (float)singleton.beatInterval;
-            float beatPhase = Mathf.Repeat(currentTrackTime, beatInterval);
-
-            // How far are we from the beat, as a fraction?
-            // (0 = exactly on beat, 1/2 = exactly off beat, 1 = exactly on next beat)
-            float swingPercentage = beatPhase / beatInterval;
-
-            // Map percentage -> accuracy:
-            // On beat:     0 -> 1
-            // Late:        (0, 0.5) -> (1, 0)
-            // Off beat:    0.5 -> 0
-            // Early:       (0.5, 1) -> (0, -1)
-            // On next beat: 1 -> -1
-            float accuracy = 1 - (2 * swingPercentage);
-            singleton.playerPhaseSlider.value = Math.Abs(accuracy);
-            singleton.accuracyText.text = accuracy < 0 ? "Early" : "Late";
-
-            Debug.Log($"Track time: {currentTrackTime} / Phase: {beatPhase:F2}/{beatInterval} / Swing: {swingPercentage:P0} / accuracy: {accuracy:P0}");
-
+            float accuracy = 1 - (2 * normalizedPhase);
             return accuracy;
         }
 
@@ -274,17 +263,11 @@ namespace Cadenza
             // Reset DSP time.
             this.previousTimeDSP = 0f;
             this.UpdateDSPClock();
-
-            this.trackStartTimeDSP = this.currentTimeDSP;
-            this.lastBeatTimeDSP = this.currentTimeDSP;
-            this.lastBeatTime = 0f;
-            this.lastUpBeatTime = 0f;
+            this.SetTrackStart(offset: 0);
         }
 
         private void OnFixedBeat()
         {
-            // Debug.Log($"Calculated time of beat: {this.lastBeatTime}sec \nFMOD time of beat: {this.timelineInfo.beatPosition / 1000f}sec \nDiff: {(float)this.lastBeatTime - (this.timelineInfo.beatPosition / 1000f)}");
-
             // Notify systems.
             ApplicationController.PlayBeat();
             BeatPlayed?.Invoke();
@@ -359,12 +342,12 @@ namespace Cadenza
         {
             // Get the current number of samples.
             this.globalTrack.getChannelGroup(out this.channelGroup);
-            this.channelGroup.getDSPClock(out this.currentSamplesDSP, out _);
+            this.channelGroup.getDSPClock(out this.elapsedSamplesDSP, out _);
 
             // Calculate the current DSP time in seconds.
-            this.previousTimeDSP = this.currentTimeDSP;
-            this.currentTimeDSP = (double)this.currentSamplesDSP / this.sampleRate;
-            this.deltaTimeDSP = this.currentTimeDSP - this.previousTimeDSP;
+            this.previousTimeDSP = this.elapsedTimeDSP;
+            this.elapsedTimeDSP = (double)this.elapsedSamplesDSP / this.sampleRate;
+            this.deltaTimeDSP = this.elapsedTimeDSP - this.previousTimeDSP;
         }
 
         /// <summary>
@@ -384,17 +367,14 @@ namespace Cadenza
         /// </summary>
         private bool CheckForNextBeat()
         {
-            // How many seconds are we into the track?
-            float currentTrackTime = (float)(this.currentTimeDSP - this.trackStartTimeDSP) - this.offsetTime;
+            float elapsedTrackTime = (float)(this.elapsedTimeDSP - this.trackStartTimeDSP) - this.offsetTime;
+            float beatPeriod = Mathf.Repeat(elapsedTrackTime, (float)this.beatPeriod);
 
-            // How many seconds away from the beat are we?
-            float beatPhase = Mathf.Repeat(currentTrackTime, (float)this.beatInterval);
-
-            bool beatBoundaryPassed = currentTrackTime >= this.lastBeatTime + this.beatInterval;
+            bool beatBoundaryPassed = elapsedTrackTime >= this.previousBeatTime + this.beatPeriod;
             if (beatBoundaryPassed)
             {
-                this.lastBeatTime = currentTrackTime - beatPhase;
-                this.lastBeatTimeDSP = this.currentTimeDSP - beatPhase;
+                this.previousBeatTime = elapsedTrackTime - beatPeriod;
+                this.previousBeatTimeDSP = this.elapsedTimeDSP - beatPeriod;
                 this.OnFixedBeat();
             }
 
@@ -406,19 +386,14 @@ namespace Cadenza
         /// </summary>
         private bool CheckForNextUpBeat()
         {
-            // How many seconds are we into the track?
-            float currentTrackTime = (float)(this.currentTimeDSP - this.trackStartTimeDSP) - this.offsetTime;
+            float elapsedTrackTime = (float)(this.elapsedTimeDSP - this.trackStartTimeDSP) - this.offsetTime;
+            float estimatedUpbeatTime = (float)(elapsedTrackTime + this.beatPeriod * this.swingPercent);
+            float beatPeriod = Mathf.Repeat(elapsedTrackTime, (float)this.beatPeriod);
 
-            // How many seconds will we be into the track, one upbeat from now?
-            float upBeatPosition = (float)(currentTrackTime + this.beatInterval * this.swingPercent);
-
-            // How many seconds away from the upbeat are we?
-            float upbeatPhase = Mathf.Repeat(currentTrackTime, (float)this.beatInterval);
-
-            bool upbeatBoundaryPassed = upBeatPosition >= this.lastUpBeatTime + this.beatInterval;
+            bool upbeatBoundaryPassed = estimatedUpbeatTime >= this.previousUpBeatTime + this.beatPeriod;
             if (upbeatBoundaryPassed)
             {
-                this.lastUpBeatTime = upBeatPosition - upbeatPhase;
+                this.previousUpBeatTime = estimatedUpbeatTime - beatPeriod;
                 this.OnUpBeat();
             }
 
@@ -435,17 +410,13 @@ namespace Cadenza
 
             this.wasMarkerPassedThisFrame = false;
 
-            // If the last beat is more than a half-beat old,
-            if (this.lastBeatTimeDSP < this.currentTimeDSP - (this.beatInterval / 2f))
+            // If the last beat is more than a half-beat old, go to the next beat.
+            if (this.previousBeatTimeDSP < this.elapsedTimeDSP - (this.beatPeriod / 2f))
                 this.OnFixedBeat();
 
             this.globalTrack.getTimelinePosition(out int currentTimelinePos);
             float offset = (currentTimelinePos - this.markerTime) / 1000f;
-
-            this.trackStartTimeDSP = this.currentTimeDSP - offset;
-            this.lastBeatTime = 0f;
-            this.lastBeatTimeDSP = this.trackStartTimeDSP;
-            this.lastUpBeatTime = 0f;
+            this.SetTrackStart(offset);
 
             MarkerPassed?.Invoke(this.timelineInfo.lastMarkerName);
             return true;
@@ -475,16 +446,25 @@ namespace Cadenza
             this.globalTrack.getTimelinePosition(out int currentTimelinePos);
 
             float offset = (currentTimelinePos - this.timelineInfo.beatPosition) / 1000f;
-
-            this.trackStartTimeDSP = this.currentTimeDSP - offset;
-            this.lastBeatTime = 0f;
-            this.lastBeatTimeDSP = this.trackStartTimeDSP;
-            this.lastUpBeatTime = 0f;
+            this.SetTrackStart(offset);
 
             this.timelineInfo.previousTempo = this.timelineInfo.currentTempo;
-            this.beatInterval = 60f / this.timelineInfo.currentTempo;
+            this.beatPeriod = 60f / this.timelineInfo.currentTempo;
 
-            TempoChanged?.Invoke((float)this.beatInterval);
+            TempoChanged?.Invoke(this.timelineInfo.currentTempo);
+        }
+
+        /// <summary>
+        /// Updates the start of the track to be offsetted from the
+        /// "real" track start time by the provided number of seconds.
+        /// </summary>
+        /// <param name="offset"></param>
+        private void SetTrackStart(float offset)
+        {
+            this.trackStartTimeDSP = this.elapsedTimeDSP - offset;
+            this.previousBeatTimeDSP = this.trackStartTimeDSP;
+            this.previousBeatTime = 0f;
+            this.previousUpBeatTime = 0f;
         }
 
         /// <summary>

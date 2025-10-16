@@ -36,7 +36,7 @@ namespace Cadenza
         {
             PlayerInput player = GetPlayerByID(id);
             // AudioSystem.PlayOneShot(AudioSystem.PlayerOneShotsEvent);
-            BeatSystem.GetAccuracy();
+            BeatSystem.GetAccuracy(BeatSystem.CurrentTime);
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 2);
         }
 
