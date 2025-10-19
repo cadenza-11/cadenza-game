@@ -24,13 +24,14 @@ namespace Cadenza
 
             this.inputActions = new CadenzaActions();
 
-            this.uiInputMap = inputActions.UI;
-            // this.uiInputMap.AddCallbacks(this);
+            this.uiInputMap = this.inputActions.UI;
+            this.uiInputMap.AddCallbacks(this);
 
-            this.playerInputMap = inputActions.Player;
-            // this.playerInputMap.AddCallbacks(this);
+            this.playerInputMap = this.inputActions.Player;
+            this.playerInputMap.AddCallbacks(this);
 
             this.uiInputMap.Enable();
+            this.playerInputMap.Disable();
         }
 
         public override void OnApplicationStop()
@@ -48,21 +49,64 @@ namespace Cadenza
             this.playerInputMap.Disable();
         }
 
+        public static void RebindPlayerInputAction(int deviceID, string actionName)
+        {
+            var player = PlayerSystem.GetPlayerByID(deviceID);
+            var playerAction = player.actions.FindAction(actionName, throwIfNotFound: true);
+            var rebindOp = playerAction.PerformInteractiveRebinding()
+                .WithControlsExcluding("<Mouse>/position")
+                .WithControlsExcluding("<Mouse>/delta")
+                .WithControlsExcluding("<Gamepad>/Start")
+                .WithControlsExcluding("<Keyboard>/escape")
+                .OnMatchWaitForAnother(0.1f)
+            .OnComplete(operation => { });
+
+            rebindOp.Start();
+        }
+
+        public static void RestorePlayerInputActionToDefault(int deviceID, string actionName)
+        {
+            var player = PlayerSystem.GetPlayerByID(deviceID);
+            var playerAction = player.actions.FindAction(actionName, throwIfNotFound: true);
+            InputActionRebindingExtensions.RemoveAllBindingOverrides(playerAction);
+        }
+
         #region Player Interface Methods
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnAttack(InputAction.CallbackContext context)
-        {
-            throw new System.NotImplementedException();
+            var input = context.performed ? context.ReadValue<Vector2>() : Vector2.zero;
+            PlayerSystem.OnMove(context.control.device.deviceId, input);
         }
 
         public void OnInteract(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            if (context.performed)
+                PlayerSystem.OnInteract(context.control.device.deviceId);
+        }
+
+        public void OnAttackLight(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                PlayerSystem.OnAttackLight(context.control.device.deviceId);
+        }
+
+        public void OnAttackHeavy(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                PlayerSystem.OnAttackHeavy(context.control.device.deviceId);
+        }
+
+        public void OnAttackSpecial(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                PlayerSystem.OnAttackSpecial(context.control.device.deviceId);
+        }
+
+        public void OnAttackTeam(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                PlayerSystem.OnAttackTeam(context.control.device.deviceId);
         }
 
         #endregion
@@ -70,57 +114,38 @@ namespace Cadenza
 
         public void OnNavigate(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnSubmit(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnCancel(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnPoint(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnClick(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnRightClick(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnMiddleClick(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnScrollWheel(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnTrackedDevicePosition(InputAction.CallbackContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnTrackedDeviceOrientation(InputAction.CallbackContext context)
-        {
-            throw new System.NotImplementedException();
         }
 
         public void OnToggleDebug(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
         }
 
         #endregion

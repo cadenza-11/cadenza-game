@@ -217,10 +217,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2494765009811005930, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
-      propertyPath: SFX_OneShot.Path
-      value: event:/SFX_Metronome
-      objectReference: {fileID: 0}
     - target: {fileID: 5832551234914853209, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
       propertyPath: m_Name
       value: Systems
