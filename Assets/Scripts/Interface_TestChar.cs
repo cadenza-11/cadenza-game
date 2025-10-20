@@ -30,7 +30,7 @@ public class Interface_TestChar : MonoBehaviour, ICharacter
     {
         
     }
-    public void SpecialAttack()
+    public void SpecialAttack(InputAction.CallbackContext context)
     {
         
     }

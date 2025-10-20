@@ -6,7 +6,7 @@ public interface ICharacter
     int specialMeter { get; set; }
     void WeakAttack(InputAction.CallbackContext context);
     void StrongAttack(InputAction.CallbackContext context);
-    void SpecialAttack();
+    void SpecialAttack(InputAction.CallbackContext context);
     void StartTeamAttk();
     void JoinTeamAttk();
     void DoDamage();
