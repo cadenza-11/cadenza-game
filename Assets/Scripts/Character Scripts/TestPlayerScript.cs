@@ -12,6 +12,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
     //Needed for Interface, does nothing rn
     public int currentHealth { get; set; }
     public int specialMeter { get; set; }
+    private int attackMod;
 
     //y only jump vector
     public Vector3 jump;
@@ -19,9 +20,10 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
     //Random components
     public Rigidbody rb;
     public SpriteRenderer sr;
-    public InputAction moveP, jumpP, attackP;
+    public InputAction moveP, jumpP, weakAttackP, strongAttackP;
     public Animator anim;
     private GameObject attackArea = default;
+    private AttackArea attackScript;
 
     //Bools for animation, attacking, and jumping
     public bool isMove;
@@ -31,75 +33,79 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        attackArea = transform.GetChild(0).gameObject;
-        jump = new Vector3(0.0f, 2.0f, 0.0f);
+        this.attackArea = this.transform.GetChild(0).gameObject;
+        this.attackScript = this.attackArea.GetComponent<AttackArea>();
+        this.jump = new Vector3(0.0f, 2.0f, 0.0f);
     }
 
     private void OnEnable()
     {
         //Enables all the inbuild inputActions, will change to an imported system later
-        moveP.Enable();
-        jumpP.Enable();
-        attackP.Enable();
-        attackP.performed += AttackCommand;
-        jumpP.performed += JumpCommand;
+        this.moveP.Enable();
+        this.jumpP.Enable();
+        this.weakAttackP.Enable();
+        this.strongAttackP.Enable();
+        this.weakAttackP.performed += this.WeakAttack;
+        this.strongAttackP.performed += this.StrongAttack;
+        this.jumpP.performed += this.JumpCommand;
     }
 
     private void OnDisable()
     {
         //Disables input actions when done
-        moveP.Disable();
-        jumpP.Disable();
-        attackP.Disable();
+        this.moveP.Disable();
+        this.jumpP.Disable();
+        this.weakAttackP.Disable();
+        this.strongAttackP.Disable();
     }
     // Update is called once per frame
     void FixedUpdate()
     {
         //Only adds gravity if in air
-        isGrounded = CheckIsGrounded();
+        this.isGrounded = this.CheckIsGrounded();
 
-        if (isGrounded == false)
+        if (this.isGrounded == false)
         {
-            rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
+            this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
         }
 
         //Reads in a Vector2, converts it to a Vector3, and flips sprite based on direction
-        Vector2 tempMov = moveP.ReadValue<Vector2>();
+        Vector2 tempMov = this.moveP.ReadValue<Vector2>();
 
-        Vector3 moveDir = new Vector3(tempMov.x * speed, rb.linearVelocity.y, tempMov.y * speed);
-        rb.linearVelocity = moveDir;
+        Vector3 moveDir = new Vector3(tempMov.x * this.speed, this.rb.linearVelocity.y, tempMov.y * this.speed);
+        this.rb.linearVelocity = moveDir;
 
         if (moveDir.x != 0 && moveDir.x < 0)
         {
-            sr.flipX = true;
-            isMove = true;
+            this.sr.flipX = true;
+            this.isMove = true;
         }
         else if (moveDir.x != 0 && moveDir.x > 0)
         {
-            sr.flipX = false;
-            isMove = true;
+            this.sr.flipX = false;
+            this.isMove = true;
         }
         else if (Mathf.Abs(moveDir.z) > 0)
         {
-            isMove = true;
+            this.isMove = true;
         }
         else if (moveDir.x == 0)
         {
-            isMove = false;
+            this.isMove = false;
         }
 
-        anim.SetBool("IsMove", isMove);
+        this.anim.SetBool("IsMove", this.isMove);
 
         //Runs timer so player cant attack more than once (may become an IEnumerator later if more effective)
-        if (attacking)
+        if (this.attacking)
         {
-            timer += Time.deltaTime;
+            this.timer += Time.deltaTime;
 
-            if (timer >= timeToAttack)
+            if (this.timer >= (this.timeToAttack * this.attackMod)) 
             {
-                timer = 0;
-                attacking = false;
-                attackArea.SetActive(attacking);
+                this.timer = 0;
+                this.attacking = false;
+                this.attackArea.SetActive(this.attacking);
             }
         }
 
@@ -109,34 +115,34 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
     bool CheckIsGrounded()
     {
         //Returns a raycast result to determine if on the ground
-        return Physics.Raycast(transform.position, -Vector3.up, 0.5f);
-    }
-
-    private void AttackCommand(InputAction.CallbackContext context)
-    {
-        //Attack Input Action Command
-        anim.SetTrigger("PlayerAttack");
-        WeakAttack();
+        return Physics.Raycast(this.transform.position, -Vector3.up, 0.5f);
     }
 
     private void JumpCommand(InputAction.CallbackContext context)
     {
         //Jump input action command, only jumps if on the ground
-        if (isGrounded)
+        if (this.isGrounded)
         {
-            rb.AddForce(jump * jumpForce, ForceMode.Impulse);
+            this.rb.AddForce(this.jump * this.jumpForce, ForceMode.Impulse);
         }
     }
 
-    public void WeakAttack()
+    public void WeakAttack(InputAction.CallbackContext context)
     {
         //Sets attacking to true and activated the hitbox for the attack
-        attacking = true;
-        attackArea.SetActive(attacking);
+        this.attacking = true;
+        this.attackMod = 1;
+        this.attackScript.damage = 3;
+        this.anim.SetTrigger("WeakAttack");
+        this.attackArea.SetActive(this.attacking);
     }
-    public void StrongAttack()
+    public void StrongAttack(InputAction.CallbackContext context)
     {
-
+        this.attacking = true;
+        this.attackMod = 2;
+        this.attackScript.damage = 6;
+        this.anim.SetTrigger("StrongAttack");
+        this.attackArea.SetActive(this.attacking);
     }
     public void SpecialAttack()
     {

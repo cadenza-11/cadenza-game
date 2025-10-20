@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Interface_TestChar : MonoBehaviour, ICharacter
 {
@@ -19,12 +20,13 @@ public class Interface_TestChar : MonoBehaviour, ICharacter
     {
 
     }
-
-    public void WeakAttack()
+    //Changed the parameters because this lets the character directly call the weak command out of an input action, lmk if you have any questions
+    // - Cole
+    public void WeakAttack(InputAction.CallbackContext context)
     {
         
     }
-    public void StrongAttack()
+    public void StrongAttack(InputAction.CallbackContext context)
     {
         
     }
