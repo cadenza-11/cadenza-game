@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7239182979401787694
 Transform:
   m_ObjectHideFlags: 0
@@ -68,6 +68,74 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  damage: 0
+--- !u!1 &4273684722368562779
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3450669493368049639}
+  - component: {fileID: 8006032454909153215}
+  - component: {fileID: 2387496068521455922}
+  m_Layer: 0
+  m_Name: ChargeArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &3450669493368049639
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4273684722368562779}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7813739055769483968}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &8006032454909153215
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4273684722368562779}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 8
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 119
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2387496068521455922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4273684722368562779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttackArea
+  damage: 0
 --- !u!1 &8363881908035172195
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +216,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1466765360, guid: 87044382bc05d8e4495c03af24c3c0ed, type: 3}
+  m_Sprite: {fileID: 349226214, guid: c466dd5a90ae32d44890db601577b358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -214,6 +282,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7239182979401787694}
+  - {fileID: 3450669493368049639}
   - {fileID: 7459484215511399675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -252,7 +321,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   jumpForce: 2
+  chargeForce: 5
   jump: {x: 0, y: 0, z: 0}
+  charge: {x: 0, y: 0, z: 0}
   rb: {fileID: 1458182412301763174}
   sr: {fileID: 6779959987335499425}
   moveP:
@@ -321,26 +392,59 @@ MonoBehaviour:
       m_Action: Jump P
       m_Flags: 0
     m_Flags: 0
-  attackP:
-    m_Name: Attack P
-    m_Type: 1
-    m_ExpectedControlType: Button
-    m_Id: 04c9667a-9db8-4ac7-be39-842245a2018c
+  weakAttackP:
+    m_Name: Weak Attack P
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: aa69293a-7222-4bc4-922d-b686aa3a1ed9
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: fc9fbc74-67ed-47d8-b571-f2c065c2a4c3
+      m_Id: a142355f-af91-4ae0-b883-80f8db6e8fe1
       m_Path: <Mouse>/leftButton
       m_Interactions: 
       m_Processors: 
       m_Groups: 
-      m_Action: Attack P
+      m_Action: Weak Attack P
+      m_Flags: 0
+    m_Flags: 0
+  strongAttackP:
+    m_Name: Strong Attack P
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 85c4e18e-36d8-4373-8832-2e50715d7cbc
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 04754eec-7f8c-4164-8807-3540763e7451
+      m_Path: <Mouse>/rightButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Strong Attack P
+      m_Flags: 0
+    m_Flags: 0
+  specialAttackP:
+    m_Name: Special Attack P
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: a406a902-9dd4-4ade-b3d7-13ee3766e362
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 8afc9d9b-9313-45a2-b026-b72dde4097c8
+      m_Path: <Keyboard>/e
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Special Attack P
       m_Flags: 0
     m_Flags: 0
   anim: {fileID: 71435134034143840}
   isMove: 0
-  isGrounded: 0
 --- !u!54 &1458182412301763174
 Rigidbody:
   m_ObjectHideFlags: 0
