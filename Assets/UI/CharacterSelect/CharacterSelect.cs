@@ -25,12 +25,12 @@ namespace Cadenza
         }
 
         [SerializeField] private UIDocument uiDocument;
-        
+
         private Dictionary<SelectPhase, VisualTreeAsset> screens;
         private VisualElement[] playerContainers;
         private List<VisualElement> usedPlayerContainers = new();
 
-        private Dictionary<int, PlayerTracker> playerPhases;
+        private Dictionary<int, PlayerTracker> playerPhases = new();
 
         #region System Events
         public override void OnInitialize()
@@ -120,7 +120,7 @@ namespace Cadenza
             }
         }
         #endregion
-        
+
         #region Private Functions
         // Container updates
         #endregion
