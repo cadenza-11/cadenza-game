@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; max-width: 300px; max-height: 100px;">
+        <ui:Label name="Label" style="align-self: center; -unity-font-style: bold; font-size: 30px; height: 50px;" />
+        <ui:Slider high-value="1" />
+    </ui:VisualElement>
+</ui:UXML>

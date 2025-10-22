@@ -35,7 +35,9 @@ namespace Cadenza
         public static void OnAttackLight(int id)
         {
             PlayerInput player = GetPlayerByID(id);
-            BeatSystem.GetAccuracy(BeatSystem.CurrentTime);
+            float accuracy = BeatSystem.GetAccuracy(BeatSystem.CurrentTime);
+            if (player.GetComponentInChildren<AccuracyBar>() is AccuracyBar bar)
+                bar.SetAccuracy(accuracy);
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 2);
         }
 
