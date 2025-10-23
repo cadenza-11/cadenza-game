@@ -1,13 +1,25 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
 namespace Cadenza
 {
+    public enum ApplicationState
+    {
+        Pregame,
+        GameSession,
+        Quitting,
+    }
+
     public class ApplicationController : MonoBehaviour
     {
         private static ApplicationController singleton;
         private ApplicationSystem[] systems;
+        private ApplicationState state;
+        public static ApplicationState State => singleton.state;
 
         #region Unity Callbacks
 
@@ -21,6 +33,8 @@ namespace Cadenza
             Debug.Log($"ApplicationController initialized with {this.systems.Length} systems.");
 
             // Initialize systems ("Awake")
+            this.ChangeState(ApplicationState.Pregame);
+
             foreach (var system in this.systems)
             {
                 system.OnInitialize();
@@ -35,9 +49,6 @@ namespace Cadenza
                 system.OnStart();
             }
 
-            // Start systems.
-            foreach (var system in singleton.systems)
-                system.OnGameStart();
             // Load the first scene in the build index.
             SetSceneAsync(1);
         }
@@ -65,16 +76,12 @@ namespace Cadenza
 
         public static async Task SetSceneAsync(int sceneIndex)
         {
-            // Shut down systems.
-            foreach (var system in singleton.systems)
-                system.OnGameStop();
-
-            // Set the scene.
-            await singleton.SetSceneImplAsync(sceneIndex);
-
-            // Restart systems.
-            foreach (var system in singleton.systems)
-                system.OnGameStart();
+            singleton.ChangeState(ApplicationState.Pregame);
+            {
+                // Set the scene.
+                await singleton.SetSceneImplAsync(sceneIndex);
+            }
+            singleton.ChangeState(ApplicationState.GameSession);
         }
 
         #endregion
@@ -94,5 +101,41 @@ namespace Cadenza
             Scene loadedScene = SceneManager.GetSceneByBuildIndex(sceneIndex);
             SceneManager.SetActiveScene(loadedScene);
         }
+
+        private void ChangeState(ApplicationState newState)
+        {
+            // Exiting game.
+            if (this.state == ApplicationState.GameSession &&
+                newState == ApplicationState.Pregame)
+            {
+                foreach (var system in this.systems)
+                    system.OnGameStop();
+            }
+
+            // Starting game.
+            else if (
+                this.state == ApplicationState.Pregame &&
+                newState == ApplicationState.GameSession)
+            {
+                foreach (var system in this.systems)
+                    system.OnGameStart();
+            }
+
+            // Quitting application.
+            else if (
+                this.state != ApplicationState.Quitting &&
+                newState == ApplicationState.Quitting)
+            {
+                foreach (var system in this.systems)
+                    system.OnGameStop();
+                foreach (var system in this.systems)
+                    system.OnApplicationStop();
+            }
+
+            Debug.Log($"Application state changed from {this.state} to {newState}");
+            this.state = newState;
+        }
     }
 }
+
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
