@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using Cadenza;
 using UnityEngine;
 
-public class GameStateManager : MonoBehaviour
+public class GameStateManager : ApplicationSystem
 {
+    private static GameStateManager singleton;
     public enum GameState
     {
         InLevel,
@@ -10,10 +13,20 @@ public class GameStateManager : MonoBehaviour
         MainMenu,
     }
 
+    [SerializeField] private UIPanel[] uiDocs;
+    private GameState currentState;
+
     public Action<GameState> OnGameStateChanged;
 
-    public void ChangeGameState(GameState newState)
+    public static void ChangeGameState(GameState newState)
     {
-        OnGameStateChanged?.Invoke(newState);
+        singleton.currentState = newState;
+        singleton.OnGameStateChanged?.Invoke(singleton.currentState);
+    }
+
+    public override void OnGameStart()
+    {
+        this.currentState = GameState.MainMenu;
+        this.uiDocs[0].Show();
     }
 }

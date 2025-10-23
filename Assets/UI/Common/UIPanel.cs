@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
@@ -8,19 +9,20 @@ namespace Cadenza
         protected CadenzaActions Inputs;
         protected InputActionMap UIActions;
         protected TemplateContainer root;
-        public override void OnStart()
+        public override void OnInitialize()
         {
-            UIActions = InputSystem.UIInputMap;
+            this.UIActions = InputSystem.UIInputMap;
+            UnityEngine.Debug.Log(this.UIActions == null);
         }
         public virtual void Show()
         {
-            UIActions.Enable();
+            this.UIActions.Enable();
             this.root.style.display = DisplayStyle.Flex;
         }
 
         public virtual void Hide()
         {
-            UIActions.Disable();
+            this.UIActions.Disable();
             this.root.style.display = DisplayStyle.None;
         }
     }
