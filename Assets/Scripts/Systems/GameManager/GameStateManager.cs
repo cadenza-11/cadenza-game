@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Cadenza;
 using UnityEngine;
 
@@ -17,6 +16,12 @@ public class GameStateManager : ApplicationSystem
     private GameState currentState;
 
     public Action<GameState> OnGameStateChanged;
+
+    public override void OnInitialize()
+    {
+        Debug.Assert(singleton == null);
+        singleton = this;
+    }
 
     public static void ChangeGameState(GameState newState)
     {

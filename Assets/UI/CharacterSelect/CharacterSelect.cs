@@ -27,6 +27,7 @@ namespace Cadenza
         }
 
         [SerializeField] private UIDocument uiDocument;
+        [SerializeField] private int TotalCallibrationAttempts;
 
         private Dictionary<SelectPhase, VisualTreeAsset> screens;
         private VisualElement[] playerContainers;
@@ -45,17 +46,20 @@ namespace Cadenza
                 this.root.Q<VisualElement>("c_PlayerThree"),
                 this.root.Q<VisualElement>("c_PlayerFour")
             };
+            this.root.style.display = DisplayStyle.None;
         }
 
         public override void Show()
         {
             base.Show();
-            this.UIInputMap.FindAction("Submit", throwIfNotFound: true).performed += this.OnSubmit;
+            this.root.style.display = DisplayStyle.Flex;
+            InputSystem.UIInputMap.FindAction("Submit", throwIfNotFound: true).performed += this.OnSubmit;
         }
 
         public override void Hide()
         {
             base.Hide();
+            this.root.style.display = DisplayStyle.None;
         }
         #endregion
 
@@ -73,12 +77,13 @@ namespace Cadenza
                 PlayerTracker newTracker;
                 newTracker.Phase = SelectPhase.Joining;
                 newTracker.Container = this.playerContainers[player.PlayerNumber - 1];
-                newTracker.CallibrationAttempts = 0;
+                newTracker.CallibrationAttempts = -1;
                 newTracker.TempLabel = newTracker.Container.Q<Label>("temp");
                 this.playerPhases.Add(player, newTracker);
             }
 
             PlayerTracker foundPlayer = this.playerPhases[player];
+            Debug.Log($"Player {player.PlayerNumber} is navigating. Phase: {foundPlayer.Phase}");
             switch (foundPlayer.Phase)
             {
                 case SelectPhase.Joining: // Connect next unassigned container to player. (Done above) //
@@ -87,14 +92,18 @@ namespace Cadenza
                     foundPlayer.Phase++;
                     break;
                 case SelectPhase.Callibrating: // For a certain amount of beats, stay on this event until input latency is calculated. //
-                    foundPlayer.TempLabel.text = "Tap to beat";
-                    if (foundPlayer.CallibrationAttempts < 3)
+                    if (foundPlayer.CallibrationAttempts == -1)
+                    {
+                        foundPlayer.TempLabel.text = "Tap to beat";
+                        foundPlayer.CallibrationAttempts++;
+                    }
+                    else if (foundPlayer.CallibrationAttempts < this.TotalCallibrationAttempts)
                     {
                         float accuracy = BeatSystem.GetAccuracy(BeatSystem.CurrentTime);
                         player.Latency = accuracy;
                         foundPlayer.CallibrationAttempts++;
                     }
-                    if (foundPlayer.CallibrationAttempts == 3)
+                    else if (foundPlayer.CallibrationAttempts == this.TotalCallibrationAttempts)
                     {
                         // Call update for container
                         foundPlayer.TempLabel.text = $"Accuracy average: {player.Latency}";
@@ -113,6 +122,7 @@ namespace Cadenza
                     this.playersReady++;
                     break;
                 case SelectPhase.Ready:
+                    Debug.Log($"# of players ready: {this.playersReady}/{PlayerSystem.PlayerCount}");
                     if (this.playersReady == PlayerSystem.PlayerCount)
                     {
                         GameStateManager.ChangeGameState(GameStateManager.GameState.InLevel);
@@ -122,6 +132,7 @@ namespace Cadenza
                 default:
                     break;
             }
+            this.playerPhases[player] = foundPlayer;
         }
         #endregion
 

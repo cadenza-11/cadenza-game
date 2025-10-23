@@ -4,26 +4,22 @@ using UnityEngine.UIElements;
 
 namespace Cadenza
 {
-    public class UIPanel : ApplicationSystem
+    public abstract class UIPanel : ApplicationSystem
     {
         protected CadenzaActions Inputs;
-        protected CadenzaActions.UIActions UIInputMap;
         protected TemplateContainer root;
 
         public override void OnInitialize()
         {
-            this.UIInputMap = InputSystem.UIInputMap;
         }
         public virtual void Show()
         {
-            this.UIInputMap.Enable();
-            this.root.style.display = DisplayStyle.Flex;
+            InputSystem.UIInputMap.Enable();
         }
 
         public virtual void Hide()
         {
-            this.UIInputMap.Disable();
-            this.root.style.display = DisplayStyle.None;
+            InputSystem.UIInputMap.Disable();
         }
     }
 }

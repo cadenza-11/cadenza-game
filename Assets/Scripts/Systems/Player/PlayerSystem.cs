@@ -97,7 +97,7 @@ namespace Cadenza
             {
                 if (!this.playerFrameImpulsesByID.ContainsKey(id))
                     return;
-                player.transform.Translate(this.playerSpeed * Time.deltaTime * this.playerFrameImpulsesByID[id]);
+                player.Input.transform.Translate(this.playerSpeed * Time.deltaTime * this.playerFrameImpulsesByID[id]);
             }
         }
 
@@ -116,7 +116,7 @@ namespace Cadenza
         /// <returns>True: player created and/or added to roster | False: player creation failed</returns>
         public static bool AddPlayer(int deviceID)
         {
-            UnityEngine.Debug.Log($"Attempting to add {deviceID} as player.");
+            Debug.Log($"Attempting to add Device {deviceID} as player.");
             Player newPlayer = GetPlayerByID(deviceID);
             if (newPlayer == null)
                 newPlayer = CreatePlayer(deviceID);
@@ -126,6 +126,7 @@ namespace Cadenza
             if (deviceIndex == -1){
                 if (openIndex != -1)
                 {
+                    Debug.Log($"Device {deviceID} added as Player {openIndex + 1} at index {openIndex}");
                     newPlayer.PlayerNumber = openIndex + 1;
                     singleton.roster[openIndex] = deviceID;
                     return true;

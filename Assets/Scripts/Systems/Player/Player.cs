@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace Cadenza
 {
-    public class Player : MonoBehaviour
+    public class Player
     {
         #region Private Attributes
 
