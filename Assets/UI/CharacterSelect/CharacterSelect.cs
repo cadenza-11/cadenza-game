@@ -50,7 +50,7 @@ namespace Cadenza
         public override void Show()
         {
             base.Show();
-            this.UIActions.FindAction("Submit").performed += this.OnSubmit;
+            this.UIInputMap.FindAction("Submit", throwIfNotFound: true).performed += this.OnSubmit;
         }
 
         public override void Hide()
