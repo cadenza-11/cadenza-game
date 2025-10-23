@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering.Universal;
 
 namespace Cadenza
 {
@@ -11,9 +9,8 @@ namespace Cadenza
     {
         private static PlayerSystem singleton;
 
-        [Header("Test values")]
+        [Header("Assign in Inspector")]
         [SerializeField] private GameObject playerPrefab;
-        [SerializeField] private float playerSpeed;
 
         private Dictionary<int, Player> playersByID;
         /// <summary>
@@ -40,7 +37,6 @@ namespace Cadenza
                 return value;
             }
         }
-        private Dictionary<int, Vector3> playerFrameImpulsesByID;
 
         public static event Action<Player> PlayerAdded;
 
@@ -50,7 +46,6 @@ namespace Cadenza
             singleton = this;
 
             this.playersByID = new();
-            this.playerFrameImpulsesByID = new();
         }
 
         public static void OnInteract(int id)
@@ -60,14 +55,12 @@ namespace Cadenza
         public static void OnAttackLight(int id)
         {
             Player player = GetPlayerByID(id);
+
             if (player != null)
             {
                 PlayerInput playerInput = player.Input;
-                float accuracy = BeatSystem.GetAccuracy(BeatSystem.CurrentTime);
-                float calculatedAccuracy = accuracy > player.Latency ? Math.Abs(accuracy) - Math.Abs(player.Latency) : Math.Abs(Math.Abs(player.Latency) - Math.Abs(accuracy));
-                if (playerInput.GetComponentInChildren<AccuracyBar>() is AccuracyBar bar)
-                    bar.SetAccuracy(calculatedAccuracy);
-                    AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 2);
+                if (player.TryGetComponent(out ICharacter character))
+                    character.WeakAttack();
             }
         }
 
@@ -85,19 +78,11 @@ namespace Cadenza
 
         public static void OnMove(int id, Vector2 input)
         {
-            if (GetPlayerByID(id) != null){
-                PlayerInput player = GetPlayerByID(id).Input;
-                singleton.playerFrameImpulsesByID[id] = new Vector3(input.x, 0, input.y);
-            }
-        }
-
-        public override void OnUpdate()
-        {
-            foreach ((int id, var player) in this.playersByID)
+            if (GetPlayerByID(id) != null)
             {
-                if (!this.playerFrameImpulsesByID.ContainsKey(id))
-                    return;
-                player.Input.transform.Translate(this.playerSpeed * Time.deltaTime * this.playerFrameImpulsesByID[id]);
+                PlayerInput player = GetPlayerByID(id).Input;
+                if (player.TryGetComponent(out ICharacter character))
+                    character.Move(input);
             }
         }
 
@@ -123,7 +108,8 @@ namespace Cadenza
 
             int deviceIndex = Array.IndexOf(singleton.roster, deviceID);
             int openIndex = Array.IndexOf(singleton.roster, -1);
-            if (deviceIndex == -1){
+            if (deviceIndex == -1)
+            {
                 if (openIndex != -1)
                 {
                     Debug.Log($"Device {deviceID} added as Player {openIndex + 1} at index {openIndex}");

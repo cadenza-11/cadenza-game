@@ -38,6 +38,8 @@ namespace Cadenza
             // Start systems.
             foreach (var system in singleton.systems)
                 system.OnGameStart();
+            // Load the first scene in the build index.
+            SetSceneAsync(1);
         }
 
         void Update()

@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afce8a83498e75c4295dcfd2d9e59721, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.PlayerSystem
-  playerPrefab: {fileID: 6656038096952510406, guid: 6d49512cf5fe5de458860c01e71d8c5f, type: 3}
+  playerPrefab: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   playerSpeed: 10

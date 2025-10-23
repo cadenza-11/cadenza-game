@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class TestPlayerScript : MonoBehaviour, ICharacter
 {
@@ -14,11 +13,11 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
 
     //y only jump vector
     public Vector3 jump, charge;
+    public Vector2 move;
 
     //Random components
     public Rigidbody rb;
     public SpriteRenderer sr;
-    public InputAction moveP, jumpP, weakAttackP, strongAttackP, specialAttackP;
     public Animator anim;
     private GameObject attackArea = default, chargeArea = default;
     private AttackArea attackScript, chargeScript;
@@ -28,7 +27,6 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
     private bool isAttacking, isGrounded, isCharging;
     private bool direction; //true = right, false = left
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         this.attackArea = this.transform.GetChild(0).gameObject;
@@ -39,30 +37,6 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
         this.charge = new Vector3(2.0f, 0.0f, 0.0f);
     }
 
-    private void OnEnable()
-    {
-        //Enables all the inbuild inputActions, will change to an imported system later
-        this.moveP.Enable();
-        this.jumpP.Enable();
-        this.weakAttackP.Enable();
-        this.strongAttackP.Enable();
-        this.specialAttackP.Enable();
-        this.weakAttackP.performed += this.WeakAttack;
-        this.strongAttackP.performed += this.StrongAttack;
-        this.specialAttackP.performed += this.SpecialAttack;
-        this.jumpP.performed += this.JumpCommand;
-    }
-
-    private void OnDisable()
-    {
-        //Disables input actions when done
-        this.moveP.Disable();
-        this.jumpP.Disable();
-        this.weakAttackP.Disable();
-        this.strongAttackP.Disable();
-        this.specialAttackP.Disable();
-    }
-    // Update is called once per frame
     void FixedUpdate()
     {
         //Only adds gravity if in air
@@ -77,9 +51,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
 
         if (!this.isCharging)
         {
-            Vector2 tempMov = this.moveP.ReadValue<Vector2>();
-
-            Vector3 moveDir = new Vector3(tempMov.x * this.speed, this.rb.linearVelocity.y, tempMov.y * this.speed);
+            Vector3 moveDir = new Vector3(this.move.x * this.speed, this.rb.linearVelocity.y, this.move.y * this.speed);
             this.rb.linearVelocity = moveDir;
 
             if (moveDir.x != 0 && moveDir.x < 0)
@@ -111,7 +83,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
         {
             this.attackTimer += Time.deltaTime;
 
-            if (this.attackTimer >= (this.attackDuration * this.attackMod)) 
+            if (this.attackTimer >= (this.attackDuration * this.attackMod))
             {
                 this.attackTimer = 0;
                 this.isAttacking = false;
@@ -140,7 +112,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
         return Physics.Raycast(this.transform.position, -Vector3.up, 0.5f);
     }
 
-    private void JumpCommand(InputAction.CallbackContext context)
+    private void JumpCommand()
     {
         //Jump input action command, only jumps if on the ground
         if (this.isGrounded)
@@ -149,7 +121,12 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
         }
     }
 
-    public void WeakAttack(InputAction.CallbackContext context)
+    public void Move(Vector2 input)
+    {
+        this.move = input;
+    }
+
+    public void WeakAttack()
     {
         //Sets attacking to true and activated the hitbox for the attack
         this.isAttacking = true;
@@ -158,7 +135,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
         this.anim.SetTrigger("WeakAttack");
         this.attackArea.SetActive(this.isAttacking);
     }
-    public void StrongAttack(InputAction.CallbackContext context)
+    public void StrongAttack()
     {
         this.isAttacking = true;
         this.attackMod = 2;
@@ -166,7 +143,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
         this.anim.SetTrigger("StrongAttack");
         this.attackArea.SetActive(this.isAttacking);
     }
-    public void SpecialAttack(InputAction.CallbackContext context)
+    public void SpecialAttack()
     {
         if (this.direction == true)
         {

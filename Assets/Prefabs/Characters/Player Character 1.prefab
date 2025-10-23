@@ -261,6 +261,7 @@ GameObject:
   - component: {fileID: 385595547923433363}
   - component: {fileID: 1142994677136861915}
   - component: {fileID: 1458182412301763174}
+  - component: {fileID: 4826268081323154847}
   m_Layer: 0
   m_Name: Player Character 1
   m_TagString: Untagged
@@ -324,125 +325,9 @@ MonoBehaviour:
   chargeForce: 5
   jump: {x: 0, y: 0, z: 0}
   charge: {x: 0, y: 0, z: 0}
+  move: {x: 0, y: 0}
   rb: {fileID: 1458182412301763174}
   sr: {fileID: 6779959987335499425}
-  moveP:
-    m_Name: Move P
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: ef026d49-0b05-4fb7-8dca-93076131d20b
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 2D Vector
-      m_Id: d76d290f-b022-464a-a2f5-c74fea0bab1a
-      m_Path: 2DVector
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move P
-      m_Flags: 4
-    - m_Name: up
-      m_Id: 3454dd1d-a652-42f7-8c0f-f00cd0f41b4a
-      m_Path: <Keyboard>/w
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move P
-      m_Flags: 8
-    - m_Name: down
-      m_Id: 56139dc7-4860-4663-afa7-ae01052c4f5a
-      m_Path: <Keyboard>/s
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move P
-      m_Flags: 8
-    - m_Name: left
-      m_Id: eff4e533-e2db-4ee3-ac33-c5a38c513e64
-      m_Path: <Keyboard>/a
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move P
-      m_Flags: 8
-    - m_Name: right
-      m_Id: fe669820-c997-46f0-ba53-48abf6753d83
-      m_Path: <Keyboard>/d
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move P
-      m_Flags: 8
-    m_Flags: 0
-  jumpP:
-    m_Name: Jump P
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: ad2fe25d-0a1c-47b9-a0f5-44f4ab85b5ff
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 41d8c977-1aab-4e4d-b420-926fc2ae1a7a
-      m_Path: <Keyboard>/space
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Jump P
-      m_Flags: 0
-    m_Flags: 0
-  weakAttackP:
-    m_Name: Weak Attack P
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: aa69293a-7222-4bc4-922d-b686aa3a1ed9
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: a142355f-af91-4ae0-b883-80f8db6e8fe1
-      m_Path: <Mouse>/leftButton
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Weak Attack P
-      m_Flags: 0
-    m_Flags: 0
-  strongAttackP:
-    m_Name: Strong Attack P
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 85c4e18e-36d8-4373-8832-2e50715d7cbc
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 04754eec-7f8c-4164-8807-3540763e7451
-      m_Path: <Mouse>/rightButton
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Strong Attack P
-      m_Flags: 0
-    m_Flags: 0
-  specialAttackP:
-    m_Name: Special Attack P
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: a406a902-9dd4-4ade-b3d7-13ee3766e362
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 8afc9d9b-9313-45a2-b026-b72dde4097c8
-      m_Path: <Keyboard>/e
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Special Attack P
-      m_Flags: 0
-    m_Flags: 0
   anim: {fileID: 71435134034143840}
   isMove: 0
 --- !u!54 &1458182412301763174
@@ -472,3 +357,33 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &4826268081323154847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8586129573200258111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: 
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
