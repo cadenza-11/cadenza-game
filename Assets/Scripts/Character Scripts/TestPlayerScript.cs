@@ -1,4 +1,5 @@
 using UnityEngine;
+using Cadenza;
 
 public class TestPlayerScript : MonoBehaviour, ICharacter
 {
@@ -19,6 +20,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
     public Rigidbody rb;
     public SpriteRenderer sr;
     public Animator anim;
+    public AccuracyBar accuracyBar;
     private GameObject attackArea = default, chargeArea = default;
     private AttackArea attackScript, chargeScript;
 
@@ -132,8 +134,22 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
         this.isAttacking = true;
         this.attackMod = 1;
         this.attackScript.damage = 3;
-        this.anim.SetTrigger("WeakAttack");
         this.attackArea.SetActive(this.isAttacking);
+
+        // Play sound
+        float accuracy = BeatSystem.GetAccuracy(BeatSystem.CurrentTime);
+        if (this.accuracyBar != null)
+            this.accuracyBar.SetAccuracy(accuracy);
+
+        accuracy = Mathf.Abs(accuracy);
+        int soundID =
+            accuracy > 0.75 ? 2 :
+            accuracy > 0.5 ? 1 : 0;
+
+        AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", soundID);
+
+        // Play animation
+        this.anim.SetTrigger("WeakAttack");
     }
     public void StrongAttack()
     {
