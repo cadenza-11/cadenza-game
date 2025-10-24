@@ -34,6 +34,10 @@ namespace Cadenza
             {
                 system.OnStart();
             }
+
+            // Start systems.
+            foreach (var system in singleton.systems)
+                system.OnGameStart();
         }
 
         void Update()

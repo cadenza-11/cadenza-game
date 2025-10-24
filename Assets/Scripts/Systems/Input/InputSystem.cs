@@ -51,22 +51,26 @@ namespace Cadenza
 
         public static void RebindPlayerInputAction(int deviceID, string actionName)
         {
-            var player = PlayerSystem.GetPlayerByID(deviceID);
-            var playerAction = player.actions.FindAction(actionName, throwIfNotFound: true);
-            var rebindOp = playerAction.PerformInteractiveRebinding()
-                .WithControlsExcluding("<Mouse>/position")
-                .WithControlsExcluding("<Mouse>/delta")
-                .WithControlsExcluding("<Gamepad>/Start")
-                .WithControlsExcluding("<Keyboard>/escape")
-                .OnMatchWaitForAnother(0.1f)
-            .OnComplete(operation => { });
+            var player = PlayerSystem.GetPlayerByID(deviceID).Input;
+            if (player != null)
+            {
+                var playerAction = player.actions.FindAction(actionName, throwIfNotFound: true);
+                var rebindOp = playerAction.PerformInteractiveRebinding()
+                    .WithControlsExcluding("<Mouse>/position")
+                    .WithControlsExcluding("<Mouse>/delta")
+                    .WithControlsExcluding("<Gamepad>/Start")
+                    .WithControlsExcluding("<Keyboard>/escape")
+                    .OnMatchWaitForAnother(0.1f)
+                .OnComplete(operation => { });
 
-            rebindOp.Start();
+                rebindOp.Start();
+            }
+            
         }
 
         public static void RestorePlayerInputActionToDefault(int deviceID, string actionName)
         {
-            var player = PlayerSystem.GetPlayerByID(deviceID);
+            var player = PlayerSystem.GetPlayerByID(deviceID).Input;
             var playerAction = player.actions.FindAction(actionName, throwIfNotFound: true);
             InputActionRebindingExtensions.RemoveAllBindingOverrides(playerAction);
         }

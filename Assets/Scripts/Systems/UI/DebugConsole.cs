@@ -59,19 +59,17 @@ namespace Cadenza
             if (this.root.style.display == DisplayStyle.Flex)
             {
                 this.root.style.display = DisplayStyle.None;
-                // InputSystem.PlayerInputMap.Enable();
+                InputSystem.PlayerInputMap.Enable();
             }
             else
             {
                 this.root.style.display = DisplayStyle.Flex;
-                // InputSystem.PlayerInputMap.Disable();
+                InputSystem.PlayerInputMap.Disable();
             }
         }
 
         private void OnKeyDown(KeyDownEvent evt)
         {
-            evt.StopImmediatePropagation();
-
             if (evt.keyCode == KeyCode.Return)
             {
                 this.commandParser.OnCommand(this.textField.text);

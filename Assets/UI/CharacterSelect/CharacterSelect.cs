@@ -22,15 +22,18 @@ namespace Cadenza
         {
             public SelectPhase Phase;
             public VisualElement Container;
+            public Label TempLabel; // remove later
+            public int CallibrationAttempts;
         }
 
         [SerializeField] private UIDocument uiDocument;
-        
+        [SerializeField] private int TotalCallibrationAttempts;
+
         private Dictionary<SelectPhase, VisualTreeAsset> screens;
         private VisualElement[] playerContainers;
-        private List<VisualElement> usedPlayerContainers = new();
+        private Dictionary<Player, PlayerTracker> playerPhases = new();
 
-        private Dictionary<int, PlayerTracker> playerPhases;
+        private int playersReady = 0;
 
         #region System Events
         public override void OnInitialize()
@@ -43,84 +46,96 @@ namespace Cadenza
                 this.root.Q<VisualElement>("c_PlayerThree"),
                 this.root.Q<VisualElement>("c_PlayerFour")
             };
-        }
-
-        public override void OnGameStart()
-        {
-            PlayerSystem.PlayerAdded += OnPlayerAdded;
-        }
-
-        public override void OnGameStop()
-        {
-            PlayerSystem.PlayerAdded -= OnPlayerAdded;
+            this.root.style.display = DisplayStyle.None;
         }
 
         public override void Show()
         {
             base.Show();
-            foreach (KeyValuePair<int, PlayerTracker> player in playerPhases)
-            {
-                // populate menu idk
-            }
-
-            UIActions.FindAction("Submit").performed += OnSubmit;
+            this.root.style.display = DisplayStyle.Flex;
+            InputSystem.UIInputMap.FindAction("Submit", throwIfNotFound: true).performed += this.OnSubmit;
         }
 
         public override void Hide()
         {
             base.Hide();
+            this.root.style.display = DisplayStyle.None;
         }
         #endregion
 
         #region Navigation Events
-        private void OnPlayerAdded(int playerIndex)
-        {
-            if (!playerPhases.ContainsKey(playerIndex))
-            {
-                PlayerTracker newPlayer = new() { Phase = SelectPhase.Joining, Container = null };
-                playerPhases.Add(playerIndex, newPlayer);
-            }
-        }
 
         private void OnSubmit(InputAction.CallbackContext context)
         {
-            PlayerInput player = PlayerSystem.GetPlayerByID(context.control.device.deviceId);
+            int id = context.control.device.deviceId;
+            Player player = PlayerSystem.GetPlayerByID(id);
 
-            if (!playerPhases.TryGetValue(player.playerIndex, out PlayerTracker foundPlayer)) return; // Ignore until user is added
-            else
+            if (player == null)
             {
-                switch (foundPlayer.Phase)
-                {
-                    case SelectPhase.Joining: // Connect next unassigned container to player. //
-                        int i = 0;
-                        while (usedPlayerContainers.Contains(playerContainers[i]) && i < 4) // Find unassigned container (up to 4 containers).
-                            i++;
-                        if (i < 4) // On success, move on. If a player 5 somehow joined, ignore them.
-                        {
-                            usedPlayerContainers.Add(playerContainers[i]);
-                            foundPlayer.Container = playerContainers[i];
-                            // Call update for container
-                            foundPlayer.Phase++;
-                        }
-                        break;
-                    case SelectPhase.Callibrating: // For a certain amount of beats, stay on this event until input latency is calculated. //
-                        // Idk I still gotta look into this
-                        break;
-                    case SelectPhase.CharacterSelection: // Select character. //
-                        // Add character selection to player system
-                        break;
-                    case SelectPhase.ControllerMapping: // Update controller mapping or select controller mapping profile. //
-                        // Same with this
-                        break;
-                    case SelectPhase.Ready: // Ignore; just wait. //
-                        break;
-                    default:
-                        break;
-                }
+                if (!PlayerSystem.AddPlayer(id)) return;
+                player =  PlayerSystem.GetPlayerByID(id);
+                PlayerTracker newTracker;
+                newTracker.Phase = SelectPhase.Joining;
+                newTracker.Container = this.playerContainers[player.PlayerNumber - 1];
+                newTracker.CallibrationAttempts = -1;
+                newTracker.TempLabel = newTracker.Container.Q<Label>("temp");
+                this.playerPhases.Add(player, newTracker);
             }
+
+            PlayerTracker foundPlayer = this.playerPhases[player];
+            Debug.Log($"Player {player.PlayerNumber} is navigating. Phase: {foundPlayer.Phase}");
+            switch (foundPlayer.Phase)
+            {
+                case SelectPhase.Joining: // Connect next unassigned container to player. (Done above) //
+                    // Call update for container
+                    foundPlayer.TempLabel.text = "Name profile here";
+                    foundPlayer.Phase++;
+                    break;
+                case SelectPhase.Callibrating: // For a certain amount of beats, stay on this event until input latency is calculated. //
+                    if (foundPlayer.CallibrationAttempts == -1)
+                    {
+                        foundPlayer.TempLabel.text = "Tap to beat";
+                        foundPlayer.CallibrationAttempts++;
+                    }
+                    else if (foundPlayer.CallibrationAttempts < this.TotalCallibrationAttempts)
+                    {
+                        float accuracy = BeatSystem.GetAccuracy(BeatSystem.CurrentTime);
+                        player.Latency = accuracy;
+                        foundPlayer.CallibrationAttempts++;
+                    }
+                    else if (foundPlayer.CallibrationAttempts == this.TotalCallibrationAttempts)
+                    {
+                        // Call update for container
+                        foundPlayer.TempLabel.text = $"Accuracy average: {player.Latency}";
+                        foundPlayer.Phase++;
+                    }
+                    break;
+                case SelectPhase.CharacterSelection: // Select character. //
+                    player.Character = "Temp"; // Update in future.
+                    if (!string.IsNullOrEmpty(player.Character))
+                        foundPlayer.Phase++;
+                    break;
+                case SelectPhase.ControllerMapping: // Update controller mapping or select controller mapping profile. //
+                    // Figure this out.
+                    foundPlayer.TempLabel.text = "Idk controller map here";
+                    foundPlayer.Phase++;
+                    this.playersReady++;
+                    break;
+                case SelectPhase.Ready:
+                    Debug.Log($"# of players ready: {this.playersReady}/{PlayerSystem.PlayerCount}");
+                    if (this.playersReady == PlayerSystem.PlayerCount)
+                    {
+                        GameStateManager.ChangeGameState(GameStateManager.GameState.InLevel);
+                        this.Hide();
+                    }
+                    break;
+                default:
+                    break;
+            }
+            this.playerPhases[player] = foundPlayer;
         }
         #endregion
-        
+
         #region Private Functions
         // Container updates
         #endregion
