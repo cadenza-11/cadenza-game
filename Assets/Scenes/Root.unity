@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &160297424 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6312266569343938218, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
+  m_PrefabInstance: {fileID: 6295539548505578110}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77fc7eb709455b6449109b6a5c0fb989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterSelect
 --- !u!1 &1654552947
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,6 +232,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Systems
       objectReference: {fileID: 0}
+    - target: {fileID: 8904825245616972040, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
+      propertyPath: uiDocs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8904825245616972040, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
+      propertyPath: 'uiDocs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 160297424}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

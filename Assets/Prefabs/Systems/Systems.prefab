@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56272ad7776e6c34bb0c8dc30b4d4b1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
+  uiDocs: []
 --- !u!1 &4467513024789239533
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,12 +217,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4520508756249848095}
   - {fileID: 5215108402385323825}
   - {fileID: 566073836337621362}
   - {fileID: 7781750574416559325}
   - {fileID: 1530705998192980714}
   - {fileID: 5424721867056156537}
+  - {fileID: 4520508756249848095}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &899894343128888571

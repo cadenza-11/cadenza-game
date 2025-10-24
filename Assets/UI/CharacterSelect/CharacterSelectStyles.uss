@@ -25,3 +25,8 @@
     border-left-width: 2px;
     max-width: 23%;
 }
+
+.temp_text {
+    flex-wrap: wrap;
+    white-space: normal;
+}
