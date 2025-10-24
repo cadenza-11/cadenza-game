@@ -15,7 +15,7 @@ public class GameStateManager : ApplicationSystem
     [SerializeField] private UIPanel[] uiDocs;
     private GameState currentState;
 
-    public Action<GameState> OnGameStateChanged;
+    public static event Action<GameState> OnGameStateChanged;
 
     public override void OnInitialize()
     {
@@ -25,8 +25,9 @@ public class GameStateManager : ApplicationSystem
 
     public static void ChangeGameState(GameState newState)
     {
+        if (singleton.currentState == newState) return;
         singleton.currentState = newState;
-        singleton.OnGameStateChanged?.Invoke(singleton.currentState);
+        OnGameStateChanged?.Invoke(newState);
     }
 
     public override void OnGameStart()
