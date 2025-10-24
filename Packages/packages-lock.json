@@ -125,7 +125,6 @@
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.5",
       "depth": 2,
-      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -217,8 +216,8 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {
-        "com.unity.burst": "1.7.2",
-        "com.unity.collections": "2.4.2"
+        "com.unity.collections": "2.4.2",
+        "com.unity.burst": "1.7.2"
       },
       "url": "https://packages.unity.com"
     },

@@ -58,8 +58,7 @@ namespace Cadenza
 
             if (player != null)
             {
-                PlayerInput playerInput = player.Input;
-                if (player.TryGetComponent(out ICharacter character))
+                if (player.Input.TryGetComponent(out ICharacter character))
                     character.WeakAttack();
             }
         }
