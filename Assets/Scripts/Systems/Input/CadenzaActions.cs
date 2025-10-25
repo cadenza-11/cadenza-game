@@ -74,7 +74,7 @@ namespace Cadenza
     /// }
     /// </code>
     /// </example>
-    public partial class @CadenzaActions: IInputActionCollection2, IDisposable
+    public partial class @CadenzaActions : IInputActionCollection2, IDisposable
     {
         /// <summary>
         /// Provides access to the underlying asset instance.
@@ -1314,8 +1314,6 @@ namespace Cadenza
             /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
             public void Disable() { Get().Disable(); }
             /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.FindAction(string, bool)" />
-            public InputAction FindAction(string a, bool throwIfNotFound = false) { return Get().FindAction(a, throwIfNotFound); }
-            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
             public bool enabled => Get().enabled;
             /// <summary>
             /// Implicitly converts an <see ref="UIActions" /> to an <see ref="InputActionMap" /> instance.

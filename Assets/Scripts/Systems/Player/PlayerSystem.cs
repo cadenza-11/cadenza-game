@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Cadenza
 {
@@ -39,6 +38,7 @@ namespace Cadenza
         }
 
         public static event Action<Player> PlayerAdded;
+        public static event Action<Player> PlayerRemoved;
 
         public override void OnInitialize()
         {
@@ -48,103 +48,87 @@ namespace Cadenza
             this.playersByID = new();
         }
 
-        public static void OnInteract(int id)
+        public override void OnGameStart()
         {
+            // Spawn player body.
+            foreach (var id in this.roster)
+                SpawnPlayer(id);
         }
 
-        public static void OnAttackLight(int id)
+        public static bool TryGetPlayerByID(int deviceID, out Player player)
         {
-            Player player = GetPlayerByID(id);
-
-            if (player != null)
-            {
-                if (player.Input.TryGetComponent(out ICharacter character))
-                    character.WeakAttack();
-            }
-        }
-
-        public static void OnAttackHeavy(int id)
-        {
-        }
-
-        public static void OnAttackSpecial(int id)
-        {
-        }
-
-        public static void OnAttackTeam(int id)
-        {
-        }
-
-        public static void OnMove(int id, Vector2 input)
-        {
-            if (GetPlayerByID(id) != null)
-            {
-                PlayerInput player = GetPlayerByID(id).Input;
-                if (player.TryGetComponent(out ICharacter character))
-                    character.Move(input);
-            }
-        }
-
-        public static Player GetPlayerByID(int deviceID)
-        {
-            if (!singleton.playersByID.ContainsKey(deviceID))
-                return null;
-
-            return singleton.playersByID[deviceID];
+            return singleton.playersByID.TryGetValue(deviceID, out player);
         }
 
         /// <summary>
-        /// Adds player to list of players.
+        /// Creates a new player and adds it to roster.
         /// </summary>
-        /// <param name="deviceID"></param>
-        /// <returns>True: player created and/or added to roster | False: player creation failed</returns>
-        public static bool AddPlayer(int deviceID)
+        /// <returns>Whether a new player was successfully added. False is a player already exists with this ID</returns>
+        public static bool TryAddPlayer(int deviceID, out Player player)
         {
-            Debug.Log($"Attempting to add Device {deviceID} as player.");
-            Player newPlayer = GetPlayerByID(deviceID);
-            if (newPlayer == null)
-                newPlayer = CreatePlayer(deviceID);
-
-            int deviceIndex = Array.IndexOf(singleton.roster, deviceID);
-            int openIndex = Array.IndexOf(singleton.roster, -1);
-            if (deviceIndex == -1)
-            {
-                if (openIndex != -1)
-                {
-                    Debug.Log($"Device {deviceID} added as Player {openIndex + 1} at index {openIndex}");
-                    newPlayer.PlayerNumber = openIndex + 1;
-                    singleton.roster[openIndex] = deviceID;
-                    return true;
-                }
+            // Get existing player.
+            if (TryGetPlayerByID(deviceID, out player))
                 return false;
+
+            // Create new player.
+            player = new(deviceID);
+            singleton.playersByID[deviceID] = player;
+
+            // Add to roster at first unused slot.
+            int openIndex = Array.IndexOf(singleton.roster, -1);
+            if (openIndex != -1)
+            {
+                singleton.roster[openIndex] = deviceID;
+                player.PlayerNumber = openIndex + 1;
             }
+
+            // Notify.
+            PlayerAdded?.Invoke(player);
+            Debug.Log($"New device joined as Player {player.PlayerNumber}. (id={deviceID})");
+
             return true;
         }
 
-        public static void RemovePlayer(Player p)
+        /// <summary>
+        /// Attempts to remove a player.
+        /// </summary>
+        /// <param name="player">The player to remove</param>
+        /// <returns>Whether the player exists and was removed successfully</returns>
+        public static bool RemovePlayer(Player player)
         {
-            singleton.roster[p.PlayerNumber - 1] = -1;
-            singleton.playersByID.Remove(p.DeviceID);
+            return RemovePlayer(player.DeviceID);
         }
 
-        public static void RemovePlayer(int id)
+        /// <summary>
+        /// Attempts to remove a player with the given ID.
+        /// </summary>
+        /// <param name="id">The device ID of the player to remove</param>
+        /// <returns>Whether the player exists was removed successfully.</returns>
+        public static bool RemovePlayer(int id)
         {
-            Player p = GetPlayerByID(id);
+            if (!TryGetPlayerByID(id, out Player p))
+                return false;
+
             singleton.roster[p.PlayerNumber - 1] = -1;
-            singleton.playersByID.Remove(id);
+            return singleton.playersByID.Remove(id);
         }
 
-        private static Player CreatePlayer(int id)
+        private static ICharacter SpawnPlayer(int id)
         {
-            GameObject newAvatar = Instantiate(singleton.playerPrefab);
-            Player newPlayer = new(newAvatar, id);
-            singleton.playersByID[id] = newPlayer;
+            Debug.Log($"Attempting to spawn player for device ID {id}; stored IDS = {string.Join(',', singleton.playersByID.Keys)}; exists = {TryGetPlayerByID(id, out _)}");
+            if (!TryGetPlayerByID(id, out Player player))
+                return null;
 
-            Debug.Log($"Player joined with device ID {id}");
+            Debug.Log($"Player exists:{player.PlayerNumber}");
 
-            PlayerAdded?.Invoke(newPlayer);
+            var character = Instantiate(singleton.playerPrefab).GetComponent<ICharacter>();
+            Debug.Log($"Instantiated {player.PlayerNumber}");
+            Debug.Log($"Player is null: {player == null}");
+            player.SetCharacter(character);
+            Debug.Log("Success");
+            Debug.Log($"Spawning player {player.PlayerNumber}");
 
-            return newPlayer;
+            return character;
         }
     }
 }

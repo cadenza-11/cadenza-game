@@ -2,6 +2,7 @@ using UnityEngine;
 
 public interface ICharacter
 {
+    Transform Transform { get; }
     int currentHealth { get; set; }
     int specialMeter { get; set; }
 

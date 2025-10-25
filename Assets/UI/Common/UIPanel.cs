@@ -9,9 +9,6 @@ namespace Cadenza
         protected CadenzaActions Inputs;
         protected TemplateContainer root;
 
-        public override void OnInitialize()
-        {
-        }
         public virtual void Show()
         {
             InputSystem.UIInputMap.Enable();

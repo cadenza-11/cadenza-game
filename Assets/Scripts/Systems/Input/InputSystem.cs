@@ -49,68 +49,59 @@ namespace Cadenza
             this.playerInputMap.Disable();
         }
 
-        public static void RebindPlayerInputAction(int deviceID, string actionName)
-        {
-            var player = PlayerSystem.GetPlayerByID(deviceID).Input;
-            if (player != null)
-            {
-                var playerAction = player.actions.FindAction(actionName, throwIfNotFound: true);
-                var rebindOp = playerAction.PerformInteractiveRebinding()
-                    .WithControlsExcluding("<Mouse>/position")
-                    .WithControlsExcluding("<Mouse>/delta")
-                    .WithControlsExcluding("<Gamepad>/Start")
-                    .WithControlsExcluding("<Keyboard>/escape")
-                    .OnMatchWaitForAnother(0.1f)
-                .OnComplete(operation => { });
-
-                rebindOp.Start();
-            }
-            
-        }
-
-        public static void RestorePlayerInputActionToDefault(int deviceID, string actionName)
-        {
-            var player = PlayerSystem.GetPlayerByID(deviceID).Input;
-            var playerAction = player.actions.FindAction(actionName, throwIfNotFound: true);
-            InputActionRebindingExtensions.RemoveAllBindingOverrides(playerAction);
-        }
-
         #region Player Interface Methods
 
         public void OnMove(InputAction.CallbackContext context)
         {
+            int id = context.control.device.deviceId;
             var input = context.performed ? context.ReadValue<Vector2>() : Vector2.zero;
-            PlayerSystem.OnMove(context.control.device.deviceId, input);
+
+            if (PlayerSystem.TryGetPlayerByID(id, out Player player))
+                player.Character.Move(input);
         }
 
         public void OnInteract(InputAction.CallbackContext context)
         {
-            if (context.performed)
-                PlayerSystem.OnInteract(context.control.device.deviceId);
         }
 
         public void OnAttackLight(InputAction.CallbackContext context)
         {
-            if (context.performed)
-                PlayerSystem.OnAttackLight(context.control.device.deviceId);
+            if (!context.performed)
+                return;
+
+            int id = context.control.device.deviceId;
+            if (PlayerSystem.TryGetPlayerByID(id, out Player player))
+                player.Character.WeakAttack();
         }
 
         public void OnAttackHeavy(InputAction.CallbackContext context)
         {
-            if (context.performed)
-                PlayerSystem.OnAttackHeavy(context.control.device.deviceId);
+            if (!context.performed)
+                return;
+
+            int id = context.control.device.deviceId;
+            if (PlayerSystem.TryGetPlayerByID(id, out Player player))
+                player.Character.StrongAttack();
         }
 
         public void OnAttackSpecial(InputAction.CallbackContext context)
         {
-            if (context.performed)
-                PlayerSystem.OnAttackSpecial(context.control.device.deviceId);
+            if (!context.performed)
+                return;
+
+            int id = context.control.device.deviceId;
+            if (PlayerSystem.TryGetPlayerByID(id, out Player player))
+                player.Character.SpecialAttack();
         }
 
         public void OnAttackTeam(InputAction.CallbackContext context)
         {
-            if (context.performed)
-                PlayerSystem.OnAttackTeam(context.control.device.deviceId);
+            if (!context.performed)
+                return;
+
+            int id = context.control.device.deviceId;
+            if (PlayerSystem.TryGetPlayerByID(id, out Player player))
+                player.Character.StartTeamAttk();
         }
 
         #endregion

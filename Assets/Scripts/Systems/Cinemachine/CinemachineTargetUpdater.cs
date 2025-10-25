@@ -21,10 +21,10 @@ namespace Cadenza
             this.cinemachineTargetComponent.Targets.Clear();
             if (state == GameStateManager.GameState.InLevel)
             {
-                foreach(int deviceID in PlayerSystem.PlayerRoster)
+                foreach (int deviceID in PlayerSystem.PlayerRoster)
                 {
-                    if (deviceID > -1)
-                        this.cinemachineTargetComponent.AddMember(PlayerSystem.GetPlayerByID(deviceID).Input.transform, 1f, .5f);
+                    if (PlayerSystem.TryGetPlayerByID(deviceID, out Player player))
+                        this.cinemachineTargetComponent.AddMember(player.transform, 1f, .5f);
                 }
             }
         }

@@ -9,10 +9,11 @@ namespace Cadenza
 
         private int playerNumber;
         private int deviceID;
-        private string profileName; // Replace with profile class in future
         private string characterName; // Replace with character class in future
         private float latency;
-        private GameObject avatar;
+
+        public Transform transform => this.Character.Transform;
+        public ICharacter Character { get; private set; }
         public PlayerInput Input { get; private set; }
 
         #endregion
@@ -26,13 +27,7 @@ namespace Cadenza
             set { this.playerNumber = value; }
         }
 
-        public string Profile
-        {
-            get { return this.profileName; }
-            set { this.profileName = value; }
-        }
-
-        public string Character
+        public string Name
         {
             get { return this.characterName; }
             set { this.characterName = value; }
@@ -56,10 +51,18 @@ namespace Cadenza
         #endregion
         #region Functions
 
-        public Player(GameObject av, int id)
+        /// <summary>
+        /// Tracks this player to an instance of a character body.
+        /// </summary>
+        /// <param name="character">A spawned instance of the player body.</param>
+        public void SetCharacter(ICharacter character)
         {
-            this.avatar = av;
-            this.Input = av.GetComponent<PlayerInput>();
+            this.Character = character;
+            this.Input = character.Transform.GetComponent<PlayerInput>();
+        }
+
+        public Player(int id)
+        {
             this.deviceID = id;
         }
 

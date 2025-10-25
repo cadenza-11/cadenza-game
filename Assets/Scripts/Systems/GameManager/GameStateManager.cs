@@ -29,10 +29,4 @@ public class GameStateManager : ApplicationSystem
         singleton.currentState = newState;
         OnGameStateChanged?.Invoke(newState);
     }
-
-    public override void OnGameStart()
-    {
-        this.currentState = GameState.MainMenu;
-        this.uiDocs[0].Show();
-    }
 }

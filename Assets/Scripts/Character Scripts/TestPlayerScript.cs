@@ -8,6 +8,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
     private float attackDuration = 0.25f, chargeDuration = 0.5f, attackTimer = 0f, chargeTimer = 0f;
 
     //Needed for Interface, does nothing rn
+    public Transform Transform => this.transform;
     public int currentHealth { get; set; }
     public int specialMeter { get; set; }
     private int attackMod;

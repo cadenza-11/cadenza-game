@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -53,7 +51,7 @@ namespace Cadenza
         {
             base.Show();
             this.root.style.display = DisplayStyle.Flex;
-            InputSystem.UIInputMap.FindAction("Submit", throwIfNotFound: true).performed += this.OnSubmit;
+            InputSystem.UIInputMap.Get().FindAction("Submit", throwIfNotFound: true).performed += this.OnSubmit;
         }
 
         public override void Hide()
@@ -61,6 +59,12 @@ namespace Cadenza
             base.Hide();
             this.root.style.display = DisplayStyle.None;
         }
+
+        public override void OnStart()
+        {
+            this.Show();
+        }
+
         #endregion
 
         #region Navigation Events
@@ -68,16 +72,19 @@ namespace Cadenza
         private void OnSubmit(InputAction.CallbackContext context)
         {
             int id = context.control.device.deviceId;
-            Player player = PlayerSystem.GetPlayerByID(id);
 
-            if (player == null)
+            // Detect new player.
+            if (!PlayerSystem.TryGetPlayerByID(id, out Player player))
             {
-                if (!PlayerSystem.AddPlayer(id)) return;
-                player =  PlayerSystem.GetPlayerByID(id);
-                PlayerTracker newTracker;
-                newTracker.Phase = SelectPhase.Joining;
-                newTracker.Container = this.playerContainers[player.PlayerNumber - 1];
-                newTracker.CallibrationAttempts = -1;
+                if (!PlayerSystem.TryAddPlayer(id, out player))
+                    return;
+
+                PlayerTracker newTracker = new()
+                {
+                    Phase = SelectPhase.Joining,
+                    Container = this.playerContainers[player.PlayerNumber - 1],
+                    CallibrationAttempts = -1
+                };
                 newTracker.TempLabel = newTracker.Container.Q<Label>("temp");
                 this.playerPhases.Add(player, newTracker);
             }
@@ -91,6 +98,7 @@ namespace Cadenza
                     foundPlayer.TempLabel.text = "Name profile here";
                     foundPlayer.Phase++;
                     break;
+
                 case SelectPhase.Callibrating: // For a certain amount of beats, stay on this event until input latency is calculated. //
                     if (foundPlayer.CallibrationAttempts == -1)
                     {
@@ -110,22 +118,25 @@ namespace Cadenza
                         foundPlayer.Phase++;
                     }
                     break;
+
                 case SelectPhase.CharacterSelection: // Select character. //
-                    player.Character = "Temp"; // Update in future.
-                    if (!string.IsNullOrEmpty(player.Character))
+                    player.Name = "Temp"; // Update in future.
+                    if (!string.IsNullOrEmpty(player.Name))
                         foundPlayer.Phase++;
                     break;
+
                 case SelectPhase.ControllerMapping: // Update controller mapping or select controller mapping profile. //
                     // Figure this out.
                     foundPlayer.TempLabel.text = "Idk controller map here";
                     foundPlayer.Phase++;
                     this.playersReady++;
                     break;
+
                 case SelectPhase.Ready:
                     Debug.Log($"# of players ready: {this.playersReady}/{PlayerSystem.PlayerCount}");
                     if (this.playersReady == PlayerSystem.PlayerCount)
                     {
-                        GameStateManager.ChangeGameState(GameStateManager.GameState.InLevel);
+                        _ = ApplicationController.SetSceneAsync(1);
                         this.Hide();
                     }
                     break;

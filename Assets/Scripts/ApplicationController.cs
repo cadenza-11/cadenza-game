@@ -3,12 +3,11 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
 namespace Cadenza
 {
     public enum ApplicationState
     {
+        Booting,
         Pregame,
         GameSession,
         Quitting,
@@ -48,9 +47,6 @@ namespace Cadenza
             {
                 system.OnStart();
             }
-
-            // Load the first scene in the build index.
-            SetSceneAsync(1);
         }
 
         void Update()
@@ -104,38 +100,44 @@ namespace Cadenza
 
         private void ChangeState(ApplicationState newState)
         {
+            if (this.state == newState)
+                return;
+
+            var previousState = this.state;
+            this.state = newState;
+            Debug.Log($"Application state changed from {previousState} to {newState}");
+
             // Exiting game.
-            if (this.state == ApplicationState.GameSession &&
+            if (previousState == ApplicationState.GameSession &&
                 newState == ApplicationState.Pregame)
             {
                 foreach (var system in this.systems)
                     system.OnGameStop();
+
+                return;
             }
 
             // Starting game.
-            else if (
-                this.state == ApplicationState.Pregame &&
+            if (previousState == ApplicationState.Pregame &&
                 newState == ApplicationState.GameSession)
             {
                 foreach (var system in this.systems)
                     system.OnGameStart();
+
+                return;
             }
 
             // Quitting application.
-            else if (
-                this.state != ApplicationState.Quitting &&
+            if (previousState != ApplicationState.Quitting &&
                 newState == ApplicationState.Quitting)
             {
                 foreach (var system in this.systems)
                     system.OnGameStop();
                 foreach (var system in this.systems)
                     system.OnApplicationStop();
-            }
 
-            Debug.Log($"Application state changed from {this.state} to {newState}");
-            this.state = newState;
+                return;
+            }
         }
     }
 }
-
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
