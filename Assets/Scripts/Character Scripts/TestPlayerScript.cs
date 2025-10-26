@@ -1,7 +1,8 @@
 using UnityEngine;
 using Cadenza;
+using UnityEngine.InputSystem;
 
-public class TestPlayerScript : MonoBehaviour, ICharacter
+public class TestPlayerScript : MonoBehaviour, CadenzaActions.IPlayerActions
 {
     //All floats, determine the player's speed, jump force, and time it takes to attack. Currently changed in the editor
     public float speed, jumpForce, chargeForce;
@@ -15,6 +16,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
 
     //y only jump vector
     public Vector3 jump, charge;
+    private CadenzaActions inputActions;
     public Vector2 move;
 
     //Random components
@@ -185,6 +187,38 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
 
     }
     public void DoDamage()
+    {
+
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        var input = context.performed ? context.ReadValue<Vector2>() : Vector2.zero;
+        this.Move(input);
+    }
+
+    public void OnAttackLight(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            this.WeakAttack();
+    }
+
+    public void OnAttackHeavy(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnAttackSpecial(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnAttackTeam(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
     {
 
     }
