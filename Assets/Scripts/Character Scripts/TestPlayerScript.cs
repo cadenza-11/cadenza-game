@@ -147,7 +147,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
             accuracy < 0.05f ? 2 :
             accuracy < 0.10f ? 1 : 0;
 
-        AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", soundID);
+        AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", soundID, immediate: true);
 
         // Play animation
         this.anim.SetTrigger("WeakAttack");
