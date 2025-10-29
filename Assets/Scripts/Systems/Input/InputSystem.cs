@@ -141,6 +141,7 @@ namespace Cadenza
 
         public void OnToggleDebug(InputAction.CallbackContext context)
         {
+            DebugConsole.ToggleVisibility();
         }
 
         #endregion

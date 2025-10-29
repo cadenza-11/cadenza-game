@@ -11,12 +11,12 @@ namespace Cadenza
 
         public virtual void Show()
         {
-            InputSystem.UIInputMap.Enable();
+            // InputSystem.UIInputMap.Enable();
         }
 
         public virtual void Hide()
         {
-            InputSystem.UIInputMap.Disable();
+            // InputSystem.UIInputMap.Disable();
         }
     }
 }

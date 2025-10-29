@@ -7,6 +7,8 @@ namespace Cadenza
 {
     public class DebugConsole : ApplicationSystem
     {
+        private static DebugConsole singleton;
+
         private struct DebugLine
         {
             public string message;
@@ -23,6 +25,9 @@ namespace Cadenza
 
         public override void OnInitialize()
         {
+            Debug.Assert(singleton == null);
+            singleton = this;
+
             // Set up UI.
             this.root = this.uiDocument.rootVisualElement.Q("root");
 
@@ -46,7 +51,6 @@ namespace Cadenza
 
             // Override logger.
             Application.logMessageReceived += this.OnLogMessageReceived;
-            InputSystem.UIInputMap.ToggleDebug.performed += _ => this.ToggleVisibility();
         }
 
         public override void OnApplicationStop()
@@ -54,17 +58,15 @@ namespace Cadenza
             Application.logMessageReceived -= this.OnLogMessageReceived;
         }
 
-        public void ToggleVisibility()
+        public static void ToggleVisibility()
         {
-            if (this.root.style.display == DisplayStyle.Flex)
+            if (singleton.root.style.display == DisplayStyle.Flex)
             {
-                this.root.style.display = DisplayStyle.None;
-                InputSystem.PlayerInputMap.Enable();
+                singleton.root.style.display = DisplayStyle.None;
             }
             else
             {
-                this.root.style.display = DisplayStyle.Flex;
-                InputSystem.PlayerInputMap.Disable();
+                singleton.root.style.display = DisplayStyle.Flex;
             }
         }
 
