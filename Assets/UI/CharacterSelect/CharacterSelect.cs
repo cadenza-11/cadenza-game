@@ -30,6 +30,7 @@ namespace Cadenza
         private Dictionary<SelectPhase, VisualTreeAsset> screens;
         private VisualElement[] playerContainers;
         private Dictionary<Player, PlayerTracker> playerPhases = new();
+        private InputAction submitAction;
 
         private int playersReady = 0;
 
@@ -44,6 +45,8 @@ namespace Cadenza
                 this.root.Q<VisualElement>("c_PlayerThree"),
                 this.root.Q<VisualElement>("c_PlayerFour")
             };
+
+            this.submitAction = InputSystem.UIInputMap.Get().FindAction("Submit", throwIfNotFound: true);
             this.root.style.display = DisplayStyle.None;
         }
 
@@ -51,12 +54,13 @@ namespace Cadenza
         {
             base.Show();
             this.root.style.display = DisplayStyle.Flex;
-            InputSystem.UIInputMap.Get().FindAction("Submit", throwIfNotFound: true).performed += this.OnSubmit;
+            this.submitAction.performed += this.OnSubmit;
         }
 
         public override void Hide()
         {
             base.Hide();
+            this.submitAction.performed -= this.OnSubmit;
             this.root.style.display = DisplayStyle.None;
         }
 

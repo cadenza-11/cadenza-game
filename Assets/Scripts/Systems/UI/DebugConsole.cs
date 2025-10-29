@@ -63,10 +63,12 @@ namespace Cadenza
             if (singleton.root.style.display == DisplayStyle.Flex)
             {
                 singleton.root.style.display = DisplayStyle.None;
+                InputSystem.PlayerInputMap.Enable();
             }
             else
             {
                 singleton.root.style.display = DisplayStyle.Flex;
+                InputSystem.PlayerInputMap.Disable();
             }
         }
 
