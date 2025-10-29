@@ -107,14 +107,14 @@ namespace Cadenza
                     }
                     else if (foundPlayer.CallibrationAttempts < this.TotalCallibrationAttempts)
                     {
-                        float accuracy = BeatSystem.GetAccuracy(BeatSystem.CurrentTime);
-                        player.Latency = accuracy;
+                        float latency = BeatSystem.GetLatency(BeatSystem.CurrentTime);
+                        player.Latency = latency;
                         foundPlayer.CallibrationAttempts++;
                     }
                     else if (foundPlayer.CallibrationAttempts == this.TotalCallibrationAttempts)
                     {
                         // Call update for container
-                        foundPlayer.TempLabel.text = $"Accuracy average: {player.Latency}";
+                        foundPlayer.TempLabel.text = $"Latency average: {player.Latency}";
                         foundPlayer.Phase++;
                     }
                     break;

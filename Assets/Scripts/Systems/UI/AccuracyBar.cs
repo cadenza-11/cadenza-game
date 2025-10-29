@@ -1,3 +1,4 @@
+using Cadenza;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,19 +8,23 @@ public class AccuracyBar : MonoBehaviour
     private Slider accuracyBar;
     private Label accuracyText;
 
-    private const string EarlyText = "Early!";
-    private const string LateText = "Late!";
-    private const float OnTimeThreshold = 0.1f;
-
     void Start()
     {
         this.accuracyBar = this.uiDocument.rootVisualElement.Q<Slider>();
         this.accuracyText = this.uiDocument.rootVisualElement.Q<Label>();
+
+        float halfPeriod = (float)BeatSystem.SecondsPerBeat / 2;
+        this.accuracyBar.lowValue = -halfPeriod;
+        this.accuracyBar.highValue = +halfPeriod;
     }
 
     public void SetAccuracy(float accuracy)
     {
-        this.accuracyBar.value = Mathf.Abs(accuracy);
-        this.accuracyText.text = accuracy < 0 ? EarlyText : LateText;
+        this.accuracyBar.value = accuracy;
+
+        accuracy = Mathf.Abs(accuracy);
+        this.accuracyText.text =
+            accuracy < 0.05f ? "Perfect" :
+            accuracy < 0.10f ? "Good" : string.Empty;
     }
 }

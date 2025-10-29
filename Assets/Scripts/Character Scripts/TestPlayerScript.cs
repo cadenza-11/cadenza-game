@@ -138,14 +138,14 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
         this.attackArea.SetActive(this.isAttacking);
 
         // Play sound
-        float accuracy = BeatSystem.GetAccuracy(BeatSystem.CurrentTime);
+        float accuracy = BeatSystem.GetLatency(BeatSystem.CurrentTime);
         if (this.accuracyBar != null)
             this.accuracyBar.SetAccuracy(accuracy);
 
         accuracy = Mathf.Abs(accuracy);
         int soundID =
-            accuracy > 0.75 ? 2 :
-            accuracy > 0.5 ? 1 : 0;
+            accuracy < 0.05f ? 2 :
+            accuracy < 0.10f ? 1 : 0;
 
         AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", soundID);
 

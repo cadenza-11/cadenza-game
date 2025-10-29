@@ -65,6 +65,12 @@ namespace Cadenza
         /// </summary>
         public static double CurrentTime => singleton.elapsedTimeDSP;
 
+        /// <summary>
+        /// The number of seconds that pass between each beat in the current tempo.
+        /// (Equivalent to 60 seconds / BPM)
+        /// </summary>
+        public static double SecondsPerBeat => singleton.beatPeriod;
+
         #endregion
         #region Private Variables
 
@@ -121,10 +127,20 @@ namespace Cadenza
         private double deltaTimeDSP = 0f;
 
         /// <summary>
-        /// A configurable amount of time (in seconds) that the system should
+        /// A configurable amount of time (in ms) that the system should
         /// detect the beat as being earlier or later than estimated.
         /// </summary>
-        private float offsetTime = 0f;
+        private float userOffsetTime = 0f;
+
+        /// <summary>
+        /// The amount of latency (in ms) it takes to communicate to/from FMOD.
+        /// </summary>
+        private const float FMODOffsetTime = 0f;
+
+        /// <summary>
+        /// The total amount of latency (in seconds) to configure the beat detection system for.
+        /// </summary>
+        private float offsetTime => (this.userOffsetTime + FMODOffsetTime) / 1000;
 
         private bool wasMarkerPassedThisFrame = false;
         private int markerTime;
@@ -140,6 +156,7 @@ namespace Cadenza
         private GCHandle timelineHandle;
         private EVENT_CALLBACK beatCallback;
         private FMOD.ChannelGroup channelGroup;
+        private static float? toleranceMsOverride;
 
         #endregion
         #region Application Callbacks
@@ -192,27 +209,26 @@ namespace Cadenza
         /// <param name="offset">How much time (in milliseconds) to shift the time estimation.</param>
         public static void SetOffset(int offsetMs)
         {
-            float offset = Mathf.Repeat(offsetMs / 1000f, (float)singleton.beatPeriod);
-            singleton.offsetTime = offset;
+            float offset = Mathf.Repeat(offsetMs, (float)singleton.beatPeriod * 1000);
+            singleton.userOffsetTime = offset;
         }
 
         /// <summary>
-        /// Calculates a measure between -1 to 1 of how on-beat the timestamp is compared to the current time.
-        /// An absolute value closer to 1 is more on-beat, while closer to 0 is more off-beat.
-        /// A positive value means the timestamp was "late" compared to the beat,
-        /// while a negative value means it was "early" compared to beat.
+        /// Calculates how far (in seconds) the given timestamp is from the closest beat.
+        /// The sign of the value indicates if it was earlier or later than the closest beat
+        /// (negative means early, positive means late).
         /// </summary>
-        public static float GetAccuracy(double timestamp)
+        public static float GetLatency(double timestamp)
         {
             singleton.UpdateDSPClock();
 
-            float elapsedTrackTime = (float)(timestamp - singleton.trackStartTimeDSP) - singleton.offsetTime;
+            float elapsedTrackTime = (float)(timestamp - singleton.trackStartTimeDSP) + singleton.offsetTime;
             float beatPeriod = (float)singleton.beatPeriod;
             float beatPhase = Mathf.Repeat(elapsedTrackTime, beatPeriod);
-            float normalizedPhase = beatPhase / beatPeriod;
+            float distance = Mathf.Min(beatPhase, beatPeriod - beatPhase);
+            int sign = (beatPhase <= beatPeriod / 2) ? +1 : -1;
 
-            float accuracy = 1 - (2 * normalizedPhase);
-            return accuracy;
+            return sign * distance;
         }
 
         #endregion
@@ -367,7 +383,7 @@ namespace Cadenza
         /// </summary>
         private bool CheckForNextBeat()
         {
-            float elapsedTrackTime = (float)(this.elapsedTimeDSP - this.trackStartTimeDSP) - this.offsetTime;
+            float elapsedTrackTime = (float)(this.elapsedTimeDSP - this.trackStartTimeDSP) + this.offsetTime;
             float beatPeriod = Mathf.Repeat(elapsedTrackTime, (float)this.beatPeriod);
 
             bool beatBoundaryPassed = elapsedTrackTime >= this.previousBeatTime + this.beatPeriod;
@@ -386,7 +402,7 @@ namespace Cadenza
         /// </summary>
         private bool CheckForNextUpBeat()
         {
-            float elapsedTrackTime = (float)(this.elapsedTimeDSP - this.trackStartTimeDSP) - this.offsetTime;
+            float elapsedTrackTime = (float)(this.elapsedTimeDSP - this.trackStartTimeDSP) + this.offsetTime;
             float estimatedUpbeatTime = (float)(elapsedTrackTime + this.beatPeriod * this.swingPercent);
             float beatPeriod = Mathf.Repeat(elapsedTrackTime, (float)this.beatPeriod);
 
