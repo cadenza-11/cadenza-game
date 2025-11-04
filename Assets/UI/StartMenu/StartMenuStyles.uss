@@ -1,0 +1,77 @@
+:root {
+    --start-menu-color: orange;
+}
+
+.panel_background {
+    background-color: rgb(0, 0, 0);
+    flex-direction: column-reverse;
+    background-image: url("project://database/Assets/Art/TEMPORARY_ASSETS/TEMP_BG_fm_orange.jpg?fileID=2800000&guid=572cce9d4fe981c4894d4a783eda8c57&type=3#TEMP_BG_fm_orange");
+    -unity-background-scale-mode: scale-and-crop;
+    align-content: flex-end;
+}
+
+.button_container {
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0.69);
+    border-top-width: 5px;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 5px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-left-radius: 500px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    max-height: 40%;
+    align-self: flex-end;
+    width: 60%;
+    padding-top: 3%;
+    padding-right: 3%;
+    padding-bottom: 3%;
+    padding-left: 10%;
+    color: rgb(255, 255, 255);
+    font-size: 60px;
+}
+
+.start_menu_button {
+    flex-direction: row;
+    background-color: rgba(188, 188, 188, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    justify-content: flex-end;
+}
+
+.focus_icon {
+    background-image: url("project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-1087164816274819069&guid=6c7fd4304507d004983595a79123c013&type=3#arrow-right@2x");
+    -unity-background-scale-mode: scale-to-fit;
+    height: auto;
+    width: 100px;
+    opacity: 0;
+}
+
+.button_text {
+    -unity-font-style: normal;
+}
+
+.start_menu_button:focus .focus_icon {
+    opacity: 1;
+    -unity-background-image-tint-color: var(--start-menu-color);
+}
+
+.start_menu_button:focus .button_text {
+    color: var(--start-menu-color);
+    -unity-font-style: bold;
+}

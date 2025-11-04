@@ -74,7 +74,7 @@ namespace Cadenza
     /// }
     /// </code>
     /// </example>
-    public partial class @CadenzaActions : IInputActionCollection2, IDisposable
+    public partial class @CadenzaActions: IInputActionCollection2, IDisposable
     {
         /// <summary>
         /// Provides access to the underlying asset instance.
@@ -478,6 +478,15 @@ namespace Cadenza
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Join"",
+                    ""type"": ""Button"",
+                    ""id"": ""bb701380-63b6-4347-a755-41bb02d10630"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -931,6 +940,50 @@ namespace Cadenza
                     ""action"": ""Point"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f31552c9-9761-4e78-b484-2bb1c0505f83"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Join"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""4fc9a1f5-46e7-4c3f-9525-b4ce396f4d4c"",
+                    ""path"": ""OneModifier(modifiersOrder=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Join"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""c14e3030-1d83-4f9e-b894-9031f7a17f5e"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Join"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""b86d55d3-1e9d-47da-98c0-ca3840d849cd"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Join"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -1017,6 +1070,7 @@ namespace Cadenza
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_ToggleDebug = m_UI.FindAction("Toggle/Debug", throwIfNotFound: true);
             m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
+            m_UI_Join = m_UI.FindAction("Join", throwIfNotFound: true);
         }
 
         ~@CadenzaActions()
@@ -1258,6 +1312,7 @@ namespace Cadenza
         private readonly InputAction m_UI_ScrollWheel;
         private readonly InputAction m_UI_ToggleDebug;
         private readonly InputAction m_UI_Point;
+        private readonly InputAction m_UI_Join;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
         /// </summary>
@@ -1306,6 +1361,10 @@ namespace Cadenza
             /// </summary>
             public InputAction @Point => m_Wrapper.m_UI_Point;
             /// <summary>
+            /// Provides access to the underlying input action "UI/Join".
+            /// </summary>
+            public InputAction @Join => m_Wrapper.m_UI_Join;
+            /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
             public InputActionMap Get() { return m_Wrapper.m_UI; }
@@ -1313,7 +1372,7 @@ namespace Cadenza
             public void Enable() { Get().Enable(); }
             /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
             public void Disable() { Get().Disable(); }
-            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.FindAction(string, bool)" />
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
             public bool enabled => Get().enabled;
             /// <summary>
             /// Implicitly converts an <see ref="UIActions" /> to an <see ref="InputActionMap" /> instance.
@@ -1358,6 +1417,9 @@ namespace Cadenza
                 @Point.started += instance.OnPoint;
                 @Point.performed += instance.OnPoint;
                 @Point.canceled += instance.OnPoint;
+                @Join.started += instance.OnJoin;
+                @Join.performed += instance.OnJoin;
+                @Join.canceled += instance.OnJoin;
             }
 
             /// <summary>
@@ -1396,6 +1458,9 @@ namespace Cadenza
                 @Point.started -= instance.OnPoint;
                 @Point.performed -= instance.OnPoint;
                 @Point.canceled -= instance.OnPoint;
+                @Join.started -= instance.OnJoin;
+                @Join.performed -= instance.OnJoin;
+                @Join.canceled -= instance.OnJoin;
             }
 
             /// <summary>
@@ -1614,6 +1679,13 @@ namespace Cadenza
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnPoint(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Join" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnJoin(InputAction.CallbackContext context);
         }
     }
 }

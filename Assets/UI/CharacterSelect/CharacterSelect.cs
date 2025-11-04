@@ -10,7 +10,7 @@ namespace Cadenza
         private enum SelectPhase
         {
             Joining,
-            Callibrating,
+            Calibrating,
             CharacterSelection,
             ControllerMapping,
             Ready
@@ -21,11 +21,11 @@ namespace Cadenza
             public SelectPhase Phase;
             public VisualElement Container;
             public Label TempLabel; // remove later
-            public int CallibrationAttempts;
+            public int CalibrationAttempts;
         }
 
         [SerializeField] private UIDocument uiDocument;
-        [SerializeField] private int TotalCallibrationAttempts;
+        [SerializeField] private int TotalCalibrationAttempts;
 
         private Dictionary<SelectPhase, VisualTreeAsset> screens;
         private VisualElement[] playerContainers;
@@ -39,6 +39,8 @@ namespace Cadenza
         {
             // Set up UI.
             this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
+            this.root.style.display = DisplayStyle.None;
+
             this.playerContainers = new VisualElement[] {
                 this.root.Q<VisualElement>("c_PlayerOne"),
                 this.root.Q<VisualElement>("c_PlayerTwo"),
@@ -55,6 +57,19 @@ namespace Cadenza
             base.Show();
             this.root.style.display = DisplayStyle.Flex;
             this.submitAction.performed += this.OnSubmit;
+            foreach (int id in PlayerSystem.PlayerRoster)
+            {
+                if (!PlayerSystem.TryGetPlayerByID(id, out Player player)) continue;
+                PlayerTracker newTracker = new()
+                {
+                    Phase = SelectPhase.Calibrating,
+                    Container = this.playerContainers[player.PlayerNumber - 1],
+                    CalibrationAttempts = -1
+                };
+                newTracker.TempLabel = newTracker.Container.Q<Label>("temp");
+                this.playerPhases.Add(player, newTracker);
+                this.Calibrate(player, newTracker);
+            }
         }
 
         public override void Hide()
@@ -62,11 +77,6 @@ namespace Cadenza
             base.Hide();
             this.submitAction.performed -= this.OnSubmit;
             this.root.style.display = DisplayStyle.None;
-        }
-
-        public override void OnStart()
-        {
-            this.Show();
         }
 
         #endregion
@@ -87,7 +97,7 @@ namespace Cadenza
                 {
                     Phase = SelectPhase.Joining,
                     Container = this.playerContainers[player.PlayerNumber - 1],
-                    CallibrationAttempts = -1
+                    CalibrationAttempts = -1
                 };
                 newTracker.TempLabel = newTracker.Container.Q<Label>("temp");
                 this.playerPhases.Add(player, newTracker);
@@ -101,32 +111,18 @@ namespace Cadenza
                     // Call update for container
                     foundPlayer.TempLabel.text = "Name profile here";
                     foundPlayer.Phase++;
+                    this.playerPhases[player] = foundPlayer;
                     break;
 
-                case SelectPhase.Callibrating: // For a certain amount of beats, stay on this event until input latency is calculated. //
-                    if (foundPlayer.CallibrationAttempts == -1)
-                    {
-                        foundPlayer.TempLabel.text = "Tap to beat";
-                        foundPlayer.CallibrationAttempts++;
-                    }
-                    else if (foundPlayer.CallibrationAttempts < this.TotalCallibrationAttempts)
-                    {
-                        float latency = BeatSystem.GetLatency(BeatSystem.CurrentTime);
-                        player.Latency = latency;
-                        foundPlayer.CallibrationAttempts++;
-                    }
-                    else if (foundPlayer.CallibrationAttempts == this.TotalCallibrationAttempts)
-                    {
-                        // Call update for container
-                        foundPlayer.TempLabel.text = $"Latency average: {player.Latency}";
-                        foundPlayer.Phase++;
-                    }
+                case SelectPhase.Calibrating: // For a certain amount of beats, stay on this event until input latency is calculated. //
+                    this.Calibrate(player, foundPlayer);
                     break;
 
                 case SelectPhase.CharacterSelection: // Select character. //
                     player.Name = "Temp"; // Update in future.
                     if (!string.IsNullOrEmpty(player.Name))
                         foundPlayer.Phase++;
+                    this.playerPhases[player] = foundPlayer;
                     break;
 
                 case SelectPhase.ControllerMapping: // Update controller mapping or select controller mapping profile. //
@@ -134,6 +130,7 @@ namespace Cadenza
                     foundPlayer.TempLabel.text = "Idk controller map here";
                     foundPlayer.Phase++;
                     this.playersReady++;
+                    this.playerPhases[player] = foundPlayer;
                     break;
 
                 case SelectPhase.Ready:
@@ -147,11 +144,34 @@ namespace Cadenza
                 default:
                     break;
             }
-            this.playerPhases[player] = foundPlayer;
         }
         #endregion
 
         #region Private Functions
+
+        private void Calibrate(Player player, PlayerTracker tracker)
+        {
+            if (tracker.CalibrationAttempts == -1)
+            {
+                tracker.TempLabel.text = "Tap to beat";
+                tracker.CalibrationAttempts++;
+            }
+            else if (tracker.CalibrationAttempts < this.TotalCalibrationAttempts)
+            {
+                float latency = BeatSystem.GetLatency(BeatSystem.CurrentTime);
+                player.Latency = latency;
+                tracker.CalibrationAttempts++;
+            }
+            else if (tracker.CalibrationAttempts == this.TotalCalibrationAttempts)
+            {
+                // Call update for container
+                tracker.TempLabel.text = $"Latency average: {player.Latency}";
+                tracker.Phase = SelectPhase.CharacterSelection;
+            }
+            this.playerPhases[player] = tracker;
+            Debug.Log($"Player {player.PlayerNumber} : Latency attempt {this.playerPhases[player].CalibrationAttempts}");
+        }
+        
         // Container updates
         #endregion
     }
