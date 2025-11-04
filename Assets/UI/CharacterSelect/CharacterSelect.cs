@@ -39,6 +39,8 @@ namespace Cadenza
         {
             // Set up UI.
             this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
+            this.root.style.display = DisplayStyle.None;
+
             this.playerContainers = new VisualElement[] {
                 this.root.Q<VisualElement>("c_PlayerOne"),
                 this.root.Q<VisualElement>("c_PlayerTwo"),
@@ -62,11 +64,6 @@ namespace Cadenza
             base.Hide();
             this.submitAction.performed -= this.OnSubmit;
             this.root.style.display = DisplayStyle.None;
-        }
-
-        public override void OnStart()
-        {
-            this.Show();
         }
 
         #endregion

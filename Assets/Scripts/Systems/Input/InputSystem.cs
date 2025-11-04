@@ -144,6 +144,10 @@ namespace Cadenza
             DebugConsole.ToggleVisibility();
         }
 
+        public void OnJoin(InputAction.CallbackContext context)
+        {
+        }
+
         #endregion
     }
 }

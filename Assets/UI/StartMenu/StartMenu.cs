@@ -8,10 +8,9 @@ namespace Cadenza
     {
 
         [SerializeField] private UIDocument uiDocument;
-        [SerializeField] private int TotalCallibrationAttempts;
-
+        [SerializeField] private UIPanel characterSelect;
+        [SerializeField] private UIPanel settingsMenu;
         private InputAction joinAction;
-        private InputAction submitAction;
 
         private VisualElement containerJoin;
         private VisualElement containerOptions;
@@ -21,13 +20,14 @@ namespace Cadenza
         private Button buttonSettings;
         private Button buttonExit;
 
-        private int playersReady = 0;
+        private Player playerOne;
 
         #region System Events
         public override void OnInitialize()
         {
             // Set up UI.
             this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
+            this.root.style.display = DisplayStyle.None;
 
             this.containerJoin = this.root.Q<VisualElement>("phase_Join");
             this.containerOptions = this.root.Q<VisualElement>("phase_Select");
@@ -35,13 +35,12 @@ namespace Cadenza
             this.buttonStartGame = this.root.Q<Button>("b_StartGame");
             this.buttonStartGame.clicked += this.OnCharacterSelect;
             this.buttonLastRun = this.root.Q<Button>("b_LastRun");
-            // Check if last run exists in player prefs to Enable and assign to OnLastRun
+            Debug.LogWarning("No way to check for last run."); // Check if last run exists in player prefs to Enable and assign to OnLastRun
             this.buttonSettings = this.root.Q<Button>("b_Settings");
             this.buttonSettings.clicked += this.OnSettings;
             this.buttonExit = this.root.Q<Button>("b_Exit");
             this.buttonExit.clicked += this.OnExit;
 
-            this.submitAction = InputSystem.UIInputMap.Get().FindAction("Submit", throwIfNotFound: true);
             this.joinAction = InputSystem.UIInputMap.Get().FindAction("Join", throwIfNotFound: true);
             this.root.style.display = DisplayStyle.None;
         }
@@ -71,29 +70,43 @@ namespace Cadenza
         private void OnPlayerOneJoin(InputAction.CallbackContext context)
         {
             // Set player one
+            int id = context.control.device.deviceId;
+            PlayerSystem.TryAddPlayer(id, out this.playerOne);
             // Unsubscribe to action
-            // Flex option containers, None join containers
+            this.joinAction.performed -= this.OnPlayerOneJoin;
+            // Swap from Join phase to Options phase display
+            this.containerJoin.style.display = DisplayStyle.None;
+            this.containerOptions.style.display = DisplayStyle.Flex;
+            this.buttonStartGame.Focus();
         }
 
         private void OnCharacterSelect()
         {
-
+            Debug.Log("Navigating to character select.");
+            this.characterSelect.Show();
+            this.Hide();
         }
 
         private void OnSettings()
         {
-
+            // Open settings menu
+            Debug.Log("Navigating to settings.");
+            Debug.LogWarning("Settings not implemented");
         }
 
         private void OnExit()
         {
-
+            // Close game
+            Debug.Log("Exiting game.");
+            Debug.LogWarning("Exit not implemented");
         }
         
         #endregion
 
         #region Private Functions
+
         // Container updates
+
         #endregion
     }
 }
