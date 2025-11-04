@@ -169,7 +169,6 @@ namespace Cadenza
                 tracker.Phase = SelectPhase.CharacterSelection;
             }
             this.playerPhases[player] = tracker;
-            Debug.Log($"Player {player.PlayerNumber} : Latency attempt {this.playerPhases[player].CalibrationAttempts}");
         }
         
         // Container updates

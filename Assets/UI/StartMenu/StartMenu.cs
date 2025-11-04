@@ -82,7 +82,6 @@ namespace Cadenza
 
         private void OnCharacterSelect()
         {
-            Debug.Log("Navigating to character select.");
             this.characterSelect.Show();
             this.Hide();
         }
@@ -90,15 +89,13 @@ namespace Cadenza
         private void OnSettings()
         {
             // Open settings menu
-            Debug.Log("Navigating to settings.");
-            Debug.LogWarning("Settings not implemented");
+            Debug.LogWarning("Settings not implemented!");
         }
 
         private void OnExit()
         {
             // Close game
-            Debug.Log("Exiting game.");
-            Debug.LogWarning("Exit not implemented");
+            Debug.LogWarning("Exit not implemented!");
         }
         
         #endregion
