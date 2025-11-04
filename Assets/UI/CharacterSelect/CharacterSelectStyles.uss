@@ -29,4 +29,5 @@
 .temp_text {
     flex-wrap: wrap;
     white-space: normal;
+    font-size: 80px;
 }

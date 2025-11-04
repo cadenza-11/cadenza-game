@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterSelect
   uiDocument: {fileID: 6410242120360780059}
-  TotalCallibrationAttempts: 5
+  TotalCalibrationAttempts: 5
 --- !u!1 &8024687789544267347
 GameObject:
   m_ObjectHideFlags: 0
