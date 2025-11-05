@@ -158,19 +158,21 @@ namespace Cadenza
             }
             else if (tracker.CalibrationAttempts < this.TotalCalibrationAttempts)
             {
-                float latency = BeatSystem.GetLatency(BeatSystem.CurrentTime);
+                double latency = BeatSystem.GetLatency(BeatSystem.CurrentTrackTime);
                 player.Latency = latency;
                 tracker.CalibrationAttempts++;
             }
             else if (tracker.CalibrationAttempts == this.TotalCalibrationAttempts)
             {
+                ScoreSystem.SetInputLatencyForPlayer(player, player.Latency);
+
                 // Call update for container
                 tracker.TempLabel.text = $"Latency average: {player.Latency}";
                 tracker.Phase = SelectPhase.CharacterSelection;
             }
             this.playerPhases[player] = tracker;
         }
-        
+
         // Container updates
         #endregion
     }

@@ -10,7 +10,7 @@ namespace Cadenza
         private int playerNumber;
         private int deviceID;
         private string characterName; // Replace with character class in future
-        private float latency;
+        private double latency;
 
         public Transform transform => this.Character.Transform;
         public ICharacter Character { get; private set; }
@@ -38,7 +38,7 @@ namespace Cadenza
         /// Set: adds latency and finds average
         /// Use ResetLatency to reset value
         /// </summary>
-        public float Latency
+        public double Latency
         {
             get { return this.latency; }
             set

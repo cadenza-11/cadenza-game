@@ -138,7 +138,7 @@ public class TestPlayerScript : MonoBehaviour, ICharacter
         this.attackArea.SetActive(this.isAttacking);
 
         // Play sound
-        float accuracy = BeatSystem.GetLatency(BeatSystem.CurrentTime);
+        float accuracy = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime);
         if (this.accuracyBar != null)
             this.accuracyBar.SetAccuracy(accuracy);
 
