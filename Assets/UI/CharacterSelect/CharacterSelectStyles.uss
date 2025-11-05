@@ -1,11 +1,14 @@
 .panel_background {
-    background-color: rgb(117, 195, 144);
+    background-color: rgb(0, 0, 0);
     flex-direction: row;
     justify-content: space-evenly;
     padding-top: 25px;
     padding-right: 25px;
     padding-bottom: 25px;
     padding-left: 25px;
+    background-image: url("project://database/Assets/Art/TEMPORARY_ASSETS/TEMP_BG_fm_green.jpg?fileID=2800000&guid=55b1fc205837bad44abdfcb237a07ce5&type=3#TEMP_BG_fm_green");
+    -unity-background-scale-mode: stretch-to-fill;
+    -unity-background-image-tint-color: rgb(161, 161, 161);
 }
 
 .player {
@@ -14,20 +17,73 @@
     justify-content: center;
     align-content: center;
     -unity-text-align: middle-center;
-    background-color: rgba(255, 255, 255, 0.38);
+    background-color: rgba(0, 0, 0, 0.38);
     border-left-color: rgb(255, 255, 255);
     border-right-color: rgb(255, 255, 255);
     border-top-color: rgb(255, 255, 255);
     border-bottom-color: rgb(255, 255, 255);
-    border-top-width: 2px;
-    border-right-width: 2px;
-    border-bottom-width: 2px;
-    border-left-width: 2px;
-    max-width: 23%;
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    color: rgb(255, 255, 255);
 }
 
 .temp_text {
     flex-wrap: wrap;
     white-space: normal;
     font-size: 80px;
+}
+
+.player_container {
+    flex-grow: 1;
+    max-width: 23%;
+}
+
+.player-number {
+    font-size: 60px;
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 4px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    letter-spacing: -13px;
+    word-spacing: 2px;
+}
+
+.navigation_hints {
+    justify-content: space-between;
+    min-height: 5%;
+    max-height: 10%;
+    -unity-text-align: middle-left;
+    font-size: 35px;
+    -unity-font-style: bold;
+    -unity-text-outline-width: 2px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    flex-direction: row;
+}
+
+.navigation_back {
+    flex-grow: 1;
+    flex-direction: row;
+    opacity: 0;
+}
+
+.navigation_next {
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-content: flex-end;
+    opacity: 0;
+}
+
+.navigation_icon {
+    -unity-background-scale-mode: scale-and-crop;
+    width: 15%;
+    height: 100%;
 }
