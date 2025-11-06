@@ -70,7 +70,7 @@ namespace Cadenza
         /// <summary>
         /// The number of seconds that have elapsed in the current track.
         /// </summary>
-        public static double CurrentTrackTime = singleton.elapsedTimeDSP - singleton.trackStartTimeDSP + singleton.offsetTime;
+        public static double CurrentTrackTime => singleton.elapsedTimeDSP - singleton.trackStartTimeDSP + singleton.offsetTime;
 
         #endregion
         #region Private Variables
@@ -79,7 +79,7 @@ namespace Cadenza
         /// The constant number of samples-per-second that the system operates at.
         /// Use this to convert samples to seconds and vice versa.
         /// </summary>
-        private int sampleRate;
+        private int sampleRate = 0;
 
         /// <summary>
         /// The number of samples that have passed since system start.
@@ -120,7 +120,7 @@ namespace Cadenza
         /// The number of seconds that pass between each beat in the current tempo.
         /// (Equivalent to 60 seconds / BPM)
         /// </summary>
-        private double beatPeriod = 0f;
+        private double beatPeriod = 0;
 
         /// <summary>
         /// The number of seconds that have passed since the last DSP clock update.
