@@ -147,13 +147,11 @@ namespace Cadenza
             else if (tracker.CalibrationAttempts < this.TotalCalibrationAttempts)
             {
                 double latency = BeatSystem.GetLatency(BeatSystem.CurrentTrackTime);
-                player.Latency = latency;
+                ScoreSystem.AddInputLatencyForPlayer(player, latency);
                 tracker.CalibrationAttempts++;
             }
             else if (tracker.CalibrationAttempts == this.TotalCalibrationAttempts)
             {
-                ScoreSystem.SetInputLatencyForPlayer(player, player.Latency);
-
                 // Call update for container
                 tracker.TempLabel.text = $"Latency average: {player.Latency}";
                 tracker.Phase = SelectPhase.CharacterSelection;

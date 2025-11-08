@@ -19,15 +19,14 @@ namespace Cadenza
 
         private Dictionary<Player, double> latencyByPlayer;
         private const double ForgivenessMs = 0.04; // 40ms
+        private const double LatencyAlpha = 0.50; // how heavily new latency values affect average
 
         public override void OnInitialize()
         {
             Debug.Assert(singleton == null);
             singleton = this;
-        }
 
-        public override void OnGameStart()
-        {
+            this.latencyByPlayer = new();
         }
 
         #region Scoring Methods
@@ -45,16 +44,28 @@ namespace Cadenza
             return (float)Cadenza.Utils.Math.NormalDist(error, stddev: ForgivenessMs);
         }
 
+        /// <summary>
+        /// Returns the average input latency for the player.
+        /// </summary>
         public static double GetInputLatencyForPlayer(Player player)
         {
-            singleton.latencyByPlayer ??= new();
-            return singleton.latencyByPlayer.GetValueOrDefault(player);
+            return player == null ? 0.0 : singleton.latencyByPlayer.GetValueOrDefault(player);
         }
 
-        public static void SetInputLatencyForPlayer(Player player, double latency)
+        /// <summary>
+        /// Takes the given latency, averages it with the previous
+        /// latency values for the given player, and stores the value in player.
+        /// </summary>
+        public static void AddInputLatencyForPlayer(Player player, double latency)
         {
-            singleton.latencyByPlayer ??= new();
-            singleton.latencyByPlayer[player] = latency;
+            // If this is the first data point, use this latency as the mean.
+            // Otherwise, calculate the mean.
+            double newLatencyAvg =
+                singleton.latencyByPlayer.TryGetValue(player, out double prevLatencyAvg)
+                ? Cadenza.Utils.Math.EWMA(prevLatencyAvg, latency, LatencyAlpha)
+                : latency;
+
+            singleton.latencyByPlayer[player] = newLatencyAvg;
         }
 
         #endregion
