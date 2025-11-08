@@ -8,11 +8,8 @@ namespace Cadenza
         [SerializeField] CinemachineTargetGroup cinemachineTargetComponent;
         public override void OnGameStart()
         {
-            foreach (var id in PlayerSystem.PlayerRoster)
-            {
-                if (PlayerSystem.TryGetPlayerByID(id, out Player player))
-                    this.cinemachineTargetComponent.AddMember(player.transform, 1f, .5f);
-            }
+            foreach (var player in PlayerSystem.PlayersByID.Values)
+                this.cinemachineTargetComponent.AddMember(player.Character.transform, 1f, .5f);
         }
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.UIElements;
 
 namespace Cadenza
@@ -10,7 +11,6 @@ namespace Cadenza
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private UIPanel characterSelect;
         [SerializeField] private UIPanel settingsMenu;
-        private InputAction joinAction;
 
         private VisualElement containerJoin;
         private VisualElement containerOptions;
@@ -19,8 +19,6 @@ namespace Cadenza
         private Button buttonLastRun;
         private Button buttonSettings;
         private Button buttonExit;
-
-        private Player playerOne;
 
         #region System Events
         public override void OnInitialize()
@@ -41,14 +39,16 @@ namespace Cadenza
             this.buttonExit = this.root.Q<Button>("b_Exit");
             this.buttonExit.clicked += this.OnExit;
 
-            this.joinAction = InputSystem.UIInputMap.Get().FindAction("Join", throwIfNotFound: true);
             this.root.style.display = DisplayStyle.None;
         }
 
         public override void Show()
         {
             base.Show();
-            this.joinAction.performed += this.OnPlayerOneJoin;
+
+            // Subscribe to any first button press by any player.
+            UnityEngine.InputSystem.InputSystem.onAnyButtonPress.CallOnce((control) => this.OnAnyButtonPress(control));
+
             this.root.style.display = DisplayStyle.Flex;
         }
 
@@ -64,16 +64,17 @@ namespace Cadenza
         }
 
         #endregion
-
         #region Navigation Events
 
-        private void OnPlayerOneJoin(InputAction.CallbackContext context)
+        private void OnAnyButtonPress(InputControl control)
         {
-            // Set player one
-            int id = context.control.device.deviceId;
-            PlayerSystem.TryAddPlayer(id, out this.playerOne);
-            // Unsubscribe to action
-            this.joinAction.performed -= this.OnPlayerOneJoin;
+            var player = InputSystem.GetPlayerFromDevice(control.device);
+            if (player != null)
+            {
+                PlayerSystem.DisableJoining();
+                InputSystem.EnableSinglePlayerInput(player);
+            }
+
             // Swap from Join phase to Options phase display
             this.containerJoin.style.display = DisplayStyle.None;
             this.containerOptions.style.display = DisplayStyle.Flex;
@@ -97,7 +98,7 @@ namespace Cadenza
             // Close game
             Debug.LogWarning("Exit not implemented!");
         }
-        
+
         #endregion
 
         #region Private Functions
