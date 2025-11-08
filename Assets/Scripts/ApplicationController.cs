@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -84,18 +83,20 @@ namespace Cadenza
 
         private async Task SetSceneImplAsync(int sceneIndex)
         {
-            var currentScene = SceneManager.GetActiveScene();
+            Scene currentScene = SceneManager.GetActiveScene();
+            if (currentScene.buildIndex == sceneIndex)
+                return;
 
             // Unload the current scene if it isn't the root scene.
             if (currentScene.buildIndex != 0)
                 await SceneManager.UnloadSceneAsync(currentScene);
 
             // Load the given scene.
-            await SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
+            if (sceneIndex != 0)
+                await SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
 
-            // Set the scene active.
-            Scene loadedScene = SceneManager.GetSceneByBuildIndex(sceneIndex);
-            SceneManager.SetActiveScene(loadedScene);
+            Scene nextScene = SceneManager.GetSceneByBuildIndex(sceneIndex);
+            SceneManager.SetActiveScene(nextScene);
         }
 
         private void ChangeState(ApplicationState newState)
