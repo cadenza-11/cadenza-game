@@ -5,41 +5,29 @@ namespace Cadenza
 {
     public class Character : MonoBehaviour, CadenzaActions.IPlayerActions
     {
-        //All floats, determine the player's speed, jump force, and time it takes to attack. Currently changed in the editor
-        public float speed, jumpForce, chargeForce;
-        private float attackDuration = 0.25f, chargeDuration = 0.5f, attackTimer = 0f, chargeTimer = 0f;
+        [Header("Player Values")]
+        [SerializeField] private float speed;
+        [SerializeField] private float jumpForce;
+        [SerializeField] private float chargeForce;
 
-        //Needed for Interface, does nothing rn
-        public int currentHealth { get; set; }
-        public int specialMeter { get; set; }
+        [SerializeField] private float attackDuration = 0.25f;
+        [SerializeField] private float chargeDuration = 0.5f;
+
+        [Header("Assign in Inspector")]
+        [SerializeField] private AttackArea attackArea;
+        [SerializeField] private AttackArea chargeArea;
+        [SerializeField] private Rigidbody rb;
+        [SerializeField] private SpriteRenderer sr;
+        [SerializeField] private Animator anim;
+        [SerializeField] private AccuracyBar accuracyBar;
+
+        private float attackTimer = 0f;
+        private float chargeTimer = 0f;
         private int attackMod;
 
-        //y only jump vector
-        public Vector3 jump, charge;
-        public Vector2 move;
-
-        //Random components
-        public Rigidbody rb;
-        public SpriteRenderer sr;
-        public Animator anim;
-        public AccuracyBar accuracyBar;
-        private GameObject attackArea = default, chargeArea = default;
-        private AttackArea attackScript, chargeScript;
-
-        //Bools for animation, attacking, and jumping
-        public bool isMove;
-        private bool isAttacking, isGrounded, isCharging;
+        private Vector2 move;
+        private bool isMove, isAttacking, isGrounded, isCharging;
         private bool direction; //true = right, false = left
-
-        void Start()
-        {
-            this.attackArea = this.transform.GetChild(0).gameObject;
-            this.chargeArea = this.transform.GetChild(1).gameObject;
-            this.attackScript = this.attackArea.GetComponent<AttackArea>();
-            this.chargeScript = this.chargeArea.GetComponent<AttackArea>();
-            this.jump = new Vector3(0.0f, 2.0f, 0.0f);
-            this.charge = new Vector3(2.0f, 0.0f, 0.0f);
-        }
 
         void FixedUpdate()
         {
@@ -121,23 +109,26 @@ namespace Cadenza
             //Jump input action command, only jumps if on the ground
             if (this.isGrounded)
             {
-                this.rb.AddForce(this.jump * this.jumpForce, ForceMode.Impulse);
+                this.rb.AddForce(Vector3.up * this.jumpForce, ForceMode.Impulse);
             }
         }
 
         #region ICharacter Interface
 
-        public void Move(Vector2 input)
+        private int currentHealth { get; set; }
+        private int specialMeter { get; set; }
+
+        private void Move(Vector2 input)
         {
             this.move = input;
         }
 
-        public void WeakAttack()
+        private void WeakAttack()
         {
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 1;
-            this.attackScript.damage = 3;
+            this.attackArea.damage = 3;
             this.attackArea.SetActive(this.isAttacking);
 
             // Play sound
@@ -155,15 +146,8 @@ namespace Cadenza
             // Play animation
             this.anim.SetTrigger("WeakAttack");
         }
-        public void StrongAttack()
-        {
-            this.isAttacking = true;
-            this.attackMod = 2;
-            this.attackScript.damage = 6;
-            this.anim.SetTrigger("StrongAttack");
-            this.attackArea.SetActive(this.isAttacking);
-        }
-        public void SpecialAttack()
+
+        private void SpecialAttack()
         {
             if (this.direction == true)
             {
@@ -174,10 +158,10 @@ namespace Cadenza
                 this.chargeForce = -Mathf.Abs(this.chargeForce);
             }
             this.isCharging = true;
-            this.chargeScript.damage = 10;
+            this.chargeArea.damage = 10;
             this.chargeArea.SetActive(this.isCharging);
             this.rb.linearVelocity = new Vector3(0.0f, 0.0f, 0.0f);
-            this.rb.AddForce(this.charge * this.chargeForce, ForceMode.VelocityChange);
+            this.rb.AddForce(Vector3.right * this.chargeForce, ForceMode.VelocityChange);
         }
         public void StartTeamAttk()
         {
@@ -203,17 +187,17 @@ namespace Cadenza
 
         public void OnAttackLight(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            this.WeakAttack();
         }
 
         public void OnAttackSpecial(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            this.SpecialAttack();
         }
 
         public void OnAttackTeam(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
+            this.StartTeamAttk();
         }
 
         #endregion

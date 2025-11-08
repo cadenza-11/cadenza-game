@@ -348,16 +348,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  jumpForce: 2
-  chargeForce: 5
-  jump: {x: 0, y: 0, z: 0}
-  charge: {x: 0, y: 0, z: 0}
-  move: {x: 0, y: 0}
+  jumpForce: 4
+  chargeForce: 10
+  attackDuration: 0.25
+  chargeDuration: 0.5
+  attackArea: {fileID: 911082884614298861}
+  chargeArea: {fileID: 2387496068521455922}
   rb: {fileID: 1458182412301763174}
   sr: {fileID: 6779959987335499425}
   anim: {fileID: 71435134034143840}
   accuracyBar: {fileID: 2866967900350389172}
-  isMove: 0
 --- !u!1001 &1003460141613909193
 PrefabInstance:
   m_ObjectHideFlags: 0

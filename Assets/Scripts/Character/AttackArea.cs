@@ -2,8 +2,17 @@ using UnityEngine;
 
 public class AttackArea : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public int damage = 0;
+    private GameObject go = null;
+
+    public void SetActive(bool enabled)
+    {
+        if (this.go == null)
+            this.go = this.gameObject;
+
+        this.go.SetActive(enabled);
+    }
+
 
     private void OnTriggerEnter(Collider collider)
     {
