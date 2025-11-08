@@ -3,72 +3,84 @@ using UnityEngine.InputSystem;
 
 namespace Cadenza
 {
-    public class Player
+    public class Player : MonoBehaviour
     {
-        #region Private Attributes
+        #region Attributes
 
-        private int playerNumber;
-        private int deviceID;
-        private string characterName; // Replace with character class in future
-        private double latency;
-
-        public Transform transform => this.Character.Transform;
-        public ICharacter Character { get; private set; }
+        public int ID { get; private set; }
+        public Character Character { get; private set; }
         public PlayerInput Input { get; private set; }
-
-        #endregion
-        #region Public Accessors
-
-        public int DeviceID => this.deviceID;
-
-        public int PlayerNumber
-        {
-            get { return this.playerNumber; }
-            set { this.playerNumber = value; }
-        }
-
-        public string Name
-        {
-            get { return this.characterName; }
-            set { this.characterName = value; }
-        }
-
-        /// <summary>
-        /// Get: returns latency
-        /// Set: adds latency and finds average
-        /// Use ResetLatency to reset value
-        /// </summary>
-        public double Latency
-        {
-            get { return this.latency; }
-            set
-            {
-                if (this.latency == 0) this.latency = value;
-                else this.latency = (this.latency + value) / 2;
-            }
-        }
+        public string Name => this.name;
+        public double Latency => ScoreSystem.GetInputLatencyForPlayer(this);
 
         #endregion
         #region Functions
+
+        private void OnDestroy()
+        {
+            if (this.Character != null)
+                this.UnregisterCharacterCallbacks(this.Input.actions, this.Character);
+        }
+
+        internal void Initialize(int id, PlayerInput input)
+        {
+            this.ID = id;
+            this.Input = input;
+        }
 
         /// <summary>
         /// Tracks this player to an instance of a character body.
         /// </summary>
         /// <param name="character">A spawned instance of the player body.</param>
-        public void SetCharacter(ICharacter character)
+        public void SetCharacter(Character character)
         {
+            // Remove the character body.
+            if (character == null && this.Character != null)
+            {
+                this.UnregisterCharacterCallbacks(this.Input.actions, this.Character);
+                Destroy(this.Character);
+            }
+
             this.Character = character;
-            this.Input = character.Transform.GetComponent<PlayerInput>();
+
+            // Give input to new character body.
+            if (this.Character != null)
+            {
+                this.RegisterCharacterCallbacks(this.Input.actions, this.Character);
+            }
+
         }
 
-        public Player(int id)
+        private void RegisterCharacterCallbacks(InputActionAsset actionMaps, CadenzaActions.IPlayerActions character)
         {
-            this.deviceID = id;
+            var map = actionMaps.FindActionMap("Player", throwIfNotFound: true);
+
+            var moveAction = map.FindAction("Move", throwIfNotFound: true);
+            var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
+            var attackSpecialAction = map.FindAction("Attack/Special", throwIfNotFound: true);
+            var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
+
+            moveAction.performed += character.OnMove;
+            moveAction.canceled += character.OnMove;
+            attackLightAction.performed += character.OnAttackLight;
+            attackSpecialAction.performed += character.OnAttackSpecial;
+            attackTeamAction.performed += character.OnAttackTeam;
         }
 
-        public void ResetLatency()
+        private void UnregisterCharacterCallbacks(InputActionAsset actionMaps, CadenzaActions.IPlayerActions character)
         {
-            this.latency = 0;
+            var map = actionMaps.FindActionMap("Player", throwIfNotFound: true);
+
+            var moveAction = map.FindAction("Move", throwIfNotFound: true);
+            var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
+            var attackSpecialAction = map.FindAction("Attack/Special", throwIfNotFound: true);
+            var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
+
+            moveAction.performed -= character.OnMove;
+            moveAction.canceled -= character.OnMove;
+            attackLightAction.performed -= character.OnAttackLight;
+            attackSpecialAction.performed -= character.OnAttackSpecial;
+            attackTeamAction.performed -= character.OnAttackTeam;
         }
 
         #endregion

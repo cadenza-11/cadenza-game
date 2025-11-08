@@ -113,15 +113,6 @@ namespace Cadenza
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Attack/Heavy"",
-                    ""type"": ""Button"",
-                    ""id"": ""d0ab27b9-a4b7-4343-befc-955c173dd9e3"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Attack/Special"",
                     ""type"": ""Button"",
                     ""id"": ""811969d1-c5c4-4b82-873b-316db499dd49"",
@@ -137,15 +128,6 @@ namespace Cadenza
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Interact"",
-                    ""type"": ""Button"",
-                    ""id"": ""852140f2-7766-474d-8707-702459ba45f3"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 }
             ],
@@ -306,28 +288,6 @@ namespace Cadenza
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d8283439-600f-418e-aab3-9fa9ec059aad"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Attack/Heavy"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8d9c084c-672f-42f7-b287-d7f18c935423"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Attack/Heavy"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""1e92ca5d-28ac-42a3-bc85-ac9dab703775"",
                     ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
@@ -367,28 +327,6 @@ namespace Cadenza
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Attack/Team"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1c04ea5f-b012-41d1-a6f7-02e963b52893"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Interact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b3f66d0b-7751-423f-908b-a11c5bd95930"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1055,10 +993,8 @@ namespace Cadenza
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_AttackLight = m_Player.FindAction("Attack/Light", throwIfNotFound: true);
-            m_Player_AttackHeavy = m_Player.FindAction("Attack/Heavy", throwIfNotFound: true);
             m_Player_AttackSpecial = m_Player.FindAction("Attack/Special", throwIfNotFound: true);
             m_Player_AttackTeam = m_Player.FindAction("Attack/Team", throwIfNotFound: true);
-            m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1154,10 +1090,8 @@ namespace Cadenza
         private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_AttackLight;
-        private readonly InputAction m_Player_AttackHeavy;
         private readonly InputAction m_Player_AttackSpecial;
         private readonly InputAction m_Player_AttackTeam;
-        private readonly InputAction m_Player_Interact;
         /// <summary>
         /// Provides access to input actions defined in input action map "Player".
         /// </summary>
@@ -1178,10 +1112,6 @@ namespace Cadenza
             /// </summary>
             public InputAction @AttackLight => m_Wrapper.m_Player_AttackLight;
             /// <summary>
-            /// Provides access to the underlying input action "Player/AttackHeavy".
-            /// </summary>
-            public InputAction @AttackHeavy => m_Wrapper.m_Player_AttackHeavy;
-            /// <summary>
             /// Provides access to the underlying input action "Player/AttackSpecial".
             /// </summary>
             public InputAction @AttackSpecial => m_Wrapper.m_Player_AttackSpecial;
@@ -1189,10 +1119,6 @@ namespace Cadenza
             /// Provides access to the underlying input action "Player/AttackTeam".
             /// </summary>
             public InputAction @AttackTeam => m_Wrapper.m_Player_AttackTeam;
-            /// <summary>
-            /// Provides access to the underlying input action "Player/Interact".
-            /// </summary>
-            public InputAction @Interact => m_Wrapper.m_Player_Interact;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1225,18 +1151,12 @@ namespace Cadenza
                 @AttackLight.started += instance.OnAttackLight;
                 @AttackLight.performed += instance.OnAttackLight;
                 @AttackLight.canceled += instance.OnAttackLight;
-                @AttackHeavy.started += instance.OnAttackHeavy;
-                @AttackHeavy.performed += instance.OnAttackHeavy;
-                @AttackHeavy.canceled += instance.OnAttackHeavy;
                 @AttackSpecial.started += instance.OnAttackSpecial;
                 @AttackSpecial.performed += instance.OnAttackSpecial;
                 @AttackSpecial.canceled += instance.OnAttackSpecial;
                 @AttackTeam.started += instance.OnAttackTeam;
                 @AttackTeam.performed += instance.OnAttackTeam;
                 @AttackTeam.canceled += instance.OnAttackTeam;
-                @Interact.started += instance.OnInteract;
-                @Interact.performed += instance.OnInteract;
-                @Interact.canceled += instance.OnInteract;
             }
 
             /// <summary>
@@ -1254,18 +1174,12 @@ namespace Cadenza
                 @AttackLight.started -= instance.OnAttackLight;
                 @AttackLight.performed -= instance.OnAttackLight;
                 @AttackLight.canceled -= instance.OnAttackLight;
-                @AttackHeavy.started -= instance.OnAttackHeavy;
-                @AttackHeavy.performed -= instance.OnAttackHeavy;
-                @AttackHeavy.canceled -= instance.OnAttackHeavy;
                 @AttackSpecial.started -= instance.OnAttackSpecial;
                 @AttackSpecial.performed -= instance.OnAttackSpecial;
                 @AttackSpecial.canceled -= instance.OnAttackSpecial;
                 @AttackTeam.started -= instance.OnAttackTeam;
                 @AttackTeam.performed -= instance.OnAttackTeam;
                 @AttackTeam.canceled -= instance.OnAttackTeam;
-                @Interact.started -= instance.OnInteract;
-                @Interact.performed -= instance.OnInteract;
-                @Interact.canceled -= instance.OnInteract;
             }
 
             /// <summary>
@@ -1581,13 +1495,6 @@ namespace Cadenza
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnAttackLight(InputAction.CallbackContext context);
             /// <summary>
-            /// Method invoked when associated input action "Attack/Heavy" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnAttackHeavy(InputAction.CallbackContext context);
-            /// <summary>
             /// Method invoked when associated input action "Attack/Special" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1601,13 +1508,6 @@ namespace Cadenza
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnAttackTeam(InputAction.CallbackContext context);
-            /// <summary>
-            /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnInteract(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

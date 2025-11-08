@@ -1,20 +1,20 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 namespace Cadenza
 {
-    public class InputSystem : ApplicationSystem,
-        CadenzaActions.IPlayerActions,
-        CadenzaActions.IUIActions
+    /// <summary>
+    /// Handles enabling and disabling of input actions, input action maps, and player input.
+    /// </summary>
+    public class InputSystem : ApplicationSystem, CadenzaActions.IUIActions
     {
         private static InputSystem singleton;
 
-        private CadenzaActions inputActions;
-        private CadenzaActions.PlayerActions playerInputMap;
-        private CadenzaActions.UIActions uiInputMap;
+        [SerializeField] private PlayerInputManager playerInputManager;
 
-        public static CadenzaActions.PlayerActions PlayerInputMap => singleton.playerInputMap;
+        private CadenzaActions inputActions;
+        private CadenzaActions.UIActions uiInputMap;
         public static CadenzaActions.UIActions UIInputMap => singleton.uiInputMap;
 
         public override void OnInitialize()
@@ -22,16 +22,12 @@ namespace Cadenza
             Debug.Assert(singleton == null);
             singleton = this;
 
+            // Configure input maps.
             this.inputActions = new CadenzaActions();
 
             this.uiInputMap = this.inputActions.UI;
             this.uiInputMap.AddCallbacks(this);
-
-            this.playerInputMap = this.inputActions.Player;
-            this.playerInputMap.AddCallbacks(this);
-
             this.uiInputMap.Enable();
-            this.playerInputMap.Disable();
         }
 
         public override void OnApplicationStop()
@@ -39,69 +35,50 @@ namespace Cadenza
             this.uiInputMap.Disable();
         }
 
-        public override void OnGameStart()
+        #region Public Static Methods
+
+        public static Player GetPlayerFromDevice(InputDevice device)
         {
-            this.playerInputMap.Enable();
+            var user = InputUser.FindUserPairedToDevice(device);
+            foreach (var player in PlayerSystem.PlayersByID.Values)
+            {
+                if (player.Input.user == user)
+                    return player;
+            }
+            return null;
         }
 
-        public override void OnGameStop()
+        /// <summary>
+        /// Disables all players' input except for a single player.
+        /// </summary>
+        public static void EnableSinglePlayerInput(Player player)
         {
-            this.playerInputMap.Disable();
+            EnableInputActionMapForPlayers("Player", disableOthers: true, player);
+            EnableInputActionMapForPlayers("UI", disableOthers: true, player);
         }
 
-        #region Player Interface Methods
-
-        public void OnMove(InputAction.CallbackContext context)
+        public static void EnableInputActionMapForPlayers(string mapName, bool disableOthers, params Player[] players)
         {
-            int id = context.control.device.deviceId;
-            var input = context.performed ? context.ReadValue<Vector2>() : Vector2.zero;
+            if (disableOthers)
+            {
+                foreach (var player in PlayerSystem.PlayersByID.Values)
+                    player.Input.actions.FindActionMap(mapName)?.Disable();
+            }
 
-            if (PlayerSystem.TryGetPlayerByID(id, out Player player))
-                player.Character.Move(input);
+            foreach (var player in players)
+                player.Input.actions.FindActionMap(mapName)?.Enable();
         }
 
-        public void OnInteract(InputAction.CallbackContext context)
+        public static void DisableInputActionMapForPlayers(string mapName, bool enableOthers, params Player[] players)
         {
-        }
+            if (enableOthers)
+            {
+                foreach (var player in PlayerSystem.PlayersByID.Values)
+                    player.Input.actions.FindActionMap(mapName)?.Enable();
+            }
 
-        public void OnAttackLight(InputAction.CallbackContext context)
-        {
-            if (!context.performed)
-                return;
-
-            int id = context.control.device.deviceId;
-            if (PlayerSystem.TryGetPlayerByID(id, out Player player))
-                player.Character.WeakAttack();
-        }
-
-        public void OnAttackHeavy(InputAction.CallbackContext context)
-        {
-            if (!context.performed)
-                return;
-
-            int id = context.control.device.deviceId;
-            if (PlayerSystem.TryGetPlayerByID(id, out Player player))
-                player.Character.StrongAttack();
-        }
-
-        public void OnAttackSpecial(InputAction.CallbackContext context)
-        {
-            if (!context.performed)
-                return;
-
-            int id = context.control.device.deviceId;
-            if (PlayerSystem.TryGetPlayerByID(id, out Player player))
-                player.Character.SpecialAttack();
-        }
-
-        public void OnAttackTeam(InputAction.CallbackContext context)
-        {
-            if (!context.performed)
-                return;
-
-            int id = context.control.device.deviceId;
-            if (PlayerSystem.TryGetPlayerByID(id, out Player player))
-                player.Character.StartTeamAttk();
+            foreach (var player in players)
+                player.Input.actions.FindActionMap(mapName)?.Disable();
         }
 
         #endregion

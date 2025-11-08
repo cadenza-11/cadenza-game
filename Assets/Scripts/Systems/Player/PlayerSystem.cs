@@ -1,44 +1,32 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Cadenza
 {
+    /// <summary>
+    /// Handles creation, removal, and tracking of players.
+    /// </summary>
+    [RequireComponent(typeof(PlayerInputManager))]
     public class PlayerSystem : ApplicationSystem
     {
         private static PlayerSystem singleton;
 
         [Header("Assign in Inspector")]
-        [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private GameObject characterPrefab;
+        [SerializeField] private int maxPlayersInRoster = 4;
+
+        private PlayerInputManager playerInputManager;
 
         private Dictionary<int, Player> playersByID;
-        /// <summary>
-        /// Assignments of player 1 - 4 by ID.
-        /// </summary>
-        private int[] roster = { -1, -1, -1, -1 };
         public static IReadOnlyDictionary<int, Player> PlayersByID => singleton.playersByID;
-        /// <summary>
-        /// Assignments of player 1 - 4 by ID.
-        /// </summary>
-        public static IReadOnlyCollection<int> PlayerRoster => singleton.roster;
-        /// <summary>
-        /// Player count in player roster.
-        /// </summary>
-        public static int PlayerCount
-        {
-            get
-            {
-                int value = 0;
-                foreach (int i in singleton.roster)
-                {
-                    if (i > -1) value++;
-                }
-                return value;
-            }
-        }
+        public static int PlayerCount => singleton.playersByID.Count;
 
-        public static event Action<Player> PlayerAdded;
+        public static event Action<Player> PlayerJoined;
         public static event Action<Player> PlayerRemoved;
+
+        #region Application Callbacks
 
         public override void OnInitialize()
         {
@@ -46,47 +34,37 @@ namespace Cadenza
             singleton = this;
 
             this.playersByID = new();
+
+            // Configure player input manager.
+            this.playerInputManager = this.GetComponent<PlayerInputManager>();
+            this.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
+            this.playerInputManager.onPlayerJoined += this.OnPlayerJoined;
+            this.playerInputManager.onPlayerLeft += this.OnPlayerLeft;
         }
 
         public override void OnGameStart()
         {
             // Spawn player body.
-            foreach (var id in this.roster)
-                SpawnPlayer(id);
+            foreach (var player in this.playersByID.Values)
+                this.SpawnPlayerBody(player);
+
+            // Enable input.
+            foreach (var player in this.playersByID.Values)
+                player.Input.SwitchCurrentActionMap("Player");
         }
 
-        public static bool TryGetPlayerByID(int deviceID, out Player player)
+        public override void OnGameStop()
         {
-            return singleton.playersByID.TryGetValue(deviceID, out player);
+            foreach (var player in this.playersByID.Values)
+                player.SetCharacter(null);
         }
 
-        /// <summary>
-        /// Creates a new player and adds it to roster.
-        /// </summary>
-        /// <returns>Whether a new player was successfully added. False is a player already exists with this ID</returns>
-        public static bool TryAddPlayer(int deviceID, out Player player)
+        #endregion
+        #region Public Static Methods
+
+        public static bool TryGetPlayerByID(int id, out Player player)
         {
-            // Get existing player.
-            if (TryGetPlayerByID(deviceID, out player))
-                return false;
-
-            // Create new player.
-            player = new(deviceID);
-            singleton.playersByID[deviceID] = player;
-
-            // Add to roster at first unused slot.
-            int openIndex = Array.IndexOf(singleton.roster, -1);
-            if (openIndex != -1)
-            {
-                singleton.roster[openIndex] = deviceID;
-                player.PlayerNumber = openIndex + 1;
-            }
-
-            // Notify.
-            PlayerAdded?.Invoke(player);
-            Debug.Log($"New device joined as Player {player.PlayerNumber}. (id={deviceID})");
-
-            return true;
+            return singleton.playersByID.TryGetValue(id, out player);
         }
 
         /// <summary>
@@ -96,39 +74,77 @@ namespace Cadenza
         /// <returns>Whether the player exists and was removed successfully</returns>
         public static bool RemovePlayer(Player player)
         {
-            return RemovePlayer(player.DeviceID);
+            return RemovePlayer(player.ID);
         }
 
         /// <summary>
         /// Attempts to remove a player with the given ID.
         /// </summary>
-        /// <param name="id">The device ID of the player to remove</param>
+        /// <param name="id">The ID of the player to remove</param>
         /// <returns>Whether the player exists was removed successfully.</returns>
         public static bool RemovePlayer(int id)
         {
             if (!TryGetPlayerByID(id, out Player p))
                 return false;
 
-            singleton.roster[p.PlayerNumber - 1] = -1;
+            singleton.OnPlayerLeft(p.Input);
             return singleton.playersByID.Remove(id);
         }
 
-        private static ICharacter SpawnPlayer(int id)
+        /// <summary>
+        /// Allow new devices/players to join when pressing a button.
+        /// </summary>
+        public static void EnableJoining()
         {
-            Debug.Log($"Attempting to spawn player for device ID {id}; stored IDS = {string.Join(',', singleton.playersByID.Keys)}; exists = {TryGetPlayerByID(id, out _)}");
-            if (!TryGetPlayerByID(id, out Player player))
-                return null;
+            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
+        }
 
-            Debug.Log($"Player exists:{player.PlayerNumber}");
 
-            var character = Instantiate(singleton.playerPrefab).GetComponent<ICharacter>();
-            Debug.Log($"Instantiated {player.PlayerNumber}");
-            Debug.Log($"Player is null: {player == null}");
+        /// <summary>
+        /// Prevent new devices/players from joining automatically upon button press.
+        /// </summary>
+        public static void DisableJoining()
+        {
+            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+        }
+
+        #endregion
+        #region Private Methods
+
+        private void OnPlayerJoined(PlayerInput playerInput)
+        {
+            playerInput.transform.SetParent(this.transform);
+            var player = playerInput.GetComponent<Player>();
+
+            int id = playerInput.playerIndex;
+            player.Initialize(id, playerInput);
+            this.playersByID[id] = player;
+
+            Debug.Log($"Player joined using device scheme {playerInput.currentControlScheme}. (id={id})");
+            PlayerJoined?.Invoke(player);
+        }
+
+        private void OnPlayerLeft(PlayerInput playerInput)
+        {
+            int id = playerInput.playerIndex;
+            var player = this.playersByID[id];
+            this.playersByID.Remove(id);
+
+            Debug.Log($"Player using device scheme {playerInput.currentControlScheme} left. (id={id})");
+            PlayerRemoved?.Invoke(player);
+
+            Destroy(player);
+        }
+
+        private Character SpawnPlayerBody(Player player)
+        {
+            var character = Instantiate(singleton.characterPrefab).GetComponent<Character>();
             player.SetCharacter(character);
-            Debug.Log("Success");
-            Debug.Log($"Spawning player {player.PlayerNumber}");
+            Debug.Log($"Player character body set to {character}. (id={player.ID})");
 
             return character;
         }
+
+        #endregion
     }
 }
