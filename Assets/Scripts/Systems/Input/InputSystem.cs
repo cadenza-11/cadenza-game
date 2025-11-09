@@ -11,8 +11,6 @@ namespace Cadenza
     {
         private static InputSystem singleton;
 
-        [SerializeField] private PlayerInputManager playerInputManager;
-
         private CadenzaActions inputActions;
         private CadenzaActions.UIActions uiInputMap;
         public static CadenzaActions.UIActions UIInputMap => singleton.uiInputMap;

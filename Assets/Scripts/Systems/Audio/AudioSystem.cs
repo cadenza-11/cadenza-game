@@ -63,6 +63,8 @@ namespace Cadenza
         public static EventReference PlayerOneShotsEvent => singleton.playerOneShotsEvent;
         private HashSet<AudioEvent> beatSetOneShot;
 
+        #region Application Callbacks
+
         public override void OnInitialize()
         {
             Debug.Assert(singleton == null);
@@ -82,20 +84,8 @@ namespace Cadenza
             this.beatSetOneShot.Clear();
         }
 
-        private IEnumerator LoadAllBanks()
-        {
-            // Wait until all the audio sample data loading is done
-            while (!RuntimeManager.HaveAllBanksLoaded || RuntimeManager.AnySampleDataLoading())
-            {
-                yield return null;
-            }
-            this.BanksLoaded();
-        }
-
-        private void BanksLoaded()
-        {
-            Debug.Log("Loaded all banks from FMOD.");
-        }
+        #endregion
+        #region Public Static Methods
 
         public static void PlayOneShot(EventReference sound, bool immediate = false)
         {
@@ -117,5 +107,43 @@ namespace Cadenza
             else
                 singleton.beatSetOneShot.Add(evt);
         }
+
+        #endregion
+        #region Private Methods
+
+        private IEnumerator LoadAllBanks()
+        {
+            // Wait until all the audio sample data loading is done
+            while (!RuntimeManager.HaveAllBanksLoaded || RuntimeManager.AnySampleDataLoading())
+            {
+                yield return null;
+            }
+            this.BanksLoaded();
+        }
+
+        private void BanksLoaded()
+        {
+            // Register for player hit events.
+            PlayerSystem.PlayerHit += this.OnPlayerHit;
+
+            Debug.Log("Loaded all banks from FMOD.");
+        }
+
+        private void OnPlayerHit(ScoreSystem.ScoreDef def)
+        {
+            int soundID = def.Class switch
+            {
+                ScoreSystem.ScoreClass.Bad => 0,
+                ScoreSystem.ScoreClass.OK => 0,
+                ScoreSystem.ScoreClass.Great => 1,
+                ScoreSystem.ScoreClass.Perfect => 2,
+                _ => 0
+            };
+
+            PlayOneShotWithParameter(PlayerOneShotsEvent, "ID", soundID, immediate: true);
+        }
+
+
+        #endregion
     }
 }

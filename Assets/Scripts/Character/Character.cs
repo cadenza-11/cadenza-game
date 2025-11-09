@@ -21,6 +21,8 @@ namespace Cadenza
         [SerializeField] private Animator anim;
         [SerializeField] private AccuracyBar accuracyBar;
 
+        public Player Player { get; private set; }
+
         private float attackTimer = 0f;
         private float chargeTimer = 0f;
         private int attackMod;
@@ -28,6 +30,12 @@ namespace Cadenza
         private Vector2 move;
         private bool isMove, isAttacking, isGrounded, isCharging;
         private bool direction; //true = right, false = left
+
+        internal void SetPlayer(Player player)
+        {
+            this.Player = player;
+            player.PlayerHit += this.accuracyBar.OnPlayerHit;
+        }
 
         void FixedUpdate()
         {
@@ -130,18 +138,6 @@ namespace Cadenza
             this.attackMod = 1;
             this.attackArea.damage = 3;
             this.attackArea.SetActive(this.isAttacking);
-
-            // Play sound
-            float accuracy = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime);
-            if (this.accuracyBar != null)
-                this.accuracyBar.SetAccuracy(accuracy);
-
-            accuracy = Mathf.Abs(accuracy);
-            int soundID =
-                accuracy < 0.05f ? 2 :
-                accuracy < 0.10f ? 1 : 0;
-
-            AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", soundID, immediate: true);
 
             // Play animation
             this.anim.SetTrigger("WeakAttack");

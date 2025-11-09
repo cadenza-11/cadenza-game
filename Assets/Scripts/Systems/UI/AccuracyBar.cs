@@ -18,13 +18,9 @@ public class AccuracyBar : MonoBehaviour
         this.accuracyBar.highValue = +halfPeriod;
     }
 
-    public void SetAccuracy(float accuracy)
+    public void OnPlayerHit(ScoreSystem.ScoreDef def)
     {
-        this.accuracyBar.value = accuracy;
-
-        accuracy = Mathf.Abs(accuracy);
-        this.accuracyText.text =
-            accuracy < 0.05f ? "Perfect" :
-            accuracy < 0.10f ? "Good" : string.Empty;
+        this.accuracyBar.value = (float)def.Latency;
+        this.accuracyText.text = def.Class.ToString();
     }
 }

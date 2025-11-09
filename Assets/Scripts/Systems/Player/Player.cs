@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,8 @@ namespace Cadenza
         public PlayerInput Input { get; private set; }
         public string Name => this.name;
         public double Latency => ScoreSystem.GetInputLatencyForPlayer(this);
+
+        public event Action<ScoreSystem.ScoreDef> PlayerHit;
 
         #endregion
         #region Functions
@@ -46,9 +49,9 @@ namespace Cadenza
             // Give input to new character body.
             if (this.Character != null)
             {
+                this.Character.SetPlayer(this);
                 this.RegisterCharacterCallbacks(this.Input.actions, this.Character);
             }
-
         }
 
         private void RegisterCharacterCallbacks(InputActionAsset actionMaps, CadenzaActions.IPlayerActions character)
@@ -63,8 +66,18 @@ namespace Cadenza
             moveAction.performed += character.OnMove;
             moveAction.canceled += character.OnMove;
             attackLightAction.performed += character.OnAttackLight;
+            attackLightAction.performed += this.OnHit;
             attackSpecialAction.performed += character.OnAttackSpecial;
             attackTeamAction.performed += character.OnAttackTeam;
+        }
+
+        private void OnHit(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
+                this.PlayerHit?.Invoke(score);
+            }
         }
 
         private void UnregisterCharacterCallbacks(InputActionAsset actionMaps, CadenzaActions.IPlayerActions character)
