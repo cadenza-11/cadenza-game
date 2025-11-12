@@ -70,10 +70,7 @@ namespace Cadenza
         {
             var player = InputSystem.GetPlayerFromDevice(control.device);
             if (player != null)
-            {
-                PlayerSystem.DisableJoining();
                 InputSystem.EnableSinglePlayerInput(player);
-            }
 
             // Swap from Join phase to Options phase display
             this.containerJoin.style.display = DisplayStyle.None;

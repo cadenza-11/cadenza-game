@@ -84,7 +84,7 @@ namespace Cadenza
                 Container = this.playerContainers[this.joinedPlayers++],
                 CalibrationAttempts = -1
             };
-            newTracker.TempLabel = newTracker.Container.Q<Label>("temp");
+            newTracker.TempLabel = newTracker.Container.Q<Label>("txt_Waiting");
             this.playerPhases.Add(player, newTracker);
         }
 
