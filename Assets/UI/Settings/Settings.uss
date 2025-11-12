@@ -1,0 +1,6 @@
+:root {
+}
+
+.blink {
+    -unity-background-image-tint-color: rgb(255, 241, 0);
+}
