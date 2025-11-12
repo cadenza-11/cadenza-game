@@ -89,8 +89,7 @@ namespace Cadenza
 
         private void OnSettings()
         {
-            // Open settings menu
-            Debug.LogWarning("Settings not implemented!");
+            this.settingsMenu.Show();
         }
 
         private void OnExit()

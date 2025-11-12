@@ -70,7 +70,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.StartMenu
   uiDocument: {fileID: 9159775407750005689}
   characterSelect: {fileID: 6621624212274879057}
-  settingsMenu: {fileID: 0}
+  settingsMenu: {fileID: 7560857650547749923}
 --- !u!1 &2692221720898030820
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,6 +103,7 @@ Transform:
   - {fileID: 5314825276738356358}
   - {fileID: 282507516178628650}
   - {fileID: 5971180210531556566}
+  - {fileID: 191295917078525619}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5506390662181233078
@@ -175,6 +176,75 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterSelect
   uiDocument: {fileID: 6410242120360780059}
   TotalCalibrationAttempts: 5
+--- !u!1 &6869839045911253032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 191295917078525619}
+  - component: {fileID: 1303972900527864231}
+  - component: {fileID: 7560857650547749923}
+  m_Layer: 0
+  m_Name: SettingsMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &191295917078525619
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6869839045911253032}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1820362299702937105}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1303972900527864231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6869839045911253032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: a9efd3a193903934489f7229d03c2959, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 74c179706df0ecf448a8501e6b50a986, type: 3}
+  m_SortingOrder: 1
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &7560857650547749923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6869839045911253032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c1f0a3746ccc394eb3c77ee8bf2e701, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.SettingsMenu
+  uiDocument: {fileID: 1303972900527864231}
 --- !u!1 &8024687789544267347
 GameObject:
   m_ObjectHideFlags: 0
