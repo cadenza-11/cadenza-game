@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -9,38 +11,54 @@ namespace Cadenza
     /// </summary>
     public class ScoreSystem : ApplicationSystem
     {
+        [Serializable]
+        public struct Thresholds
+        {
+            [Tooltip("The maximum latency from the beat needed for a perfect score.")]
+            public float perfectScoreMs;
+
+            [Tooltip("The maximum latency from the beat needed for a Great score.")]
+            public float greatScoreMs;
+
+            [Tooltip("The maximum latency from the beat needed for an OK score.")]
+            public float okScoreMs;
+        }
+
         private static ScoreSystem singleton;
 
+        [Header("Team Score Properties")]
+        [SerializeField] private int teamHitToleranceMs = 200;
+
         [Header("Score Class Thresholds")]
-        [Tooltip("The maximum latency from the beat needed for a perfect score.")]
-        [SerializeField] private float perfectScoreMs;
-
-        [Tooltip("The maximum latency from the beat needed for a Great score.")]
-        [SerializeField] private float greatScoreMs;
-
-        [Tooltip("The maximum latency from the beat needed for an OK score.")]
-        [SerializeField] private float okScoreMs;
+        [SerializeField] private Thresholds individualThresholds;
+        [SerializeField] private Thresholds teamThresholds;
 
         [Header("Calibration Properties")]
         [SerializeField] private bool enableCalibration;
         [SerializeField] private double latencyAlpha = 0.50;
+
+        public static Thresholds IndividualThresholds => singleton.individualThresholds;
 
         /// <summary>
         /// Encapsulates data related to a single player "hit" and its accuracy.
         /// </summary>
         public struct ScoreDef
         {
+            public readonly double Timestamp;
+            public readonly int Beat;
             public readonly double Latency;
             public readonly ScoreClass Class;
             public readonly Player Player;
             public readonly int PlayerID;
 
-            public ScoreDef(double latency, Player player)
+            public ScoreDef(double timestamp, double latency, Player player)
             {
+                this.Timestamp = timestamp;
+                this.Beat = BeatSystem.GetClosestBeat(timestamp);
                 this.Latency = latency;
                 this.Player = player;
                 this.PlayerID = player.ID;
-                this.Class = ScoreSystem.GetScoreClass(this.Latency);
+                this.Class = ScoreSystem.GetScoreClass(ScoreSystem.IndividualThresholds, this.Latency);
             }
 
             public override readonly string ToString()
@@ -62,6 +80,9 @@ namespace Cadenza
 
         private Dictionary<Player, double> latencyByPlayer;
 
+        // Record player hits within a short time window.
+        private Dictionary<int, ScoreDef> playerHits;
+
         public override void OnInitialize()
         {
             Debug.Assert(singleton == null);
@@ -72,7 +93,50 @@ namespace Cadenza
 #endif
 
             this.latencyByPlayer = new();
+            this.playerHits = new();
         }
+
+        public override void OnGameStart()
+        {
+            this.playerHits.Clear();
+            PlayerSystem.PlayerHit += this.OnPlayerHit;
+        }
+
+        public override void OnBeat()
+        {
+
+            this.playerHits.Clear();
+        }
+
+        private void OnPlayerHit(ScoreDef def)
+        {
+            if (PlayerSystem.PlayerCount == 1 || this.playerHits.ContainsKey(def.PlayerID))
+                return;
+
+            this.playerHits[def.PlayerID] = def;
+
+            if (PlayerSystem.PlayerCount > 1 && this.playerHits.Count == PlayerSystem.PlayerCount)
+            {
+                var stddev = Cadenza.Utils.Math.StdDev(this.playerHits.Values.Select(v => v.Timestamp).ToArray());
+                var scoreClass = ScoreSystem.GetScoreClass(this.teamThresholds, stddev);
+                int soundID = scoreClass switch
+                {
+                    ScoreClass.Bad => 0,
+                    ScoreClass.OK => 0,
+                    ScoreClass.Great => 1,
+                    ScoreClass.Perfect => 2,
+                    _ => 0,
+                };
+
+                Debug.Log($"Team accuracy: {this.playerHits.Count} / stddev = {stddev} / class = {scoreClass}");
+
+                if (soundID != 0)
+                    AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", soundID);
+
+                this.playerHits.Clear();
+            }
+        }
+
 
         #region Scoring Methods
 
@@ -86,7 +150,7 @@ namespace Cadenza
             double offset = singleton.enableCalibration ? GetInputLatencyForPlayer(player) * -1 : 0;
             double error = BeatSystem.GetLatency(timestamp + offset);
 
-            ScoreDef score = new ScoreDef(error, player);
+            ScoreDef score = new ScoreDef(timestamp + offset, error, player);
             Debug.Log(score);
             return score;
         }
@@ -95,14 +159,14 @@ namespace Cadenza
         /// Returns a descriptor of a score (e.g. Bad, OK, Perfect)
         /// given the thresholds defined in ScoreSystem.
         /// </summary>
-        public static ScoreClass GetScoreClass(double latency)
+        public static ScoreClass GetScoreClass(Thresholds thresholds, double latency)
         {
             latency = math.abs(latency);
-            if (latency <= singleton.perfectScoreMs / 1000f)
+            if (latency <= thresholds.perfectScoreMs / 1000f)
                 return ScoreClass.Perfect;
-            if (latency <= singleton.greatScoreMs / 1000f)
+            if (latency <= thresholds.greatScoreMs / 1000f)
                 return ScoreClass.Great;
-            if (latency <= singleton.okScoreMs / 1000f)
+            if (latency <= thresholds.okScoreMs / 1000f)
                 return ScoreClass.OK;
             return ScoreClass.Bad;
         }

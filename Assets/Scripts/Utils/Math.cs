@@ -22,6 +22,21 @@ namespace Cadenza.Utils
             return math.exp(-(t * t) / (2f * stddev * stddev));
         }
 
+        public static double StdDev(params double[] entries)
+        {
+            double mean = 0;
+            foreach (var entry in entries)
+                mean += entry;
+            mean /= entries.Length;
+
+            double variance = 0;
+            foreach (var entry in entries)
+                variance += (entry - mean) * (entry - mean);
+            variance /= entries.Length;
+
+            return math.sqrt(variance);
+        }
+
         /// <summary>
         /// Calculates the next exponentially-weighted moving average of a previous
         /// average value and the next data point.

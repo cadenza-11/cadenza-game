@@ -230,6 +230,12 @@ namespace Cadenza
             return sign * distance;
         }
 
+        public static int GetClosestBeat(double timestamp)
+        {
+            double beatPeriod = singleton.beatPeriod;
+            return Mathf.RoundToInt((float)(timestamp / beatPeriod));
+        }
+
         #endregion
         #region Callback Methods
 

@@ -44,8 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d11e8c31927f4630a795f5cb08dce7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.ScoreSystem
-  perfectScoreMs: 80
-  greatScoreMs: 140
-  okScoreMs: 200
+  teamHitToleranceMs: 200
+  individualThresholds:
+    perfectScoreMs: 56
+    greatScoreMs: 108
+    okScoreMs: 160
+  teamThresholds:
+    perfectScoreMs: 50
+    greatScoreMs: 75
+    okScoreMs: 100
   enableCalibration: 0
   latencyAlpha: 0.5

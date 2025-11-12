@@ -131,16 +131,7 @@ namespace Cadenza
 
         private void OnPlayerHit(ScoreSystem.ScoreDef def)
         {
-            int soundID = def.Class switch
-            {
-                ScoreSystem.ScoreClass.Bad => 0,
-                ScoreSystem.ScoreClass.OK => 0,
-                ScoreSystem.ScoreClass.Great => 1,
-                ScoreSystem.ScoreClass.Perfect => 2,
-                _ => 0
-            };
-
-            PlayOneShotWithParameter(PlayerOneShotsEvent, "ID", soundID, immediate: true);
+            PlayOneShotWithParameter(PlayerOneShotsEvent, "ID", 0, immediate: true);
         }
 
 
