@@ -32,6 +32,8 @@ namespace Cadenza
         private bool direction; //true = right, false = left
 
         private int[] comboArray = new int[2];
+        private float comboTimer = 0.0f;
+        private bool comboWaiting = false;
 
         internal void SetPlayer(Player player)
         {
@@ -105,7 +107,10 @@ namespace Cadenza
                 }
             }
 
-
+            if (this.comboWaiting)
+            {
+                this.comboTimer += Time.deltaTime;
+            }
         }
 
         bool CheckIsGrounded()
@@ -212,6 +217,16 @@ namespace Cadenza
                 }
             }
 
+            if (this.comboTimer >= 2.0f)
+            {
+                Debug.Log("Combo Reset");
+                this.ResetCombo();
+            }
+            else
+            {
+                this.comboTimer = 0.0f;
+            }
+
             switch (attType)
             {
                 //No Attack Inputted, reset combo
@@ -227,6 +242,7 @@ namespace Cadenza
                         case 0:
                             this.comboArray[0] = 1;
                             Debug.Log("[1, 0, 0]");
+                            this.comboWaiting = true;
                             this.WeakAttack(3);
                             break;
 
@@ -288,6 +304,7 @@ namespace Cadenza
                         //2 -> [0, 0, 0]
                         case 0:
                             this.comboArray[0] = 2;
+                            this.comboWaiting = true;
                             //This is where the heavy attack would go
                             break;
 
@@ -345,6 +362,8 @@ namespace Cadenza
 
         public void ResetCombo()
         {
+            this.comboWaiting = false;
+            this.comboTimer = 0.0f;
             for (int i = 0; i < 2; i++)
             {
                 this.comboArray[i] = 0;
