@@ -3,6 +3,18 @@ using UnityEngine.InputSystem;
 
 namespace Cadenza
 {
+    public enum AttkEffect
+    {
+        None,
+        Light_Knockback
+    }
+
+    public enum AttkTypes
+    {
+        None,
+        Light,
+        Heavy
+    }
     public class Character : MonoBehaviour, CadenzaActions.IPlayerActions
     {
         [Header("Player Values")]
@@ -43,7 +55,7 @@ namespace Cadenza
 
         void FixedUpdate()
         {
-            //Only adds gravity if in air
+            //Only adds gravity if not charging
             this.isGrounded = this.CheckIsGrounded();
 
             if (!this.isCharging)
@@ -128,6 +140,9 @@ namespace Cadenza
             }
         }
 
+        /// <summary>
+        /// Calculates the absolute x value of the hitbox's vector3 local position, then changes it if the attack is in a different direction
+        /// </summary>
         public void ManageAttackDirection()
         {
             Vector3 localPos = this.attackArea.gameObject.transform.localPosition;
@@ -207,7 +222,7 @@ namespace Cadenza
 
         public void OnAttackLight(InputAction.CallbackContext context)
         {
-            this.ComboManager(1);
+            this.ComboManager((int)AttkTypes.Light);
         }
 
         public void OnAttackSpecial(InputAction.CallbackContext context)
@@ -223,14 +238,19 @@ namespace Cadenza
         #endregion
 
         #region Combo Management
-
+        /// <summary>
+        /// All attacks go through the combo manager, which uses a series of switch statememnts to determine what part of the combo the attack falls in.
+        /// From there it triggers the attack, with aditional parameters passed for special moves or more damage.
+        /// A combo timer set up in update will reset the combo if there is too much time between the last attack and the next.
+        /// </summary>
+        /// <param name="attType"> The type of attack that is being done (0 for none, 1 for light, 2 for heavy) </param>
         public void ComboManager(int attType)
         {
             for (int i = 0; i < 2; i++)
             {
                 if (this.comboArray[i] != 0 && this.comboArray[i] != 1 && this.comboArray[i] != 2)
                 {
-                    this.comboArray[i] = 0;
+                    this.comboArray[i] = (int)AttkTypes.None;
                 }
             }
 
@@ -247,125 +267,125 @@ namespace Cadenza
             switch (attType)
             {
                 //No Attack Inputted, reset combo
-                case 0:
+                case (int)AttkTypes.None:
                     this.ResetCombo();
                     break;
 
-                //Input 1
-                case 1:
+                //Input Light
+                case (int)AttkTypes.Light:
                     switch (this.comboArray[0])
                     {
-                        //1 -> [0, 0, 0]
-                        case 0:
+                        //Light -> [None, None, None]
+                        case (int)AttkTypes.None:
                             this.comboArray[0] = 1;
                             Debug.Log("[1, 0, 0]");
                             this.comboWaiting = true;
-                            this.WeakAttack(3, 0);
+                            this.WeakAttack(3, (int)AttkEffect.None);
                             break;
 
-                        //1 -> [1, ?, 0]
-                        case 1:
+                        //Light -> [Light, ?, None]
+                        case (int)AttkTypes.Light:
                             switch (this.comboArray[1])
                             {
-                                //1 -> [1, 0, 0]
-                                case 0:
+                                //1 -> [Light, None, None]
+                                case (int)AttkTypes.None:
                                     this.comboArray[1] = 1;
                                     Debug.Log("[1, 1, 0]");
-                                    this.WeakAttack(3, 0);
+                                    this.WeakAttack(3, (int)AttkEffect.None);
                                     break;
 
-                                //1 -> [1, 1, 0]
-                                case 1:
+                                //Light -> [Light, Light, None]
+                                case (int)AttkTypes.Light:
                                     Debug.Log("[1, 1, 1]");
                                     this.ResetCombo();
-                                    this.WeakAttack(5, 1);
+                                    this.WeakAttack(5, (int)AttkEffect.Light_Knockback);
                                     break;
 
-                                //1 -> [1, 2, 0]
-                                case 2:
+                                //Light -> [Light, Heavy, None]
+                                case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
-                                    this.WeakAttack(3, 0);
+                                    this.WeakAttack(3, (int)AttkEffect.None);
                                     break;
                             }
                             break;
 
-                        case 2:
+                        case (int)AttkTypes.Heavy:
                             switch (this.comboArray[1])
                             {
-                                //1 -> [2, 0, 0]
-                                case 0:
+                                //Light -> [Heavy, None, None]
+                                case (int)AttkTypes.None:
                                     this.comboArray[1] = 1;
-                                    this.WeakAttack(3, 0);
+                                    this.WeakAttack(3, (int)AttkEffect.None);
                                     break;
 
-                                //1 -> [2, 1, 0]
-                                case 1:
+                                //Light -> [Heavy, Light, None]
+                                case (int)AttkTypes.Light:
                                     this.ResetCombo();
-                                    this.WeakAttack(3, 0);
+                                    this.WeakAttack(3, (int)AttkEffect.None);
                                     break;
 
-                                //1 -> [2, 2, 0]
-                                case 2:
+                                //Light -> [Heavy, Heavy, None]
+                                case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
-                                    this.WeakAttack(3, 0);
+                                    this.WeakAttack(3, (int)AttkEffect.None);
                                     break;
                             }
                             break;
                     }
                     break;
 
-                //Input 2
-                case 2:
+                //Input Heavy
+                case (int)AttkTypes.Heavy:
                     switch (this.comboArray[0])
                     {
-                        //2 -> [0, 0, 0]
-                        case 0:
+                        //Heavy -> [None, None, None]
+                        case (int)AttkTypes.None:
                             this.comboArray[0] = 2;
                             this.comboWaiting = true;
                             //This is where the heavy attack would go
                             break;
 
-                        //2 -> [1, ?, 0]
-                        case 1:
+                        //Heavy -> [Light, ?, None]
+                        case (int)AttkTypes.Light:
                             switch (this.comboArray[1])
                             {
-                                //2 -> [1, 0, 0]
-                                case 0:
+                                //Heavy -> [Light, None, None]
+                                case (int)AttkTypes.None:
                                     this.comboArray[1] = 2;
                                     //This is where the heavy attack would go
                                     break;
 
-                                //2 -> [1, 1, 0]
-                                case 1:
+                                //Heavy -> [Light, Light, None]
+                                case (int)AttkTypes.Light:
                                     this.ResetCombo();
                                     //This is where the heavy attack would go
                                     break;
 
-                                //2 -> [1, 2, 0]
-                                case 2:
+                                //Heavy -> [Light, Heavy, None]
+                                case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
                                     //This is where the heavy attack would go
                                     break;
                             }
                             break;
 
-                        case 2:
+                        case (int)AttkTypes.Heavy:
                             switch (this.comboArray[1])
                             {
-                                //2 -> [2, 0, 0]
-                                case 0:
+                                //Heavy -> [Heavy, None, None]
+                                case (int)AttkTypes.None:
                                     this.comboArray[1] = 2;
                                     //This is where the heavy attack would go
                                     break;
 
-                                //2 -> [2, 1, 0]
-                                case 1:
+                                //Heavy -> [Heavy, Light, None]
+                                case (int)AttkTypes.Light:
                                     this.ResetCombo();
                                     //This is where the heavy attack would go
                                     break;
 
-                                //2 -> [2, 2, 0]
-                                case 2:
+                                //Heavy -> [Heavy, Heavy, None]
+                                case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
                                     //This is where the heavy attack would go
                                     break;
@@ -383,7 +403,7 @@ namespace Cadenza
             this.comboTimer = 0.0f;
             for (int i = 0; i < 2; i++)
             {
-                this.comboArray[i] = 0;
+                this.comboArray[i] = (int)AttkTypes.None;
             }
         }
 
