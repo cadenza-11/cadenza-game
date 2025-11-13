@@ -37,6 +37,8 @@ public class TestAllyScript : MonoBehaviour
     }
 
     // Update is called once per frame
+
+    //"State Machine" for ally Ai
     void FixedUpdate()
     {
         switch (currentState)
