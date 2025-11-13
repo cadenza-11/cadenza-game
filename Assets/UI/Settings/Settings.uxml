@@ -1,8 +1,17 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Settings/Settings.uss?fileID=7433441132597879392&amp;guid=b5e1e074dd830e4428a37e9aabfb347d&amp;type=3#Settings" />
-    <ui:VisualElement name="background" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Art/TEMPORARY_ASSETS/TEMP_BG_fm_orange.jpg?fileID=2800000&amp;guid=572cce9d4fe981c4894d4a783eda8c57&amp;type=3#TEMP_BG_fm_orange&quot;); -unity-background-image-tint-color: rgb(89, 76, 76); padding-top: 30px; padding-right: 30px; padding-bottom: 30px; padding-left: 30px; justify-content: space-around;">
-        <ui:Button text="Back to Home" name="b_Back" style="font-size: 50px;" />
-        <ui:VisualElement name="icon_Blinker" style="width: 300px; height: 300px; align-self: center; background-image: url(&quot;project://database/Assets/Plugins/FMOD/images/TransportStopButtonOff.png?fileID=2800000&amp;guid=cafa069c15865d543a07375373f0a18e&amp;type=3#TransportStopButtonOff&quot;);" />
-        <ui:SliderInt label="Latency&#10;" value="0" high-value="500" name="slider_Latency" fill="true" low-value="-500" direction="Horizontal" inverted="false" style="color: rgb(255, 255, 255); font-size: 40px;" />
+    <ui:VisualElement name="background" class="background">
+        <ui:Button text="Back to Home" name="b_Back" style="font-size: 50px; align-self: flex-start;" />
+        <ui:VisualElement name="c_Tabs" class="tabs">
+            <ui:Button text="Audio" name="b_AudioTab" />
+            <ui:Button text="Visuals" name="b_VisualTab" />
+        </ui:VisualElement>
+        <ui:VisualElement name="c_AudioTab" style="flex-grow: 1; display: none;" />
+        <ui:VisualElement name="c_VisualTab" style="flex-grow: 1; justify-content: center;">
+            <ui:VisualElement name="c_LatencyCalibration" style="flex-grow: 0;">
+                <ui:VisualElement name="icon_Blinker" style="width: 300px; height: 300px; align-self: center; background-image: url(&quot;project://database/Assets/Plugins/FMOD/images/TransportStopButtonOff.png?fileID=2800000&amp;guid=cafa069c15865d543a07375373f0a18e&amp;type=3#TransportStopButtonOff&quot;);" />
+                <ui:SliderInt label="Latency&#10;" value="0" high-value="500" name="slider_Latency" fill="true" low-value="-500" direction="Horizontal" inverted="false" style="color: rgb(255, 255, 255); font-size: 40px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
