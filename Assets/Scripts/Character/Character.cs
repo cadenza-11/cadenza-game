@@ -128,6 +128,21 @@ namespace Cadenza
             }
         }
 
+        public void ManageAttackDirection()
+        {
+            Vector3 localPos = this.attackArea.gameObject.transform.localPosition;
+            float absLocalX = Mathf.Abs(localPos.x);
+            if (this.direction == true)
+            {
+                localPos.x = absLocalX;
+            }
+            else if (this.direction == false)
+            {
+                localPos.x = absLocalX * -1;
+            }
+            this.attackArea.gameObject.transform.localPosition = localPos;
+        }
+
         #region ICharacter Interface
 
         private int currentHealth { get; set; }
@@ -140,6 +155,7 @@ namespace Cadenza
 
         private void WeakAttack(int damage, int comboMove)
         {
+            this.ManageAttackDirection();
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 1;
