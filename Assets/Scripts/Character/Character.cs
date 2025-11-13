@@ -89,7 +89,7 @@ namespace Cadenza
                 {
                     this.attackTimer = 0;
                     this.isAttacking = false;
-                    this.attackArea.SetActive(this.isAttacking);
+                    this.attackArea.gameObject.SetActive(this.isAttacking);
                 }
             }
 
@@ -133,13 +133,13 @@ namespace Cadenza
             this.move = input;
         }
 
-        private void WeakAttack()
+        private void WeakAttack(int damage)
         {
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 1;
-            this.attackArea.damage = 3;
-            this.attackArea.SetActive(this.isAttacking);
+            this.attackArea.damage = damage;
+            this.attackArea.gameObject.SetActive(this.isAttacking);
 
             // Play animation
             this.anim.SetTrigger("WeakAttack");
@@ -206,7 +206,7 @@ namespace Cadenza
         {
             for (int i = 0; i < 2; i++)
             {
-                if (this.comboArray[i] != 0 || this.comboArray[i] != 1 || this.comboArray[i] != 2)
+                if (this.comboArray[i] != 0 && this.comboArray[i] != 1 && this.comboArray[i] != 2)
                 {
                     this.comboArray[i] = 0;
                 }
@@ -226,7 +226,8 @@ namespace Cadenza
                         //1 -> [0, 0, 0]
                         case 0:
                             this.comboArray[0] = 1;
-                            this.WeakAttack();
+                            Debug.Log("[1, 0, 0]");
+                            this.WeakAttack(3);
                             break;
 
                         //1 -> [1, ?, 0]
@@ -236,19 +237,21 @@ namespace Cadenza
                                 //1 -> [1, 0, 0]
                                 case 0:
                                     this.comboArray[1] = 1;
-                                    this.WeakAttack();
+                                    Debug.Log("[1, 1, 0]");
+                                    this.WeakAttack(3);
                                     break;
 
                                 //1 -> [1, 1, 0]
                                 case 1:
+                                    Debug.Log("[1, 1, 1]");
                                     this.ResetCombo();
-                                    this.WeakAttack();
+                                    this.WeakAttack(5);
                                     break;
 
                                 //1 -> [1, 2, 0]
                                 case 2:
                                     this.ResetCombo();
-                                    this.WeakAttack();
+                                    this.WeakAttack(3);
                                     break;
                             }
                             break;
@@ -259,19 +262,19 @@ namespace Cadenza
                                 //1 -> [2, 0, 0]
                                 case 0:
                                     this.comboArray[1] = 1;
-                                    this.WeakAttack();
+                                    this.WeakAttack(3);
                                     break;
 
                                 //1 -> [2, 1, 0]
                                 case 1:
                                     this.ResetCombo();
-                                    this.WeakAttack();
+                                    this.WeakAttack(3);
                                     break;
 
                                 //1 -> [2, 2, 0]
                                 case 2:
                                     this.ResetCombo();
-                                    this.WeakAttack();
+                                    this.WeakAttack(3);
                                     break;
                             }
                             break;
