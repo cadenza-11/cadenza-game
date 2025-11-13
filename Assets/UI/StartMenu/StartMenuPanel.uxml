@@ -1,0 +1,31 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/StartMenu/StartMenuStyles.uss?fileID=7433441132597879392&amp;guid=6e71e48c6e1969b4497d59acc87e0a75&amp;type=3#StartMenuStyles" />
+    <ui:VisualElement name="c_Panel" class="panel_background" style="flex-grow: 1;">
+        <ui:Label text="CADENZA" name="TEMP_TITLE" style="position: absolute; top: 10%; left: 5%; font-size: 250px; -unity-font-style: bold; color: rgb(255, 255, 255); -unity-text-outline-width: 20px; -unity-text-outline-color: rgb(26, 26, 26); letter-spacing: -15px;" />
+        <ui:VisualElement name="c_Selectables" class="button_container">
+            <ui:VisualElement name="phase_Join" style="flex-grow: 1; flex-direction: row; align-items: flex-end; justify-content: center; display: flex;">
+                <ui:Label text="Press" name="txt_JoinMsg1" />
+                <ui:Label text="&lt;join button&gt;" name="TEMP_INPUT" />
+                <ui:Label text="to start!" name="txt_JoinMsg2" />
+            </ui:VisualElement>
+            <ui:VisualElement name="phase_Select" style="flex-grow: 1; display: none;">
+                <ui:Button text="&#10;" name="b_StartGame" class="start_menu_button">
+                    <ui:VisualElement name="icon_Focused" class="focus_icon" />
+                    <ui:Label text="Start New Game" name="txt_Action" class="button_text" />
+                </ui:Button>
+                <ui:Button text="&#10;" name="b_LastRun" enabled="false" class="start_menu_button">
+                    <ui:VisualElement name="icon_Focused" class="focus_icon" />
+                    <ui:Label text="Continue Last Run" name="txt_Action" class="button_text" />
+                </ui:Button>
+                <ui:Button text="&#10;" name="b_Settings" class="start_menu_button">
+                    <ui:VisualElement name="icon_Focused" class="focus_icon" />
+                    <ui:Label text="Settings" name="txt_Action" class="button_text" />
+                </ui:Button>
+                <ui:Button text="&#10;" name="b_Exit" class="start_menu_button">
+                    <ui:VisualElement name="icon_Focused" class="focus_icon" />
+                    <ui:Label text="Exit Game" name="txt_Action" class="button_text" />
+                </ui:Button>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

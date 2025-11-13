@@ -217,9 +217,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2494765009811005930, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
-      propertyPath: SFX_OneShot.Path
-      value: event:/SFX_Metronome
+    - target: {fileID: 1516789990230778352, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215108402385323825, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215108402385323825, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215108402385323825, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9659258
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215108402385323825, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.2588191
       objectReference: {fileID: 0}
     - target: {fileID: 5832551234914853209, guid: a25d165ff1aa94fdd9218be33f0385fb, type: 3}
       propertyPath: m_Name

@@ -39,3 +39,9 @@ dotnet_naming_style.underscore_camel_case.capitalization = camel_case
 # ===== Analyzer severities (promote to warnings/errors if you like) =====
 dotnet_diagnostic.IDE0005.severity = warning   # remove unnecessary usings
 dotnet_diagnostic.IDE0060.severity = suggestion # remove unused parameter
+
+# Require 'this.' for instance members
+dotnet_style_qualification_for_field = true:warning
+dotnet_style_qualification_for_property = true:warning
+dotnet_style_qualification_for_method = true:warning
+dotnet_style_qualification_for_event = true:warning

@@ -1,20 +1,18 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 namespace Cadenza
 {
-    public class InputSystem : ApplicationSystem,
-        CadenzaActions.IPlayerActions,
-        CadenzaActions.IUIActions
+    /// <summary>
+    /// Handles enabling and disabling of input actions, input action maps, and player input.
+    /// </summary>
+    public class InputSystem : ApplicationSystem, CadenzaActions.IUIActions
     {
         private static InputSystem singleton;
 
         private CadenzaActions inputActions;
-        private CadenzaActions.PlayerActions playerInputMap;
         private CadenzaActions.UIActions uiInputMap;
-
-        public static CadenzaActions.PlayerActions PlayerInputMap => singleton.playerInputMap;
         public static CadenzaActions.UIActions UIInputMap => singleton.uiInputMap;
 
         public override void OnInitialize()
@@ -22,14 +20,11 @@ namespace Cadenza
             Debug.Assert(singleton == null);
             singleton = this;
 
+            // Configure input maps.
             this.inputActions = new CadenzaActions();
 
-            this.uiInputMap = inputActions.UI;
-            // this.uiInputMap.AddCallbacks(this);
-
-            this.playerInputMap = inputActions.Player;
-            // this.playerInputMap.AddCallbacks(this);
-
+            this.uiInputMap = this.inputActions.UI;
+            this.uiInputMap.AddCallbacks(this);
             this.uiInputMap.Enable();
         }
 
@@ -38,31 +33,50 @@ namespace Cadenza
             this.uiInputMap.Disable();
         }
 
-        public override void OnGameStart()
+        #region Public Static Methods
+
+        public static Player GetPlayerFromDevice(InputDevice device)
         {
-            this.playerInputMap.Enable();
+            var user = InputUser.FindUserPairedToDevice(device);
+            foreach (var player in PlayerSystem.PlayersByID.Values)
+            {
+                if (player.Input.user == user)
+                    return player;
+            }
+            return null;
         }
 
-        public override void OnGameStop()
+        /// <summary>
+        /// Disables all players' input except for a single player.
+        /// </summary>
+        public static void EnableSinglePlayerInput(Player player)
         {
-            this.playerInputMap.Disable();
+            EnableInputActionMapForPlayers("Player", disableOthers: true, player);
+            EnableInputActionMapForPlayers("UI", disableOthers: true, player);
         }
 
-        #region Player Interface Methods
-
-        public void OnMove(InputAction.CallbackContext context)
+        public static void EnableInputActionMapForPlayers(string mapName, bool disableOthers, params Player[] players)
         {
-            throw new System.NotImplementedException();
+            if (disableOthers)
+            {
+                foreach (var player in PlayerSystem.PlayersByID.Values)
+                    player.Input.actions.FindActionMap(mapName)?.Disable();
+            }
+
+            foreach (var player in players)
+                player.Input.actions.FindActionMap(mapName)?.Enable();
         }
 
-        public void OnAttack(InputAction.CallbackContext context)
+        public static void DisableInputActionMapForPlayers(string mapName, bool enableOthers, params Player[] players)
         {
-            throw new System.NotImplementedException();
-        }
+            if (enableOthers)
+            {
+                foreach (var player in PlayerSystem.PlayersByID.Values)
+                    player.Input.actions.FindActionMap(mapName)?.Enable();
+            }
 
-        public void OnInteract(InputAction.CallbackContext context)
-        {
-            throw new System.NotImplementedException();
+            foreach (var player in players)
+                player.Input.actions.FindActionMap(mapName)?.Disable();
         }
 
         #endregion
@@ -70,57 +84,43 @@ namespace Cadenza
 
         public void OnNavigate(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnSubmit(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnCancel(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnPoint(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnClick(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnRightClick(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnMiddleClick(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnScrollWheel(InputAction.CallbackContext context)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnTrackedDevicePosition(InputAction.CallbackContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnTrackedDeviceOrientation(InputAction.CallbackContext context)
-        {
-            throw new System.NotImplementedException();
         }
 
         public void OnToggleDebug(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
+            DebugConsole.ToggleVisibility();
+        }
+
+        public void OnJoin(InputAction.CallbackContext context)
+        {
         }
 
         #endregion

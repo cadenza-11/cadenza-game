@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles" />
+    <ui:VisualElement name="c_Ready" style="flex-grow: 1; position: absolute; top: 25%; max-width: 90%;">
+        <ui:Label text="Ready!" name="txt_Ready1" class="temp_text" />
+        <ui:Label text="(0/0)" name="update_NumReady" class="temp_text" />
+        <ui:Label text="players ready" name="txt_Ready2" class="temp_text" />
+    </ui:VisualElement>
+</ui:UXML>

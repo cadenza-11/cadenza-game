@@ -1,6 +1,0 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:VisualElement name="root" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.45); position: absolute; bottom: 0; align-self: center; left: 0; right: 0;">
-        <ui:ListView item-template="project://database/Assets/UI/DebugLine.uxml?fileID=9197481963319205126&amp;guid=c6dac8153dbe0473991fdc0f9c6879f6&amp;type=3#DebugLine" style="max-height: 300px;" />
-        <ui:TextField placeholder-text="Enter command..." />
-    </ui:VisualElement>
-</ui:UXML>

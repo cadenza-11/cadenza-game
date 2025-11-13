@@ -2,8 +2,11 @@ using UnityEngine;
 
 public interface ICharacter
 {
+    Transform Transform { get; }
     int currentHealth { get; set; }
     int specialMeter { get; set; }
+
+    void Move(Vector2 input);
     void WeakAttack();
     void StrongAttack();
     void SpecialAttack();
