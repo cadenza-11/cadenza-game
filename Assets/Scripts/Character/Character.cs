@@ -31,6 +31,8 @@ namespace Cadenza
         private bool isMove, isAttacking, isGrounded, isCharging;
         private bool direction; //true = right, false = left
 
+        private int[] comboArray = new int[2];
+
         internal void SetPlayer(Player player)
         {
             this.Player = player;
@@ -42,7 +44,7 @@ namespace Cadenza
             //Only adds gravity if in air
             this.isGrounded = this.CheckIsGrounded();
 
-            if (!this.isGrounded && !this.isCharging)
+            if (!this.isCharging)
             {
                 this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
             }
@@ -183,7 +185,7 @@ namespace Cadenza
 
         public void OnAttackLight(InputAction.CallbackContext context)
         {
-            this.WeakAttack();
+            this.ComboManager(1);
         }
 
         public void OnAttackSpecial(InputAction.CallbackContext context)
@@ -194,6 +196,156 @@ namespace Cadenza
         public void OnAttackTeam(InputAction.CallbackContext context)
         {
             this.StartTeamAttk();
+        }
+
+        #endregion
+
+        #region Combo Management
+
+        public void ComboManager(int attType)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                if (this.comboArray[i] != 0 || this.comboArray[i] != 1 || this.comboArray[i] != 2)
+                {
+                    this.comboArray[i] = 0;
+                }
+            }
+
+            switch (attType)
+            {
+                //No Attack Inputted, reset combo
+                case 0:
+                    this.ResetCombo();
+                    break;
+
+                //Input 1
+                case 1:
+                    switch (this.comboArray[0])
+                    {
+                        //1 -> [0, 0, 0]
+                        case 0:
+                            this.comboArray[0] = 1;
+                            this.WeakAttack();
+                            break;
+
+                        //1 -> [1, ?, 0]
+                        case 1:
+                            switch (this.comboArray[1])
+                            {
+                                //1 -> [1, 0, 0]
+                                case 0:
+                                    this.comboArray[1] = 1;
+                                    this.WeakAttack();
+                                    break;
+
+                                //1 -> [1, 1, 0]
+                                case 1:
+                                    this.ResetCombo();
+                                    this.WeakAttack();
+                                    break;
+
+                                //1 -> [1, 2, 0]
+                                case 2:
+                                    this.ResetCombo();
+                                    this.WeakAttack();
+                                    break;
+                            }
+                            break;
+
+                        case 2:
+                            switch (this.comboArray[1])
+                            {
+                                //1 -> [2, 0, 0]
+                                case 0:
+                                    this.comboArray[1] = 1;
+                                    this.WeakAttack();
+                                    break;
+
+                                //1 -> [2, 1, 0]
+                                case 1:
+                                    this.ResetCombo();
+                                    this.WeakAttack();
+                                    break;
+
+                                //1 -> [2, 2, 0]
+                                case 2:
+                                    this.ResetCombo();
+                                    this.WeakAttack();
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+
+                //Input 2
+                case 2:
+                    switch (this.comboArray[0])
+                    {
+                        //2 -> [0, 0, 0]
+                        case 0:
+                            this.comboArray[0] = 2;
+                            //This is where the heavy attack would go
+                            break;
+
+                        //2 -> [1, ?, 0]
+                        case 1:
+                            switch (this.comboArray[1])
+                            {
+                                //2 -> [1, 0, 0]
+                                case 0:
+                                    this.comboArray[1] = 2;
+                                    //This is where the heavy attack would go
+                                    break;
+
+                                //2 -> [1, 1, 0]
+                                case 1:
+                                    this.ResetCombo();
+                                    //This is where the heavy attack would go
+                                    break;
+
+                                //2 -> [1, 2, 0]
+                                case 2:
+                                    this.ResetCombo();
+                                    //This is where the heavy attack would go
+                                    break;
+                            }
+                            break;
+
+                        case 2:
+                            switch (this.comboArray[1])
+                            {
+                                //2 -> [2, 0, 0]
+                                case 0:
+                                    this.comboArray[1] = 2;
+                                    //This is where the heavy attack would go
+                                    break;
+
+                                //2 -> [2, 1, 0]
+                                case 1:
+                                    this.ResetCombo();
+                                    //This is where the heavy attack would go
+                                    break;
+
+                                //2 -> [2, 2, 0]
+                                case 2:
+                                    this.ResetCombo();
+                                    //This is where the heavy attack would go
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
+
+        }
+
+        public void ResetCombo()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                this.comboArray[i] = 0;
+            }
         }
 
         #endregion
