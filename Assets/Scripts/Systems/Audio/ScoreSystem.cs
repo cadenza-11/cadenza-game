@@ -122,13 +122,13 @@ namespace Cadenza
 
         private void OnPlayerHit(ScoreDef def)
         {
-            if (PlayerSystem.PlayerCount == 1 || this.playerHits.ContainsKey(def.PlayerID))
+            if (this.playerHits.ContainsKey(def.PlayerID))
                 return;
 
             this.playerHits[def.PlayerID] = def;
 
             // All players have hit within the beat; broadcast team score.
-            if (PlayerSystem.PlayerCount > 1 && this.playerHits.Count == PlayerSystem.PlayerCount)
+            if (this.playerHits.Count == PlayerSystem.PlayerCount)
             {
                 var stddev = Cadenza.Utils.Math.StdDev(this.playerHits.Values.Select(v => v.Timestamp).ToArray());
                 var scoreClass = ScoreSystem.GetScoreClass(this.teamThresholds, stddev);

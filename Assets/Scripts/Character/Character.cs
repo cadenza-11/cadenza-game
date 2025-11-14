@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -34,6 +35,7 @@ namespace Cadenza
         [SerializeField] private AccuracyBar accuracyBar;
 
         public Player Player { get; private set; }
+        public static event Action TeamAttackInitiated;
 
         private float attackTimer = 0f;
         private float chargeTimer = 0f;
@@ -200,7 +202,7 @@ namespace Cadenza
         }
         public void StartTeamAttk()
         {
-
+            TeamAttackInitiated?.Invoke();
         }
         public void JoinTeamAttk()
         {
