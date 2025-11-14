@@ -38,6 +38,7 @@ namespace Cadenza
         [SerializeField] private double latencyAlpha = 0.50;
 
         public static Thresholds IndividualThresholds => singleton.individualThresholds;
+        public static event Action<TeamScoreDef> TeamHit;
 
         /// <summary>
         /// Encapsulates data related to a single player "hit" and its accuracy.
@@ -64,6 +65,18 @@ namespace Cadenza
             public override readonly string ToString()
             {
                 return $"Player {this.PlayerID} hit: \nLatency: {this.Latency * 1000:f0}ms \nClass: {this.Class}";
+            }
+        }
+
+        public struct TeamScoreDef
+        {
+            public int[] PlayerIDs;
+            public double StdDev;
+            public ScoreClass Class;
+
+            public override readonly string ToString()
+            {
+                return $"(TeamHit) PlayerIDs: {string.Join(',', this.PlayerIDs)} / stddev = {this.StdDev} / class = {this.Class}";
             }
         }
 
@@ -104,7 +117,6 @@ namespace Cadenza
 
         public override void OnBeat()
         {
-
             this.playerHits.Clear();
         }
 
@@ -115,23 +127,18 @@ namespace Cadenza
 
             this.playerHits[def.PlayerID] = def;
 
+            // All players have hit within the beat; broadcast team score.
             if (PlayerSystem.PlayerCount > 1 && this.playerHits.Count == PlayerSystem.PlayerCount)
             {
                 var stddev = Cadenza.Utils.Math.StdDev(this.playerHits.Values.Select(v => v.Timestamp).ToArray());
                 var scoreClass = ScoreSystem.GetScoreClass(this.teamThresholds, stddev);
-                int soundID = scoreClass switch
+
+                TeamHit?.Invoke(new TeamScoreDef()
                 {
-                    ScoreClass.Bad => 0,
-                    ScoreClass.OK => 0,
-                    ScoreClass.Great => 1,
-                    ScoreClass.Perfect => 2,
-                    _ => 0,
-                };
-
-                Debug.Log($"Team accuracy: {this.playerHits.Count} / stddev = {stddev} / class = {scoreClass}");
-
-                if (soundID != 0)
-                    AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", soundID);
+                    PlayerIDs = this.playerHits.Keys.ToArray(),
+                    StdDev = stddev,
+                    Class = scoreClass
+                });
 
                 this.playerHits.Clear();
             }
