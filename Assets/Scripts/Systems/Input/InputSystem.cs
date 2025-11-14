@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.InputSystem.Users;
 
 namespace Cadenza
@@ -7,13 +8,16 @@ namespace Cadenza
     /// <summary>
     /// Handles enabling and disabling of input actions, input action maps, and player input.
     /// </summary>
+    [RequireComponent(typeof(InputSystemUIInputModule))]
     public class InputSystem : ApplicationSystem, CadenzaActions.IUIActions
     {
         private static InputSystem singleton;
 
         private CadenzaActions inputActions;
         private CadenzaActions.UIActions uiInputMap;
+        private InputSystemUIInputModule uiInputModule;
         public static CadenzaActions.UIActions UIInputMap => singleton.uiInputMap;
+        public static InputSystemUIInputModule UIInputModule => singleton.uiInputModule;
 
         public override void OnInitialize()
         {
@@ -26,6 +30,8 @@ namespace Cadenza
             this.uiInputMap = this.inputActions.UI;
             this.uiInputMap.AddCallbacks(this);
             this.uiInputMap.Enable();
+
+            this.uiInputModule = this.GetComponent<InputSystemUIInputModule>();
         }
 
         public override void OnApplicationStop()
@@ -53,6 +59,7 @@ namespace Cadenza
         {
             EnableInputActionMapForPlayers("Player", disableOthers: true, player);
             EnableInputActionMapForPlayers("UI", disableOthers: true, player);
+            singleton.uiInputModule.actionsAsset = player.Input.actions;
         }
 
         public static void EnableInputActionMapForPlayers(string mapName, bool disableOthers, params Player[] players)
