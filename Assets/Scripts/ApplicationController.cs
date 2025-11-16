@@ -26,6 +26,8 @@ namespace Cadenza
             Debug.Assert(singleton == null);
             singleton = this;
 
+            Application.wantsToQuit += this.OnApplicationWantsToQuit;
+
             // Get application systems.
             this.systems = this.GetComponentsInChildren<ApplicationSystem>();
             Debug.Log($"ApplicationController initialized with {this.systems.Length} systems.");
@@ -79,7 +81,21 @@ namespace Cadenza
             singleton.ChangeState(ApplicationState.GameSession);
         }
 
+        public static void RequestQuit()
+        {
+            if (singleton.state == ApplicationState.Quitting)
+                return;
+
+            Application.Quit();
+        }
+
         #endregion
+
+        private bool OnApplicationWantsToQuit()
+        {
+            this.ChangeState(ApplicationState.Quitting);
+            return true;
+        }
 
         private async Task SetSceneImplAsync(int sceneIndex)
         {

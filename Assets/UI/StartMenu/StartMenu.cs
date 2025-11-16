@@ -91,8 +91,7 @@ namespace Cadenza
 
         private void OnExit()
         {
-            // Close game
-            Debug.LogWarning("Exit not implemented!");
+            ApplicationController.RequestQuit();
         }
 
         #endregion
