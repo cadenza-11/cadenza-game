@@ -1,0 +1,46 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="c_Panel" style="flex-grow: 1; padding-top: 40px; padding-right: 40px; padding-bottom: 40px; padding-left: 40px;">
+        <ui:VisualElement name="c_Title" style="align-items: center; font-size: 65px; flex-direction: row; justify-content: center;">
+            <ui:Label text="BAND NAME" name="update_PlayerBand" />
+            <ui:Label text="vs." name="txt_vs" />
+            <ui:Label text="OPPONENT NAME" name="update_LevelName" />
+            <ui:Label text=":" name="txt_colon" />
+            <ui:Label text="YOU WIN!" name="update_WinLoss" />
+        </ui:VisualElement>
+        <ui:VisualElement name="c_Team" style="flex-direction: row; font-size: 40px; align-items: center; justify-content: space-around;">
+            <ui:VisualElement name="c_LetterGrade" style="align-items: center; align-self: flex-start;">
+                <ui:Label text="Team Grade" name="txt_TeamGrade" style="font-size: 50px; -unity-font-style: bold;" />
+                <ui:Label text="A" name="update_TeamLetterGrade" style="-unity-text-align: middle-center; font-size: 90px;" />
+                <ui:VisualElement name="c_TeamPts" style="flex-direction: row; justify-content: center; font-size: 30px;">
+                    <ui:Label text="100000" name="update_TeamScoreNum" />
+                    <ui:Label text="pts" name="txt_Points" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="c_TeamCombos" style="align-items: center;">
+                <ui:Label text="Combos Activated" name="txt_TeamCombos" style="-unity-font-style: bold;" />
+                <ui:Label text="5" name="update_CombosActivated" />
+            </ui:VisualElement>
+            <ui:VisualElement name="c_TeamAccuracy" style="align-items: center;">
+                <ui:Label text="Overall Accuracy" name="txt_TeamAccuracy" style="-unity-font-style: bold;" />
+                <ui:Label text="85%" name="update_TeamAccuracy" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="c_Individual" style="flex-grow: 1; flex-direction: row; font-size: 60px; -unity-text-align: middle-center;">
+            <ui:VisualElement name="c_Player" style="flex-grow: 1;">
+                <ui:Label text="PLAYER" name="txt_PlayerHeader" />
+                <ui:Label text="Player 1" name="txt_PlayerNum" />
+                <ui:Label text="Player 2" name="txt_PlayerNum" />
+            </ui:VisualElement>
+            <ui:VisualElement name="c_Accuracy" style="flex-grow: 1;">
+                <ui:Label text="ACCURACY" name="txt_AccuracyHeader" />
+                <ui:Label text="90%" name="update_PlayerPercent" />
+                <ui:Label text="80%" name="update_PlayerPercent" />
+            </ui:VisualElement>
+            <ui:VisualElement name="c_Perfects" style="flex-grow: 1;">
+                <ui:Label text="PERFECTS" name="txt_PerfectsHeader" />
+                <ui:Label text="180" name="update_PlayerPerfect" />
+                <ui:Label text="150" name="update_PlayerPerfect" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
