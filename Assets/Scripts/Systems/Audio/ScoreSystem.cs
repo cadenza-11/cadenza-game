@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -39,6 +38,9 @@ namespace Cadenza
 
         public static Thresholds IndividualThresholds => singleton.individualThresholds;
         public static event Action<TeamScoreDef> TeamHit;
+
+        private int[] playerIdScratch;
+        private double[] timestampScratch;
 
         /// <summary>
         /// Encapsulates data related to a single player "hit" and its accuracy.
@@ -112,6 +114,13 @@ namespace Cadenza
         public override void OnGameStart()
         {
             this.playerHits.Clear();
+
+            // Prepare individual hits.
+
+            // Prepare team hits.
+            this.playerIdScratch = new int[PlayerSystem.PlayerCount];
+            this.timestampScratch = new double[PlayerSystem.PlayerCount];
+
             PlayerSystem.PlayerHit += this.OnPlayerHit;
         }
 
@@ -122,6 +131,10 @@ namespace Cadenza
 
         private void OnPlayerHit(ScoreDef def)
         {
+            // Register individual hit.
+
+
+            // Register team hit.
             if (this.playerHits.ContainsKey(def.PlayerID))
                 return;
 
@@ -130,17 +143,30 @@ namespace Cadenza
             // All players have hit within the beat; broadcast team score.
             if (this.playerHits.Count == PlayerSystem.PlayerCount)
             {
-                var stddev = Cadenza.Utils.Math.StdDev(this.playerHits.Values.Select(v => v.Timestamp).ToArray());
+                this.GetPlayersAndHits(this.playerHits, this.playerIdScratch, this.timestampScratch);
+
+                var stddev = Cadenza.Utils.Math.StdDev(this.timestampScratch);
                 var scoreClass = ScoreSystem.GetScoreClass(this.teamThresholds, stddev);
 
                 TeamHit?.Invoke(new TeamScoreDef()
                 {
-                    PlayerIDs = this.playerHits.Keys.ToArray(),
+                    PlayerIDs = this.playerIdScratch,
                     StdDev = stddev,
                     Class = scoreClass
                 });
 
                 this.playerHits.Clear();
+            }
+        }
+
+        private void GetPlayersAndHits(Dictionary<int, ScoreDef> playerHits, int[] players, double[] timestamps)
+        {
+            int i = 0;
+            foreach ((int id, ScoreDef score) in playerHits)
+            {
+                players[i] = id;
+                timestamps[i] = score.Timestamp;
+                i++;
             }
         }
 
@@ -166,7 +192,7 @@ namespace Cadenza
         /// Returns a descriptor of a score (e.g. Bad, OK, Perfect)
         /// given the thresholds defined in ScoreSystem.
         /// </summary>
-        public static ScoreClass GetScoreClass(Thresholds thresholds, double latency)
+        public static ScoreClass GetScoreClass(in Thresholds thresholds, double latency)
         {
             latency = math.abs(latency);
             if (latency <= thresholds.perfectScoreMs / 1000f)
