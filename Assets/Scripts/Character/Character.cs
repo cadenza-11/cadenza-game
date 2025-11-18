@@ -6,6 +6,7 @@ namespace Cadenza
     public class Character : MonoBehaviour, CadenzaActions.IPlayerActions
     {
         [Header("Player Values")]
+        [SerializeField] private Transform Transform;
         [SerializeField] private float speed;
         [SerializeField] private float jumpForce;
         [SerializeField] private float chargeForce;
@@ -30,6 +31,11 @@ namespace Cadenza
         private Vector2 move;
         private bool isMove, isAttacking, isGrounded, isCharging;
         private bool direction; //true = right, false = left
+
+        void Start()
+        {
+            this.Transform = this.GetComponent<Transform>();
+        }
 
         internal void SetPlayer(Player player)
         {
@@ -119,6 +125,11 @@ namespace Cadenza
             {
                 this.rb.AddForce(Vector3.up * this.jumpForce, ForceMode.Impulse);
             }
+        }
+
+        public Vector2 GetLocation()
+        {
+            return new Vector2(this.Transform.position.x, this.Transform.position.y);
         }
 
         #region ICharacter Interface

@@ -1,8 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Cadenza;
 
 public class EnemyManager : MonoBehaviour
 {
+    public static EnemyManager singleton;
     //Initial enemies in a scene will be placed in editor
     [SerializeField] private List<GameObject> enemies;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -19,7 +21,7 @@ public class EnemyManager : MonoBehaviour
 
     //Removes an enemy as being in the scene once they die. Death logic will be placed in another script
     //May want to put an equals operator for enemy to not rely on references (?)
-    bool EnemyDeath(GameObject enemy)
+    public bool RemoveEnemy(GameObject enemy)
     {
         for (int i = 0; i < this.enemies.Count; i++)
         {
@@ -32,7 +34,7 @@ public class EnemyManager : MonoBehaviour
         return false;
     }
     
-    void AddEnemy(GameObject enemy)
+    public void AddEnemy(GameObject enemy)
     {
         this.enemies.Add(enemy);
     }

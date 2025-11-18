@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1595507460558127831}
   - component: {fileID: 259284012352757776}
   - component: {fileID: 5270485635380850187}
+  - component: {fileID: 4016516325214397422}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: Untagged
@@ -95,6 +96,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fd7ead00c82eb24f801c4a061f03186, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!114 &4016516325214397422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010987114114650534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dc5988cebcb4f8408761a211cbdd4c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Enemy
+  Transform: {fileID: 2003244786977031834}
+  speed: 3
+  meleeDuration: 2
+  rangedDuration: 2
+  maxHealth: 10
+  currentHealth: 10
+  attackArea: {fileID: 0}
+  chargeArea: {fileID: 0}
+  rb: {fileID: 259284012352757776}
+  sr: {fileID: 4940573528697529019}
+  anim: {fileID: 6195701624303688636}
 --- !u!1 &1203646789165182342
 GameObject:
   m_ObjectHideFlags: 0
