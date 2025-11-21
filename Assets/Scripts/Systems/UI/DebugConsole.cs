@@ -8,6 +8,7 @@ namespace Cadenza
     public class DebugConsole : ApplicationSystem
     {
         private static DebugConsole singleton;
+        public static bool IsVisible => singleton.root.style.display == DisplayStyle.Flex;
 
         private struct DebugLine
         {
@@ -60,13 +61,14 @@ namespace Cadenza
 
         public static void ToggleVisibility()
         {
-            if (singleton.root.style.display == DisplayStyle.Flex)
+            if (IsVisible)
             {
                 singleton.root.style.display = DisplayStyle.None;
             }
             else
             {
                 singleton.root.style.display = DisplayStyle.Flex;
+                singleton.textField.Focus();
             }
         }
 

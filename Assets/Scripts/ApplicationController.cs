@@ -52,6 +52,10 @@ namespace Cadenza
 
         void Update()
         {
+            // Wait for initialization.
+            if (State == ApplicationState.Booting)
+                return;
+
             // Update systems
             foreach (var system in this.systems)
             {
@@ -62,7 +66,7 @@ namespace Cadenza
         #endregion
         #region Public Static Methods
 
-        // This should be called only by the AudioSystem.
+        /// This should be called only by the <see cref="BeatSystem"/>.
         public static void PlayBeat()
         {
             foreach (var system in singleton.systems)
