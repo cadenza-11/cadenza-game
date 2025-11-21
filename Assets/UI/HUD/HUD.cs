@@ -34,6 +34,7 @@ namespace Cadenza
             this.teamMeter = root.Q<Slider>("team-meter");
             this.teamMeter.highValue = this.durationToFull;
             this.teamMeter.lowValue = 0;
+            this.teamMeter.style.display = DisplayStyle.None;
         }
 
         public override void OnGameStart()
@@ -60,6 +61,9 @@ namespace Cadenza
 
         public override void OnUpdate()
         {
+            if (ApplicationController.State != ApplicationState.GameSession)
+                return;
+
             var nextState = this.GetMeterState();
 
             if (nextState != MeterState.Filled)
