@@ -12,7 +12,7 @@ namespace Cadenza
         [SerializeField] private float durationToFull;
 
         [Tooltip("How much should each score class fill the meter (in seconds)?")]
-        [SerializeField] private ScoreSystem.Thresholds fillAmount;
+        [SerializeField] private Thresholds fillAmount;
 
         [Tooltip("How much should the combo length speed up the meter?")]
         [SerializeField, Min(1.0f)] private float comboMultiplier;
@@ -70,17 +70,17 @@ namespace Cadenza
                 this.FillMeter(Time.deltaTime);
         }
 
-        private void OnTeamHit(ScoreSystem.TeamScoreDef def)
+        private void OnTeamHit(TeamScoreDef def)
         {
             if (this.GetMeterState() == MeterState.Filled)
                 return;
 
             float fillAmount = def.Class switch
             {
-                ScoreSystem.ScoreClass.Bad => 0,
-                ScoreSystem.ScoreClass.OK => this.fillAmount.okScoreMs,
-                ScoreSystem.ScoreClass.Great => this.fillAmount.greatScoreMs,
-                ScoreSystem.ScoreClass.Perfect => this.fillAmount.perfectScoreMs,
+                ScoreClass.Bad => 0,
+                ScoreClass.OK => this.fillAmount.okScoreMs,
+                ScoreClass.Great => this.fillAmount.greatScoreMs,
+                ScoreClass.Perfect => this.fillAmount.perfectScoreMs,
                 _ => 0
             };
 

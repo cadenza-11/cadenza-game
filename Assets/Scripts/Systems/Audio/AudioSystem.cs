@@ -130,19 +130,19 @@ namespace Cadenza
             Debug.Log("Loaded all banks from FMOD.");
         }
 
-        private void OnPlayerHit(ScoreSystem.ScoreDef def)
+        private void OnPlayerHit(ScoreDef def)
         {
             PlayOneShotWithParameter(PlayerOneShotsEvent, "ID", 0, immediate: true);
         }
 
-        private void OnTeamHit(ScoreSystem.TeamScoreDef def)
+        private void OnTeamHit(TeamScoreDef def)
         {
             int soundID = def.Class switch
             {
-                ScoreSystem.ScoreClass.Bad => 0,
-                ScoreSystem.ScoreClass.OK => 0,
-                ScoreSystem.ScoreClass.Great => 1,
-                ScoreSystem.ScoreClass.Perfect => 2,
+                ScoreClass.Bad => 0,
+                ScoreClass.OK => 0,
+                ScoreClass.Great => 1,
+                ScoreClass.Perfect => 2,
                 _ => 0,
             };
 

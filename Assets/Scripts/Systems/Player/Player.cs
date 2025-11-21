@@ -14,7 +14,7 @@ namespace Cadenza
         public string Name => this.name;
         public double Latency => ScoreSystem.GetInputLatencyForPlayer(this);
 
-        public event Action<ScoreSystem.ScoreDef> PlayerHit;
+        public event Action<ScoreDef> PlayerHit;
 
         #endregion
         #region Functions
