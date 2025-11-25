@@ -4,10 +4,17 @@ using UnityEngine.InputSystem;
 
 namespace Cadenza
 {
+    /// <summary>
+    /// Designed to make the combo system easier to read. In description, L is light and H is heavy.
+    /// </summary>
     public enum AttkEffect
     {
-        None,
-        Light_Knockback
+        None, //Basic effect of attack
+        Light_Knockback, //Weak knockback, performed after a L L L combo
+        Projectile, //Shoots a projectile forward, performed after a L H L combo
+        Area_Smash, //Larger but weaker ground slam, performed after a L H H combo
+        Heavy_Knockback, //Shoots a projectile forward, performed after a H H L combo
+        Base_Smash //Base AOE ground slam, performed after a H H H combo
     }
 
     public enum AttkTypes
@@ -48,6 +55,9 @@ namespace Cadenza
         private int[] comboArray = new int[2];
         private float comboTimer = 0.0f;
         private bool comboWaiting = false;
+
+        private int baseLight = 3;
+        private int baseHeavy = 6;
 
         internal void SetPlayer(Player player)
         {
@@ -297,9 +307,8 @@ namespace Cadenza
                         //Light -> [None, None, None]
                         case (int)AttkTypes.None:
                             this.comboArray[0] = 1;
-                            Debug.Log("[1, 0, 0]");
                             this.comboWaiting = true;
-                            this.WeakAttack(3, (int)AttkEffect.None);
+                            this.WeakAttack(this.baseLight, (int)AttkEffect.None);
                             break;
 
                         //Light -> [Light, ?, None]
@@ -309,21 +318,19 @@ namespace Cadenza
                                 //1 -> [Light, None, None]
                                 case (int)AttkTypes.None:
                                     this.comboArray[1] = 1;
-                                    Debug.Log("[1, 1, 0]");
-                                    this.WeakAttack(3, (int)AttkEffect.None);
+                                    this.WeakAttack(this.baseLight, (int)AttkEffect.None);
                                     break;
 
                                 //Light -> [Light, Light, None]
                                 case (int)AttkTypes.Light:
-                                    Debug.Log("[1, 1, 1]");
                                     this.ResetCombo();
-                                    this.WeakAttack(5, (int)AttkEffect.Light_Knockback);
+                                    this.WeakAttack((int)(this.baseLight * 1.5), (int)AttkEffect.Light_Knockback);
                                     break;
 
                                 //Light -> [Light, Heavy, None]
                                 case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
-                                    this.WeakAttack(3, (int)AttkEffect.None);
+                                    this.WeakAttack(this.baseLight, (int)AttkEffect.Projectile);
                                     break;
                             }
                             break;
@@ -334,19 +341,19 @@ namespace Cadenza
                                 //Light -> [Heavy, None, None]
                                 case (int)AttkTypes.None:
                                     this.comboArray[1] = 1;
-                                    this.WeakAttack(3, (int)AttkEffect.None);
+                                    this.WeakAttack(this.baseLight * 2, (int)AttkEffect.None);
                                     break;
 
                                 //Light -> [Heavy, Light, None]
                                 case (int)AttkTypes.Light:
                                     this.ResetCombo();
-                                    this.WeakAttack(3, (int)AttkEffect.None);
+                                    this.WeakAttack(this.baseLight * 2, (int)AttkEffect.None);
                                     break;
 
                                 //Light -> [Heavy, Heavy, None]
                                 case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
-                                    this.WeakAttack(3, (int)AttkEffect.None);
+                                    this.WeakAttack((int)(this.baseLight * 1.5), (int)AttkEffect.Heavy_Knockback);
                                     break;
                             }
                             break;
@@ -361,7 +368,7 @@ namespace Cadenza
                         case (int)AttkTypes.None:
                             this.comboArray[0] = 2;
                             this.comboWaiting = true;
-                            this.HeavyAttack(6, (int)AttkEffect.None);
+                            this.HeavyAttack(this.baseHeavy, (int)AttkEffect.None);
                             break;
 
                         //Heavy -> [Light, ?, None]
@@ -371,19 +378,19 @@ namespace Cadenza
                                 //Heavy -> [Light, None, None]
                                 case (int)AttkTypes.None:
                                     this.comboArray[1] = 2;
-                                    this.HeavyAttack(6, (int)AttkEffect.None);
+                                    this.HeavyAttack(this.baseHeavy, (int)AttkEffect.None);
                                     break;
 
                                 //Heavy -> [Light, Light, None]
                                 case (int)AttkTypes.Light:
                                     this.ResetCombo();
-                                    this.HeavyAttack(6, (int)AttkEffect.None);
+                                    this.HeavyAttack((int)(this.baseHeavy * 2.5), (int)AttkEffect.None);
                                     break;
 
                                 //Heavy -> [Light, Heavy, None]
                                 case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
-                                    this.HeavyAttack(6, (int)AttkEffect.None);
+                                    this.HeavyAttack(0, (int)AttkEffect.Area_Smash);
                                     break;
                             }
                             break;
@@ -394,19 +401,19 @@ namespace Cadenza
                                 //Heavy -> [Heavy, None, None]
                                 case (int)AttkTypes.None:
                                     this.comboArray[1] = 2;
-                                    this.HeavyAttack(6, (int)AttkEffect.None);
+                                    this.HeavyAttack(this.baseHeavy, (int)AttkEffect.None);
                                     break;
 
                                 //Heavy -> [Heavy, Light, None]
                                 case (int)AttkTypes.Light:
                                     this.ResetCombo();
-                                    this.HeavyAttack(6, (int)AttkEffect.None);
+                                    this.HeavyAttack(this.baseLight * 2, (int)AttkEffect.None);
                                     break;
 
                                 //Heavy -> [Heavy, Heavy, None]
                                 case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
-                                    this.HeavyAttack(6, (int)AttkEffect.None);
+                                    this.HeavyAttack(0, (int)AttkEffect.Base_Smash);
                                     break;
                             }
                             break;

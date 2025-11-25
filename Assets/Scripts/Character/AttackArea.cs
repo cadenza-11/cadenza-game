@@ -18,12 +18,28 @@ public class AttackArea : MonoBehaviour
     private void OnTriggerEnter(Collider collider)
     {
         Debug.Log("dealt" + this.damage + "damage");
-        if(this.comboMove == 1)
+        switch (this.comboMove)
         {
-            this.comboMove = 0;
-            Vector3 direction = this.transform.position - collider.transform.position;
-            Vector3 normalDirection = direction.normalized;
-            collider.attachedRigidbody.AddForce(normalDirection * -10.0f, ForceMode.Impulse);
+            case 1:
+                this.comboMove = 0;
+                Vector3 direction = this.transform.position - collider.transform.position;
+                Vector3 normalDirection = direction.normalized;
+                collider.attachedRigidbody.AddForce(normalDirection * -10.0f, ForceMode.Impulse);
+                break;
+
+            case 2:
+                break;
+
+            case 3:
+                break;
+
+            case 4:
+                break;
+
+            case 5:
+                break;
         }
+
+
     }
 }
