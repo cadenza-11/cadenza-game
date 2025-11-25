@@ -113,6 +113,15 @@ namespace Cadenza
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Attack/Heavy"",
+                    ""type"": ""Button"",
+                    ""id"": ""4649785a-cfca-48a7-92bc-445e0aa63f68"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Attack/Special"",
                     ""type"": ""Button"",
                     ""id"": ""811969d1-c5c4-4b82-873b-316db499dd49"",
@@ -283,6 +292,28 @@ namespace Cadenza
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Attack/Light"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9e0575f9-3d03-4714-9e00-e0384fb56fb6"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Attack/Heavy"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""041e1bbb-b29d-4614-aca1-1cc161d19b7b"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Attack/Heavy"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -993,6 +1024,7 @@ namespace Cadenza
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_AttackLight = m_Player.FindAction("Attack/Light", throwIfNotFound: true);
+            m_Player_AttackHeavy = m_Player.FindAction("Attack/Heavy", throwIfNotFound: true);
             m_Player_AttackSpecial = m_Player.FindAction("Attack/Special", throwIfNotFound: true);
             m_Player_AttackTeam = m_Player.FindAction("Attack/Team", throwIfNotFound: true);
             // UI
@@ -1090,6 +1122,7 @@ namespace Cadenza
         private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_AttackLight;
+        private readonly InputAction m_Player_AttackHeavy;
         private readonly InputAction m_Player_AttackSpecial;
         private readonly InputAction m_Player_AttackTeam;
         /// <summary>
@@ -1111,6 +1144,10 @@ namespace Cadenza
             /// Provides access to the underlying input action "Player/AttackLight".
             /// </summary>
             public InputAction @AttackLight => m_Wrapper.m_Player_AttackLight;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/AttackHeavy".
+            /// </summary>
+            public InputAction @AttackHeavy => m_Wrapper.m_Player_AttackHeavy;
             /// <summary>
             /// Provides access to the underlying input action "Player/AttackSpecial".
             /// </summary>
@@ -1151,6 +1188,9 @@ namespace Cadenza
                 @AttackLight.started += instance.OnAttackLight;
                 @AttackLight.performed += instance.OnAttackLight;
                 @AttackLight.canceled += instance.OnAttackLight;
+                @AttackHeavy.started += instance.OnAttackHeavy;
+                @AttackHeavy.performed += instance.OnAttackHeavy;
+                @AttackHeavy.canceled += instance.OnAttackHeavy;
                 @AttackSpecial.started += instance.OnAttackSpecial;
                 @AttackSpecial.performed += instance.OnAttackSpecial;
                 @AttackSpecial.canceled += instance.OnAttackSpecial;
@@ -1174,6 +1214,9 @@ namespace Cadenza
                 @AttackLight.started -= instance.OnAttackLight;
                 @AttackLight.performed -= instance.OnAttackLight;
                 @AttackLight.canceled -= instance.OnAttackLight;
+                @AttackHeavy.started -= instance.OnAttackHeavy;
+                @AttackHeavy.performed -= instance.OnAttackHeavy;
+                @AttackHeavy.canceled -= instance.OnAttackHeavy;
                 @AttackSpecial.started -= instance.OnAttackSpecial;
                 @AttackSpecial.performed -= instance.OnAttackSpecial;
                 @AttackSpecial.canceled -= instance.OnAttackSpecial;
@@ -1494,6 +1537,13 @@ namespace Cadenza
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnAttackLight(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Attack/Heavy" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnAttackHeavy(InputAction.CallbackContext context);
             /// <summary>
             /// Method invoked when associated input action "Attack/Special" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>

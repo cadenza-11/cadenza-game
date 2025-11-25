@@ -60,6 +60,7 @@ namespace Cadenza
 
             var moveAction = map.FindAction("Move", throwIfNotFound: true);
             var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
+            var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackSpecialAction = map.FindAction("Attack/Special", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
 
@@ -67,6 +68,8 @@ namespace Cadenza
             moveAction.canceled += character.OnMove;
             attackLightAction.performed += character.OnAttackLight;
             attackLightAction.performed += this.OnHit;
+            attackHeavyAction.performed += character.OnAttackHeavy;
+            attackHeavyAction.performed += this.OnHit;
             attackSpecialAction.performed += character.OnAttackSpecial;
             attackTeamAction.performed += character.OnAttackTeam;
         }
@@ -86,12 +89,14 @@ namespace Cadenza
 
             var moveAction = map.FindAction("Move", throwIfNotFound: true);
             var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
+            var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackSpecialAction = map.FindAction("Attack/Special", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
 
             moveAction.performed -= character.OnMove;
             moveAction.canceled -= character.OnMove;
             attackLightAction.performed -= character.OnAttackLight;
+            attackHeavyAction.performed -= character.OnAttackHeavy;
             attackSpecialAction.performed -= character.OnAttackSpecial;
             attackTeamAction.performed -= character.OnAttackTeam;
         }

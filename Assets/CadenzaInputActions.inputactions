@@ -25,6 +25,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Attack/Heavy",
+                    "type": "Button",
+                    "id": "4649785a-cfca-48a7-92bc-445e0aa63f68",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Attack/Special",
                     "type": "Button",
                     "id": "811969d1-c5c4-4b82-873b-316db499dd49",
@@ -195,6 +204,28 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Attack/Light",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e0575f9-3d03-4714-9e00-e0384fb56fb6",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Attack/Heavy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "041e1bbb-b29d-4614-aca1-1cc161d19b7b",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Attack/Heavy",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

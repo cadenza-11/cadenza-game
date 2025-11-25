@@ -183,6 +183,19 @@ namespace Cadenza
             // Play animation
             this.anim.SetTrigger("WeakAttack");
         }
+        private void HeavyAttack(int damage, int comboMove)
+        {
+            this.ManageAttackDirection();
+            //Sets attacking to true and activated the hitbox for the attack
+            this.isAttacking = true;
+            this.attackMod = 2;
+            this.attackArea.damage = damage;
+            this.attackArea.comboMove = comboMove;
+            this.attackArea.gameObject.SetActive(this.isAttacking);
+
+            // Play animation
+            this.anim.SetTrigger("HeavyAttack");
+        }
 
         private void SpecialAttack()
         {
@@ -227,6 +240,11 @@ namespace Cadenza
             this.ComboManager((int)AttkTypes.Light);
         }
 
+        public void OnAttackHeavy(InputAction.CallbackContext context)
+        {
+            this.ComboManager((int)AttkTypes.Heavy);
+        }
+
         public void OnAttackSpecial(InputAction.CallbackContext context)
         {
             this.SpecialAttack();
@@ -238,7 +256,6 @@ namespace Cadenza
         }
 
         #endregion
-
         #region Combo Management
         /// <summary>
         /// All attacks go through the combo manager, which uses a series of switch statememnts to determine what part of the combo the attack falls in.
@@ -344,7 +361,7 @@ namespace Cadenza
                         case (int)AttkTypes.None:
                             this.comboArray[0] = 2;
                             this.comboWaiting = true;
-                            //This is where the heavy attack would go
+                            this.HeavyAttack(6, (int)AttkEffect.None);
                             break;
 
                         //Heavy -> [Light, ?, None]
@@ -354,19 +371,19 @@ namespace Cadenza
                                 //Heavy -> [Light, None, None]
                                 case (int)AttkTypes.None:
                                     this.comboArray[1] = 2;
-                                    //This is where the heavy attack would go
+                                    this.HeavyAttack(6, (int)AttkEffect.None);
                                     break;
 
                                 //Heavy -> [Light, Light, None]
                                 case (int)AttkTypes.Light:
                                     this.ResetCombo();
-                                    //This is where the heavy attack would go
+                                    this.HeavyAttack(6, (int)AttkEffect.None);
                                     break;
 
                                 //Heavy -> [Light, Heavy, None]
                                 case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
-                                    //This is where the heavy attack would go
+                                    this.HeavyAttack(6, (int)AttkEffect.None);
                                     break;
                             }
                             break;
@@ -377,19 +394,19 @@ namespace Cadenza
                                 //Heavy -> [Heavy, None, None]
                                 case (int)AttkTypes.None:
                                     this.comboArray[1] = 2;
-                                    //This is where the heavy attack would go
+                                    this.HeavyAttack(6, (int)AttkEffect.None);
                                     break;
 
                                 //Heavy -> [Heavy, Light, None]
                                 case (int)AttkTypes.Light:
                                     this.ResetCombo();
-                                    //This is where the heavy attack would go
+                                    this.HeavyAttack(6, (int)AttkEffect.None);
                                     break;
 
                                 //Heavy -> [Heavy, Heavy, None]
                                 case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
-                                    //This is where the heavy attack would go
+                                    this.HeavyAttack(6, (int)AttkEffect.None);
                                     break;
                             }
                             break;
