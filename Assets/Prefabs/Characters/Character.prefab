@@ -70,6 +70,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   damage: 0
   comboMove: 0
+  projDirection: 0
 --- !u!1 &4273684722368562779
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,6 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackArea
   damage: 0
   comboMove: 0
+  projDirection: 0
 --- !u!1 &8363881908035172195
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,6 +362,7 @@ MonoBehaviour:
   sr: {fileID: 6779959987335499425}
   anim: {fileID: 71435134034143840}
   accuracyBar: {fileID: 2866967900350389172}
+  projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
 --- !u!1001 &1003460141613909193
 PrefabInstance:
   m_ObjectHideFlags: 0

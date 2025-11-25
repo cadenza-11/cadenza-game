@@ -7,7 +7,7 @@ public interface ICharacter
     int specialMeter { get; set; }
 
     void Move(Vector2 input);
-    void WeakAttack();
+    void LightAttack();
     void StrongAttack();
     void SpecialAttack();
     void StartTeamAttk();

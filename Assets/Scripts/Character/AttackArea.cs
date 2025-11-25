@@ -5,6 +5,7 @@ public class AttackArea : MonoBehaviour
     public int damage = 0;
     public int comboMove = 0;
     private GameObject go = null;
+    public bool projDirection;
 
     public void SetActive(bool enabled)
     {
@@ -22,22 +23,18 @@ public class AttackArea : MonoBehaviour
         {
             case 1:
                 this.comboMove = 0;
-                Vector3 direction = this.transform.position - collider.transform.position;
-                Vector3 normalDirection = direction.normalized;
-                collider.attachedRigidbody.AddForce(normalDirection * -10.0f, ForceMode.Impulse);
-                break;
-
-            case 2:
-                break;
-
-            case 3:
+                Vector3 lightDirection = this.transform.position - collider.transform.position;
+                Vector3 lightNormalDirection = lightDirection.normalized;
+                collider.attachedRigidbody.AddForce(lightNormalDirection * -3.0f, ForceMode.Impulse);
                 break;
 
             case 4:
+                this.comboMove = 0;
+                Vector3 heavyDirection = this.transform.position - collider.transform.position;
+                Vector3 heavyNormalDirection = heavyDirection.normalized;
+                collider.attachedRigidbody.AddForce(heavyNormalDirection * -6.0f, ForceMode.Impulse);
                 break;
 
-            case 5:
-                break;
         }
 
 
