@@ -6,7 +6,7 @@
     <ui:VisualElement name="c_Panel" class="panel_background" style="flex-grow: 1; display: flex;">
         <ui:VisualElement name="c_PlayerOne" class="player_container">
             <ui:Label text="PLAYER 1" name="txt_PlayerNumber" class="player-number" />
-            <ui:VisualElement name="c_PlayerOnePhases" class="player">
+            <ui:VisualElement name="c_Phase" class="player">
                 <ui:Label text="Waiting for player to join..." name="txt_Waiting" class="temp_text" />
             </ui:VisualElement>
             <ui:VisualElement name="c_NavHints" class="navigation_hints">
@@ -14,15 +14,15 @@
                     <ui:VisualElement name="icon_Back" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=5923138177525885446&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left&quot;);" />
                     <ui:Label text="(back)" name="txt_TEMP_Back" />
                 </ui:VisualElement>
-                <ui:VisualElement name="c_NavBack" class="navigation_next">
-                    <ui:Label text="(next)" name="txt_TEMP_Next" />
+                <ui:VisualElement name="c_NavNext" class="navigation_next" style="opacity: 0;">
+                    <ui:Label text="(submit)" name="txt_TEMP_Next" />
                     <ui:VisualElement name="icon_Next" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-4521532143779581420&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-right&quot;);" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="c_PlayerTwo" class="player_container" style="flex-grow: 1;">
             <ui:Label text="PLAYER 2" name="txt_PlayerNumber" class="player-number" />
-            <ui:VisualElement name="c_PlayerTwoPhases" class="player">
+            <ui:VisualElement name="c_Phase" class="player">
                 <ui:Label text="Waiting for player to join..." name="txt_Waiting" class="temp_text" />
             </ui:VisualElement>
             <ui:VisualElement name="c_NavHints" class="navigation_hints">
@@ -30,15 +30,15 @@
                     <ui:VisualElement name="icon_Back" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=5923138177525885446&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left&quot;);" />
                     <ui:Label text="(back)" name="txt_TEMP_Back" />
                 </ui:VisualElement>
-                <ui:VisualElement name="c_NavBack" class="navigation_next">
-                    <ui:Label text="(next)" name="txt_TEMP_Next" />
+                <ui:VisualElement name="c_NavNext" class="navigation_next">
+                    <ui:Label text="(submit)" name="txt_TEMP_Next" />
                     <ui:VisualElement name="icon_Next" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-4521532143779581420&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-right&quot;);" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="c_PlayerThree" class="player_container" style="flex-grow: 1;">
             <ui:Label text="PLAYER 3" name="txt_PlayerNumber" class="player-number" />
-            <ui:VisualElement name="c_PlayerThreePhases" class="player">
+            <ui:VisualElement name="c_Phase" class="player">
                 <ui:Label text="Waiting for player to join..." name="txt_Waiting" class="temp_text" />
             </ui:VisualElement>
             <ui:VisualElement name="c_NavHints" class="navigation_hints">
@@ -46,15 +46,15 @@
                     <ui:VisualElement name="icon_Back" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=5923138177525885446&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left&quot;);" />
                     <ui:Label text="(back)" name="txt_TEMP_Back" />
                 </ui:VisualElement>
-                <ui:VisualElement name="c_NavBack" class="navigation_next">
-                    <ui:Label text="(next)" name="txt_TEMP_Next" />
+                <ui:VisualElement name="c_NavNext" class="navigation_next">
+                    <ui:Label text="(submit)" name="txt_TEMP_Next" />
                     <ui:VisualElement name="icon_Next" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-4521532143779581420&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-right&quot;);" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="c_PlayerFour" class="player_container" style="flex-grow: 1;">
             <ui:Label text="PLAYER 4" name="txt_PlayerNumber" class="player-number" />
-            <ui:VisualElement name="c_PlayerFourPhases" class="player">
+            <ui:VisualElement name="c_Phase" class="player">
                 <ui:Label text="Waiting for player to join..." name="txt_Waiting" class="temp_text" />
             </ui:VisualElement>
             <ui:VisualElement name="c_NavHints" class="navigation_hints">
@@ -62,8 +62,8 @@
                     <ui:VisualElement name="icon_Back" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=5923138177525885446&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left&quot;);" />
                     <ui:Label text="(back)" name="txt_TEMP_Back" />
                 </ui:VisualElement>
-                <ui:VisualElement name="c_NavBack" class="navigation_next">
-                    <ui:Label text="(next)" name="txt_TEMP_Next" />
+                <ui:VisualElement name="c_NavNext" class="navigation_next">
+                    <ui:Label text="(submit)" name="txt_TEMP_Next" />
                     <ui:VisualElement name="icon_Next" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-4521532143779581420&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-right&quot;);" />
                 </ui:VisualElement>
             </ui:VisualElement>

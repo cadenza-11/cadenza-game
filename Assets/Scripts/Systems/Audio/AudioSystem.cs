@@ -125,13 +125,29 @@ namespace Cadenza
         {
             // Register for player hit events.
             PlayerSystem.PlayerHit += this.OnPlayerHit;
+            ScoreSystem.TeamHit += this.OnTeamHit;
 
             Debug.Log("Loaded all banks from FMOD.");
         }
 
-        private void OnPlayerHit(ScoreSystem.ScoreDef def)
+        private void OnPlayerHit(ScoreDef def)
         {
             PlayOneShotWithParameter(PlayerOneShotsEvent, "ID", 0, immediate: true);
+        }
+
+        private void OnTeamHit(TeamScoreDef def)
+        {
+            int soundID = def.Class switch
+            {
+                ScoreClass.Bad => 0,
+                ScoreClass.OK => 0,
+                ScoreClass.Great => 1,
+                ScoreClass.Perfect => 2,
+                _ => 0,
+            };
+
+            if (soundID != 0)
+                PlayOneShotWithParameter(PlayerOneShotsEvent, "ID", soundID);
         }
 
 

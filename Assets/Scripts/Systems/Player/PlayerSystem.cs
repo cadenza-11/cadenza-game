@@ -25,7 +25,7 @@ namespace Cadenza
 
         public static event Action<Player> PlayerJoined;
         public static event Action<Player> PlayerRemoved;
-        public static event Action<ScoreSystem.ScoreDef> PlayerHit;
+        public static event Action<ScoreDef> PlayerHit;
 
         #region Application Callbacks
 

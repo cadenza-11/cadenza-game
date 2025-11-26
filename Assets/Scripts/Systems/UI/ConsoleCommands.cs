@@ -34,6 +34,9 @@ namespace Cadenza
                 case "audio":
                     this.OnCommandAudio(args);
                     break;
+                case "save":
+                    this.OnCommandSave(args);
+                    break;
                 default:
                     break;
             }
@@ -103,6 +106,29 @@ namespace Cadenza
                 _ = ApplicationController.SetSceneAsync(sceneIndex);
                 Debug.Log($"Loading scene with build index {sceneIndex}.");
             }
+        }
+
+        private void OnCommandSave(string[] args)
+        {
+            switch (args[0])
+            {
+                case "results":
+
+                    SaveSystem.SaveRunToFile(this.GetFakeRun());
+                    break;
+            }
+        }
+
+        private Results GetFakeRun()
+        {
+            Results results = new();
+            results.AddTeamScore(ScoreClass.Bad);
+            results.AddPlayerScore(1, ScoreClass.Bad);
+            results.AddPlayerScore(2, ScoreClass.OK);
+            results.AddPlayerScore(3, ScoreClass.Great);
+            results.AddPlayerScore(4, ScoreClass.Perfect);
+            results.AddPlayerScore(4, ScoreClass.Perfect);
+            return results;
         }
     }
 }

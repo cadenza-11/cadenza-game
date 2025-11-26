@@ -172,6 +172,7 @@ namespace Cadenza
 
         public override void OnApplicationStop()
         {
+            this.globalTrack.setCallback(null);
             this.timelineHandle.Free();
         }
 

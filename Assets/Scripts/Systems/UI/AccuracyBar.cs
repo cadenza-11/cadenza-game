@@ -18,7 +18,7 @@ public class AccuracyBar : MonoBehaviour
         this.accuracyBar.highValue = +halfPeriod;
     }
 
-    public void OnPlayerHit(ScoreSystem.ScoreDef def)
+    public void OnPlayerHit(ScoreDef def)
     {
         this.accuracyBar.value = (float)def.Latency;
         this.accuracyText.text = def.Class.ToString();
