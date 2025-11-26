@@ -3,14 +3,15 @@ using Newtonsoft.Json;
 using Cadenza;
 using UnityEngine;
 using System.IO;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 public static class SaveSystem
 {
     private const string ResultsJSONFileName = "results.json";
     private static readonly System.Array scoreClasses = System.Enum.GetValues(typeof(ScoreClass));
     private static readonly System.Array scoreClassNames = System.Enum.GetNames(typeof(ScoreClass));
+    private static readonly string ResultsFilePath = Path.Combine(Application.persistentDataPath, ResultsJSONFileName);
 
     /// <summary>
     /// Serializes and saves an instance of Results to the persistent JSON file.
@@ -24,31 +25,93 @@ public static class SaveSystem
             return true;
         }
 
-        // Save to file.
-        string json = results.ToJSON();
-        var path = Path.Combine(Application.persistentDataPath, ResultsJSONFileName);
-        Directory.CreateDirectory(Path.GetDirectoryName(path));
-        File.WriteAllText(path, json);
+        // Append this to previous runs.
+        JArray previousRuns = GetPreviousRunsAsJSON();
+        previousRuns.Add(results.ToJSON());
 
-        Debug.Log($"Saved results to {path}.");
+        // Save to file.
+        string json = previousRuns.ToString(Formatting.Indented);
+        File.WriteAllText(ResultsFilePath, json);
+
+        Debug.Log($"Saved results to {ResultsFilePath}.");
         return true;
     }
 
+    /// <summary>
+    /// Reads from file the stored runs on this device.
+    /// </summary>
+    /// <param name="results">The list to populate with Results objects.</param>
+    /// <returns>Whether the file was read successfully.</returns>
     public static bool GetPreviousRuns(out Results[] results)
     {
-        results = null;
-
-        // Read from path.
-        string path = Path.Combine(Application.persistentDataPath, ResultsJSONFileName);
-        if (!Directory.Exists(path))
+        var root = GetPreviousRunsAsJSON();
+        if (root == null)
+        {
+            results = null;
             return false;
+        }
 
-        string json = File.ReadAllText(path);
-        results = FromJSON(json);
-        return results != null;
+        var resultsList = new List<Results>();
+        foreach (var result in root)
+        {
+            var resultJSON = result.FromJSON();
+
+            // Only store results that are successfully converted from JSON.
+            if (resultJSON != null)
+                resultsList.Add(resultJSON);
+        }
+
+        results = resultsList.ToArray();
+        return true;
     }
 
-    private static string ToJSON(this Results results)
+    /// <summary>
+    /// Removes the persistent file used to store previous runs.
+    /// </summary>
+    /// <returns>Whether the file was deleted successfully.</returns>
+    public static bool DeletePreviousRuns()
+    {
+        if (File.Exists(ResultsFilePath))
+        {
+            File.Delete(ResultsFilePath);
+            Debug.Log($"Successfully deleted file at path {ResultsFilePath}.");
+        }
+        else
+        {
+            Debug.Log($"No file exists at {ResultsFilePath}. Skipping deletion.");
+        }
+        return true;
+    }
+
+    private static JArray GetPreviousRunsAsJSON()
+    {
+        // Get file.
+        JArray root;
+        if (File.Exists(ResultsFilePath))
+        {
+            try
+            {
+                string json = File.ReadAllText(ResultsFilePath);
+                root = JArray.Parse(json);
+            }
+            catch (JsonReaderException e)
+            {
+                Debug.LogWarning($"Failed to get runs from file: {e}");
+                root = null;
+            }
+        }
+        else
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(ResultsFilePath));
+            root = new JArray();
+        }
+        return root;
+    }
+
+    /// <summary>
+    /// Constructs a JSON object from a Results instance.
+    /// </summary>
+    private static JToken ToJSON(this Results results)
     {
         var playerResults = results.PlayerResults;
         var teamResults = results.TeamResults;
@@ -119,31 +182,12 @@ public static class SaveSystem
             ["TeamScores"] = teamScores,
             ["PlayerScores"] = playerScores,
         };
-
-        string json = root.ToString(Formatting.Indented);
-        return json;
     }
 
-    private static Results[] FromJSON(string jsonString)
-    {
-        List<Results> resultsList;
-        try
-        {
-            JArray root = JArray.Parse(jsonString);
-            resultsList = new List<Results>();
-            foreach (var result in root)
-                resultsList.Add(GetResults(result));
-        }
-        catch (JsonReaderException e)
-        {
-            Debug.LogWarning(e);
-            return null;
-        }
-
-        return resultsList.ToArray();
-    }
-
-    private static Results GetResults(JToken root)
+    /// <summary>
+    /// Reconstructs a Results instance from a JSON token. Returns null if JSON parsing fails.
+    /// </summary>
+    private static Results FromJSON(this JToken root)
     {
         Results results = new();
 
@@ -153,17 +197,15 @@ public static class SaveSystem
         results.TeamName = root["Team"]["Name"].Value<string>();
 
         // Add team scores.
-        var teamScores = root["TeamScores"];
+        var teamScores = (JObject)root["TeamScores"];
         {
-            JObject counts = (JObject)teamScores["Counts"];
-
             // Get score counts.
             for (int i = 0; i < scoreClasses.Length; i++)
             {
                 string scoreName = (string)scoreClassNames.GetValue(i);
                 ScoreClass scoreClass = (ScoreClass)scoreClasses.GetValue(i);
 
-                if (!counts.TryGetValue(scoreName, out JToken count))
+                if (!teamScores.TryGetValue(scoreName, out JToken count))
                     continue;
 
                 for (int j = 0; j < count.Value<int>(); j++)
