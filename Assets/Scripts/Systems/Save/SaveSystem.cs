@@ -53,17 +53,26 @@ public static class SaveSystem
         var playerResults = results.PlayerResults;
         var teamResults = results.TeamResults;
 
-        // Save team member information.
-        var team = new JArray();
+        // Save metadata.
+        var metadata = new JObject()
         {
-            foreach (var id in playerResults.Keys)
+            ["Timestamp"] = DateTime.UtcNow,
+        };
+
+        // Save team member information.
+        var members = new JArray();
+        foreach (var id in playerResults.Keys)
+        {
+            members.Add(new JObject
             {
-                team.Add(new JObject
-                {
-                    ["ID"] = id
-                });
-            }
+                ["ID"] = id
+            });
         }
+        var team = new JObject
+        {
+            ["Name"] = results.TeamName,
+            ["Members"] = members,
+        };
 
         // Save team scores.
         var teamScores = new JObject();
@@ -103,9 +112,9 @@ public static class SaveSystem
             }
         }
 
-        var root = new JObject
+        return new JObject
         {
-            ["Timestamp"] = DateTime.UtcNow,
+            ["Metadata"] = metadata,
             ["Team"] = team,
             ["TeamScores"] = teamScores,
             ["PlayerScores"] = playerScores,
@@ -138,8 +147,10 @@ public static class SaveSystem
     {
         Results results = new();
 
-        // Get metadata.
-        DateTime dt = root["Timestamp"].Value<DateTime>();
+        // Set metadata.
+        var metadata = root["Metadata"];
+        results.Timestamp = metadata["Timestamp"].Value<DateTime>();
+        results.TeamName = root["Team"]["Name"].Value<string>();
 
         // Add team scores.
         var teamScores = root["TeamScores"];
