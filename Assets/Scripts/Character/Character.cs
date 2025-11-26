@@ -36,6 +36,7 @@ namespace Cadenza
         [Header("Assign in Inspector")]
         [SerializeField] private AttackArea attackArea;
         [SerializeField] private AttackArea chargeArea;
+        [SerializeField] private AttackArea slamArea;
         [SerializeField] private Rigidbody rb;
         [SerializeField] private SpriteRenderer sr;
         [SerializeField] private Animator anim;
@@ -117,6 +118,7 @@ namespace Cadenza
                     this.attackTimer = 0.0f;
                     this.isAttacking = false;
                     this.attackArea.gameObject.SetActive(this.isAttacking);
+                    this.slamArea.gameObject.SetActive(this.isAttacking);
                 }
             }
 
@@ -209,9 +211,26 @@ namespace Cadenza
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 2;
-            this.attackArea.damage = damage;
-            this.attackArea.comboMove = comboMove;
-            this.attackArea.gameObject.SetActive(this.isAttacking);
+            if(comboMove == (int)AttkEffect.Base_Smash)
+            {
+                this.slamArea.damage = damage;
+                this.slamArea.comboMove = comboMove;
+                this.slamArea.gameObject.GetComponent<SphereCollider>().radius = 1;
+                this.slamArea.gameObject.SetActive(this.isAttacking);
+            }
+            else if (comboMove == (int)AttkEffect.Area_Smash)
+            {
+                this.slamArea.damage = damage;
+                this.slamArea.comboMove = comboMove;
+                this.slamArea.gameObject.GetComponent<SphereCollider>().radius = 1.5f;
+                this.slamArea.gameObject.SetActive(this.isAttacking);
+            }
+            else
+            {
+                this.attackArea.damage = damage;
+                this.attackArea.comboMove = comboMove;
+                this.attackArea.gameObject.SetActive(this.isAttacking);
+            }
 
             // Play animation
             this.anim.SetTrigger("HeavyAttack");
@@ -394,13 +413,13 @@ namespace Cadenza
                                 //Heavy -> [Light, Light, None]
                                 case (int)AttkTypes.Light:
                                     this.ResetCombo();
-                                    this.HeavyAttack((int)(this.baseHeavy * 2.5), (int)AttkEffect.None);
+                                    this.HeavyAttack((int)(this.baseHeavy * 2), (int)AttkEffect.None);
                                     break;
 
                                 //Heavy -> [Light, Heavy, None]
                                 case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
-                                    this.HeavyAttack(0, (int)AttkEffect.Area_Smash);
+                                    this.HeavyAttack((int)(this.baseHeavy * 0.5f), (int)AttkEffect.Area_Smash);
                                     break;
                             }
                             break;
@@ -417,13 +436,13 @@ namespace Cadenza
                                 //Heavy -> [Heavy, Light, None]
                                 case (int)AttkTypes.Light:
                                     this.ResetCombo();
-                                    this.HeavyAttack(this.baseLight * 2, (int)AttkEffect.None);
+                                    this.HeavyAttack((int)(this.baseHeavy * 1.5), (int)AttkEffect.None);
                                     break;
 
                                 //Heavy -> [Heavy, Heavy, None]
                                 case (int)AttkTypes.Heavy:
                                     this.ResetCombo();
-                                    this.HeavyAttack(0, (int)AttkEffect.Base_Smash);
+                                    this.HeavyAttack((int)(this.baseHeavy * 0.75f), (int)AttkEffect.Base_Smash);
                                     break;
                             }
                             break;
