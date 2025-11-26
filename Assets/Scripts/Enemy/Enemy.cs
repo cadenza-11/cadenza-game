@@ -1,0 +1,380 @@
+using UnityEngine;
+using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
+using System;
+
+//Royce Ortega
+namespace Cadenza
+{
+    public enum EnemyState
+    {
+        Idle,
+        Chase,
+        Melee,
+        Special,
+        Run,
+        Ranged,
+        Dead
+    }
+
+    public class Enemy : MonoBehaviour
+    {
+        [SerializeField] private Transform Transform;
+        [SerializeField] public int speed;
+        [SerializeField] private float meleeDuration = 0.25f;
+        [SerializeField] private float rangedDuration = 0.25f;
+        [SerializeField] private int maxHealth;
+        [SerializeField] public int currentHealth;
+        [SerializeField] private AttackArea attackArea;
+        [SerializeField] private Rigidbody rb;
+        [SerializeField] private SpriteRenderer sr;
+        [SerializeField] private Animator anim;
+        private float attackTimer = 0f;
+        private EnemyState curState = EnemyState.Idle;
+        private const int chaseDistance = 20;
+        private const int meleeDistance = 1;
+        private const int rangedDistance = 50;
+        private bool meleeState;
+        private bool hasRun;
+        private bool isAttacking;
+        private int attackMod;
+        private  int runHealth;
+        private float nearestPlayerDist;
+        private float curAngle;
+        private Player follow;
+        private Vector2 TargetLocation;
+
+        //May want a character manager to see character locations
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+            this.Transform = this.GetComponent<Transform>();
+            this.runHealth = (int)(0.2 * this.maxHealth);
+            this.hasRun = false;
+            this.speed = 5;
+            this.isAttacking = false;
+        }
+
+        // Update is called once per frame
+        void FixedUpdate()
+        {
+            if(this.curAngle > -90 && this.curAngle < 90)
+            {
+                this.Transform.rotation =  Quaternion.Euler(0, 0, 0);
+            }
+            else
+            {
+                this.Transform.rotation = Quaternion.Euler(0, 180, 0);
+            }
+            //Handles Melee Attack animation
+            if (this.isAttacking)
+            {
+                this.attackTimer += Time.deltaTime;
+
+                if (this.attackTimer >= (this.meleeDuration * this.attackMod))
+                {
+                    this.attackTimer = 0;
+                    this.isAttacking = false;
+                    this.attackArea.SetActive(this.isAttacking);
+                }
+            }
+
+            //Checks if the Enemy's state needs to change
+            this.CheckState();
+        }
+
+        #region IEnemy Interface
+        private void MeleeAttack()
+        {
+            this.isAttacking = true;
+            this.attackMod = 1;
+            this.attackArea.damage = 3;
+            this.attackArea.SetActive(this.isAttacking);
+
+            // Play animation
+            this.anim.SetTrigger("WeakAttack");
+        }
+        
+        private void RangedAttack()
+        {
+            //To implement later
+        }
+
+        private void SpecialAttack()
+        {
+            //To implement later
+        }
+
+        private void DoDamage()
+        {
+
+        }
+
+        public void TakeDamage()
+        {
+            
+        }
+
+        /// <summary>
+        /// Checks the enemy's current state and then goes into the proper State function for actions/state changes
+        /// </summary>
+        private void CheckState()
+        {
+            switch (this.curState)
+            {
+                case EnemyState.Idle:
+                    this.IdleState();
+                    break;
+                case EnemyState.Chase:
+                    this.ChaseState();
+                    break;
+                case EnemyState.Melee:
+                    this.MeleeState();
+                    break;
+                case EnemyState.Special:
+                    this.SpecialState();
+                    break;
+                case EnemyState.Run:
+                    this.RunState();
+                    break;
+                case EnemyState.Ranged:
+                    this.RangedState();
+                    break;
+                case EnemyState.Dead:
+                    this.DeadState();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Enemy's Idle State. Finds Enemy's distance to the nearest player and checks if it is within the bounds to enter the Ranged, Melee, or
+        /// Chase states. Also checks health to see if Enemy should die.
+        /// </summary>
+        private void IdleState()
+        {
+            Debug.Log("In idle state");
+            this.FindNearestPlayerDist();
+            if(this.nearestPlayerDist < rangedDistance && this.nearestPlayerDist > chaseDistance)
+            {
+                this.meleeState = false;
+                this.curState = EnemyState.Ranged;
+            }
+            else if(this.nearestPlayerDist < chaseDistance)
+            {
+                this.curState = EnemyState.Chase;
+            }
+
+            if(this.currentHealth <= 0)
+            {
+                this.curState = EnemyState.Dead;
+            }
+        }
+        
+        /// <summary>
+        /// Enemy's Chase State. Moves the enemy towards the selected closest Player. 
+        /// </summary>
+        private void ChaseState()
+        {
+            Debug.Log("In chase state");
+            this.FindNearestPlayerDist();
+            Vector3 pos = this.transform.position;
+            this.curAngle = (float)Math.Atan2(this.TargetLocation.y - this.transform.position.z, this.TargetLocation.x - this.transform.position.x);
+            pos.x += this.speed * (float)Math.Cos(this.curAngle) * Time.deltaTime;
+            pos.z += this.speed * (float)Math.Sin(this.curAngle) * Time.deltaTime;
+            //this.GetComponent<Transform>().position = pos;
+            this.Transform.position = pos;
+
+            this.FindNearestPlayerDist();
+            //Move Towards target location here
+            if(this.nearestPlayerDist > rangedDistance)
+            {
+                this.curState = EnemyState.Idle;
+            }
+            else if(this.nearestPlayerDist < rangedDistance && this.nearestPlayerDist > chaseDistance)
+            {
+                this.meleeState = false;
+                this.curState = EnemyState.Ranged;
+            }
+            else if(this.nearestPlayerDist <= meleeDistance)
+            {
+                this.meleeState = true;
+                this.curState = EnemyState.Melee;
+            }
+
+            if(this.currentHealth < this.runHealth && this.currentHealth > 0)
+            {
+                this.curState = EnemyState.Run;
+            }
+            else if(this.currentHealth <= 0)
+            {
+                this.curState = EnemyState.Dead;
+            }
+        }
+
+        private void MeleeState()
+        {
+            Debug.Log("In melee state");
+            if(!this.isAttacking)
+            {
+                this.FindNearestPlayerDist();
+                if(this.nearestPlayerDist > rangedDistance)
+                {
+                    this.curState = EnemyState.Idle;
+                }
+                else if(this.nearestPlayerDist < rangedDistance && this.nearestPlayerDist > chaseDistance)
+                {
+                    this.meleeState = false;
+                    this.curState = EnemyState.Ranged;
+                }
+                else if(this.nearestPlayerDist < chaseDistance && this.nearestPlayerDist > meleeDistance)
+                {
+                    this.curState = EnemyState.Chase;
+                }
+
+                if(this.currentHealth <= this.runHealth & this.currentHealth > 0)
+                {
+                    this.curState = EnemyState.Run;
+                }
+                else if(this.currentHealth <= 0)
+                {
+                    this.curState = EnemyState.Dead;
+                }
+
+                System.Random rand = new System.Random();
+                if(rand.Next(1, 100) <= 10)
+                {
+                    this.curState = EnemyState.Special;
+                }
+
+                if(this.curState == EnemyState.Melee)
+                {
+                    this.MeleeAttack();
+                }
+                else
+                {
+                    this.isAttacking = false;
+                }
+            }
+        }
+
+        private void SpecialState()
+        {
+            Debug.Log("In special state");
+            //Do Special Move
+            if(this.meleeState)
+            {
+                this.meleeState = true;
+                this.curState = EnemyState.Melee;
+            }
+            else if(!this.hasRun && this.currentHealth < this.runHealth && this.currentHealth >= 0)
+            {
+                this.curState = EnemyState.Run;
+            }
+            else if(this.currentHealth <= 0)
+            {
+                this.curState = EnemyState.Dead;
+            }
+            else
+            {
+                this.meleeState = false;
+                this.curState = EnemyState.Ranged;
+            }
+        }
+
+        private void RunState()
+        {
+            Debug.Log("In run state");
+            if(!this.hasRun)
+            {
+                this.hasRun = true;
+                this.TargetLocation = this.FindRunLocation();
+            }
+
+            Vector3 pos = this.Transform.position;
+            this.curAngle = (float)Math.Atan2(this.TargetLocation.y - pos.z, this.TargetLocation.x - pos.x);
+            pos.x += this.speed * (float)Math.Cos(this.curAngle) * Time.deltaTime;
+            pos.z += this.speed * (float)Math.Sin(this.curAngle) * Time.deltaTime;
+            this.Transform.position = pos;
+
+            if(Math.Abs(this.Transform.position.x - this.TargetLocation.x) <= 0.1 && 
+                Math.Abs(this.Transform.position.z - this.TargetLocation.y) <= 0.1)
+            {
+                this.meleeState = false;
+                this.curState = EnemyState.Ranged;
+            }
+            if(this.currentHealth <= 0)
+            {
+                this.curState = EnemyState.Dead;
+            }
+        }
+
+        private void RangedState()
+        {
+            this.FindNearestPlayerDist();
+            if(this.nearestPlayerDist > rangedDistance)
+            {
+                this.curState = EnemyState.Idle;
+            }
+            else if(!this.hasRun && this.nearestPlayerDist < chaseDistance && this.nearestPlayerDist > meleeDistance)
+            {
+                this.curState = EnemyState.Chase;
+            }
+            else if(!this.hasRun && this.nearestPlayerDist <= meleeDistance)
+            {
+                this.meleeState = true;
+                this.curState = EnemyState.Melee;
+            }
+
+            if(!this.hasRun && this.currentHealth <= this.runHealth && this.currentHealth > 0)
+            {
+                this.curState = EnemyState.Run;
+            }
+            else if(this.currentHealth <= 0)
+            {
+                this.curState = EnemyState.Dead;
+            }
+        }
+
+        private void DeadState()
+        {
+            Debug.Log("In Dead State");
+            EnemyManager.singleton.RemoveEnemy(this.gameObject);
+        }
+
+        private void FindNearestPlayerDist()
+        {
+            float nearest = 99999999999999;
+            foreach(KeyValuePair<int, Player> player in PlayerSystem.PlayersByID)
+            {
+                Vector3 playerPos = player.Value.Character.GetComponent<Transform>().position;
+                float curDistance = (float)Math.Sqrt(Math.Pow(this.Transform.position.x - playerPos.x, 2) + 
+                                                Math.Pow(this.Transform.position.z - playerPos.z, 2));
+                if(curDistance < nearest)
+                {
+                    nearest = curDistance;
+                    this.follow = player.Value;
+                }
+            }
+            this.TargetLocation = this.follow.Character.GetLocation();
+            this.nearestPlayerDist = nearest;
+        }
+
+        private Vector2 FindRunLocation()
+        {
+            this.FindNearestPlayerDist();
+            Vector2 displacement = new Vector2(this.TargetLocation.x - this.Transform.position.x, this.TargetLocation.y - this.Transform.position.z);
+            Vector2 runDirection = new Vector2(-1 * displacement.x / displacement.magnitude, -1 * displacement.y / displacement.magnitude);
+            return new Vector3(this.Transform.position.x + runDirection.x * 30, this.Transform.position.y, this.Transform.position.z + runDirection.y * 30);
+        }
+
+        public bool CheckIsDead()
+        {
+            if (this.currentHealth <= 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        #endregion
+    }
+}
