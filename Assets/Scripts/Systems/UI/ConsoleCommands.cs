@@ -34,8 +34,8 @@ namespace Cadenza
                 case "audio":
                     this.OnCommandAudio(args);
                     break;
-                case "save":
-                    this.OnCommandSave(args);
+                case "results":
+                    this.OnCommandResults(args);
                     break;
                 default:
                     break;
@@ -108,13 +108,21 @@ namespace Cadenza
             }
         }
 
-        private void OnCommandSave(string[] args)
+        private void OnCommandResults(string[] args)
         {
             switch (args[0])
             {
-                case "results":
-
+                case "save":
                     SaveSystem.SaveRunToFile(this.GetFakeRun());
+                    break;
+
+                case "load":
+                    bool success = SaveSystem.GetPreviousRuns(out Results[] results);
+                    Debug.Log($"Successfully retrieved {results.Length} runs. (success={success})");
+                    break;
+
+                case "delete":
+                    SaveSystem.DeletePreviousRuns();
                     break;
             }
         }

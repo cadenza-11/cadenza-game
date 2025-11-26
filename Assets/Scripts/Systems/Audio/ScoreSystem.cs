@@ -111,6 +111,7 @@ namespace Cadenza
 
         private int[] playerIdScratch;
         private double[] timestampScratch;
+        private string teamName;
 
         private Dictionary<Player, double> latencyByPlayer;
         private Dictionary<int, ScoreDef> playerHitsThisBeat;
@@ -127,6 +128,7 @@ namespace Cadenza
 
             this.latencyByPlayer = new();
             this.playerHitsThisBeat = new();
+            SaveSystem.GetPreviousRuns(out Results[] results);
         }
 
         public override void OnGameStart()
@@ -143,7 +145,11 @@ namespace Cadenza
 
         public override void OnGameStop()
         {
-            // SaveSystem.SaveRunToFile(this.results);
+            if (this.results != null)
+            {
+                this.results.Timestamp = DateTime.UtcNow;
+                SaveSystem.SaveRunToFile(this.results);
+            }
         }
 
         public override void OnBeat()

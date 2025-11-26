@@ -140,6 +140,12 @@ namespace Cadenza
             }
         }
 
+        public Vector2 GetLocation()
+        {
+            Vector3 pos = this.GetComponent<Transform>().position;
+            return new Vector2(pos.x, pos.z);
+        }
+
         bool CheckIsGrounded()
         {
             //Returns a raycast result to determine if on the ground

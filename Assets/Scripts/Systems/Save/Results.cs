@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Cadenza
@@ -8,7 +9,9 @@ namespace Cadenza
     public class Results
     {
         private readonly Dictionary<int, ResultsDef> playerResults = new();
-        private readonly ResultsDef teamResults = new();
+        public readonly ResultsDef teamResults = new();
+        public string TeamName = string.Empty;
+        public DateTime Timestamp;
 
         public IReadOnlyDictionary<int, ResultsDef> PlayerResults => this.playerResults;
         public ResultsDef TeamResults => this.teamResults;
