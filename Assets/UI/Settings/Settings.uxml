@@ -1,16 +1,31 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Settings/Settings.uss?fileID=7433441132597879392&amp;guid=b5e1e074dd830e4428a37e9aabfb347d&amp;type=3#Settings" />
-    <ui:VisualElement name="background" class="background">
-        <ui:Button text="Back to Home" name="b_Back" style="font-size: 50px; align-self: flex-start;" />
-        <ui:VisualElement name="c_Tabs" class="tabs">
-            <ui:Button text="Audio" name="b_AudioTab" />
-            <ui:Button text="Visuals" name="b_VisualTab" />
+    <ui:VisualElement name="root" class="root" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;">
+        <ui:VisualElement name="ribbon" style="flex-direction: row;">
+            <ui:Button name="b_Back" icon-image="project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=5866165431930342980&amp;guid=f95dbedc287fb481ca8a830e99c754e3&amp;type=3#Remove@2x" style="font-size: 50px; align-self: flex-start; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;" />
+            <ui:VisualElement name="tab-buttons" style="flex-grow: 1; flex-direction: row; justify-content: space-between; width: 100%;">
+                <ui:Button text="General" name="b_GeneralTab" class="tab-button" style="flex-shrink: 1; flex-grow: 1;" />
+                <ui:Button text="Visuals" name="b_VisualTab" class="tab-button" style="flex-shrink: 1; flex-grow: 1;" />
+                <ui:Button text="Audio" name="b_AudioTab" class="tab-button" style="flex-shrink: 1; flex-grow: 1;" />
+                <ui:Button text="Calibration" name="b_CalibrationTab" class="tab-button" style="flex-shrink: 1; flex-grow: 1;" />
+            </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="c_AudioTab" style="flex-grow: 1; display: none;" />
-        <ui:VisualElement name="c_VisualTab" style="flex-grow: 1; justify-content: center;">
-            <ui:VisualElement name="c_LatencyCalibration" style="flex-grow: 0;">
-                <ui:VisualElement name="icon_Blinker" style="width: 300px; height: 300px; align-self: center; background-image: url(&quot;project://database/Assets/Plugins/FMOD/images/TransportStopButtonOff.png?fileID=2800000&amp;guid=cafa069c15865d543a07375373f0a18e&amp;type=3#TransportStopButtonOff&quot;);" />
-                <ui:SliderInt label="Latency&#10;" value="0" high-value="500" name="slider_Latency" fill="true" low-value="-500" direction="Horizontal" inverted="false" style="color: rgb(255, 255, 255); font-size: 40px;" />
+        <ui:VisualElement name="tab-views" style="flex-grow: 1; margin-top: 100px; margin-right: 100px; margin-bottom: 100px; margin-left: 100px; justify-content: center;">
+            <ui:VisualElement name="c_GeneralTab" style="flex-grow: 1; display: none;">
+                <ui:Button text="Delete save data" name="b_DeleteSaveData" />
+            </ui:VisualElement>
+            <ui:VisualElement name="c_VisualTab" style="flex-grow: 1; display: none;" />
+            <ui:VisualElement name="c_AudioTab" style="flex-grow: 1; display: none;">
+                <ui:Label text="Volume Settings" style="color: rgb(255, 255, 255); -unity-font-style: bold; font-size: 40px; -unity-text-align: upper-center;" />
+                <ui:Slider label="Master" value="42" high-value="1" name="slider_Master" fill="true" style="-unity-font-style: normal;" />
+                <ui:Slider label="Music" value="42" high-value="1" name="slider_Music" fill="true" />
+                <ui:Slider label="SFX" value="42" high-value="1" name="slider_SFX" fill="true" />
+            </ui:VisualElement>
+            <ui:VisualElement name="c_CalibrationTab" style="flex-grow: 1; display: none;">
+                <ui:VisualElement name="icon_Blinker" style="width: 300px; height: 300px; align-self: center; background-image: url(&quot;project://database/Assets/Plugins/FMOD/images/TransportStopButtonOff.png?fileID=2800000&amp;guid=cafa069c15865d543a07375373f0a18e&amp;type=3#TransportStopButtonOff&quot;); margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px;" />
+                <ui:SliderInt value="0" high-value="250" name="slider_Latency" fill="true" low-value="-250" direction="Horizontal" inverted="false" show-input-field="false" style="color: rgb(255, 255, 255); font-size: 40px; margin-top: 10px; margin-right: 200px; margin-bottom: 10px; margin-left: 200px;" />
+                <ui:Label text="Adjust the slider until the beat matches the flashing light!" style="align-self: center; color: rgb(255, 255, 255); -unity-font-style: italic; font-size: 29px;" />
+                <ui:Button text="Save Calibration" name="b_SaveCalibration" style="width: 300px; height: 80px; align-self: center; margin-top: 50px; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
