@@ -45,6 +45,11 @@ namespace Cadenza
             // Configure general.
             this.root.Q<Button>("b_DeleteSaveData").clicked += () => SaveSystem.DeletePreviousRuns();
 
+            // Configure audio.
+            this.root.Q<Slider>("slider_Master").RegisterValueChangedCallback(evt => AudioSystem.SetVolume(AudioSystem.Group.Master, evt.newValue));
+            this.root.Q<Slider>("slider_Music").RegisterValueChangedCallback(evt => AudioSystem.SetVolume(AudioSystem.Group.Music, evt.newValue));
+            this.root.Q<Slider>("slider_SFX").RegisterValueChangedCallback(evt => AudioSystem.SetVolume(AudioSystem.Group.SFX, evt.newValue));
+
             // Configure calibration.
             var latencySlider = this.root.Q<SliderInt>("slider_Latency");
             latencySlider.RegisterValueChangedCallback(evt => BeatSystem.SetOffset(evt.newValue));

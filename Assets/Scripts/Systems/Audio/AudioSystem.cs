@@ -11,10 +11,11 @@ namespace Cadenza
     {
         private static AudioSystem singleton;
 
-        private class TimelineInfo
+        public enum Group
         {
-            public int currentBeat;
-            public float currentTempo;
+            Master,
+            Music,
+            SFX
         }
 
         private struct AudioEvent : IEquatable<AudioEvent>
@@ -63,6 +64,10 @@ namespace Cadenza
         public static EventReference PlayerOneShotsEvent => singleton.playerOneShotsEvent;
         private HashSet<AudioEvent> beatSetOneShot;
 
+        private Bus masterBus;
+        private Bus musicBus;
+        private Bus sfxBus;
+
         #region Application Callbacks
 
         public override void OnInitialize()
@@ -108,6 +113,19 @@ namespace Cadenza
                 singleton.beatSetOneShot.Add(evt);
         }
 
+        public static void SetVolume(Group group, float value)
+        {
+            Bus bus = group switch
+            {
+                Group.Master => singleton.masterBus,
+                Group.Music => singleton.musicBus,
+                Group.SFX => singleton.sfxBus,
+                _ => default
+            };
+
+            bus.setVolume(Mathf.Clamp01(value));
+        }
+
         #endregion
         #region Private Methods
 
@@ -126,6 +144,11 @@ namespace Cadenza
             // Register for player hit events.
             PlayerSystem.PlayerHit += this.OnPlayerHit;
             ScoreSystem.TeamHit += this.OnTeamHit;
+
+            // Set up audio busses.
+            this.masterBus = RuntimeManager.GetBus("bus:/Master");
+            this.musicBus = RuntimeManager.GetBus("bus:/Master/Music");
+            this.sfxBus = RuntimeManager.GetBus("bus:/Master/SFX");
 
             Debug.Log("Loaded all banks from FMOD.");
         }
