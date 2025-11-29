@@ -814,10 +814,10 @@
                 {
                     "name": "",
                     "id": "7a1a5ac8-6009-4157-a458-286d74fd260e",
-                    "path": "",
+                    "path": "<Pointer>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard&Mouse;Touch;XR",
                     "action": "Point",
                     "isComposite": false,
                     "isPartOfComposite": false
