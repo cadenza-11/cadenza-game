@@ -170,7 +170,7 @@ namespace Cadenza
             };
 
             if (soundID != 0)
-                PlayOneShotWithParameter(PlayerOneShotsEvent, "ID", soundID);
+                PlayOneShotWithParameter(PlayerOneShotsEvent, "ID", soundID, immediate: true);
         }
 
 
