@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,6 +23,7 @@ namespace Cadenza
         private Dictionary<int, Player> playersByID;
         public static IReadOnlyDictionary<int, Player> PlayersByID => singleton.playersByID;
         public static int PlayerCount => singleton.playersByID.Count;
+        public static Player[] Players => PlayersByID.Values.ToArray();
 
         public static event Action<Player> PlayerJoined;
         public static event Action<Player> PlayerRemoved;

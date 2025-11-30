@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="root" style="background-color: rgba(0, 0, 0, 0.59); display: flex; flex-grow: 1;">
+        <ui:Button name="b_Exit" style="background-image: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=5866165431930342980&amp;guid=f95dbedc287fb481ca8a830e99c754e3&amp;type=3#Remove@2x&quot;); flex-shrink: 1; width: 100px; height: 100px;" />
+        <ui:Label text="Leaderboard" style="color: rgb(255, 255, 255); font-size: 70px; -unity-font-style: bold;" />
+    </ui:VisualElement>
+</ui:UXML>
