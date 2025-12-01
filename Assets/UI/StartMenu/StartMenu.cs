@@ -31,7 +31,6 @@ namespace Cadenza
             this.containerOptions = this.root.Q<VisualElement>("phase_Select");
 
             this.buttonStartGame = this.root.Q<Button>("b_StartGame");
-            this.buttonStartGame.clicked += this.OnCharacterSelect;
             this.buttonLastRun = this.root.Q<Button>("b_LastRun");
             Debug.LogWarning("No way to check for last run."); // Check if last run exists in player prefs to Enable and assign to OnLastRun
             this.buttonSettings = this.root.Q<Button>("b_Settings");
@@ -76,6 +75,7 @@ namespace Cadenza
             this.containerJoin.style.display = DisplayStyle.None;
             this.containerOptions.style.display = DisplayStyle.Flex;
             this.buttonStartGame.Focus();
+            this.buttonStartGame.clicked += this.OnCharacterSelect;
         }
 
         private void OnCharacterSelect()
