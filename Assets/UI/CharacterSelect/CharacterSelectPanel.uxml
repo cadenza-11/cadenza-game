@@ -4,11 +4,9 @@
     <ui:Template name="Ready" src="project://database/Assets/UI/CharacterSelect/Phases/Ready.uxml?fileID=9197481963319205126&amp;guid=1b13ae536d2e7e44b8064fc2396375e3&amp;type=3#Ready" />
     <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles" />
     <ui:VisualElement name="c_Panel" class="panel_background" style="flex-grow: 1; display: flex;">
-        <ui:VisualElement name="c_PlayerOne" class="player_container">
+        <ui:VisualElement name="c_Player" class="player_container">
             <ui:Label text="PLAYER 1" name="txt_PlayerNumber" class="player-number" />
-            <ui:VisualElement name="c_Phase" class="player">
-                <ui:Label text="Waiting for player to join..." name="txt_Waiting" class="temp_text" />
-            </ui:VisualElement>
+            <ui:VisualElement name="c_Phase" class="player" />
             <ui:VisualElement name="c_NavHints" class="navigation_hints">
                 <ui:VisualElement name="c_NavBack" class="navigation_back">
                     <ui:VisualElement name="icon_Back" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=5923138177525885446&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left&quot;);" />
@@ -20,11 +18,9 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="c_PlayerTwo" class="player_container" style="flex-grow: 1;">
+        <ui:VisualElement name="c_Player" class="player_container" style="flex-grow: 1;">
             <ui:Label text="PLAYER 2" name="txt_PlayerNumber" class="player-number" />
-            <ui:VisualElement name="c_Phase" class="player">
-                <ui:Label text="Waiting for player to join..." name="txt_Waiting" class="temp_text" />
-            </ui:VisualElement>
+            <ui:VisualElement name="c_Phase" class="player" />
             <ui:VisualElement name="c_NavHints" class="navigation_hints">
                 <ui:VisualElement name="c_NavBack" class="navigation_back">
                     <ui:VisualElement name="icon_Back" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=5923138177525885446&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left&quot;);" />
@@ -36,11 +32,9 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="c_PlayerThree" class="player_container" style="flex-grow: 1;">
+        <ui:VisualElement name="c_Player" class="player_container" style="flex-grow: 1;">
             <ui:Label text="PLAYER 3" name="txt_PlayerNumber" class="player-number" />
-            <ui:VisualElement name="c_Phase" class="player">
-                <ui:Label text="Waiting for player to join..." name="txt_Waiting" class="temp_text" />
-            </ui:VisualElement>
+            <ui:VisualElement name="c_Phase" class="player" />
             <ui:VisualElement name="c_NavHints" class="navigation_hints">
                 <ui:VisualElement name="c_NavBack" class="navigation_back">
                     <ui:VisualElement name="icon_Back" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=5923138177525885446&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left&quot;);" />
@@ -52,11 +46,9 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="c_PlayerFour" class="player_container" style="flex-grow: 1;">
+        <ui:VisualElement name="c_Player" class="player_container" style="flex-grow: 1;">
             <ui:Label text="PLAYER 4" name="txt_PlayerNumber" class="player-number" />
-            <ui:VisualElement name="c_Phase" class="player">
-                <ui:Label text="Waiting for player to join..." name="txt_Waiting" class="temp_text" />
-            </ui:VisualElement>
+            <ui:VisualElement name="c_Phase" class="player" />
             <ui:VisualElement name="c_NavHints" class="navigation_hints">
                 <ui:VisualElement name="c_NavBack" class="navigation_back">
                     <ui:VisualElement name="icon_Back" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=5923138177525885446&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left&quot;);" />

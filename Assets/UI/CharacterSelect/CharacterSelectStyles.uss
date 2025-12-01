@@ -81,7 +81,6 @@
 .navigation_back {
     flex-grow: 1;
     flex-direction: row;
-    opacity: 0;
 }
 
 .navigation_next {
@@ -164,4 +163,8 @@
 
 :focus .unfocused_icon {
     -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+.player > * {
+    flex-grow: 1;
 }
