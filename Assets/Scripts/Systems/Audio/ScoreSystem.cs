@@ -97,6 +97,8 @@ namespace Cadenza
     {
         private static ScoreSystem singleton;
 
+        #region Inspector Variables
+
         [Header("Score Class Thresholds")]
         [SerializeField] private Thresholds individualThresholds;
         [SerializeField] private Thresholds teamThresholds;
@@ -106,8 +108,17 @@ namespace Cadenza
         [SerializeField] private bool enableCalibration;
         [SerializeField] private double latencyAlpha = 0.50;
 
+        #endregion
+        #region Public Accessors
+
         public static Thresholds IndividualThresholds => singleton.individualThresholds;
         public static event Action<TeamScoreDef> TeamHit;
+        public static event Action<int> StreakUpdated;
+
+        #endregion
+
+        private TeamScoreDef? teamScoreThisBeat;
+        private int currentStreak;
 
         private int[] playerIdScratch;
         private double[] timestampScratch;
@@ -140,6 +151,9 @@ namespace Cadenza
             this.playerIdScratch = new int[PlayerSystem.PlayerCount];
             this.timestampScratch = new double[PlayerSystem.PlayerCount];
 
+            // Prepare streaks.
+            this.currentStreak = 0;
+
             PlayerSystem.PlayerHit += this.OnPlayerHit;
         }
 
@@ -154,7 +168,20 @@ namespace Cadenza
 
         public override void OnBeat()
         {
+            if (ApplicationController.State != ApplicationState.GameSession)
+                return;
+
+            if (this.teamScoreThisBeat.HasValue && this.teamScoreThisBeat.Value.Class != ScoreClass.Bad)
+                this.currentStreak++;
+            else
+                this.currentStreak = 0;
+
+            this.results.AddStreak(this.currentStreak);
+            StreakUpdated?.Invoke(this.currentStreak);
+
+            // Reset team hit tracking.
             this.playerHitsThisBeat.Clear();
+            this.teamScoreThisBeat = null;
         }
 
         private void OnPlayerHit(ScoreDef def)
@@ -163,6 +190,9 @@ namespace Cadenza
             {
                 this.results.AddPlayerScore(def.PlayerID, def.Class);
             }
+
+            if (this.teamScoreThisBeat.HasValue)
+                return;
 
             // Register team hit.
             {
@@ -183,11 +213,10 @@ namespace Cadenza
                         StdDev = stddev,
                         Class = scoreClass
                     };
+                    this.teamScoreThisBeat = teamScore;
 
                     this.results.AddTeamScore(teamScore.Class);
                     TeamHit?.Invoke(teamScore);
-
-                    this.playerHitsThisBeat.Clear();
                 }
             }
         }

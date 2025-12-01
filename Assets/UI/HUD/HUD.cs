@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -18,6 +19,8 @@ namespace Cadenza
         [SerializeField, Min(1.0f)] private float comboMultiplier;
 
         private Slider teamMeter;
+        private Label teamStreak;
+        private Dictionary<int, string> streakLabels = new();
 
         public enum MeterState
         {
@@ -35,6 +38,18 @@ namespace Cadenza
             this.teamMeter.highValue = this.durationToFull;
             this.teamMeter.lowValue = 0;
             this.teamMeter.style.display = DisplayStyle.None;
+
+            // Initialize team streak.
+            this.teamStreak = root.Q<Label>("team-streak");
+            ScoreSystem.StreakUpdated += this.OnStreakUpdated;
+        }
+
+        private void OnStreakUpdated(int streak)
+        {
+            if (!this.streakLabels.ContainsKey(streak))
+                this.streakLabels[streak] = $"x{streak}";
+
+            this.teamStreak.text = this.streakLabels[streak];
         }
 
         public override void OnGameStart()

@@ -1,5 +1,8 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <ui:VisualElement name="root" style="flex-grow: 1;">
-        <ui:Slider value="0" high-value="1" name="team-meter" focusable="false" />
+        <ui:VisualElement name="team" style="flex-grow: 0; flex-direction: row; margin-top: 0; margin-right: 20px; margin-bottom: 0; margin-left: 20px;">
+            <ui:Slider value="0" high-value="1" name="team-meter" focusable="false" style="flex-grow: 1; margin-right: 60px; max-width: 1600px;" />
+            <ui:Label name="team-streak" style="-unity-font-style: bold; font-size: 50px; align-self: flex-end; width: 200px; height: 80px;" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -179,6 +179,7 @@ public static class SaveSystem
         {
             ["Metadata"] = metadata,
             ["Team"] = team,
+            ["HighestStreak"] = results.HighestStreak,
             ["TeamScores"] = teamScores,
             ["PlayerScores"] = playerScores,
         };
@@ -189,12 +190,13 @@ public static class SaveSystem
     /// </summary>
     private static Results FromJSON(this JToken root)
     {
-        Results results = new();
-
-        // Set metadata.
-        var metadata = root["Metadata"];
-        results.Timestamp = metadata["Timestamp"].Value<DateTime>();
-        results.TeamName = root["Team"]["Name"].Value<string>();
+        Results results = new()
+        {
+            // Set metadata.
+            Timestamp = root["Metadata"]["Timestamp"]?.Value<DateTime>() ?? DateTime.MinValue,
+            TeamName = root["Team"]["Name"]?.Value<string>() ?? string.Empty,
+            HighestStreak = root["HighestStreak"]?.Value<int>() ?? 0
+        };
 
         // Add team scores.
         var teamScores = (JObject)root["TeamScores"];

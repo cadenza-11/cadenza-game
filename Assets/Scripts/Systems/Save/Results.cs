@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Cadenza
 {
@@ -12,6 +13,7 @@ namespace Cadenza
         public readonly ResultsDef teamResults = new();
         public string TeamName = string.Empty;
         public DateTime Timestamp;
+        public int HighestStreak;
 
         public IReadOnlyDictionary<int, ResultsDef> PlayerResults => this.playerResults;
         public ResultsDef TeamResults => this.teamResults;
@@ -27,6 +29,11 @@ namespace Cadenza
         public void AddTeamScore(ScoreClass scoreClass)
         {
             this.teamResults.AddScore(scoreClass);
+        }
+
+        public void AddStreak(int streak)
+        {
+            this.HighestStreak = Mathf.Max(this.HighestStreak, streak);
         }
     }
 
