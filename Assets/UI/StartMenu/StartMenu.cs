@@ -42,6 +42,9 @@ namespace Cadenza
 
         public override void Show()
         {
+            this.containerJoin.style.display = DisplayStyle.Flex;
+            this.containerOptions.style.display = DisplayStyle.None;
+            PlayerSystem.EnableJoining();
             base.Show();
             this.root.style.display = DisplayStyle.Flex;
         }
