@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Utilities;
 using UnityEngine.UIElements;
 
 namespace Cadenza
@@ -39,15 +37,12 @@ namespace Cadenza
             this.buttonExit.clicked += this.OnExit;
 
             this.root.style.display = DisplayStyle.None;
+            PlayerSystem.PlayerJoined += this.OnPlayerJoined;
         }
 
         public override void Show()
         {
             base.Show();
-
-            // Subscribe to any first button press by any player.
-            UnityEngine.InputSystem.InputSystem.onAnyButtonPress.CallOnce((control) => this.OnAnyButtonPress(control));
-
             this.root.style.display = DisplayStyle.Flex;
         }
 
@@ -65,11 +60,10 @@ namespace Cadenza
         #endregion
         #region Navigation Events
 
-        private void OnAnyButtonPress(InputControl control)
+        private void OnPlayerJoined(Player player)
         {
-            var player = InputSystem.GetPlayerFromDevice(control.device);
-            if (player != null)
-                InputSystem.EnableSinglePlayerInput(player);
+            InputSystem.EnableSinglePlayerInput(player);
+            PlayerSystem.DisableJoining();
 
             // Swap from Join phase to Options phase display
             this.containerJoin.style.display = DisplayStyle.None;
