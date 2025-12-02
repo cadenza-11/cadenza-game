@@ -215,7 +215,7 @@ namespace Cadenza
         {
             if (tracker.Phase == SelectPhase.CalibratingInProgress)
             {
-                var blinker = tracker.Elements.CalibrationContainer.Q<VisualElement>("c_blinker");
+                var blinker = tracker.Elements.CalibrationContainer.Q<VisualElement>("c_Blinker");
                 var attemptCounter = tracker.Elements.CalibrationContainer.Q<Label>("update_Counter");
                 if (tracker.CalibrationAttempts < this.TotalCalibrationAttempts)
                 {
