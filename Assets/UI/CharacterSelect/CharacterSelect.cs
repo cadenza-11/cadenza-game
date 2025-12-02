@@ -25,7 +25,6 @@ namespace Cadenza
             CalibratingInProgress,
             CalibratingDone,
             CharacterSelection,
-            // ControllerMapping,
             Ready
         }
 
@@ -41,6 +40,7 @@ namespace Cadenza
         #region Serialized Fields
 
         [SerializeField] private UIDocument uiDocument;
+        [SerializeField] private StartMenu startMenu;
         [SerializeField] private VisualTreeAsset joiningTemplate;
         [SerializeField] private VisualTreeAsset calibrationTemplate;
         [SerializeField] private VisualTreeAsset characterSelectionTemplate;
@@ -56,9 +56,9 @@ namespace Cadenza
 
         private Dictionary<Player, PlayerTracker> playerPhases = new();
         private InputAction submitAction;
+        private InputAction cancelAction;
 
         private int playersReady = 0;
-        private int joinedPlayers = 0;
 
         #endregion
 
@@ -78,20 +78,22 @@ namespace Cadenza
             }
 
             this.submitAction = InputSystem.UIInputMap.Get().FindAction("Submit", throwIfNotFound: true);
+            this.cancelAction = InputSystem.UIInputMap.Get().FindAction("Cancel", throwIfNotFound: true);
             this.root.style.display = DisplayStyle.None;
+        }
 
+        public override void Show()
+        {
             // Create tracker for existing players.
             foreach (var player in PlayerSystem.PlayersByID.Values)
                 this.OnPlayerJoined(player);
 
             // Create tracker for newly joined players.
             PlayerSystem.PlayerJoined += this.OnPlayerJoined;
-        }
 
-        public override void Show()
-        {
             base.Show();
             this.submitAction.performed += this.OnSubmit;
+            this.cancelAction.performed += this.OnCancel;
             this.root.style.display = DisplayStyle.Flex;
         }
 
@@ -99,6 +101,7 @@ namespace Cadenza
         {
             base.Hide();
             this.submitAction.performed -= this.OnSubmit;
+            this.cancelAction.performed -= this.OnCancel;
             this.root.style.display = DisplayStyle.None;
         }
 
@@ -108,12 +111,11 @@ namespace Cadenza
             PlayerTracker newTracker = new()
             {
                 Phase = SelectPhase.CalibratingInProgress,
-                Elements = this.playerContainers[this.joinedPlayers],
+                Elements = this.playerContainers[player.ID],
                 CalibrationAttempts = 0,
             };
             this.playerPhases.Add(player, newTracker);
-            this.ShowPhase(this.playerContainers[this.joinedPlayers], SelectPhase.CalibratingInProgress);
-            this.joinedPlayers++;
+            this.ShowPhase(this.playerContainers[player.ID], SelectPhase.CalibratingInProgress);
         }
 
         #endregion
@@ -125,7 +127,7 @@ namespace Cadenza
             if (player == null || !this.playerPhases.TryGetValue(player, out PlayerTracker foundPlayer))
                 return;
 
-            Debug.Log($"Player {player.ID} is navigating. Phase: {foundPlayer.Phase}");
+            Debug.Log($"Player {player.ID} is navigating forward. Phase: {foundPlayer.Phase}");
 
             switch (foundPlayer.Phase)
             {
@@ -142,17 +144,47 @@ namespace Cadenza
                     this.SelectCharacter(player, foundPlayer);
                     break;
 
-                // case SelectPhase.ControllerMapping: // Update controller mapping or select controller mapping profile. //
-                //     // Figure this out.
-                //     foundPlayer.TempLabel.text = "Idk controller map here";
-                //     foundPlayer.Phase++;
-                //     this.playersReady++;
-                //     break;
+                default:
+                    break;
+            }
+        }
+
+        private void OnCancel(InputAction.CallbackContext context)
+        {
+            var player = InputSystem.GetPlayerFromDevice(context.control.device);
+            if (player == null || !this.playerPhases.TryGetValue(player, out PlayerTracker foundPlayer))
+                return;
+
+            Debug.Log($"Player {player.ID} is navigating back. Phase: {foundPlayer.Phase}");
+
+            switch (foundPlayer.Phase)
+            {
+                case SelectPhase.CalibratingInProgress: // Continue latency calculation process. //
+                    this.DisconnectPlayer(player, foundPlayer);
+                    break;
+
+                case SelectPhase.CalibratingDone: // Proceed to character select. //
+                    foundPlayer.CalibrationAttempts = 0;
+                    foundPlayer.Phase = SelectPhase.CalibratingInProgress;
+                    break;
+
+                case SelectPhase.CharacterSelection: // Select character and ready up. //
+                                                     // if (player.Character != null)
+                    foundPlayer.CalibrationAttempts = 0;
+                    foundPlayer.Phase = SelectPhase.CalibratingInProgress;
+                    break;
+
+                case SelectPhase.Ready:
+                    this.ShowPhase(foundPlayer.Elements, SelectPhase.Ready);
+                    foundPlayer.Phase = SelectPhase.Ready;
+                    this.playerPhases[player] = foundPlayer;
+                    break;
 
                 default:
                     break;
             }
         }
+
         #endregion
 
         #region Private Functions
@@ -165,6 +197,7 @@ namespace Cadenza
             var selection = this.characterSelectionTemplate.Instantiate();
             var ready = this.readyTemplate.Instantiate();
 
+            phaseContainer.Clear();
             phaseContainer.Add(joining);
             phaseContainer.Add(calibration);
             phaseContainer.Add(selection);
@@ -203,6 +236,9 @@ namespace Cadenza
                 phase == SelectPhase.Ready
                 ? DisplayStyle.Flex : DisplayStyle.None;
             playerContainer.NavNextHint.style.opacity =
+                (phase == SelectPhase.Joining)
+                ? 0 : 1;
+            playerContainer.NavNextHint.style.opacity =
                 (phase != SelectPhase.Ready && phase != SelectPhase.CalibratingInProgress)
                 ? 0 : 1;
             if (phase == SelectPhase.Joining)
@@ -215,6 +251,9 @@ namespace Cadenza
         {
             if (tracker.Phase == SelectPhase.CalibratingInProgress)
             {
+                tracker.Elements.CalibrationContainer.Q<VisualElement>("phase_Calibrating").style.display = DisplayStyle.Flex;
+                tracker.Elements.CalibrationContainer.Q<VisualElement>("phase_Results").style.display = DisplayStyle.None;
+                this.ShowPhase(tracker.Elements, SelectPhase.CalibratingInProgress);
                 var blinker = tracker.Elements.CalibrationContainer.Q<VisualElement>("c_Blinker");
                 var attemptCounter = tracker.Elements.CalibrationContainer.Q<Label>("update_Counter");
                 if (tracker.CalibrationAttempts < this.TotalCalibrationAttempts)
@@ -260,6 +299,19 @@ namespace Cadenza
                 _ = ApplicationController.SetSceneAsync(1);
                 this.Hide();
             }
+        }
+
+        private void DisconnectPlayer(Player player, PlayerTracker tracker)
+        {
+            this.ResetContainers(player.ID, this.playerContainers[player.ID].Container);
+            this.playerPhases.Remove(player);
+            if (player.ID == 0)
+            {
+                this.startMenu.Show();
+                this.Hide();
+                // REMOVE EVERYONE
+            }
+            PlayerSystem.RemovePlayer(player.ID);
         }
 
         #endregion

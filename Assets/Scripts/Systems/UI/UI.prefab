@@ -251,6 +251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterSelect
   uiDocument: {fileID: 6410242120360780059}
+  startMenu: {fileID: 404073981900992975}
   joiningTemplate: {fileID: 9197481963319205126, guid: 6ee44ba837057d747af63936c731ab68, type: 3}
   calibrationTemplate: {fileID: 9197481963319205126, guid: ae3a027b0a7e9db4084daba4f8738a42, type: 3}
   characterSelectionTemplate: {fileID: 9197481963319205126, guid: e4afe7d3158a4f64cbb51db220e56c30, type: 3}
