@@ -18,7 +18,7 @@ namespace Cadenza
         [Tooltip("How much should the combo length speed up the meter?")]
         [SerializeField, Min(1.0f)] private float comboMultiplier;
 
-        private Slider teamMeter;
+        private ProgressBar teamMeter;
         private Label teamStreak;
         private Dictionary<int, string> streakLabels = new();
 
@@ -34,13 +34,13 @@ namespace Cadenza
             var root = this.uiDocument.rootVisualElement;
 
             // Initialize team meter.
-            this.teamMeter = root.Q<Slider>("team-meter");
+            this.teamMeter = root.Q<ProgressBar>("meter_TeamMeter");
             this.teamMeter.highValue = this.durationToFull;
             this.teamMeter.lowValue = 0;
             this.teamMeter.style.display = DisplayStyle.None;
 
             // Initialize team streak.
-            this.teamStreak = root.Q<Label>("team-streak");
+            this.teamStreak = root.Q<Label>("update_TeamStreak");
             ScoreSystem.StreakUpdated += this.OnStreakUpdated;
         }
 

@@ -1,0 +1,6 @@
+:root {
+}
+
+.player_health {
+    width: 24%;
+}
