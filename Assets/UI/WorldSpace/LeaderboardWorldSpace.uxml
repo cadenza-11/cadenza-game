@@ -1,0 +1,3 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Art/TEMPORARY_ASSETS/TEMP_BG_fm_orange.jpg?fileID=2800000&amp;guid=572cce9d4fe981c4894d4a783eda8c57&amp;type=3#TEMP_BG_fm_orange&quot;);" />
+</ui:UXML>

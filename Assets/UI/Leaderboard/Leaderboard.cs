@@ -1,18 +1,17 @@
 using System.Linq;
 using Cadenza;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-[RequireComponent(typeof(Collider), typeof(UIDocument))]
-public class Leaderboard : MonoBehaviour
+[RequireComponent(typeof(UIDocument))]
+public class Leaderboard : MonoBehaviour, IInteractable
 {
     [SerializeField] VisualTreeAsset resultLineAsset;
 
     private UIDocument uiDocument;
     private VisualElement root;
     private Button exitButton;
-    private Player player;
+    private Player openingPlayer;
     private Results[] results;
 
     void Start()
@@ -42,45 +41,22 @@ public class Leaderboard : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider collider)
+    public void OnInteract(Player player)
     {
-        if (!collider.TryGetComponent(out Character character))
-            return;
-
-        InputAction action = character.Player.Input.actions.FindAction("Attack/Light");
-        action.performed += this.OpenLeaderboardUI;
-    }
-
-    void OnTriggerExit(Collider collider)
-    {
-        if (!collider.TryGetComponent(out Character character))
-            return;
-
-        InputAction action = character.Player.Input.actions.FindAction("Attack/Light");
-        action.performed -= this.OpenLeaderboardUI;
-    }
-
-    private void OpenLeaderboardUI(InputAction.CallbackContext context)
-    {
-        if (!context.performed)
-            return;
-
-        Debug.Log("Opening leaderboard.");
-        this.player = Cadenza.InputSystem.GetPlayerFromDevice(context.control.device);
+        this.openingPlayer = player;
         this.Show();
-
     }
 
     private void Show()
     {
-        Cadenza.InputSystem.EnableSinglePlayerInput(this.player);
-        Cadenza.InputSystem.DisableInputActionMapForPlayers("Player", enableOthers: false, this.player);
+        InputSystem.EnableSinglePlayerInput(this.openingPlayer);
+        InputSystem.DisableInputActionMapForPlayers("Player", enableOthers: false, this.openingPlayer);
         this.root.style.display = DisplayStyle.Flex;
     }
 
     private void Hide()
     {
-        Cadenza.InputSystem.EnableInputActionMapForPlayers("Player", disableOthers: false, PlayerSystem.Players);
+        InputSystem.EnableInputActionMapForPlayers("Player", disableOthers: false, PlayerSystem.Players);
         this.root.style.display = DisplayStyle.None;
     }
 }
