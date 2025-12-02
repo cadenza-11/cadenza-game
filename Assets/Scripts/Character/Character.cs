@@ -41,6 +41,7 @@ namespace Cadenza
         [SerializeField] private SpriteRenderer sr;
         [SerializeField] private Animator anim;
         [SerializeField] private AccuracyBar accuracyBar;
+        [SerializeField] private InteractionIndicator interactionIndicator;
         [SerializeField] private GameObject projectile;
 
         public Player Player { get; private set; }
@@ -65,6 +66,7 @@ namespace Cadenza
         {
             this.Player = player;
             player.PlayerHit += this.accuracyBar.OnPlayerHit;
+            player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
         }
 
         void FixedUpdate()

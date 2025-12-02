@@ -15,8 +15,14 @@ namespace Cadenza
         public double Latency => ScoreSystem.GetInputLatencyForPlayer(this);
 
         public event Action<ScoreDef> PlayerHit;
+        public event Action<IInteractable> InteractChanged;
 
         #endregion
+
+        private InputAction interactAction;
+        private Action<InputAction.CallbackContext> interactCallback;
+        private IInteractable currentInteractable;
+
         #region Functions
 
         private void OnDestroy()
@@ -54,6 +60,35 @@ namespace Cadenza
             }
         }
 
+        public void RegisterInteract(IInteractable interactable)
+        {
+            if (interactable == null || interactable == this.currentInteractable)
+                return;
+
+            if (this.currentInteractable != null)
+                this.UnregisterInteract(this.currentInteractable);
+
+            // Subscribe the interactable to the interact action.
+            this.currentInteractable = interactable;
+            this.interactCallback = ctx => interactable?.OnInteract(this);
+            this.interactAction.performed += this.interactCallback;
+
+            this.InteractChanged?.Invoke(interactable);
+        }
+
+        public void UnregisterInteract(IInteractable interactable)
+        {
+            if (interactable == null || interactable != this.currentInteractable)
+                return;
+
+            // Unsubscribe the interactable from the interact action.
+            this.currentInteractable = null;
+            this.interactAction.performed -= this.interactCallback;
+            this.interactCallback = null;
+
+            this.InteractChanged?.Invoke(null);
+        }
+
         private void RegisterCharacterCallbacks(InputActionAsset actionMaps, CadenzaActions.IPlayerActions character)
         {
             var map = actionMaps.FindActionMap("Player", throwIfNotFound: true);
@@ -63,6 +98,7 @@ namespace Cadenza
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackSpecialAction = map.FindAction("Attack/Special", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
+            this.interactAction = attackLightAction;
 
             moveAction.performed += character.OnMove;
             moveAction.canceled += character.OnMove;
