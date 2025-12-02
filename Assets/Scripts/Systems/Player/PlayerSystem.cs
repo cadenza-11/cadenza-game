@@ -28,6 +28,7 @@ namespace Cadenza
         public static event Action<Player> PlayerJoined;
         public static event Action<Player> PlayerRemoved;
         public static event Action<ScoreDef> PlayerHit;
+        public static event Action<Player> PlayerSpawned;
 
         #region Application Callbacks
 
@@ -147,8 +148,9 @@ namespace Cadenza
         {
             var character = Instantiate(singleton.characterPrefab).GetComponent<Character>();
             player.SetCharacter(character);
-            Debug.Log($"Player character body set to {character}. (id={player.ID})");
 
+            Debug.Log($"Player character body set to {character}. (id={player.ID})");
+            PlayerSpawned?.Invoke(player);
             return character;
         }
 

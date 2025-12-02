@@ -3,13 +3,23 @@ using UnityEngine;
 
 namespace Cadenza
 {
-    public class CinemachineTargetUpdater : ApplicationSystem
+    /// <summary>
+    /// Adds all current Players to a Cinemachine group that will be followed by a virtual camera.
+    /// </summary>
+    [RequireComponent(typeof(CinemachineTargetGroup))]
+    public class CinemachineTargetUpdater : MonoBehaviour
     {
-        [SerializeField] CinemachineTargetGroup cinemachineTargetComponent;
-        public override void OnGameStart()
+        [SerializeField] private float defaultTargetWeight;
+        [SerializeField] private float defaultTargetRadius;
+
+        void Start()
         {
-            foreach (var player in PlayerSystem.PlayersByID.Values)
-                this.cinemachineTargetComponent.AddMember(player.Character.transform, 1f, .5f);
+            var group = this.GetComponent<CinemachineTargetGroup>();
+
+            foreach (var player in PlayerSystem.Players)
+                group.AddMember(player.Character.transform, this.defaultTargetWeight, this.defaultTargetRadius);
+
+            PlayerSystem.PlayerSpawned += p => group.AddMember(p.Character.transform, this.defaultTargetWeight, this.defaultTargetRadius);
         }
     }
 }
