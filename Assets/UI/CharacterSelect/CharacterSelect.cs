@@ -305,13 +305,13 @@ namespace Cadenza
         {
             this.ResetContainers(player.ID, this.playerContainers[player.ID].Container);
             this.playerPhases.Remove(player);
+            PlayerSystem.RemovePlayer(player.ID);
             if (player.ID == 0)
             {
                 this.startMenu.Show();
                 this.Hide();
                 // REMOVE EVERYONE
             }
-            PlayerSystem.RemovePlayer(player.ID);
         }
 
         #endregion
