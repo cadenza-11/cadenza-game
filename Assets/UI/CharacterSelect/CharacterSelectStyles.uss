@@ -31,10 +31,10 @@
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
     color: rgb(255, 255, 255);
-    padding-top: 5px;
-    padding-right: 5px;
-    padding-bottom: 5px;
-    padding-left: 5px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
 }
 
 .joined .player {
@@ -111,6 +111,10 @@
     border-right-width: 10px;
     border-bottom-width: 10px;
     border-left-width: 10px;
+    max-width: 200px;
+    max-height: 200px;
+    min-width: 200px;
+    min-height: 200px;
 }
 
 .blinker.alt {
@@ -167,4 +171,6 @@
 
 .player > * {
     flex-grow: 1;
+    width: 100%;
+    justify-content: center;
 }
