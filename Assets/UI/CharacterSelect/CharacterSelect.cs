@@ -41,6 +41,7 @@ namespace Cadenza
 
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private StartMenu startMenu;
+        [SerializeField] private BandNameSelect bandNameSelect;
         [SerializeField] private VisualTreeAsset joiningTemplate;
         [SerializeField] private VisualTreeAsset calibrationTemplate;
         [SerializeField] private VisualTreeAsset characterSelectionTemplate;
@@ -239,7 +240,7 @@ namespace Cadenza
                 (phase == SelectPhase.Joining)
                 ? 0 : 1;
             playerContainer.NavNextHint.style.opacity =
-                (phase != SelectPhase.Ready && phase != SelectPhase.CalibratingInProgress)
+                (phase == SelectPhase.Ready && phase == SelectPhase.CalibratingInProgress)
                 ? 0 : 1;
             if (phase == SelectPhase.Joining)
                 playerContainer.Container.RemoveFromClassList("joined");
@@ -296,7 +297,7 @@ namespace Cadenza
             Debug.Log($"# of players ready: {this.playersReady}/{PlayerSystem.PlayerCount}");
             if (this.playersReady == PlayerSystem.PlayerCount)
             {
-                _ = ApplicationController.SetSceneAsync(1);
+                this.bandNameSelect.Show();
                 this.Hide();
             }
         }
