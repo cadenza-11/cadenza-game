@@ -1,3 +1,5 @@
 :root {
     -unity-font-definition: url("project://database/Assets/Fonts/Next%20Bravo/Next%20Bravo.ttf?fileID=12800000&guid=233fe1fac9a97f24b8ebdd612dd40092&type=3#Next Bravo");
+    font-size: 32px;
+    white-space: normal;
 }
