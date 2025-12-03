@@ -45,6 +45,7 @@ namespace Cadenza
             this.containerJoin.style.display = DisplayStyle.Flex;
             this.containerOptions.style.display = DisplayStyle.None;
             PlayerSystem.EnableJoining();
+            AudioSystem.SetParameter(AudioSystem.Param.LowPass, true);
             base.Show();
             this.root.style.display = DisplayStyle.Flex;
         }
@@ -53,6 +54,7 @@ namespace Cadenza
         {
             base.Hide();
             this.root.style.display = DisplayStyle.None;
+            AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
         }
 
         public override void OnStart()
@@ -65,8 +67,11 @@ namespace Cadenza
 
         private void OnPlayerJoined(Player player)
         {
+            PlayerSystem.PlayerJoined -= this.OnPlayerJoined;
+
             InputSystem.EnableSinglePlayerInput(player);
             PlayerSystem.DisableJoining();
+            AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
 
             // Swap from Join phase to Options phase display
             this.containerJoin.style.display = DisplayStyle.None;

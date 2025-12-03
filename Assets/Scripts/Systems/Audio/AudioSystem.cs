@@ -18,6 +18,13 @@ namespace Cadenza
             SFX
         }
 
+        public enum Param
+        {
+            LowPass,
+        }
+
+        private const string ParamNameLowPass = "isLowPass";
+
         private struct AudioEvent : IEquatable<AudioEvent>
         {
             public EventInstance instance;
@@ -124,6 +131,17 @@ namespace Cadenza
             };
 
             bus.setVolume(Mathf.Clamp01(value));
+        }
+
+        public static void SetParameter(Param parameter, bool enabled)
+        {
+            string parameterName = parameter switch
+            {
+                Param.LowPass => ParamNameLowPass,
+                _ => string.Empty
+            };
+
+            RuntimeManager.StudioSystem.setParameterByName(parameterName, enabled ? 1 : 0);
         }
 
         #endregion

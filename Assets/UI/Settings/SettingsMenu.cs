@@ -64,6 +64,7 @@ namespace Cadenza
         {
             base.Show();
             BeatSystem.BeatPlayed += () => this.blinker.ToggleInClassList("blink");
+            AudioSystem.SetParameter(AudioSystem.Param.LowPass, true);
             this.root.style.display = DisplayStyle.Flex;
         }
 
@@ -71,6 +72,7 @@ namespace Cadenza
         {
             base.Hide();
             BeatSystem.BeatPlayed -= () => this.blinker.ToggleInClassList("blink");
+            AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
             this.root.style.display = DisplayStyle.None;
         }
 
