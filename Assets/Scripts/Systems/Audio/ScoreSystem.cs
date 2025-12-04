@@ -146,6 +146,7 @@ namespace Cadenza
         {
             this.playerHitsThisBeat.Clear();
             this.results = new();
+            this.results.TeamName = TeamSystem.TeamName;
 
             // Prepare team hits.
             this.playerIdScratch = new int[PlayerSystem.PlayerCount];

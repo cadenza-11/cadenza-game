@@ -37,6 +37,9 @@ namespace Cadenza
                 case "results":
                     this.OnCommandResults(args);
                     break;
+                case "team":
+                    this.OnCommandTeam(args);
+                    break;
                 default:
                     break;
             }
@@ -123,6 +126,27 @@ namespace Cadenza
 
                 case "delete":
                     SaveSystem.DeletePreviousRuns();
+                    break;
+            }
+        }
+        private void OnCommandTeam(string[] args)
+        {
+            switch (args[0])
+            {
+                case "save":
+                    SaveSystem.SaveTeamToFile(TeamSystem.Team);
+                    break;
+
+                case "load":
+                    Team team = SaveSystem.GetTeamFromFile();
+                    if (team == null)
+                        Debug.Log("Failed to retrieve team from file.");
+                    else
+                        Debug.Log($"Retrieved team from file: name={team.Name}, id={team.Guid}");
+                    break;
+
+                case "delete":
+                    SaveSystem.DeleteTeamFile();
                     break;
             }
         }

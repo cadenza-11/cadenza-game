@@ -44,7 +44,7 @@ namespace Cadenza
         }
 
         #endregion
-       
+
         #region Private Functions
 
         private void OnRandomizeName()
@@ -55,7 +55,7 @@ namespace Cadenza
 
         private void OnSetName()
         {
-            Debug.LogWarning($"Band name '{this.bandNameField.value}' not saved. No functionality.");
+            TeamSystem.CreateTeam(this.bandNameField.value);
             _ = ApplicationController.SetSceneAsync(1);
             this.Hide();
         }

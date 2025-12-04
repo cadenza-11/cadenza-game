@@ -297,7 +297,11 @@ namespace Cadenza
             Debug.Log($"# of players ready: {this.playersReady}/{PlayerSystem.PlayerCount}");
             if (this.playersReady == PlayerSystem.PlayerCount)
             {
-                this.bandNameSelect.Show();
+                // Open team creation UI if this is a new run.
+                if (TeamSystem.Team == null)
+                    this.bandNameSelect.Show();
+                else
+                    _ = ApplicationController.SetSceneAsync(1);
                 this.Hide();
             }
         }
