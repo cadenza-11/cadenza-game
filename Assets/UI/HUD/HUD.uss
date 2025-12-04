@@ -4,3 +4,35 @@
 .player_health {
     width: 24%;
 }
+
+.team-streak {
+    -unity-font-style: bold;
+    font-size: 50px;
+    align-self: flex-end;
+    width: 150px;
+    height: 80px;
+    -unity-text-align: middle-right;
+    margin-left: 4px;
+    -unity-text-outline-width: 3px;
+    -unity-text-outline-color: rgb(255, 255, 255);
+}
+
+.team-meter {
+    flex-grow: 1;
+    border-top-width: 4px;
+    border-right-width: 4px;
+    border-bottom-width: 4px;
+    border-left-width: 4px;
+    border-left-color: rgb(77, 77, 77);
+    border-right-color: rgb(77, 77, 77);
+    border-top-color: rgb(77, 77, 77);
+    border-bottom-color: rgb(77, 77, 77);
+    word-spacing: 35px;
+    letter-spacing: 8px;
+}
+
+.team-meter > .unity-progress-bar__container {
+    height: 50px;
+    min-height: auto;
+    max-height: none;
+}
