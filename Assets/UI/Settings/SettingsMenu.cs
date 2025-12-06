@@ -43,7 +43,11 @@ namespace Cadenza
             this.root.Q<Button>("b_Back").clicked += this.Hide;
 
             // Configure general.
-            this.root.Q<Button>("b_DeleteSaveData").clicked += () => SaveSystem.DeletePreviousRuns();
+            this.root.Q<Button>("b_DeleteSaveData").clicked += () =>
+            {
+                SaveSystem.DeletePreviousRuns();
+                SaveSystem.DeleteTeamFile();
+            };
 
             // Configure audio.
             this.root.Q<Slider>("slider_Master").RegisterValueChangedCallback(evt => AudioSystem.SetVolume(AudioSystem.Group.Master, evt.newValue));
@@ -63,9 +67,15 @@ namespace Cadenza
         public override void Show()
         {
             base.Show();
+
             BeatSystem.BeatPlayed += () => this.blinker.ToggleInClassList("blink");
             AudioSystem.SetParameter(AudioSystem.Param.LowPass, true);
             this.root.style.display = DisplayStyle.Flex;
+
+            // TODO: move this elsewhere
+            this.root.Q<Button>("b_DeleteSaveData").SetEnabled(
+                ApplicationController.State != ApplicationState.GameSession
+                && SaveSystem.SaveFileExists);
         }
 
         public override void Hide()

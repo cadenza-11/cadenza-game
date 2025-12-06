@@ -33,7 +33,9 @@ namespace Cadenza
             this.buttonSettings = this.root.Q<Button>("b_Settings");
             this.buttonExit = this.root.Q<Button>("b_Exit");
 
+            // Configure "continue last run" button.
             this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
+            SaveSystem.TeamFileDeleted += () => this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
 
             this.root.style.display = DisplayStyle.None;
         }
