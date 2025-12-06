@@ -30,11 +30,10 @@ namespace Cadenza
 
             this.buttonStartGame = this.root.Q<Button>("b_StartGame");
             this.buttonLastRun = this.root.Q<Button>("b_LastRun");
-            Debug.LogWarning("No way to check for last run."); // Check if last run exists in player prefs to Enable and assign to OnLastRun
             this.buttonSettings = this.root.Q<Button>("b_Settings");
-            this.buttonSettings.clicked += this.OnSettings;
             this.buttonExit = this.root.Q<Button>("b_Exit");
-            this.buttonExit.clicked += this.OnExit;
+
+            this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
 
             this.root.style.display = DisplayStyle.None;
             PlayerSystem.PlayerJoined += this.OnPlayerJoined;
@@ -67,6 +66,7 @@ namespace Cadenza
 
         private void OnPlayerJoined(Player player)
         {
+            // Only get input from the first player to join the game.
             PlayerSystem.PlayerJoined -= this.OnPlayerJoined;
 
             InputSystem.EnableSinglePlayerInput(player);
@@ -76,14 +76,32 @@ namespace Cadenza
             // Swap from Join phase to Options phase display
             this.containerJoin.style.display = DisplayStyle.None;
             this.containerOptions.style.display = DisplayStyle.Flex;
-            this.buttonStartGame.Focus();
+
             this.buttonStartGame.clicked += this.OnCharacterSelect;
+            this.buttonLastRun.clicked += this.OnLastRun;
+            this.buttonSettings.clicked += this.OnSettings;
+            this.buttonExit.clicked += this.OnExit;
+
+            this.buttonStartGame.Focus();
         }
 
         private void OnCharacterSelect()
         {
             this.characterSelect.Show();
             this.Hide();
+        }
+
+        private void OnLastRun()
+        {
+            Team team = SaveSystem.GetTeamFromFile();
+            if (team == null)
+            {
+                Debug.LogWarning("Could not read previous save data from file.");
+                return;
+            }
+
+            TeamSystem.SetTeam(team);
+            this.OnCharacterSelect();
         }
 
         private void OnSettings()

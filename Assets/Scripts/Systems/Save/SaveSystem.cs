@@ -8,10 +8,101 @@ using System.Collections.Generic;
 
 public static class SaveSystem
 {
+    // Save
+    public static bool SaveFileExists => File.Exists(TeamFilePath);
+    private const string TeamJSONFileName = "team.json";
+    private static readonly string TeamFilePath = Path.Combine(Application.persistentDataPath, TeamJSONFileName);
+
+    // Results
     private const string ResultsJSONFileName = "results.json";
     private static readonly System.Array scoreClasses = System.Enum.GetValues(typeof(ScoreClass));
     private static readonly System.Array scoreClassNames = System.Enum.GetNames(typeof(ScoreClass));
     private static readonly string ResultsFilePath = Path.Combine(Application.persistentDataPath, ResultsJSONFileName);
+
+    #region Team
+
+    /// <summary>
+    /// Serializes and saves an instance of Team to the persistent JSON file.
+    /// </summary>
+    /// <returns>Whether the file was successfully saved to file.</return>
+    public static bool SaveTeamToFile(Team team)
+    {
+        if (team == null)
+        {
+            Debug.LogWarning("Attempting to save a null Team instance to file.");
+            return true;
+        }
+
+        JObject root = new()
+        {
+            ["Name"] = team.Name,
+            ["ID"] = team.Guid
+        };
+
+        // Save to file.
+        string json = root.ToString(Formatting.Indented);
+        File.WriteAllText(TeamFilePath, json);
+
+        if (SaveFileExists)
+        {
+            Debug.Log($"Saved team to {TeamFilePath}.");
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning("Failed to save team to file.");
+            return false;
+        }
+    }
+
+
+    /// <summary>
+    /// Reads from file the stored teams on this device.
+    /// </summary>
+    /// <returns>A Team instance if successfully read from file, otherwise null.</returns>
+    public static Team GetTeamFromFile()
+    {
+        if (!SaveFileExists)
+            return null;
+
+        try
+        {
+            string json = File.ReadAllText(TeamFilePath);
+            var root = JObject.Parse(json);
+
+            return new Team()
+            {
+                Name = root["Name"].Value<string>(),
+                Guid = Guid.Parse(root["ID"].Value<string>())
+            };
+        }
+        catch (JsonReaderException e)
+        {
+            Debug.LogWarning($"Failed to get team from file: {e}");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Removes the persistent file used to store saved teams.
+    /// </summary>
+    /// <returns>Whether the file was deleted successfully.</returns>
+    public static bool DeleteTeamFile()
+    {
+        if (SaveFileExists)
+        {
+            File.Delete(TeamFilePath);
+            Debug.Log($"Successfully deleted file at path {TeamFilePath}.");
+        }
+        else
+        {
+            Debug.Log($"No file exists at {TeamFilePath}. Skipping deletion.");
+        }
+        return true;
+    }
+
+    #endregion
+    #region Results
 
     /// <summary>
     /// Serializes and saves an instance of Results to the persistent JSON file.
@@ -82,6 +173,9 @@ public static class SaveSystem
         }
         return true;
     }
+
+    #endregion
+    #region Private methods
 
     private static JArray GetPreviousRunsAsJSON()
     {
@@ -238,4 +332,6 @@ public static class SaveSystem
 
         return results;
     }
+
+    #endregion
 }
