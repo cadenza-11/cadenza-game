@@ -29,6 +29,7 @@ namespace Cadenza
         [SerializeField] private Rigidbody rb;
         [SerializeField] private SpriteRenderer sr;
         [SerializeField] private Animator anim;
+        [SerializeField] private GameObject projectile;
         private float attackTimer = 0f;
         private EnemyState curState = EnemyState.Idle;
         private const int chaseDistance = 20;
@@ -48,6 +49,7 @@ namespace Cadenza
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+            int i = PlayerSystem.PlayerCount;
             this.Transform = this.GetComponent<Transform>();
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
@@ -60,7 +62,7 @@ namespace Cadenza
         {
             if(this.curAngle > -90 && this.curAngle < 90)
             {
-                this.Transform.rotation =  Quaternion.Euler(0, 0, 0);
+                this.Transform.rotation = Quaternion.Euler(0, 0, 0);
             }
             else
             {
@@ -97,7 +99,10 @@ namespace Cadenza
         
         private void RangedAttack()
         {
-            //To implement later
+            GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
+            projectileInstance.GetComponent<Projectile>().direction = (this.curAngle > -90 && this.curAngle < 90) ? true : false;
+            projectileInstance.GetComponent<Projectile>().speedSet = false;
+            this.anim.SetTrigger("LightAttack");
         }
 
         private void SpecialAttack()
@@ -107,7 +112,7 @@ namespace Cadenza
 
         private void DoDamage()
         {
-
+            
         }
 
         public void TakeDamage()
@@ -333,6 +338,7 @@ namespace Cadenza
             {
                 this.curState = EnemyState.Dead;
             }
+            this.RangedAttack();
         }
 
         private void DeadState()
