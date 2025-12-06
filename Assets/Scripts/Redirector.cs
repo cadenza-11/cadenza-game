@@ -13,6 +13,8 @@ public class Redirector : MonoBehaviour
         this.sceneBuildIndex >= 0 &&
         this.sceneBuildIndex < SceneManager.sceneCountInBuildSettings;
 
+    private bool hasRedirected = false;
+
     void OnValidate()
     {
         // If a scene is not in the build scene list, Unity returns a greater out-of-bounds value.
@@ -22,10 +24,10 @@ public class Redirector : MonoBehaviour
 
     void OnTriggerEnter(Collider player)
     {
-        if (!this.isSceneValid)
+        if (!this.isSceneValid || this.hasRedirected)
             return;
 
+        this.hasRedirected = true;
         _ = ApplicationController.SetSceneAsync(this.sceneBuildIndex);
-        this.enabled = false;
     }
 }
