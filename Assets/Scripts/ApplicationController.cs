@@ -83,8 +83,14 @@ namespace Cadenza
                 // Set the scene.
                 await singleton.SetSceneImplAsync(sceneIndex);
             }
-            singleton.ChangeState(ApplicationState.GameSession);
+            ApplicationState nextState = sceneIndex == 0 ? ApplicationState.Pregame : ApplicationState.GameSession;
+            singleton.ChangeState(nextState);
             await Fader.HideAsync();
+        }
+
+        public static void ExitToPregame()
+        {
+            _ = SetSceneAsync(0);
         }
 
         public static void RequestQuit()
