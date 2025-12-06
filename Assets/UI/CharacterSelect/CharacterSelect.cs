@@ -52,7 +52,7 @@ namespace Cadenza
         #endregion
 
         #region Variables
-        
+
         private PlayerContainer[] playerContainers = new PlayerContainer[4];
 
         private Dictionary<Player, PlayerTracker> playerPhases = new();
@@ -100,6 +100,8 @@ namespace Cadenza
 
         public override void Hide()
         {
+            PlayerSystem.PlayerJoined -= this.OnPlayerJoined;
+
             base.Hide();
             this.submitAction.performed -= this.OnSubmit;
             this.cancelAction.performed -= this.OnCancel;
@@ -108,14 +110,16 @@ namespace Cadenza
 
         private void OnPlayerJoined(Player player)
         {
-            Debug.Log("Player joined");
-            PlayerTracker newTracker = new()
+            if (!this.playerPhases.ContainsKey(player))
             {
-                Phase = SelectPhase.CalibratingInProgress,
-                Elements = this.playerContainers[player.ID],
-                CalibrationAttempts = 0,
-            };
-            this.playerPhases.Add(player, newTracker);
+                PlayerTracker newTracker = new()
+                {
+                    Phase = SelectPhase.CalibratingInProgress,
+                    Elements = this.playerContainers[player.ID],
+                    CalibrationAttempts = 0,
+                };
+                this.playerPhases.Add(player, newTracker);
+            }
             this.ShowPhase(this.playerContainers[player.ID], SelectPhase.CalibratingInProgress);
         }
 
@@ -223,17 +227,17 @@ namespace Cadenza
 
         private void ShowPhase(PlayerContainer playerContainer, SelectPhase phase)
         {
-            playerContainer.JoiningContainer.style.display = 
+            playerContainer.JoiningContainer.style.display =
                 phase == SelectPhase.Joining
                 ? DisplayStyle.Flex : DisplayStyle.None;
-            playerContainer.CalibrationContainer.style.display = 
+            playerContainer.CalibrationContainer.style.display =
                 (phase == SelectPhase.CalibratingInProgress || phase == SelectPhase.CalibratingDone)
                 ? DisplayStyle.Flex : DisplayStyle.None;
-            
-            playerContainer.CharacterSelectionContainer.style.display = 
+
+            playerContainer.CharacterSelectionContainer.style.display =
                 phase == SelectPhase.CharacterSelection
                 ? DisplayStyle.Flex : DisplayStyle.None;
-            playerContainer.ReadyContainer.style.display = 
+            playerContainer.ReadyContainer.style.display =
                 phase == SelectPhase.Ready
                 ? DisplayStyle.Flex : DisplayStyle.None;
             playerContainer.NavNextHint.style.opacity =
@@ -310,7 +314,6 @@ namespace Cadenza
         {
             this.ResetContainers(player.ID, this.playerContainers[player.ID].Container);
             this.playerPhases.Remove(player);
-            PlayerSystem.RemovePlayer(player.ID);
             if (player.ID == 0)
             {
                 this.startMenu.Show();
