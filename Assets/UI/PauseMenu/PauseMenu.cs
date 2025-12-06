@@ -8,8 +8,6 @@ namespace Cadenza
 
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private SettingsMenu settingsMenu;
-        [SerializeField] private StartMenu startMenu;
-
 
         #region System Events
         public override void OnInitialize()
@@ -20,7 +18,7 @@ namespace Cadenza
 
             // Grab elements.
             Button unpause = this.root.Q<Button>("b_Unpause");
-            unpause.clicked += this.Hide;
+            unpause.clicked += ApplicationController.UnpauseGame;
             Button settings = this.root.Q<Button>("b_Settings");
             settings.clicked += this.OnSettings;
             Button main = this.root.Q<Button>("b_MainMenu");
@@ -28,26 +26,34 @@ namespace Cadenza
             Button exit = this.root.Q<Button>("b_Close");
             exit.clicked += this.OnExit;
             this.Hide();
+
+            ApplicationController.GamePaused += this.OnGamePaused;
+            ApplicationController.GameUnpaused += this.OnGameUnpaused;
         }
 
         public override void Show()
         {
-            base.Show();
-            PlayerSystem.TryGetPlayerByID(0, out Player player);
-            if (player != null)
-                InputSystem.EnableSinglePlayerInput(player);
             this.root.style.display = DisplayStyle.Flex;
         }
 
         public override void Hide()
         {
-            base.Hide();
             this.root.style.display = DisplayStyle.None;
         }
 
         #endregion
 
         #region Private Functions
+
+        private void OnGamePaused(Player player)
+        {
+            this.Show();
+        }
+
+        private void OnGameUnpaused()
+        {
+            this.Hide();
+        }
 
         private void OnSettings()
         {
@@ -56,8 +62,7 @@ namespace Cadenza
 
         private void OnMainMenu()
         {
-            Debug.LogWarning("Not exiting level (no implementation)");
-            this.startMenu.Show();
+            ApplicationController.ExitToPregame();
             this.Hide();
         }
 

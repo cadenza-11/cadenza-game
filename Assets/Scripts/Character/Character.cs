@@ -471,6 +471,10 @@ namespace Cadenza
             Debug.Log("Combo Reset");
         }
 
+        public void OnPause(InputAction.CallbackContext context)
+        {
+        }
+
         #endregion
     }
 }

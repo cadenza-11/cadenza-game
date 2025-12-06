@@ -130,6 +130,12 @@ namespace Cadenza
         {
         }
 
+        public void OnUnpause(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                ApplicationController.UnpauseGame();
+        }
+
         #endregion
     }
 }

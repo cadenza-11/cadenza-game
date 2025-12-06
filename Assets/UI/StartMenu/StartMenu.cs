@@ -75,6 +75,11 @@ namespace Cadenza
             this.Show();
         }
 
+        public override void OnGameStart()
+        {
+            this.Hide();
+        }
+
         #endregion
         #region Navigation Events
 
