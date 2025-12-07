@@ -249,7 +249,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.PauseMenu
   uiDocument: {fileID: 7893745333986377073}
   settingsMenu: {fileID: 7560857650547749923}
-  startMenu: {fileID: 404073981900992975}
 --- !u!1 &3937496575230460264
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,7 +514,7 @@ MonoBehaviour:
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: a9efd3a193903934489f7229d03c2959, type: 2}
+  m_PanelSettings: {fileID: 11400000, guid: 777c3afc2c4b3454cb17884f78e932d1, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 74c179706df0ecf448a8501e6b50a986, type: 3}
   m_SortingOrder: 3

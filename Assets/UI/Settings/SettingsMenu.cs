@@ -12,6 +12,7 @@ namespace Cadenza
         private Button[] tabButtons;
         private VisualElement[] tabViews;
         private int tabIndex = -1;
+        private Button backButton;
 
         #region System Events
         public override void OnInitialize()
@@ -40,7 +41,8 @@ namespace Cadenza
             }
 
             // Configure back button.
-            this.root.Q<Button>("b_Back").clicked += this.Hide;
+            this.backButton = this.root.Q<Button>("b_Back");
+            this.backButton.clicked += this.Hide;
 
             // Configure general.
             this.root.Q<Button>("b_DeleteSaveData").clicked += () =>
@@ -76,6 +78,8 @@ namespace Cadenza
             this.root.Q<Button>("b_DeleteSaveData").SetEnabled(
                 ApplicationController.State != ApplicationState.GameSession
                 && SaveSystem.SaveFileExists);
+
+            this.backButton.Focus();
         }
 
         public override void Hide()
