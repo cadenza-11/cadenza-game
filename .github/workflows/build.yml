@@ -67,6 +67,9 @@ jobs:
           git add .
           git reset --hard
 
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
+
       # Cache Library folder
       - uses: actions/cache@v3
         with:
