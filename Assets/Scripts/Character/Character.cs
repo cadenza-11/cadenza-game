@@ -32,6 +32,8 @@ namespace Cadenza
 
         [SerializeField] private float attackDuration = 0.25f;
         [SerializeField] private float chargeDuration = 0.5f;
+        [SerializeField] private int currentHealth = 20;
+        [SerializeField] private int maxHealth = 20;
 
         [Header("Assign in Inspector")]
         [SerializeField] private AttackArea attackArea;
@@ -181,9 +183,17 @@ namespace Cadenza
             this.attackArea.gameObject.transform.localPosition = localPos;
         }
 
-        #region ICharacter Interface
+        public int GetCurHealth()
+        {
+            return this.currentHealth;
+        }
 
-        private int currentHealth { get; set; }
+        public int GetMaxHealth()
+        {
+            return this.maxHealth;
+        }
+
+        #region ICharacter Interface
         private int specialMeter { get; set; }
 
         private void Move(Vector2 input)
@@ -268,9 +278,9 @@ namespace Cadenza
         {
 
         }
-        public void DoDamage()
+        public void DoDamage(int damage)
         {
-
+            this.currentHealth -= damage;
         }
 
         #endregion
