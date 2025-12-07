@@ -33,20 +33,31 @@ namespace Cadenza
             this.buttonSettings = this.root.Q<Button>("b_Settings");
             this.buttonExit = this.root.Q<Button>("b_Exit");
 
+            // Configure "continue last run" button.
             this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
+            SaveSystem.TeamFileDeleted += () => this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
 
             this.root.style.display = DisplayStyle.None;
-            PlayerSystem.PlayerJoined += this.OnPlayerJoined;
         }
 
         public override void Show()
         {
             this.containerJoin.style.display = DisplayStyle.Flex;
             this.containerOptions.style.display = DisplayStyle.None;
-            PlayerSystem.EnableJoining();
-            AudioSystem.SetParameter(AudioSystem.Param.LowPass, true);
-            base.Show();
+
+            // Give single-player input to the first player.
+            if (PlayerSystem.PlayerCount < 1)
+            {
+                PlayerSystem.EnableJoining();
+                PlayerSystem.PlayerJoined += this.OnPlayerJoined;
+            }
+            else
+            {
+                this.OnPlayerJoined(PlayerSystem.Players[0]);
+            }
+
             this.root.style.display = DisplayStyle.Flex;
+            AudioSystem.SetParameter(AudioSystem.Param.LowPass, true);
         }
 
         public override void Hide()
@@ -59,6 +70,16 @@ namespace Cadenza
         public override void OnStart()
         {
             this.Show();
+        }
+
+        public override void OnGameStop()
+        {
+            this.Show();
+        }
+
+        public override void OnGameStart()
+        {
+            this.Hide();
         }
 
         #endregion

@@ -12,12 +12,14 @@ public static class SaveSystem
     public static bool SaveFileExists => File.Exists(TeamFilePath);
     private const string TeamJSONFileName = "team.json";
     private static readonly string TeamFilePath = Path.Combine(Application.persistentDataPath, TeamJSONFileName);
+    public static event Action TeamFileDeleted;
 
     // Results
     private const string ResultsJSONFileName = "results.json";
     private static readonly System.Array scoreClasses = System.Enum.GetValues(typeof(ScoreClass));
     private static readonly System.Array scoreClassNames = System.Enum.GetNames(typeof(ScoreClass));
     private static readonly string ResultsFilePath = Path.Combine(Application.persistentDataPath, ResultsJSONFileName);
+    public static event Action ResultsFileDeleted;
 
     #region Team
 
@@ -93,6 +95,7 @@ public static class SaveSystem
         {
             File.Delete(TeamFilePath);
             Debug.Log($"Successfully deleted file at path {TeamFilePath}.");
+            TeamFileDeleted?.Invoke();
         }
         else
         {
@@ -166,6 +169,7 @@ public static class SaveSystem
         {
             File.Delete(ResultsFilePath);
             Debug.Log($"Successfully deleted file at path {ResultsFilePath}.");
+            ResultsFileDeleted?.Invoke();
         }
         else
         {

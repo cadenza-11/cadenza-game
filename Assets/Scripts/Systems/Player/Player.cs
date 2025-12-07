@@ -98,6 +98,7 @@ namespace Cadenza
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackSpecialAction = map.FindAction("Attack/Special", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
+            var pauseAction = map.FindAction("Pause", throwIfNotFound: true);
             this.interactAction = attackLightAction;
 
             moveAction.performed += character.OnMove;
@@ -108,6 +109,13 @@ namespace Cadenza
             attackHeavyAction.performed += this.OnHit;
             attackSpecialAction.performed += character.OnAttackSpecial;
             attackTeamAction.performed += character.OnAttackTeam;
+            pauseAction.performed += this.OnPause;
+        }
+
+        private void OnPause(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                ApplicationController.PauseGame(this);
         }
 
         private void OnHit(InputAction.CallbackContext context)

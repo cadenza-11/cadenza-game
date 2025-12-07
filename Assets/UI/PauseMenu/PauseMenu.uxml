@@ -1,0 +1,18 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="c_Background" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.35); border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); align-items: center; justify-content: center;">
+        <ui:Label text="PAUSED!" name="txt_Paused" style="font-size: 100px; -unity-font-style: bold; -unity-text-outline-width: 10px; -unity-text-outline-color: rgb(26, 26, 26); color: rgb(229, 229, 229);" />
+        <ui:VisualElement name="c_PlayerInfo" style="flex-direction: row; font-size: 60px; -unity-font-style: bold; color: rgb(229, 229, 229); -unity-text-outline-width: 10px; -unity-text-outline-color: rgb(26, 26, 26);">
+            <ui:Label text="[" name="txt_Bracket" style="padding-right: 0; margin-right: 0;" />
+            <ui:Label text="Player" name="txt_Player" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+            <ui:Label text="0" name="update_PlayerNumber" style="margin-right: 0; padding-right: 0;" />
+            <ui:Label text="]" name="txt_Bracket" style="margin-left: 0; padding-left: 0;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="spacer" style="height: 5%;" />
+        <ui:VisualElement name="c_Buttons" style="height: 40%; justify-content: space-around; font-size: 45px;">
+            <ui:Button text="Unpause" name="b_Unpause" />
+            <ui:Button text="Settings" name="b_Settings" />
+            <ui:Button text="Return to Main Menu" name="b_MainMenu" />
+            <ui:Button text="Close Game" name="b_Close" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

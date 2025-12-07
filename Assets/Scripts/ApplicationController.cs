@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,6 +19,10 @@ namespace Cadenza
         private ApplicationSystem[] systems;
         private ApplicationState state;
         public static ApplicationState State => singleton.state;
+        public static event Action<Player> GamePaused;
+        public static event Action GameUnpaused;
+        private bool isPaused;
+        public static bool IsPaused => singleton.isPaused;
 
         #region Unity Callbacks
 
@@ -63,6 +68,31 @@ namespace Cadenza
             }
         }
 
+        private void StartGame()
+        {
+            foreach (var system in this.systems)
+                system.OnGameStart();
+        }
+
+        private void StopGame()
+        {
+            if (this.isPaused)
+            {
+                Time.timeScale = 1;
+                this.isPaused = false;
+            }
+
+            foreach (var system in this.systems)
+                system.OnGameStop();
+        }
+
+        private void StopApplication()
+        {
+            this.StopGame();
+            foreach (var system in this.systems)
+                system.OnApplicationStop();
+        }
+
         #endregion
         #region Public Static Methods
 
@@ -77,12 +107,47 @@ namespace Cadenza
 
         public static async Task SetSceneAsync(int sceneIndex)
         {
+            await Fader.ShowAsync();
             singleton.ChangeState(ApplicationState.Pregame);
             {
                 // Set the scene.
                 await singleton.SetSceneImplAsync(sceneIndex);
             }
-            singleton.ChangeState(ApplicationState.GameSession);
+            if (sceneIndex != 0)
+                singleton.ChangeState(ApplicationState.GameSession);
+            await Fader.HideAsync();
+        }
+
+        public static void ExitToPregame()
+        {
+            _ = SetSceneAsync(0);
+        }
+
+        public static void PauseGame(Player requestingPlayer)
+        {
+            if (State != ApplicationState.GameSession || singleton.isPaused || requestingPlayer == null)
+                return;
+
+            Time.timeScale = 0;
+            InputSystem.DisableInputActionMapForPlayers("Player", enableOthers: false, PlayerSystem.Players);
+            InputSystem.EnableInputActionMapForPlayers("UI", disableOthers: true, requestingPlayer);
+
+            singleton.isPaused = true;
+            Debug.Log($"{requestingPlayer.Name} (id={requestingPlayer.ID}) paused the game.");
+            GamePaused?.Invoke(requestingPlayer);
+        }
+
+        public static void UnpauseGame()
+        {
+            if (State != ApplicationState.GameSession || !singleton.isPaused)
+                return;
+
+            InputSystem.EnableInputActionMapForPlayers("Player", disableOthers: false, PlayerSystem.Players);
+            Time.timeScale = 1;
+
+            singleton.isPaused = false;
+            Debug.Log("Game unpaused.");
+            GameUnpaused?.Invoke();
         }
 
         public static void RequestQuit()
@@ -132,9 +197,7 @@ namespace Cadenza
             if (previousState == ApplicationState.GameSession &&
                 newState == ApplicationState.Pregame)
             {
-                foreach (var system in this.systems)
-                    system.OnGameStop();
-
+                this.StopGame();
                 return;
             }
 
@@ -142,9 +205,7 @@ namespace Cadenza
             if (previousState == ApplicationState.Pregame &&
                 newState == ApplicationState.GameSession)
             {
-                foreach (var system in this.systems)
-                    system.OnGameStart();
-
+                this.StartGame();
                 return;
             }
 
@@ -152,11 +213,7 @@ namespace Cadenza
             if (previousState != ApplicationState.Quitting &&
                 newState == ApplicationState.Quitting)
             {
-                foreach (var system in this.systems)
-                    system.OnGameStop();
-                foreach (var system in this.systems)
-                    system.OnApplicationStop();
-
+                this.StopApplication();
                 return;
             }
         }

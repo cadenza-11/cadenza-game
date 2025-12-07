@@ -138,6 +138,15 @@ namespace Cadenza
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""ad4fda9d-cda1-4e98-beff-59d1ce144794"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -360,6 +369,28 @@ namespace Cadenza
                     ""action"": ""Attack/Team"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""08216d2c-7138-4472-82e8-215020fd41b6"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ab487f9a-9623-44f2-bc4d-0ce4b535408d"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -452,6 +483,15 @@ namespace Cadenza
                     ""name"": ""Join"",
                     ""type"": ""Button"",
                     ""id"": ""bb701380-63b6-4347-a755-41bb02d10630"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Unpause"",
+                    ""type"": ""Button"",
+                    ""id"": ""a2dc345c-f436-4a63-9ea2-0eda73d1eb3d"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -887,6 +927,28 @@ namespace Cadenza
                     ""action"": ""Join"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9f912953-5284-454e-afe2-bf97675df396"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Unpause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a73d48be-495c-4f53-8e95-2c055005e260"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Unpause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -961,6 +1023,7 @@ namespace Cadenza
             m_Player_AttackHeavy = m_Player.FindAction("Attack/Heavy", throwIfNotFound: true);
             m_Player_AttackSpecial = m_Player.FindAction("Attack/Special", throwIfNotFound: true);
             m_Player_AttackTeam = m_Player.FindAction("Attack/Team", throwIfNotFound: true);
+            m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -973,6 +1036,7 @@ namespace Cadenza
             m_UI_ToggleDebug = m_UI.FindAction("Toggle/Debug", throwIfNotFound: true);
             m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
             m_UI_Join = m_UI.FindAction("Join", throwIfNotFound: true);
+            m_UI_Unpause = m_UI.FindAction("Unpause", throwIfNotFound: true);
         }
 
         ~@CadenzaActions()
@@ -1059,6 +1123,7 @@ namespace Cadenza
         private readonly InputAction m_Player_AttackHeavy;
         private readonly InputAction m_Player_AttackSpecial;
         private readonly InputAction m_Player_AttackTeam;
+        private readonly InputAction m_Player_Pause;
         /// <summary>
         /// Provides access to input actions defined in input action map "Player".
         /// </summary>
@@ -1090,6 +1155,10 @@ namespace Cadenza
             /// Provides access to the underlying input action "Player/AttackTeam".
             /// </summary>
             public InputAction @AttackTeam => m_Wrapper.m_Player_AttackTeam;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Pause".
+            /// </summary>
+            public InputAction @Pause => m_Wrapper.m_Player_Pause;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1131,6 +1200,9 @@ namespace Cadenza
                 @AttackTeam.started += instance.OnAttackTeam;
                 @AttackTeam.performed += instance.OnAttackTeam;
                 @AttackTeam.canceled += instance.OnAttackTeam;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
 
             /// <summary>
@@ -1157,6 +1229,9 @@ namespace Cadenza
                 @AttackTeam.started -= instance.OnAttackTeam;
                 @AttackTeam.performed -= instance.OnAttackTeam;
                 @AttackTeam.canceled -= instance.OnAttackTeam;
+                @Pause.started -= instance.OnPause;
+                @Pause.performed -= instance.OnPause;
+                @Pause.canceled -= instance.OnPause;
             }
 
             /// <summary>
@@ -1204,6 +1279,7 @@ namespace Cadenza
         private readonly InputAction m_UI_ToggleDebug;
         private readonly InputAction m_UI_Point;
         private readonly InputAction m_UI_Join;
+        private readonly InputAction m_UI_Unpause;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
         /// </summary>
@@ -1255,6 +1331,10 @@ namespace Cadenza
             /// Provides access to the underlying input action "UI/Join".
             /// </summary>
             public InputAction @Join => m_Wrapper.m_UI_Join;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/Unpause".
+            /// </summary>
+            public InputAction @Unpause => m_Wrapper.m_UI_Unpause;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1311,6 +1391,9 @@ namespace Cadenza
                 @Join.started += instance.OnJoin;
                 @Join.performed += instance.OnJoin;
                 @Join.canceled += instance.OnJoin;
+                @Unpause.started += instance.OnUnpause;
+                @Unpause.performed += instance.OnUnpause;
+                @Unpause.canceled += instance.OnUnpause;
             }
 
             /// <summary>
@@ -1352,6 +1435,9 @@ namespace Cadenza
                 @Join.started -= instance.OnJoin;
                 @Join.performed -= instance.OnJoin;
                 @Join.canceled -= instance.OnJoin;
+                @Unpause.started -= instance.OnUnpause;
+                @Unpause.performed -= instance.OnUnpause;
+                @Unpause.canceled -= instance.OnUnpause;
             }
 
             /// <summary>
@@ -1492,6 +1578,13 @@ namespace Cadenza
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnAttackTeam(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnPause(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
@@ -1570,6 +1663,13 @@ namespace Cadenza
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnJoin(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Unpause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnUnpause(InputAction.CallbackContext context);
         }
     }
 }

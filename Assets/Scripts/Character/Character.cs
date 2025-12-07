@@ -29,8 +29,6 @@ namespace Cadenza
         [SerializeField] private float speed;
         [SerializeField] private float jumpForce;
         [SerializeField] private float chargeForce;
-        [SerializeField] private int currentHealth = 20;
-        [SerializeField] private int maxHealth = 20;
 
         [SerializeField] private float attackDuration = 0.25f;
         [SerializeField] private float chargeDuration = 0.5f;
@@ -142,11 +140,6 @@ namespace Cadenza
             {
                 this.comboTimer += Time.deltaTime;
             }
-
-            if(this.currentHealth <= 0)
-            {
-                //Go into game over/death function
-            }
         }
 
         public Vector2 GetLocation()
@@ -190,6 +183,7 @@ namespace Cadenza
 
         #region ICharacter Interface
 
+        private int currentHealth { get; set; }
         private int specialMeter { get; set; }
 
         private void Move(Vector2 input)
@@ -274,9 +268,9 @@ namespace Cadenza
         {
 
         }
-        public void DoDamage(int damage)
+        public void DoDamage()
         {
-            this.currentHealth -= damage;
+
         }
 
         #endregion
@@ -477,14 +471,8 @@ namespace Cadenza
             Debug.Log("Combo Reset");
         }
 
-        public int GetCurHealth()
+        public void OnPause(InputAction.CallbackContext context)
         {
-            return this.currentHealth;
-        }
-
-        public int GetMaxHealth()
-        {
-            return this.GetMaxHealth();
         }
 
         #endregion
