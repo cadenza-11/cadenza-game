@@ -276,7 +276,6 @@ namespace Cadenza
         }
         public void DoDamage(int damage)
         {
-            Debug.Log("Goes into Player: DoDamage function");
             this.currentHealth -= damage;
         }
 
@@ -476,6 +475,16 @@ namespace Cadenza
                 this.comboArray[i] = (int)AttkTypes.None;
             }
             Debug.Log("Combo Reset");
+        }
+
+        public int GetCurHealth()
+        {
+            return this.currentHealth;
+        }
+
+        public int GetMaxHealth()
+        {
+            return this.GetMaxHealth();
         }
 
         #endregion

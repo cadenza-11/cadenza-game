@@ -31,7 +31,9 @@ namespace Cadenza
         [SerializeField] private Animator anim;
         [SerializeField] private GameObject projectile;
         private float attackTimer = 0f;
+        private float rangedAttackInterval = 0f;
         [SerializeField] private EnemyState curState = EnemyState.Idle;
+        [SerializeField] private EnemyManager enemyMgr;
         private const int chaseDistance = 20;
         private const int meleeDistance = 1;
         private const int rangedDistance = 50;
@@ -55,6 +57,7 @@ namespace Cadenza
             this.hasRun = false;
             this.speed = 5;
             this.isAttacking = false;
+            this.enemyMgr.AddEnemy(this.gameObject);
         }
 
         // Update is called once per frame
@@ -62,7 +65,7 @@ namespace Cadenza
         {
             if(!this.CheckIsGrounded())
             {
-                this.rb.AddForce(Physics.gravity, ForceMode.Acceleration);
+                this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
             }
             if(this.curAngle > -90 && this.curAngle < 90)
             {
@@ -353,14 +356,22 @@ namespace Cadenza
             {
                 this.curState = EnemyState.Dead;
             }
-            this.RangedAttack();
+            if(this.rangedAttackInterval <= 0)
+            {
+                this.RangedAttack();
+                this.rangedAttackInterval = 1.5f;
+            }
+            else
+            {
+                this.rangedAttackInterval -= Time.deltaTime;
+            }
+            
         }
 
         private void DeadState()
         {
             this.rb.linearVelocity = Vector3.zero;
-            Debug.Log("In Dead State");
-            EnemyManager.singleton.RemoveEnemy(this.gameObject);
+            this.enemyMgr.RemoveEnemy(this.gameObject);
         }
 
         private void FindNearestPlayerDist()
@@ -386,7 +397,7 @@ namespace Cadenza
             this.FindNearestPlayerDist();
             Vector2 displacement = new Vector2(this.TargetLocation.x - this.Transform.position.x, this.TargetLocation.y - this.Transform.position.z);
             Vector2 runDirection = new Vector2(-1 * displacement.x / displacement.magnitude, -1 * displacement.y / displacement.magnitude);
-            return new Vector3(this.Transform.position.x + runDirection.x * 30, this.Transform.position.y, this.Transform.position.z + runDirection.y * 30);
+            return new Vector3(this.Transform.position.x + runDirection.x * 10, this.Transform.position.y, this.Transform.position.z + runDirection.y * 10);
         }
 
         public bool CheckIsDead()
@@ -396,6 +407,16 @@ namespace Cadenza
                 return true;
             }
             return false;
+        }
+
+        public int GetCurHealth()
+        {
+            return this.currentHealth;
+        }
+
+        public int GetMaxHealth()
+        {
+            return this.maxHealth;
         }
         #endregion
     }

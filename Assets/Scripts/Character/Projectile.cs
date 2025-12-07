@@ -1,3 +1,4 @@
+using Cadenza;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -8,6 +9,7 @@ public class Projectile : MonoBehaviour
     public bool direction;
     public bool speedSet = true;
     [SerializeField] private int speed = 0;
+    [SerializeField] private int damage = 2;
     void Start()
     {
         this.rb = this.gameObject.GetComponent<Rigidbody>();
@@ -39,7 +41,22 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("dealt" + 5 + "damage");
+        Debug.Log("dealt " + this.damage + " damage");
+        if(collider.CompareTag("Player"))
+        {
+            Character hitEntity = collider.gameObject.GetComponent<Character>();
+            hitEntity.DoDamage(this.damage);
+        }
+        else
+        {
+            Debug.Log("dealt" + this.damage + "damage");
+        }
+        if(collider.CompareTag("Enemy"))
+        {
+            Debug.Log("AttackArea: Area collided with Enemy");
+            Enemy hitEntity = collider.gameObject.GetComponent<Enemy>();
+            hitEntity.DoDamage(2);
+        }
         Destroy(this.gameObject);
     }
 }
