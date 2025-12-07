@@ -9,6 +9,7 @@ namespace Cadenza
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private SettingsMenu settingsMenu;
         private Button unpause;
+        private Label playerNumber;
 
         #region System Events
         public override void OnInitialize()
@@ -26,6 +27,8 @@ namespace Cadenza
             main.clicked += this.OnMainMenu;
             Button exit = this.root.Q<Button>("b_Close");
             exit.clicked += this.OnExit;
+            this.playerNumber = this.root.Q<Label>("update_PlayerNumber");
+
             this.Hide();
 
             ApplicationController.GamePaused += this.OnGamePaused;
@@ -49,6 +52,7 @@ namespace Cadenza
 
         private void OnGamePaused(Player player)
         {
+            this.playerNumber.text = (player.ID + 1).ToString();
             this.Show();
         }
 
