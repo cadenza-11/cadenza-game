@@ -93,7 +93,9 @@ namespace Cadenza
                 this.OnPlayerJoined(player);
 
             // Create tracker for newly joined players.
+            InputSystem.EnableInputActionMapForPlayers("UI", disableOthers: false, PlayerSystem.Players);
             PlayerSystem.PlayerJoined += this.OnPlayerJoined;
+            PlayerSystem.EnableJoining();
 
             base.Show();
             this.submitAction.performed += this.OnSubmit;

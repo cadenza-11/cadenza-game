@@ -17,6 +17,7 @@ namespace Cadenza
         private Button buttonLastRun;
         private Button buttonSettings;
         private Button buttonExit;
+        private bool isInitialized;
 
         #region System Events
         public override void OnInitialize()
@@ -98,10 +99,14 @@ namespace Cadenza
             this.containerJoin.style.display = DisplayStyle.None;
             this.containerOptions.style.display = DisplayStyle.Flex;
 
-            this.buttonStartGame.clicked += this.OnCharacterSelect;
-            this.buttonLastRun.clicked += this.OnLastRun;
-            this.buttonSettings.clicked += this.OnSettings;
-            this.buttonExit.clicked += this.OnExit;
+            if (!this.isInitialized)
+            {
+                this.buttonStartGame.clicked += this.OnCharacterSelect;
+                this.buttonLastRun.clicked += this.OnLastRun;
+                this.buttonSettings.clicked += this.OnSettings;
+                this.buttonExit.clicked += this.OnExit;
+                this.isInitialized = true;
+            }
 
             this.buttonStartGame.Focus();
         }

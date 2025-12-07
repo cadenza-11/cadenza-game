@@ -103,7 +103,7 @@ namespace Cadenza
         /// </summary>
         public static void EnableJoining()
         {
-            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
+            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenJoinActionIsTriggered;
         }
 
 
