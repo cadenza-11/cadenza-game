@@ -31,16 +31,16 @@ namespace Cadenza
 
         public override void OnInitialize()
         {
-            var root = this.uiDocument.rootVisualElement;
+            this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
+            this.root.style.display = DisplayStyle.None;
 
             // Initialize team meter.
-            this.teamMeter = root.Q<ProgressBar>("meter_TeamMeter");
+            this.teamMeter = this.root.Q<ProgressBar>("meter_TeamMeter");
             this.teamMeter.highValue = this.durationToFull;
             this.teamMeter.lowValue = 0;
-            this.teamMeter.style.display = DisplayStyle.None;
 
             // Initialize team streak.
-            this.teamStreak = root.Q<Label>("update_TeamStreak");
+            this.teamStreak = this.root.Q<Label>("update_TeamStreak");
             ScoreSystem.StreakUpdated += this.OnStreakUpdated;
         }
 
@@ -55,9 +55,9 @@ namespace Cadenza
         public override void OnGameStart()
         {
             this.Show();
+            this.root.style.display = DisplayStyle.Flex;
 
             this.teamMeter.value = 0;
-            this.teamMeter.style.display = DisplayStyle.Flex;
 
             ScoreSystem.TeamHit += this.OnTeamHit;
             Character.TeamAttackInitiated += this.OnTeamAttackInitiated;
@@ -66,9 +66,9 @@ namespace Cadenza
         public override void OnGameStop()
         {
             this.Hide();
+            this.root.style.display = DisplayStyle.None;
 
             this.teamMeter.value = 0;
-            this.teamMeter.style.display = DisplayStyle.None;
 
             ScoreSystem.TeamHit -= this.OnTeamHit;
             Character.TeamAttackInitiated -= this.OnTeamAttackInitiated;
