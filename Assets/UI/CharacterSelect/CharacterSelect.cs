@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -58,6 +59,7 @@ namespace Cadenza
         private Dictionary<Player, PlayerTracker> playerPhases = new();
         private InputAction submitAction;
         private InputAction cancelAction;
+        private InputAction navigationAction;
 
         private int playersReady = 0;
 
@@ -80,6 +82,7 @@ namespace Cadenza
 
             this.submitAction = InputSystem.UIInputMap.Get().FindAction("Submit", throwIfNotFound: true);
             this.cancelAction = InputSystem.UIInputMap.Get().FindAction("Cancel", throwIfNotFound: true);
+            this.navigationAction = InputSystem.UIInputMap.Get().FindAction("Navigate", throwIfNotFound: true);
             this.root.style.display = DisplayStyle.None;
         }
 
@@ -95,6 +98,8 @@ namespace Cadenza
             base.Show();
             this.submitAction.performed += this.OnSubmit;
             this.cancelAction.performed += this.OnCancel;
+            this.navigationAction.performed += this.OnNavigation;
+            ClassManager.CharacterTakenStatusChanged += this.RefreshShownCharacters;
             this.root.style.display = DisplayStyle.Flex;
         }
 
@@ -105,6 +110,8 @@ namespace Cadenza
             base.Hide();
             this.submitAction.performed -= this.OnSubmit;
             this.cancelAction.performed -= this.OnCancel;
+            this.navigationAction.performed -= this.OnNavigation;
+            ClassManager.CharacterTakenStatusChanged -= this.RefreshShownCharacters;
             this.root.style.display = DisplayStyle.None;
         }
 
@@ -164,29 +171,63 @@ namespace Cadenza
 
             switch (foundPlayer.Phase)
             {
-                case SelectPhase.CalibratingInProgress: // Continue latency calculation process. //
+                case SelectPhase.CalibratingInProgress: // Disconnect. //
                     this.DisconnectPlayer(player, foundPlayer);
                     break;
 
-                case SelectPhase.CalibratingDone: // Proceed to character select. //
+                case SelectPhase.CalibratingDone: // Back to calibrating. //
                     foundPlayer.CalibrationAttempts = 0;
                     foundPlayer.Phase = SelectPhase.CalibratingInProgress;
+                    this.ShowPhase(foundPlayer.Elements, SelectPhase.CalibratingInProgress);
                     break;
 
-                case SelectPhase.CharacterSelection: // Select character and ready up. //
-                                                     // if (player.Character != null)
+                case SelectPhase.CharacterSelection: // Back to calibrating. //
                     foundPlayer.CalibrationAttempts = 0;
                     foundPlayer.Phase = SelectPhase.CalibratingInProgress;
+                    this.ShowPhase(foundPlayer.Elements, SelectPhase.CalibratingInProgress);
                     break;
 
                 case SelectPhase.Ready:
-                    this.ShowPhase(foundPlayer.Elements, SelectPhase.Ready);
-                    foundPlayer.Phase = SelectPhase.Ready;
+                    player.SetCharacterClass(null);
+                    ClassManager.UnselectCharacter(player);
+                    this.ShowPhase(foundPlayer.Elements, SelectPhase.CharacterSelection);
+                    foundPlayer.Phase = SelectPhase.CharacterSelection;
                     this.playerPhases[player] = foundPlayer;
                     break;
 
                 default:
                     break;
+            }
+        }
+
+        private void OnNavigation(InputAction.CallbackContext context)
+        {
+            var player = InputSystem.GetPlayerFromDevice(context.control.device);
+            if (player == null 
+                || !this.playerPhases.TryGetValue(player, out PlayerTracker foundPlayer) 
+                || foundPlayer.Phase != SelectPhase.CharacterSelection)
+                return;
+            Vector2 moveDirection = context.ReadValue<Vector2>();
+            VisualElement selection = foundPlayer.Elements.CharacterSelectionContainer;
+            if (Math.Abs(moveDirection.x) >= Math.Abs(moveDirection.y) && Math.Abs(moveDirection.x) > 0.2f)
+            {
+                if (selection.Q<VisualElement>("c_CharacterPicker").ClassListContains("is_focus"))
+                {
+                    String currentChar = selection.Q<Label>("update_CharacterName").text;
+                    this.ChangeShownCharacter
+                    (
+                        selection, 
+                        (moveDirection.x > 0) ? ClassManager.GetNextCharacter(currentChar) : ClassManager.GetPreviousCharacter(currentChar)
+                    );
+                    
+                }
+                else
+                    Debug.LogWarning("There are no cosmetics.");
+            }
+            else if (Math.Abs(moveDirection.y) > 0.2f)
+            {
+                selection.Q<VisualElement>("c_CharacterPicker").ToggleInClassList("is_focus");
+                selection.Q<VisualElement>("c_CosmeticsPicker").ToggleInClassList("is_focus");
             }
         }
 
@@ -211,6 +252,10 @@ namespace Cadenza
             calibration.Q<Label>("update_MaxAttempts").text = this.TotalCalibrationAttempts.ToString();
             calibration.Q<Label>("update_Counter").text = 0.ToString();
 
+            this.ChangeShownCharacter(selection, ClassManager.GetNextCharacter(""));
+            selection.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
+            selection.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
+
             this.playerContainers[index] = new PlayerContainer()
             {
                 Container = container,
@@ -233,7 +278,6 @@ namespace Cadenza
             playerContainer.CalibrationContainer.style.display =
                 (phase == SelectPhase.CalibratingInProgress || phase == SelectPhase.CalibratingDone)
                 ? DisplayStyle.Flex : DisplayStyle.None;
-
             playerContainer.CharacterSelectionContainer.style.display =
                 phase == SelectPhase.CharacterSelection
                 ? DisplayStyle.Flex : DisplayStyle.None;
@@ -250,6 +294,29 @@ namespace Cadenza
                 playerContainer.Container.RemoveFromClassList("joined");
             else
                 playerContainer.CalibrationContainer.AddToClassList("joined");
+        }
+
+        private void ChangeShownCharacter(VisualElement container, ClassManager.CharacterSelectInfo shownClass)
+        {
+            container.Q<Label>("update_CharacterName").text = shownClass.Class.Name;
+            VisualElement portrait = container.Q<VisualElement>("portrait_Character");
+            portrait.style.backgroundImage = shownClass.Class.Portrait;
+            portrait.RemoveFromClassList("taken");
+            if (shownClass.IsTaken)
+                portrait.AddToClassList("taken");
+        }
+
+        private void RefreshShownCharacters()
+        {
+            foreach (VisualElement container in this.root.Query<VisualElement>("c_Character").ToList())
+            {
+                this.ChangeShownCharacter
+                (
+                    container, 
+                    ClassManager.GetCharacter(container.Q<Label>("update_CharacterName").text)
+                );
+            }
+            
         }
 
         private void Calibrate(Player player, PlayerTracker tracker)
@@ -288,7 +355,15 @@ namespace Cadenza
 
         private void SelectCharacter(Player player, PlayerTracker tracker)
         {
-            // Show character being selected
+            CharacterClass selectedCharacter = ClassManager.SelectCharacter
+            (
+                player,
+                tracker.Elements.CharacterSelectionContainer.Q<Label>("update_CharacterName").text
+            );
+
+            if (selectedCharacter == null) return; // NOTE: Add animation in future
+
+            player.SetCharacterClass(selectedCharacter);
             this.ShowPhase(tracker.Elements, SelectPhase.Ready);
             tracker.Phase = SelectPhase.Ready;
             this.playerPhases[player] = tracker;
@@ -318,7 +393,7 @@ namespace Cadenza
             {
                 this.startMenu.Show();
                 this.Hide();
-                // REMOVE EVERYONE
+                Debug.LogWarning("Does not reset ALL players.");
             }
         }
 
