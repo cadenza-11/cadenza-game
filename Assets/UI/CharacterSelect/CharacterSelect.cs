@@ -73,13 +73,6 @@ namespace Cadenza
             this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
             this.root.style.display = DisplayStyle.None;
 
-            int i = 0;
-            foreach (VisualElement container in this.root.Query<VisualElement>("c_Player").ToList())
-            {
-                this.ResetContainers(i, container);
-                i++;
-            }
-
             this.submitAction = InputSystem.UIInputMap.Get().FindAction("Submit", throwIfNotFound: true);
             this.cancelAction = InputSystem.UIInputMap.Get().FindAction("Cancel", throwIfNotFound: true);
             this.navigationAction = InputSystem.UIInputMap.Get().FindAction("Navigate", throwIfNotFound: true);
@@ -88,6 +81,16 @@ namespace Cadenza
 
         public override void Show()
         {
+            this.playersReady = 0;
+            
+            // Reset visuals.
+            int i = 0;
+            foreach (VisualElement container in this.root.Query<VisualElement>("c_Player").ToList())
+            {
+                this.ResetContainers(i, container);
+                i++;
+            }
+
             // Create tracker for existing players.
             foreach (var player in PlayerSystem.PlayersByID.Values)
                 this.OnPlayerJoined(player);
@@ -128,6 +131,15 @@ namespace Cadenza
                     CalibrationAttempts = 0,
                 };
                 this.playerPhases.Add(player, newTracker);
+            } 
+            else
+            {
+                if (this.playerPhases.TryGetValue(player, out PlayerTracker foundPlayer))
+                {
+                    foundPlayer.Phase = SelectPhase.CalibratingInProgress;
+                    foundPlayer.CalibrationAttempts = 0;
+                    this.playerPhases[player] = foundPlayer;
+                }
             }
             this.ShowPhase(this.playerContainers[player.ID], SelectPhase.CalibratingInProgress);
         }
@@ -391,6 +403,7 @@ namespace Cadenza
         {
             this.ResetContainers(player.ID, this.playerContainers[player.ID].Container);
             this.playerPhases.Remove(player);
+            this.playersReady--;
             if (player.ID == 0)
             {
                 this.startMenu.Show();
