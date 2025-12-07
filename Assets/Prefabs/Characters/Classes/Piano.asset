@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterType
   ID: 4
   Name: Piano
-  Portrait: {fileID: 0}
+  Portrait: {fileID: 2800000, guid: 5412b7fd1e87ba140b629536a2ccd236, type: 3}
+  Prefab: {fileID: 1662831655738370594, guid: 654a6b14b31fc4865bac7e8b66999881, type: 3}

@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterType
   ID: 3
   Name: Guitar
-  Portrait: {fileID: 0}
+  Portrait: {fileID: 2800000, guid: 30cd5425cd126994397456683ad79720, type: 3}
+  Prefab: {fileID: 5759731777474461351, guid: 0461cdb9357c9474cb9f322cedb6ee76, type: 3}
