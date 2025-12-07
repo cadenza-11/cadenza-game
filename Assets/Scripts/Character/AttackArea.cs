@@ -1,3 +1,4 @@
+using Cadenza;
 using UnityEngine;
 
 /// <summary>
@@ -30,7 +31,21 @@ public class AttackArea : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("dealt" + this.damage + "damage");
+        if(collider.CompareTag("Player"))
+        {
+            Character hitEntity = collider.gameObject.GetComponent<Character>();
+            hitEntity.DoDamage(this.damage);
+        }
+        else
+        {
+            Debug.Log("dealt" + this.damage + "damage");
+        }
+        if(collider.CompareTag("Enemy"))
+        {
+            Debug.Log("AttackArea: Area collided with Enemy");
+            Enemy hitEntity = collider.gameObject.GetComponent<Enemy>();
+            hitEntity.DoDamage(2);
+        }
         switch (this.comboMove)
         {
             case (int)AttkEffect.Light_Knockback:

@@ -112,6 +112,16 @@ namespace Cadenza
             singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
         }
 
+        public static int GetCharacterCurrentHealth(int playerID)
+        {
+            return PlayersByID[playerID].Character.GetCurHealth();
+        }
+
+        public static int GetCharacterMaxHealth(int playerID)
+        {
+            return PlayersByID[playerID].Character.GetCurHealth();
+        }
+
         #endregion
         #region Private Methods
 

@@ -29,8 +29,11 @@ namespace Cadenza
         [SerializeField] private Rigidbody rb;
         [SerializeField] private SpriteRenderer sr;
         [SerializeField] private Animator anim;
+        [SerializeField] private GameObject projectile;
         private float attackTimer = 0f;
-        private EnemyState curState = EnemyState.Idle;
+        private float rangedAttackInterval = 0f;
+        [SerializeField] private EnemyState curState = EnemyState.Idle;
+        [SerializeField] private EnemyManager enemyMgr;
         private const int chaseDistance = 20;
         private const int meleeDistance = 1;
         private const int rangedDistance = 50;
@@ -48,19 +51,25 @@ namespace Cadenza
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+            int i = PlayerSystem.PlayerCount;
             this.Transform = this.GetComponent<Transform>();
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
             this.speed = 5;
             this.isAttacking = false;
+            this.enemyMgr.AddEnemy(this.gameObject);
         }
 
         // Update is called once per frame
         void FixedUpdate()
         {
+            if(!this.CheckIsGrounded())
+            {
+                this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
+            }
             if(this.curAngle > -90 && this.curAngle < 90)
             {
-                this.Transform.rotation =  Quaternion.Euler(0, 0, 0);
+                this.Transform.rotation = Quaternion.Euler(0, 0, 0);
             }
             else
             {
@@ -88,16 +97,19 @@ namespace Cadenza
         {
             this.isAttacking = true;
             this.attackMod = 1;
-            this.attackArea.damage = 3;
+            this.attackArea.damage = 1;
             this.attackArea.SetActive(this.isAttacking);
 
             // Play animation
-            this.anim.SetTrigger("WeakAttack");
+            this.anim.SetTrigger("LightAttack");
         }
         
         private void RangedAttack()
         {
-            //To implement later
+            GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
+            projectileInstance.GetComponent<Projectile>().direction = (this.curAngle > -90 && this.curAngle < 90) ? true : false;
+            projectileInstance.GetComponent<Projectile>().speedSet = false;
+            this.anim.SetTrigger("LightAttack");
         }
 
         private void SpecialAttack()
@@ -105,14 +117,20 @@ namespace Cadenza
             //To implement later
         }
 
-        private void DoDamage()
+        public void DoDamage(int damage)
         {
-
+            Debug.Log("Goes into Enemy: DoDamage Function");
+            this.currentHealth -= damage;
         }
 
         public void TakeDamage()
         {
             
+        }
+
+        bool CheckIsGrounded()
+        {
+            return Physics.Raycast(this.transform.position, -Vector3.up, 0.5f);
         }
 
         /// <summary>
@@ -152,7 +170,7 @@ namespace Cadenza
         /// </summary>
         private void IdleState()
         {
-            Debug.Log("In idle state");
+            this.rb.linearVelocity = Vector3.zero;
             this.FindNearestPlayerDist();
             if(this.nearestPlayerDist < rangedDistance && this.nearestPlayerDist > chaseDistance)
             {
@@ -175,45 +193,47 @@ namespace Cadenza
         /// </summary>
         private void ChaseState()
         {
-            Debug.Log("In chase state");
             this.FindNearestPlayerDist();
-            Vector3 pos = this.transform.position;
             this.curAngle = (float)Math.Atan2(this.TargetLocation.y - this.transform.position.z, this.TargetLocation.x - this.transform.position.x);
-            pos.x += this.speed * (float)Math.Cos(this.curAngle) * Time.deltaTime;
-            pos.z += this.speed * (float)Math.Sin(this.curAngle) * Time.deltaTime;
-            //this.GetComponent<Transform>().position = pos;
-            this.Transform.position = pos;
+
+            Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
+            this.rb.linearVelocity = moveDir;
 
             this.FindNearestPlayerDist();
             //Move Towards target location here
             if(this.nearestPlayerDist > rangedDistance)
             {
                 this.curState = EnemyState.Idle;
+                this.rb.linearVelocity = Vector3.zero;
             }
             else if(this.nearestPlayerDist < rangedDistance && this.nearestPlayerDist > chaseDistance)
             {
                 this.meleeState = false;
                 this.curState = EnemyState.Ranged;
+                this.rb.linearVelocity = Vector3.zero;
             }
             else if(this.nearestPlayerDist <= meleeDistance)
             {
                 this.meleeState = true;
                 this.curState = EnemyState.Melee;
+                this.rb.linearVelocity = Vector3.zero;
             }
 
             if(this.currentHealth < this.runHealth && this.currentHealth > 0)
             {
                 this.curState = EnemyState.Run;
+                this.rb.linearVelocity = Vector3.zero;
             }
             else if(this.currentHealth <= 0)
             {
                 this.curState = EnemyState.Dead;
+                this.rb.linearVelocity = Vector3.zero;
             }
         }
 
         private void MeleeState()
         {
-            Debug.Log("In melee state");
+            this.rb.linearVelocity = Vector3.zero;
             if(!this.isAttacking)
             {
                 this.FindNearestPlayerDist();
@@ -259,7 +279,7 @@ namespace Cadenza
 
         private void SpecialState()
         {
-            Debug.Log("In special state");
+            this.rb.linearVelocity = Vector3.zero;
             //Do Special Move
             if(this.meleeState)
             {
@@ -292,24 +312,27 @@ namespace Cadenza
 
             Vector3 pos = this.Transform.position;
             this.curAngle = (float)Math.Atan2(this.TargetLocation.y - pos.z, this.TargetLocation.x - pos.x);
-            pos.x += this.speed * (float)Math.Cos(this.curAngle) * Time.deltaTime;
-            pos.z += this.speed * (float)Math.Sin(this.curAngle) * Time.deltaTime;
-            this.Transform.position = pos;
+
+            Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
+            this.rb.linearVelocity = moveDir;
 
             if(Math.Abs(this.Transform.position.x - this.TargetLocation.x) <= 0.1 && 
                 Math.Abs(this.Transform.position.z - this.TargetLocation.y) <= 0.1)
             {
                 this.meleeState = false;
                 this.curState = EnemyState.Ranged;
+                this.rb.linearVelocity = Vector3.zero;
             }
             if(this.currentHealth <= 0)
             {
                 this.curState = EnemyState.Dead;
+                this.rb.linearVelocity = Vector3.zero;
             }
         }
 
         private void RangedState()
         {
+            this.rb.linearVelocity = Vector3.zero;
             this.FindNearestPlayerDist();
             if(this.nearestPlayerDist > rangedDistance)
             {
@@ -333,12 +356,22 @@ namespace Cadenza
             {
                 this.curState = EnemyState.Dead;
             }
+            if(this.rangedAttackInterval <= 0)
+            {
+                this.RangedAttack();
+                this.rangedAttackInterval = 1.5f;
+            }
+            else
+            {
+                this.rangedAttackInterval -= Time.deltaTime;
+            }
+            
         }
 
         private void DeadState()
         {
-            Debug.Log("In Dead State");
-            EnemyManager.singleton.RemoveEnemy(this.gameObject);
+            this.rb.linearVelocity = Vector3.zero;
+            this.enemyMgr.RemoveEnemy(this.gameObject);
         }
 
         private void FindNearestPlayerDist()
@@ -364,7 +397,7 @@ namespace Cadenza
             this.FindNearestPlayerDist();
             Vector2 displacement = new Vector2(this.TargetLocation.x - this.Transform.position.x, this.TargetLocation.y - this.Transform.position.z);
             Vector2 runDirection = new Vector2(-1 * displacement.x / displacement.magnitude, -1 * displacement.y / displacement.magnitude);
-            return new Vector3(this.Transform.position.x + runDirection.x * 30, this.Transform.position.y, this.Transform.position.z + runDirection.y * 30);
+            return new Vector3(this.Transform.position.x + runDirection.x * 10, this.Transform.position.y, this.Transform.position.z + runDirection.y * 10);
         }
 
         public bool CheckIsDead()
@@ -374,6 +407,16 @@ namespace Cadenza
                 return true;
             }
             return false;
+        }
+
+        public int GetCurHealth()
+        {
+            return this.currentHealth;
+        }
+
+        public int GetMaxHealth()
+        {
+            return this.maxHealth;
         }
         #endregion
     }
