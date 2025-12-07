@@ -9,6 +9,7 @@ namespace Cadenza
         #region Attributes
 
         public int ID { get; private set; }
+        public CharacterClass CharacterClass { get; private set; }
         public Character Character { get; private set; }
         public PlayerInput Input { get; private set; }
         public string Name => this.name;
@@ -37,11 +38,16 @@ namespace Cadenza
             this.Input = input;
         }
 
+        internal void SetCharacterClass(CharacterClass characterClass)
+        {
+            this.CharacterClass = characterClass;
+        }
+
         /// <summary>
         /// Tracks this player to an instance of a character body.
         /// </summary>
         /// <param name="character">A spawned instance of the player body.</param>
-        public void SetCharacter(Character character)
+        internal void SetCharacter(Character character)
         {
             // Remove the character body.
             if (character == null && this.Character != null)

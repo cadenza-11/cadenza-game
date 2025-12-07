@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +18,7 @@ namespace Cadenza
         [Header("Assign in Inspector")]
         [SerializeField] private GameObject characterPrefab;
         [SerializeField] private int maxPlayersInRoster = 4;
+        [SerializeField] private CharacterClass[] characterClasses;
 
         private PlayerInputManager playerInputManager;
 
@@ -24,6 +26,7 @@ namespace Cadenza
         public static IReadOnlyDictionary<int, Player> PlayersByID => singleton.playersByID;
         public static int PlayerCount => singleton.playersByID.Count;
         public static Player[] Players => PlayersByID.Values.ToArray();
+        public static CharacterClass[] CharacterClasses => singleton.characterClasses;
 
         public static event Action<Player> PlayerJoined;
         public static event Action<Player> PlayerRemoved;
@@ -156,7 +159,10 @@ namespace Cadenza
 
         private Character SpawnPlayerBody(Player player)
         {
-            var character = Instantiate(singleton.characterPrefab).GetComponent<Character>();
+            if (player == null || player.CharacterClass == null || player.CharacterClass.Prefab == null)
+                return null;
+
+            var character = Instantiate(player.CharacterClass.Prefab).GetComponent<Character>();
             player.SetCharacter(character);
 
             Debug.Log($"Player character body set to {character}. (id={player.ID})");
