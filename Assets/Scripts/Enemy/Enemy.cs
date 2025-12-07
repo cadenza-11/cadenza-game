@@ -20,7 +20,7 @@ namespace Cadenza
     public class Enemy : MonoBehaviour
     {
         [SerializeField] private Transform Transform;
-        [SerializeField] public int speed;
+        [SerializeField] public float speed;
         [SerializeField] private float meleeDuration = 0.25f;
         [SerializeField] private float rangedDuration = 0.25f;
         [SerializeField] private int maxHealth;
@@ -55,7 +55,7 @@ namespace Cadenza
             this.Transform = this.GetComponent<Transform>();
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
-            this.speed = 5;
+            this.speed = 1.5f;
             this.isAttacking = false;
             this.enemyMgr.AddEnemy(this.gameObject);
         }

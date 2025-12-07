@@ -422,10 +422,10 @@ MonoBehaviour:
   speed: 3
   jumpForce: 4
   chargeForce: 10
-  currentHealth: 20
-  maxHealth: 20
   attackDuration: 0.25
   chargeDuration: 0.5
+  currentHealth: 20
+  maxHealth: 20
   attackArea: {fileID: 911082884614298861}
   chargeArea: {fileID: 2387496068521455922}
   slamArea: {fileID: 4036822961007657625}

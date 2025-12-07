@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Enemy
   Transform: {fileID: 2003244786977031834}
-  speed: 3
+  speed: 1.5
   meleeDuration: 2
   rangedDuration: 2
   maxHealth: 10
@@ -121,7 +121,7 @@ MonoBehaviour:
   anim: {fileID: 6195701624303688636}
   projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
   curState: 0
-  enemyMgr: {fileID: 0}
+  enemyMgr: {fileID: 440276601815438109, guid: ab0db344855b6ba449958ed864656141, type: 3}
 --- !u!1 &1203646789165182342
 GameObject:
   m_ObjectHideFlags: 0
