@@ -85,24 +85,24 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings:
       - m_Name: 
-        m_Id: c75a202e-145c-4d56-a0ca-47677ece04a7
-        m_Path: <Gamepad>/buttonSouth
-        m_Interactions: 
-        m_Processors: 
-        m_Groups: 
-        m_Action: Join
-        m_Flags: 0
-      - m_Name: 
-        m_Id: 0abd85d2-bf58-4324-8832-d35f40372ab6
-        m_Path: <Keyboard>/anyKey
-        m_Interactions: 
-        m_Processors: 
-        m_Groups: 
-        m_Action: Join
-        m_Flags: 0
-      - m_Name: 
         m_Id: 9d855729-7153-4acd-a54d-48bd6b608c80
         m_Path: <Mouse>/leftButton
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Join
+        m_Flags: 0
+      - m_Name: 
+        m_Id: 38808d5b-868a-4936-88ec-93fb9f77f311
+        m_Path: <Gamepad>/start
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Join
+        m_Flags: 0
+      - m_Name: 
+        m_Id: a29d8ade-eca7-4c84-b598-fa99660a2ff6
+        m_Path: <Keyboard>/anyKey
         m_Interactions: 
         m_Processors: 
         m_Groups: 
