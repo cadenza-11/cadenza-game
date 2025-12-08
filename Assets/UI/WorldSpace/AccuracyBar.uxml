@@ -1,6 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement style="flex-grow: 1; max-width: 300px; max-height: 100px;">
-        <ui:Label name="Label" style="align-self: center; -unity-font-style: bold; font-size: 30px; height: 50px;" />
+        <ui:Label name="Label" style="align-self: center; -unity-font-style: normal; font-size: 30px; height: 34px; -unity-text-align: upper-center; -unity-font-definition: url(&quot;project://database/Assets/Fonts/Next%20Bravo/Next%20Bravo.ttf?fileID=12800000&amp;guid=233fe1fac9a97f24b8ebdd612dd40092&amp;type=3#Next Bravo&quot;); letter-spacing: 9px; -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(255, 255, 255); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         <ui:Slider high-value="0.25" low-value="-0.25" />
     </ui:VisualElement>
 </ui:UXML>
