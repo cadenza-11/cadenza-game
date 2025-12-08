@@ -46,6 +46,7 @@ namespace Cadenza
             // if (player != null)
             //     InputSystem.EnableSinglePlayerInput(player);
             this.root.style.display = DisplayStyle.Flex;
+            this.randomizeName.Focus();
         }
 
         public override void Hide()

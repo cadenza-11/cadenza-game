@@ -1,3 +1,10 @@
 :root {
+}
 
+Button:hover {
+    background-color: rgb(255, 113, 0);
+}
+
+Button:focus {
+    background-color: rgb(255, 113, 0);
 }
