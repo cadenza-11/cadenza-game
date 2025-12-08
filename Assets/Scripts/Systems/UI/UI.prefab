@@ -70,6 +70,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.BandNameSelect
   previousPanel: {fileID: 0}
   uiDocument: {fileID: 3070153359184090518}
+  articlesFile: {fileID: 4900000, guid: c956a6f114edd4a4e8c1abc10757e34b, type: 3}
+  adjectivesFile: {fileID: 4900000, guid: b5d7ccde1ca3006439992a28baab5d5b, type: 3}
+  nounsFile: {fileID: 4900000, guid: f0bc5dde8ea0cf7448c617e9b2c4391a, type: 3}
 --- !u!1 &2018074778152609133
 GameObject:
   m_ObjectHideFlags: 0
