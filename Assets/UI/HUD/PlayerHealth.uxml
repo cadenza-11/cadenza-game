@@ -9,7 +9,7 @@
                     <ui:VisualElement name="icon" class="meter_icon" />
                     <ui:ProgressBar value="22" name="bar" class="meter" style="width: 75%;" />
                 </ui:VisualElement>
-                <ui:VisualElement name="TEMP_ACCURACY" class="player_meter accuracy">
+                <ui:VisualElement name="TEMP_ACCURACY" class="player_meter accuracy" style="display: none;">
                     <ui:VisualElement name="icon" class="meter_icon" />
                     <ui:ProgressBar value="22" name="bar" class="meter" style="width: 75%;" />
                 </ui:VisualElement>

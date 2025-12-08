@@ -21,6 +21,7 @@ namespace Cadenza
         private ProgressBar teamMeter;
         private Label teamStreak;
         private Dictionary<int, string> streakLabels = new();
+        private VisualElement[] healthBars = new VisualElement[4];
 
         public enum MeterState
         {
@@ -42,6 +43,14 @@ namespace Cadenza
             // Initialize team streak.
             this.teamStreak = this.root.Q<Label>("update_TeamStreak");
             ScoreSystem.StreakUpdated += this.OnStreakUpdated;
+
+            // Get health bars.
+            int i = 0;
+            foreach (VisualElement container in this.root.Query<VisualElement>("c_PlayerHealth").ToList())
+            {
+                this.healthBars[i] = container;
+                i++;
+            }
         }
 
         private void OnStreakUpdated(int streak)
@@ -56,6 +65,21 @@ namespace Cadenza
         {
             this.Show();
             this.root.style.display = DisplayStyle.Flex;
+
+            for(int i = 0; i < 4; i++)
+            {
+                if(PlayerSystem.TryGetPlayerByID(i, out Player player))
+                {
+                    this.healthBars[i].style.opacity = 1;
+                    this.healthBars[i].Q<Label>("update_CharacterName").text = player.CharacterClass.Name;
+                    this.healthBars[i].Q<VisualElement>("portrait_Character").style.backgroundImage = player.CharacterClass.Portrait;
+                    ProgressBar health = this.healthBars[i].Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
+                    health.highValue = player.Character.GetMaxHealth();
+                    player.Character.HealthChanged += (healthValue) => this.OnHealthChanged(healthValue, health);
+                }
+                else
+                    this.healthBars[i].style.opacity = 0;
+            }
 
             this.teamMeter.value = 0;
 
@@ -123,5 +147,14 @@ namespace Cadenza
 
             return MeterState.Filling;
         }
+
+        #region Health Bar
+
+        private void OnHealthChanged(int health, ProgressBar bar)
+        {
+            bar.value = health;
+        }
+
+        #endregion
     }
 }

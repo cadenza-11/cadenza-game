@@ -48,6 +48,7 @@ namespace Cadenza
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
+        public event Action<int> HealthChanged;
 
         private float attackTimer = 0.0f;
         private float chargeTimer = 0.0f;
@@ -281,6 +282,7 @@ namespace Cadenza
         public void DoDamage(int damage)
         {
             this.currentHealth -= damage;
+            HealthChanged?.Invoke(this.currentHealth);
         }
 
         #endregion
