@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text;
 using Cadenza;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -19,6 +20,7 @@ public class Leaderboard : MonoBehaviour, IInteractable
         this.uiDocument = this.GetComponent<UIDocument>();
         this.root = this.uiDocument.rootVisualElement;
         this.root.style.display = DisplayStyle.None;
+        this.root.RegisterCallback<NavigationCancelEvent>(_ => this.Hide(), TrickleDown.TrickleDown);
 
         // Configure exit button.
         this.exitButton = this.root.Q<Button>("b_Exit");
@@ -32,11 +34,19 @@ public class Leaderboard : MonoBehaviour, IInteractable
             .ToArray();
 
         var resultsElement = this.root.Q<VisualElement>("results");
+        int i = 0;
         foreach (var result in this.results)
         {
             string teamName = string.IsNullOrEmpty(result.TeamName) ? "Unnamed Team" : result.TeamName;
             var resultLine = this.resultLineAsset.CloneTree();
-            resultLine.Q<Label>().text = $"{teamName} ... {result.TeamResults.ScoreTotal}";
+
+            StringBuilder sb = new();
+            sb.AppendLine($"#{++i}. {teamName} ... {result.TeamResults.ScoreTotal}");
+
+            foreach ((int id, var playerResult) in result.PlayerResults)
+                sb.AppendLine($"\t Player {id + 1}: {playerResult.ScoreTotal} ({playerResult.Hits} hits)");
+
+            resultLine.Q<Label>().text = sb.ToString();
             resultsElement.Add(resultLine);
         }
     }
@@ -52,6 +62,7 @@ public class Leaderboard : MonoBehaviour, IInteractable
         InputSystem.EnableSinglePlayerInput(this.openingPlayer);
         InputSystem.DisableInputActionMapForPlayers("Player", enableOthers: false, this.openingPlayer);
         this.root.style.display = DisplayStyle.Flex;
+        this.exitButton.Focus();
     }
 
     private void Hide()

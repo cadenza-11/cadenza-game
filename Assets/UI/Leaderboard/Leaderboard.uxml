@@ -1,9 +1,9 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="root" style="background-color: rgba(0, 0, 0, 0.7); display: flex; flex-grow: 1; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px;">
-        <ui:VisualElement name="ribbon" style="flex-grow: 0; flex-direction: row; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; align-items: center;">
-            <ui:Button name="b_Exit" style="background-image: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=5866165431930342980&amp;guid=f95dbedc287fb481ca8a830e99c754e3&amp;type=3#Remove@2x&quot;); flex-shrink: 1; width: 80px; height: 80px;" />
+    <ui:VisualElement name="root" style="background-color: rgba(0, 0, 0, 0.7); display: flex; flex-grow: 1; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);">
+        <ui:VisualElement name="ribbon" style="flex-grow: 0; flex-direction: row; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; align-items: center; height: 100px;">
+            <ui:Button name="b_Exit" style="background-image: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=5866165431930342980&amp;guid=f95dbedc287fb481ca8a830e99c754e3&amp;type=3#Remove@2x&quot;); flex-shrink: 1; width: 80px; height: 80px; margin-right: 33px;" />
             <ui:Label text="Leaderboard" style="color: rgb(255, 255, 255); font-size: 70px; -unity-font-style: bold;" />
         </ui:VisualElement>
-        <ui:VisualElement name="results" style="flex-grow: 1;" />
+        <ui:ScrollView name="results" scroll-deceleration-rate="0.2" style="flex-grow: 1;" />
     </ui:VisualElement>
 </ui:UXML>
