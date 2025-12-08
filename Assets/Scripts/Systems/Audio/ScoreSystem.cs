@@ -247,7 +247,6 @@ namespace Cadenza
             double error = BeatSystem.GetLatency(timestamp + offset);
 
             ScoreDef score = new ScoreDef(timestamp + offset, error, player);
-            Debug.Log(score);
             return score;
         }
 
@@ -294,6 +293,7 @@ namespace Cadenza
         /// Takes the given latency, averages it with the previous
         /// latency values for the given player, and stores the value in player.
         /// </summary>
+        /// <param name="latency">The latency value, in seconds</param>
         public static void AddInputLatencyForPlayer(Player player, double latency)
         {
             // If this is the first data point, use this latency as the mean.
@@ -307,20 +307,11 @@ namespace Cadenza
         }
 
         /// <summary>
-        /// Wipes all specified players' stored latencies to prepare for recalibration.
-        /// If no players are specified, calibration data will be reset for all players.
+        /// Wipes the specified player's stored latencies to prepare for recalibration.
         /// </summary>
-        /// <param name="players"></param>
-        public static void ResetCalibrationDataForPlayers(params Player[] players)
+        public static void ResetCalibrationDataForPlayer(Player player)
         {
-            if (players == null || players.Length == 0)
-            {
-                singleton.latencyByPlayer.Clear();
-                return;
-            }
-
-            foreach (var player in players)
-                singleton.latencyByPlayer.Remove(player);
+            singleton.latencyByPlayer.Remove(player);
         }
 
         #endregion

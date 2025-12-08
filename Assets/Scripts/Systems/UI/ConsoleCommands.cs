@@ -40,6 +40,9 @@ namespace Cadenza
                 case "team":
                     this.OnCommandTeam(args);
                     break;
+                case "player":
+                    this.OnCommandPlayer(args);
+                    break;
                 default:
                     break;
             }
@@ -108,6 +111,28 @@ namespace Cadenza
             {
                 _ = ApplicationController.SetSceneAsync(sceneIndex);
                 Debug.Log($"Loading scene with build index {sceneIndex}.");
+            }
+        }
+
+        private void OnCommandPlayer(string[] args)
+        {
+            if (args.Length < 2
+                || !int.TryParse(args[0], out int playerID)
+                || !PlayerSystem.TryGetPlayerByID(playerID, out Player player))
+            {
+                return;
+            }
+
+            switch (args[1])
+            {
+                case "latency":
+                    if (args.Length >= 3 && int.TryParse(args[2], out int latency))
+                    {
+                        ScoreSystem.ResetCalibrationDataForPlayer(player);
+                        ScoreSystem.AddInputLatencyForPlayer(player, latency / 1000f);
+                        Debug.Log($"Set latency for player (id={playerID}) to {latency}ms");
+                    }
+                    break;
             }
         }
 

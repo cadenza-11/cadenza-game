@@ -57,5 +57,5 @@ MonoBehaviour:
     greatScoreValue: 50
     okScoreValue: 25
     badScoreValue: 10
-  enableCalibration: 0
+  enableCalibration: 1
   latencyAlpha: 0.5

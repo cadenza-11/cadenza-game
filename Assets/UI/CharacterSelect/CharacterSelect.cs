@@ -354,7 +354,7 @@ namespace Cadenza
                 {
                     tracker.Elements.CalibrationContainer.Q<VisualElement>("phase_Calibrating").style.display = DisplayStyle.None;
                     tracker.Elements.CalibrationContainer.Q<VisualElement>("phase_Results").style.display = DisplayStyle.Flex;
-                    tracker.Elements.CalibrationContainer.Q<Label>("update_Latency").text = ScoreSystem.GetInputLatencyForPlayer(player).ToString();
+                    tracker.Elements.CalibrationContainer.Q<Label>("update_Latency").text = ((int)(player.Latency * 1000)).ToString();
                     tracker.Phase = SelectPhase.CalibratingDone;
                     this.ShowPhase(tracker.Elements, SelectPhase.CalibratingDone);
                 }
