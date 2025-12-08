@@ -53,11 +53,10 @@ namespace Cadenza
         }
 
         /// <summary>
-        /// Disables all players' input except for a single player.
+        /// Disables all players' UI input except for a single player.
         /// </summary>
         public static void EnableSinglePlayerInput(Player player)
         {
-            EnableInputActionMapForPlayers("Player", disableOthers: true, player);
             EnableInputActionMapForPlayers("UI", disableOthers: true, player);
             singleton.uiInputModule.actionsAsset = player.Input.actions;
         }

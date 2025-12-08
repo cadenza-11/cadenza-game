@@ -210,6 +210,7 @@ namespace Cadenza
                     this.ShowPhase(foundPlayer.Elements, SelectPhase.CharacterSelection);
                     foundPlayer.Phase = SelectPhase.CharacterSelection;
                     this.playerPhases[player] = foundPlayer;
+                    this.playersReady--;
                     break;
 
                 default:
