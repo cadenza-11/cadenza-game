@@ -274,6 +274,7 @@ namespace Cadenza
         public void StartTeamAttk()
         {
             TeamAttackInitiated?.Invoke();
+            AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 4, immediate: true);
         }
         public void JoinTeamAttk()
         {
