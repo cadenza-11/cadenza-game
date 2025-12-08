@@ -1,5 +1,3 @@
-using System;
-using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace Cadenza
@@ -8,6 +6,7 @@ namespace Cadenza
     {
         protected CadenzaActions Inputs;
         protected TemplateContainer root;
+        public UIPanel previousPanel;
 
         public virtual void Show()
         {

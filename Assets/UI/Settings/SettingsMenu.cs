@@ -88,6 +88,12 @@ namespace Cadenza
             BeatSystem.BeatPlayed -= () => this.blinker.ToggleInClassList("blink");
             AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
             this.root.style.display = DisplayStyle.None;
+
+            if (this.previousPanel != null)
+            {
+                this.previousPanel.Show();
+                this.previousPanel = null;
+            }
         }
 
         #endregion
