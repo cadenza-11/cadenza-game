@@ -12,12 +12,14 @@
     height: 100%;
     -unity-background-scale-mode: scale-to-fit;
     background-color: rgb(26, 26, 26);
-    margin-top: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;
-    margin-left: 20px;
     width: auto;
     font-size: 23px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    background-size: cover;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&guid=e3265ab4bf004d28a9537516768c1c75&type=3#LiberationSans");
 }
 
 .tab-button {
@@ -26,7 +28,7 @@
     border-top-right-radius: 21px;
     border-bottom-right-radius: 21px;
     border-bottom-left-radius: 21px;
-    -unity-font-style: normal;
+    -unity-font-style: bold;
     width: 1000px;
 }
 
@@ -45,4 +47,12 @@ Slider {
     font-size: 30px;
     width: 75%;
     align-self: center;
+}
+
+Button:focus {
+    background-color: rgb(255, 110, 0);
+}
+
+Button:hover {
+    background-color: rgb(255, 138, 0);
 }

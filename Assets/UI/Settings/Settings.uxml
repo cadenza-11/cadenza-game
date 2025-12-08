@@ -1,6 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Settings/Settings.uss?fileID=7433441132597879392&amp;guid=b5e1e074dd830e4428a37e9aabfb347d&amp;type=3#Settings" />
-    <ui:VisualElement name="root" class="root" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;">
+    <ui:VisualElement name="root" class="root">
         <ui:VisualElement name="ribbon" style="flex-direction: row;">
             <ui:Button name="b_Back" icon-image="project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=5866165431930342980&amp;guid=f95dbedc287fb481ca8a830e99c754e3&amp;type=3#Remove@2x" style="font-size: 50px; align-self: flex-start; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;" />
             <ui:VisualElement name="tab-buttons" style="flex-grow: 1; flex-direction: row; justify-content: space-between; width: 100%;">

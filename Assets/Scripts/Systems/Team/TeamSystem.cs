@@ -14,7 +14,7 @@ namespace Cadenza
         private const string DefaultTeamName = "Unnamed Team";
 
         public static Team Team => team;
-        public static string TeamName => team?.Name;
+        public static string TeamName => team?.Name ?? DefaultTeamName;
         private static Team team = null;
 
         public static Team CreateTeam(string name)
@@ -26,6 +26,7 @@ namespace Cadenza
                 Guid = Guid.NewGuid()
             };
             SaveSystem.SaveTeamToFile(team);
+            SetTeam(team);
             return team;
         }
 

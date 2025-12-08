@@ -17,6 +17,7 @@ namespace Cadenza
         [Header("Assign in Inspector")]
         [SerializeField] private GameObject characterPrefab;
         [SerializeField] private int maxPlayersInRoster = 4;
+        [SerializeField] private CharacterClass[] characterClasses;
 
         private PlayerInputManager playerInputManager;
 
@@ -24,6 +25,7 @@ namespace Cadenza
         public static IReadOnlyDictionary<int, Player> PlayersByID => singleton.playersByID;
         public static int PlayerCount => singleton.playersByID.Count;
         public static Player[] Players => PlayersByID.Values.ToArray();
+        public static CharacterClass[] CharacterClasses => singleton.characterClasses;
 
         public static event Action<Player> PlayerJoined;
         public static event Action<Player> PlayerRemoved;
@@ -53,12 +55,17 @@ namespace Cadenza
                 this.SpawnPlayerBody(player);
 
             // Enable input.
-            foreach (var player in this.playersByID.Values)
-                player.Input.SwitchCurrentActionMap("Player");
+            InputSystem.DisableInputActionMapForPlayers("UI", enableOthers: false, Players);
+            InputSystem.EnableInputActionMapForPlayers("Player", disableOthers: true, Players);
         }
 
         public override void OnGameStop()
         {
+            // Disable input.
+            InputSystem.DisableInputActionMapForPlayers("Player", enableOthers: false, Players);
+            InputSystem.EnableInputActionMapForPlayers("UI", disableOthers: true, Players);
+
+            // Destroy player body.
             foreach (var player in this.playersByID.Values)
                 player.SetCharacter(null);
         }
@@ -100,7 +107,7 @@ namespace Cadenza
         /// </summary>
         public static void EnableJoining()
         {
-            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
+            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenJoinActionIsTriggered;
         }
 
 
@@ -156,7 +163,10 @@ namespace Cadenza
 
         private Character SpawnPlayerBody(Player player)
         {
-            var character = Instantiate(singleton.characterPrefab).GetComponent<Character>();
+            if (player == null || player.CharacterClass == null || player.CharacterClass.Prefab == null)
+                return null;
+
+            var character = Instantiate(player.CharacterClass.Prefab).GetComponent<Character>();
             player.SetCharacter(character);
 
             Debug.Log($"Player character body set to {character}. (id={player.ID})");

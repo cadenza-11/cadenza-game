@@ -8,6 +8,8 @@ namespace Cadenza
 
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private SettingsMenu settingsMenu;
+        private Button unpause;
+        private Label playerNumber;
 
         #region System Events
         public override void OnInitialize()
@@ -17,14 +19,16 @@ namespace Cadenza
             this.root.style.display = DisplayStyle.None;
 
             // Grab elements.
-            Button unpause = this.root.Q<Button>("b_Unpause");
-            unpause.clicked += ApplicationController.UnpauseGame;
+            this.unpause = this.root.Q<Button>("b_Unpause");
+            this.unpause.clicked += ApplicationController.UnpauseGame;
             Button settings = this.root.Q<Button>("b_Settings");
             settings.clicked += this.OnSettings;
             Button main = this.root.Q<Button>("b_MainMenu");
             main.clicked += this.OnMainMenu;
             Button exit = this.root.Q<Button>("b_Close");
             exit.clicked += this.OnExit;
+            this.playerNumber = this.root.Q<Label>("update_PlayerNumber");
+
             this.Hide();
 
             ApplicationController.GamePaused += this.OnGamePaused;
@@ -34,6 +38,7 @@ namespace Cadenza
         public override void Show()
         {
             this.root.style.display = DisplayStyle.Flex;
+            this.unpause.Focus();
         }
 
         public override void Hide()
@@ -47,6 +52,7 @@ namespace Cadenza
 
         private void OnGamePaused(Player player)
         {
+            this.playerNumber.text = (player.ID + 1).ToString();
             this.Show();
         }
 
@@ -57,6 +63,7 @@ namespace Cadenza
 
         private void OnSettings()
         {
+            this.settingsMenu.previousPanel = this;
             this.settingsMenu.Show();
         }
 

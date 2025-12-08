@@ -47,6 +47,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.PlayerSystem
   characterPrefab: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   maxPlayersInRoster: 4
+  characterClasses:
+  - {fileID: 11400000, guid: cda20754fcd514e8f8d90723ac11b9e5, type: 2}
+  - {fileID: 11400000, guid: a8016ff13eb5642c990da52e9c2eb5e0, type: 2}
+  - {fileID: 11400000, guid: ae8914c139d804a62b31a3c14bbf57d4, type: 2}
+  - {fileID: 11400000, guid: efd3ab957a08649749161d487cdc17d4, type: 2}
 --- !u!114 &7326972724028805928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,24 +85,24 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings:
       - m_Name: 
-        m_Id: c75a202e-145c-4d56-a0ca-47677ece04a7
-        m_Path: <Gamepad>/buttonSouth
-        m_Interactions: 
-        m_Processors: 
-        m_Groups: 
-        m_Action: Join
-        m_Flags: 0
-      - m_Name: 
-        m_Id: 0abd85d2-bf58-4324-8832-d35f40372ab6
-        m_Path: <Keyboard>/anyKey
-        m_Interactions: 
-        m_Processors: 
-        m_Groups: 
-        m_Action: Join
-        m_Flags: 0
-      - m_Name: 
         m_Id: 9d855729-7153-4acd-a54d-48bd6b608c80
         m_Path: <Mouse>/leftButton
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Join
+        m_Flags: 0
+      - m_Name: 
+        m_Id: 38808d5b-868a-4936-88ec-93fb9f77f311
+        m_Path: <Gamepad>/start
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Join
+        m_Flags: 0
+      - m_Name: 
+        m_Id: a29d8ade-eca7-4c84-b598-fa99660a2ff6
+        m_Path: <Keyboard>/anyKey
         m_Interactions: 
         m_Processors: 
         m_Groups: 
