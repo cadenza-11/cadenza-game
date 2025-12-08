@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -56,12 +55,17 @@ namespace Cadenza
                 this.SpawnPlayerBody(player);
 
             // Enable input.
-            foreach (var player in this.playersByID.Values)
-                player.Input.SwitchCurrentActionMap("Player");
+            InputSystem.DisableInputActionMapForPlayers("UI", enableOthers: false, Players);
+            InputSystem.EnableInputActionMapForPlayers("Player", disableOthers: true, Players);
         }
 
         public override void OnGameStop()
         {
+            // Disable input.
+            InputSystem.DisableInputActionMapForPlayers("Player", enableOthers: false, Players);
+            InputSystem.EnableInputActionMapForPlayers("UI", disableOthers: true, Players);
+
+            // Destroy player body.
             foreach (var player in this.playersByID.Values)
                 player.SetCharacter(null);
         }
