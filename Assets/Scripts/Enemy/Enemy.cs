@@ -67,12 +67,14 @@ namespace Cadenza
             {
                 this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
             }
-            if(this.curAngle > -90 && this.curAngle < 90)
+            if(this.curAngle * (180/Math.PI) > -90 && this.curAngle * (180/Math.PI) < 90)
             {
+                Debug.Log(this.curAngle * (180/Math.PI) + " No Rotation Needed");
                 this.Transform.rotation = Quaternion.Euler(0, 0, 0);
             }
             else
             {
+                Debug.Log("Turns Character to the left");
                 this.Transform.rotation = Quaternion.Euler(0, 180, 0);
             }
             //Handles Melee Attack animation
@@ -107,7 +109,8 @@ namespace Cadenza
         private void RangedAttack()
         {
             GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
-            projectileInstance.GetComponent<Projectile>().direction = (this.curAngle > -90 && this.curAngle < 90) ? true : false;
+            projectileInstance.GetComponent<Projectile>().direction = 
+                (this.curAngle * (180/Math.PI) > -90 && this.curAngle * (180/Math.PI) < 90) ? true : false;
             projectileInstance.GetComponent<Projectile>().speedSet = false;
             this.anim.SetTrigger("LightAttack");
         }
@@ -334,6 +337,7 @@ namespace Cadenza
         {
             this.rb.linearVelocity = Vector3.zero;
             this.FindNearestPlayerDist();
+            this.curAngle = (float)Math.Atan2(this.TargetLocation.y - this.transform.position.z, this.TargetLocation.x - this.transform.position.x);
             if(this.nearestPlayerDist > rangedDistance)
             {
                 this.curState = EnemyState.Idle;
