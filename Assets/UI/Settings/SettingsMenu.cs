@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -70,7 +71,7 @@ namespace Cadenza
         {
             base.Show();
 
-            BeatSystem.BeatPlayed += () => this.blinker.ToggleInClassList("blink");
+            BeatSystem.BeatPlayed += this.Blink;
             AudioSystem.SetParameter(AudioSystem.Param.LowPass, true);
             this.root.style.display = DisplayStyle.Flex;
 
@@ -82,10 +83,15 @@ namespace Cadenza
             this.backButton.Focus();
         }
 
+        private void Blink()
+        {
+            this.blinker.ToggleInClassList("blink");
+        }
+
         public override void Hide()
         {
             base.Hide();
-            BeatSystem.BeatPlayed -= () => this.blinker.ToggleInClassList("blink");
+            BeatSystem.BeatPlayed -= this.Blink;
             AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
             this.root.style.display = DisplayStyle.None;
 

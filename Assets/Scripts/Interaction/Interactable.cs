@@ -14,7 +14,7 @@ namespace Cadenza
         private IInteractable interactable;
         private readonly List<Player> interactingPlayers = new();
 
-        void Start()
+        void Awake()
         {
             this.interactable = this.GetComponent<IInteractable>();
         }
@@ -33,7 +33,7 @@ namespace Cadenza
             if (other.TryGetComponent(out Character character))
             {
                 character.Player.UnregisterInteract(this.interactable);
-                this.interactingPlayers.Add(character.Player);
+                this.interactingPlayers.Remove(character.Player);
             }
         }
 
@@ -41,6 +41,7 @@ namespace Cadenza
         {
             foreach (var player in this.interactingPlayers)
                 player.UnregisterInteract(this.interactable);
+            this.interactingPlayers.Clear();
         }
     }
 }
