@@ -88,5 +88,10 @@ namespace Cadenza
             }
             return -1;
         }
+
+        public static void ClearCharacterAssignments()
+        {
+            singleton.takenCharacters = new();
+        }
     }
 }

@@ -82,6 +82,7 @@ namespace Cadenza
         public override void Show()
         {
             this.playersReady = 0;
+            ClassManager.ClearCharacterAssignments();
             
             // Reset visuals.
             int i = 0;
@@ -110,6 +111,8 @@ namespace Cadenza
 
         public override void Hide()
         {
+
+            this.playerPhases = new();
             PlayerSystem.PlayerJoined -= this.OnPlayerJoined;
 
             base.Hide();
@@ -245,6 +248,14 @@ namespace Cadenza
             }
         }
 
+        public override void OnBeat()
+        {
+            foreach(VisualElement blinker in this.root.Query<VisualElement>("icon_Blinker").ToList())
+            {
+                blinker.ToggleInClassList("alt");
+            }
+        }
+
         #endregion
 
         #region Private Functions
@@ -307,7 +318,7 @@ namespace Cadenza
             if (phase == SelectPhase.Joining)
                 playerContainer.Container.RemoveFromClassList("joined");
             else
-                playerContainer.CalibrationContainer.AddToClassList("joined");
+                playerContainer.Container.AddToClassList("joined");
         }
 
         private void ChangeShownCharacter(VisualElement container, ClassManager.CharacterSelectInfo shownClass)
@@ -315,9 +326,10 @@ namespace Cadenza
             container.Q<Label>("update_CharacterName").text = shownClass.Class.Name;
             VisualElement portrait = container.Q<VisualElement>("portrait_Character");
             portrait.style.backgroundImage = shownClass.Class.Portrait;
-            portrait.RemoveFromClassList("taken");
+            VisualElement selector = container.Q<VisualElement>("c_CharacterPicker");
+            selector.RemoveFromClassList("taken");
             if (shownClass.IsTaken)
-                portrait.AddToClassList("taken");
+                selector.AddToClassList("taken");
         }
 
         private void RefreshShownCharacters()
@@ -340,7 +352,6 @@ namespace Cadenza
                 tracker.Elements.CalibrationContainer.Q<VisualElement>("phase_Calibrating").style.display = DisplayStyle.Flex;
                 tracker.Elements.CalibrationContainer.Q<VisualElement>("phase_Results").style.display = DisplayStyle.None;
                 this.ShowPhase(tracker.Elements, SelectPhase.CalibratingInProgress);
-                var blinker = tracker.Elements.CalibrationContainer.Q<VisualElement>("c_Blinker");
                 var attemptCounter = tracker.Elements.CalibrationContainer.Q<Label>("update_Counter");
                 if (tracker.CalibrationAttempts < this.TotalCalibrationAttempts)
                 {
@@ -348,7 +359,6 @@ namespace Cadenza
                     ScoreSystem.AddInputLatencyForPlayer(player, latency);
                     tracker.CalibrationAttempts++;
                     attemptCounter.text = tracker.CalibrationAttempts.ToString();
-                    blinker.ToggleInClassList("alt");
                 }
                 else if (tracker.CalibrationAttempts == this.TotalCalibrationAttempts)
                 {
@@ -403,7 +413,6 @@ namespace Cadenza
         {
             this.ResetContainers(player.ID, this.playerContainers[player.ID].Container);
             this.playerPhases.Remove(player);
-            this.playersReady--;
             if (player.ID == 0)
             {
                 this.startMenu.Show();

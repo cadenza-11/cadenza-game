@@ -10,7 +10,7 @@
                 <ui:Label text="/" name="txt_Slash" />
                 <ui:Label text="X" name="update_MaxAttempts" />
             </ui:VisualElement>
-            <ui:VisualElement name="c_Instructions" style="flex-grow: 1; flex-direction: row; justify-content: center;">
+            <ui:VisualElement name="c_Instructions" style="flex-direction: row; justify-content: center; flex-wrap: wrap;">
                 <ui:Label text="Press" name="txt_Press1" />
                 <ui:Label text="&lt;submit button&gt;" name="txt_TEMP_input" />
                 <ui:Label text="to the beat!" name="txt_Press2" />

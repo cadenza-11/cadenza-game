@@ -55,7 +55,7 @@
 }
 
 .focus_icon {
-    background-image: url("project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-1087164816274819069&guid=6c7fd4304507d004983595a79123c013&type=3#arrow-right@2x");
+    background-image: url('project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-1087164816274819069&guid=6c7fd4304507d004983595a79123c013&type=3#arrow-right@2x');
     -unity-background-scale-mode: scale-to-fit;
     height: auto;
     width: 100px;
@@ -74,4 +74,6 @@
 .start_menu_button:focus .button_text {
     color: var(--start-menu-color);
     -unity-font-style: bold;
+    -unity-text-outline-width: 3px;
+    -unity-text-outline-color: rgb(139, 69, 19);
 }
