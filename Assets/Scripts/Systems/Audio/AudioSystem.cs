@@ -70,6 +70,7 @@ namespace Cadenza
         [SerializeField] private EventReference playerOneShotsEvent;
         public static EventReference PlayerOneShotsEvent => singleton.playerOneShotsEvent;
         private HashSet<AudioEvent> beatSetOneShot;
+        private PlayerSounds playerSounds;
 
         private Bus masterBus;
         private Bus musicBus;
@@ -86,6 +87,16 @@ namespace Cadenza
 
             // Start loading all audio banks.
             this.StartCoroutine(this.LoadAllBanks());
+        }
+
+        public override void OnGameStart()
+        {
+            this.playerSounds?.OnGameStart();
+        }
+
+        public override void OnGameStop()
+        {
+            this.playerSounds?.OnGameStop();
         }
 
         public override void OnBeat()
@@ -133,6 +144,12 @@ namespace Cadenza
             bus.setVolume(Mathf.Clamp01(value));
         }
 
+        public static void SetInstrumentActive(CharacterClass characterClass, bool enabled)
+        {
+            if (characterClass != null)
+                RuntimeManager.StudioSystem.setParameterByName(characterClass.Name, enabled ? 1 : 0);
+        }
+
         public static void SetParameter(Param parameter, bool enabled)
         {
             string parameterName = parameter switch
@@ -159,38 +176,16 @@ namespace Cadenza
 
         private void BanksLoaded()
         {
-            // Register for player hit events.
-            PlayerSystem.PlayerHit += this.OnPlayerHit;
-            ScoreSystem.TeamHit += this.OnTeamHit;
-
             // Set up audio busses.
             this.masterBus = RuntimeManager.GetBus("bus:/Master");
             this.musicBus = RuntimeManager.GetBus("bus:/Master/Music");
             this.sfxBus = RuntimeManager.GetBus("bus:/Master/SFX");
 
+            this.playerSounds = new();
+            this.playerSounds.Initialize();
+
             Debug.Log("Loaded all banks from FMOD.");
         }
-
-        private void OnPlayerHit(ScoreDef def)
-        {
-            PlayOneShotWithParameter(PlayerOneShotsEvent, "ID", 0, immediate: true);
-        }
-
-        private void OnTeamHit(TeamScoreDef def)
-        {
-            int soundID = def.Class switch
-            {
-                ScoreClass.Bad => 0,
-                ScoreClass.OK => 0,
-                ScoreClass.Great => 1,
-                ScoreClass.Perfect => 2,
-                _ => 0,
-            };
-
-            if (soundID != 0)
-                PlayOneShotWithParameter(PlayerOneShotsEvent, "ID", soundID, immediate: true);
-        }
-
 
         #endregion
     }
