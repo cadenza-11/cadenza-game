@@ -205,6 +205,7 @@ namespace Cadenza
                     break;
 
                 case SelectPhase.Ready:
+                    AudioSystem.SetInstrumentActive(player.CharacterClass, false);
                     player.SetCharacterClass(null);
                     ClassManager.UnselectCharacter(player);
                     this.ShowPhase(foundPlayer.Elements, SelectPhase.CharacterSelection);
@@ -390,6 +391,7 @@ namespace Cadenza
 
             player.SetCharacterClass(selectedCharacter);
             this.ShowPhase(tracker.Elements, SelectPhase.Ready);
+            AudioSystem.SetInstrumentActive(selectedCharacter, true);
             tracker.Phase = SelectPhase.Ready;
             this.playerPhases[player] = tracker;
             this.ReadyPlayer();
