@@ -102,6 +102,11 @@ namespace Cadenza
                         Debug.Log("Turning off audio debug sounds.");
                     }
                     break;
+
+                case "metronome":
+                    if (bool.TryParse(args[1], out bool enabled))
+                        AudioSystem.SetMetronomeSoloed(enabled);
+                    break;
             }
         }
 

@@ -68,9 +68,15 @@ namespace Cadenza
         [SerializeField] private EventReference globalBeatEvent;
         [SerializeField] private EventReference beatCallbackDebugEvent;
         [SerializeField] private EventReference playerOneShotsEvent;
+
+        [Header("Metronome")]
+        [SerializeField] private EventReference metronomeEvent;
+        [SerializeField] private EventReference metronomeSnapshot;
         public static EventReference PlayerOneShotsEvent => singleton.playerOneShotsEvent;
         private HashSet<AudioEvent> beatSetOneShot;
         private PlayerSounds playerSounds;
+        private EventInstance metronomeEventInstance;
+        private EventInstance metronomeSnapshotInstance;
 
         private Bus masterBus;
         private Bus musicBus;
@@ -159,6 +165,26 @@ namespace Cadenza
             };
 
             RuntimeManager.StudioSystem.setParameterByName(parameterName, enabled ? 1 : 0);
+        }
+
+        public static void SetMetronomeSoloed(bool enabled)
+        {
+            // Play the metronome and change the snapshot, if not already playing.
+            if (!singleton.metronomeSnapshotInstance.isValid())
+                singleton.metronomeSnapshotInstance = RuntimeManager.CreateInstance(singleton.metronomeSnapshot);
+            if (!singleton.metronomeEventInstance.isValid())
+                singleton.metronomeEventInstance = RuntimeManager.CreateInstance(singleton.metronomeEvent);
+
+            if (enabled)
+            {
+                singleton.metronomeSnapshotInstance.start();
+                singleton.metronomeEventInstance.start();
+            }
+            else
+            {
+                singleton.metronomeSnapshotInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                singleton.metronomeEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            }
         }
 
         #endregion
