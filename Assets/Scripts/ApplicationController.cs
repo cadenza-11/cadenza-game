@@ -155,7 +155,12 @@ namespace Cadenza
             if (singleton.state == ApplicationState.Quitting)
                 return;
 
+#if UNITY_EDITOR
+            singleton.OnApplicationWantsToQuit();
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
             Application.Quit();
+#endif
         }
 
         #endregion
