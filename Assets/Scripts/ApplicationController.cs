@@ -129,8 +129,7 @@ namespace Cadenza
                 return;
 
             Time.timeScale = 0;
-            InputSystem.DisableInputActionMapForPlayers("Player", enableOthers: false, PlayerSystem.Players);
-            InputSystem.EnableInputActionMapForPlayers("UI", disableOthers: true, requestingPlayer);
+            InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, requestingPlayer);
 
             singleton.isPaused = true;
             Debug.Log($"{requestingPlayer.Name} (id={requestingPlayer.ID}) paused the game.");
@@ -142,7 +141,7 @@ namespace Cadenza
             if (State != ApplicationState.GameSession || !singleton.isPaused)
                 return;
 
-            InputSystem.EnableInputActionMapForPlayers("Player", disableOthers: false, PlayerSystem.Players);
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
             Time.timeScale = 1;
 
             singleton.isPaused = false;

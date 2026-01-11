@@ -55,15 +55,13 @@ namespace Cadenza
                 this.SpawnPlayerBody(player);
 
             // Enable input.
-            InputSystem.DisableInputActionMapForPlayers("UI", enableOthers: false, Players);
-            InputSystem.EnableInputActionMapForPlayers("Player", disableOthers: true, Players);
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
         }
 
         public override void OnGameStop()
         {
             // Disable input.
-            InputSystem.DisableInputActionMapForPlayers("Player", enableOthers: false, Players);
-            InputSystem.EnableInputActionMapForPlayers("UI", disableOthers: true, Players);
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
 
             // Destroy player body.
             foreach (var player in this.playersByID.Values)

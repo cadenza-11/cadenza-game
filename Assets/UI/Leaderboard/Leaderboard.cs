@@ -59,15 +59,14 @@ public class Leaderboard : MonoBehaviour, IInteractable
 
     private void Show()
     {
-        InputSystem.EnableSinglePlayerInput(this.openingPlayer);
-        InputSystem.DisableInputActionMapForPlayers("Player", enableOthers: false, this.openingPlayer);
+        InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, this.openingPlayer);
         this.root.style.display = DisplayStyle.Flex;
         this.exitButton.Focus();
     }
 
     private void Hide()
     {
-        InputSystem.EnableInputActionMapForPlayers("Player", disableOthers: false, PlayerSystem.Players);
+        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
         this.root.style.display = DisplayStyle.None;
     }
 }

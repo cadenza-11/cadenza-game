@@ -42,9 +42,6 @@ namespace Cadenza
         public override void Show()
         {
             base.Show();
-            PlayerSystem.TryGetPlayerByID(0, out Player player);
-            // if (player != null)
-            //     InputSystem.EnableSinglePlayerInput(player);
             this.root.style.display = DisplayStyle.Flex;
             this.randomizeName.Focus();
         }

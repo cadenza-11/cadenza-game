@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
@@ -11,6 +12,18 @@ namespace Cadenza
     [RequireComponent(typeof(InputSystemUIInputModule))]
     public class InputSystem : ApplicationSystem, CadenzaActions.IUIActions
     {
+        public enum InputMap
+        {
+            Player,
+            UI,
+        }
+
+        private static readonly Dictionary<InputMap, string> mapNames = new()
+        {
+            { InputMap.Player, "Player" },
+            { InputMap.UI, "UI" },
+        };
+
         private static InputSystem singleton;
 
         private CadenzaActions inputActions;
@@ -41,6 +54,40 @@ namespace Cadenza
 
         #region Public Static Methods
 
+        /// <summary>
+        /// Enables the requested input map on the host player and disables all
+        /// other input maps. Disables all input for players other than the host player.
+        /// </summary>
+        /// <param name="inputMap">The input map to enable</param>
+        /// <param name="hostPlayer">The player to give sole input</param>
+        public static void SwitchInputMapSinglePlayer(InputMap inputMap, Player hostPlayer)
+        {
+            Debug.Assert(mapNames.TryGetValue(inputMap, out string mapName));
+
+            foreach (var player in PlayerSystem.PlayersByID.Values)
+                player.Input.DeactivateInput();
+
+            hostPlayer.Input.SwitchCurrentActionMap(mapName);
+            hostPlayer.Input.ActivateInput();
+        }
+
+        /// <summary>
+        /// Enables the requested input map for all players
+        /// and disables all other input maps.
+        /// </summary>
+        /// <param name="inputMap">The input map to enable</param>
+        public static void SwitchInputMapMultiPlayer(InputMap inputMap)
+        {
+            Debug.Assert(mapNames.TryGetValue(inputMap, out string mapName));
+
+            foreach (var player in PlayerSystem.PlayersByID.Values)
+            {
+                player.Input.DeactivateInput();
+                player.Input.SwitchCurrentActionMap(mapName);
+                player.Input.ActivateInput();
+            }
+        }
+
         public static Player GetPlayerFromDevice(InputDevice device)
         {
             var user = InputUser.FindUserPairedToDevice(device);
@@ -50,39 +97,6 @@ namespace Cadenza
                     return player;
             }
             return null;
-        }
-
-        /// <summary>
-        /// Disables all players' UI input except for a single player.
-        /// </summary>
-        public static void EnableSinglePlayerInput(Player player)
-        {
-            EnableInputActionMapForPlayers("UI", disableOthers: true, player);
-            singleton.uiInputModule.actionsAsset = player.Input.actions;
-        }
-
-        public static void EnableInputActionMapForPlayers(string mapName, bool disableOthers, params Player[] players)
-        {
-            if (disableOthers)
-            {
-                foreach (var player in PlayerSystem.PlayersByID.Values)
-                    player.Input.actions.FindActionMap(mapName)?.Disable();
-            }
-
-            foreach (var player in players)
-                player.Input.actions.FindActionMap(mapName)?.Enable();
-        }
-
-        public static void DisableInputActionMapForPlayers(string mapName, bool enableOthers, params Player[] players)
-        {
-            if (enableOthers)
-            {
-                foreach (var player in PlayerSystem.PlayersByID.Values)
-                    player.Input.actions.FindActionMap(mapName)?.Enable();
-            }
-
-            foreach (var player in players)
-                player.Input.actions.FindActionMap(mapName)?.Disable();
         }
 
         #endregion

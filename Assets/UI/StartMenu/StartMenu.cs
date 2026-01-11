@@ -91,7 +91,7 @@ namespace Cadenza
             // Only get input from the first player to join the game.
             PlayerSystem.PlayerJoined -= this.OnPlayerJoined;
 
-            InputSystem.EnableSinglePlayerInput(player);
+            InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, player);
             PlayerSystem.DisableJoining();
             AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
 

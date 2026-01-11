@@ -83,7 +83,7 @@ namespace Cadenza
         {
             this.playersReady = 0;
             ClassManager.ClearCharacterAssignments();
-            
+
             // Reset visuals.
             int i = 0;
             foreach (VisualElement container in this.root.Query<VisualElement>("c_Player").ToList())
@@ -97,7 +97,7 @@ namespace Cadenza
                 this.OnPlayerJoined(player);
 
             // Create tracker for newly joined players.
-            InputSystem.EnableInputActionMapForPlayers("UI", disableOthers: false, PlayerSystem.Players);
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
             PlayerSystem.PlayerJoined += this.OnPlayerJoined;
             PlayerSystem.EnableJoining();
 
@@ -134,7 +134,7 @@ namespace Cadenza
                     CalibrationAttempts = 0,
                 };
                 this.playerPhases.Add(player, newTracker);
-            } 
+            }
             else
             {
                 if (this.playerPhases.TryGetValue(player, out PlayerTracker foundPlayer))
@@ -222,8 +222,8 @@ namespace Cadenza
         private void OnNavigation(InputAction.CallbackContext context)
         {
             var player = InputSystem.GetPlayerFromDevice(context.control.device);
-            if (player == null 
-                || !this.playerPhases.TryGetValue(player, out PlayerTracker foundPlayer) 
+            if (player == null
+                || !this.playerPhases.TryGetValue(player, out PlayerTracker foundPlayer)
                 || foundPlayer.Phase != SelectPhase.CharacterSelection)
                 return;
             Vector2 moveDirection = context.ReadValue<Vector2>();
@@ -235,10 +235,10 @@ namespace Cadenza
                     String currentChar = selection.Q<Label>("update_CharacterName").text;
                     this.ChangeShownCharacter
                     (
-                        selection, 
+                        selection,
                         (moveDirection.x > 0) ? ClassManager.GetNextCharacter(currentChar) : ClassManager.GetPreviousCharacter(currentChar)
                     );
-                    
+
                 }
                 else
                     Debug.LogWarning("There are no cosmetics.");
@@ -252,7 +252,7 @@ namespace Cadenza
 
         public override void OnBeat()
         {
-            foreach(VisualElement blinker in this.root.Query<VisualElement>("icon_Blinker").ToList())
+            foreach (VisualElement blinker in this.root.Query<VisualElement>("icon_Blinker").ToList())
             {
                 blinker.ToggleInClassList("alt");
             }
@@ -340,11 +340,11 @@ namespace Cadenza
             {
                 this.ChangeShownCharacter
                 (
-                    container, 
+                    container,
                     ClassManager.GetCharacter(container.Q<Label>("update_CharacterName").text)
                 );
             }
-            
+
         }
 
         private void Calibrate(Player player, PlayerTracker tracker)
