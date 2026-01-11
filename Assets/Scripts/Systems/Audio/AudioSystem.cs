@@ -93,6 +93,9 @@ namespace Cadenza
 
             // Start loading all audio banks.
             this.StartCoroutine(this.LoadAllBanks());
+
+            // Listen for beat.
+            BeatSystem.BeatPlayed += this.OnBeat;
         }
 
         public override void OnGameStart()
@@ -105,7 +108,7 @@ namespace Cadenza
             this.playerSounds?.OnGameStop();
         }
 
-        public override void OnBeat()
+        private void OnBeat()
         {
             // Dump (play) all queued one-shots.
             foreach (var evt in this.beatSetOneShot)

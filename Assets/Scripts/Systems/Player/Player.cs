@@ -6,7 +6,7 @@ namespace Cadenza
 {
     public class Player : MonoBehaviour
     {
-        #region Attributes
+        #region Public Variables
 
         public int ID { get; private set; }
         public CharacterClass CharacterClass { get; private set; }
@@ -24,13 +24,13 @@ namespace Cadenza
         private Action<InputAction.CallbackContext> interactCallback;
         private IInteractable currentInteractable;
 
-        #region Functions
-
         private void OnDestroy()
         {
             if (this.Character != null)
                 this.UnregisterCharacterCallbacks(this.Input.actions, this.Character);
         }
+
+        #region Public Methods
 
         internal void Initialize(int id, PlayerInput input)
         {
@@ -95,8 +95,11 @@ namespace Cadenza
             this.InteractChanged?.Invoke(null);
         }
 
+        #endregion
+        #region Input
         private void RegisterCharacterCallbacks(InputActionAsset actionMaps, CadenzaActions.IPlayerActions character)
         {
+            // Player map.
             var map = actionMaps.FindActionMap("Player", throwIfNotFound: true);
 
             var moveAction = map.FindAction("Move", throwIfNotFound: true);
@@ -116,12 +119,32 @@ namespace Cadenza
             attackSpecialAction.performed += character.OnAttackSpecial;
             attackTeamAction.performed += character.OnAttackTeam;
             pauseAction.performed += this.OnPause;
+
+            // UI map.
+            map = actionMaps.FindActionMap("UI", throwIfNotFound: true);
+            var toggleDebugAction = map.FindAction("Toggle/Debug", throwIfNotFound: true);
+            var unpauseAction = map.FindAction("Unpause", throwIfNotFound: true);
+
+            toggleDebugAction.performed += this.OnToggleDebug;
+            unpauseAction.performed += this.OnUnPause;
+        }
+
+        private void OnToggleDebug(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                DebugConsole.ToggleVisibility();
         }
 
         private void OnPause(InputAction.CallbackContext context)
         {
             if (context.performed)
-                ApplicationController.PauseGame(this);
+                GameManager.PauseGame(this);
+        }
+
+        private void OnUnPause(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                GameManager.UnpauseGame();
         }
 
         private void OnHit(InputAction.CallbackContext context)
@@ -135,6 +158,7 @@ namespace Cadenza
 
         private void UnregisterCharacterCallbacks(InputActionAsset actionMaps, CadenzaActions.IPlayerActions character)
         {
+            // Player map.
             var map = actionMaps.FindActionMap("Player", throwIfNotFound: true);
 
             var moveAction = map.FindAction("Move", throwIfNotFound: true);
@@ -149,6 +173,8 @@ namespace Cadenza
             attackHeavyAction.performed -= character.OnAttackHeavy;
             attackSpecialAction.performed -= character.OnAttackSpecial;
             attackTeamAction.performed -= character.OnAttackTeam;
+
+            // UI map.
         }
 
         #endregion

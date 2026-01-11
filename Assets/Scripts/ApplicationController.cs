@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,10 +18,6 @@ namespace Cadenza
         private ApplicationSystem[] systems;
         private ApplicationState state;
         public static ApplicationState State => singleton.state;
-        public static event Action<Player> GamePaused;
-        public static event Action GameUnpaused;
-        private bool isPaused;
-        public static bool IsPaused => singleton.isPaused;
 
         #region Unity Callbacks
 
@@ -76,12 +71,6 @@ namespace Cadenza
 
         private void StopGame()
         {
-            if (this.isPaused)
-            {
-                Time.timeScale = 1;
-                this.isPaused = false;
-            }
-
             foreach (var system in this.systems)
                 system.OnGameStop();
         }
@@ -95,15 +84,6 @@ namespace Cadenza
 
         #endregion
         #region Public Static Methods
-
-        /// This should be called only by the <see cref="BeatSystem"/>.
-        public static void PlayBeat()
-        {
-            foreach (var system in singleton.systems)
-            {
-                system.OnBeat();
-            }
-        }
 
         public static async Task SetSceneAsync(int sceneIndex)
         {
@@ -121,32 +101,6 @@ namespace Cadenza
         public static void ExitToPregame()
         {
             _ = SetSceneAsync(0);
-        }
-
-        public static void PauseGame(Player requestingPlayer)
-        {
-            if (State != ApplicationState.GameSession || singleton.isPaused || requestingPlayer == null)
-                return;
-
-            Time.timeScale = 0;
-            InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, requestingPlayer);
-
-            singleton.isPaused = true;
-            Debug.Log($"{requestingPlayer.Name} (id={requestingPlayer.ID}) paused the game.");
-            GamePaused?.Invoke(requestingPlayer);
-        }
-
-        public static void UnpauseGame()
-        {
-            if (State != ApplicationState.GameSession || !singleton.isPaused)
-                return;
-
-            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
-            Time.timeScale = 1;
-
-            singleton.isPaused = false;
-            Debug.Log("Game unpaused.");
-            GameUnpaused?.Invoke();
         }
 
         public static void RequestQuit()

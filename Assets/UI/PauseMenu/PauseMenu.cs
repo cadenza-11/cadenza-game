@@ -20,7 +20,7 @@ namespace Cadenza
 
             // Grab elements.
             this.unpause = this.root.Q<Button>("b_Unpause");
-            this.unpause.clicked += ApplicationController.UnpauseGame;
+            this.unpause.clicked += GameManager.UnpauseGame;
             Button settings = this.root.Q<Button>("b_Settings");
             settings.clicked += this.OnSettings;
             Button main = this.root.Q<Button>("b_MainMenu");
@@ -31,8 +31,8 @@ namespace Cadenza
 
             this.Hide();
 
-            ApplicationController.GamePaused += this.OnGamePaused;
-            ApplicationController.GameUnpaused += this.OnGameUnpaused;
+            GameManager.GamePaused += this.OnGamePaused;
+            GameManager.GameUnpaused += this.OnGameUnpaused;
         }
 
         public override void Show()

@@ -27,9 +27,5 @@ namespace Cadenza
         public virtual void OnUpdate()
         {
         }
-
-        public virtual void OnBeat()
-        {
-        }
     }
 }

@@ -48,26 +48,6 @@ namespace Cadenza
             this.playerInputManager.onPlayerLeft += this.OnPlayerLeft;
         }
 
-        public override void OnGameStart()
-        {
-            // Spawn player body.
-            foreach (var player in this.playersByID.Values)
-                this.SpawnPlayerBody(player);
-
-            // Enable input.
-            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
-        }
-
-        public override void OnGameStop()
-        {
-            // Disable input.
-            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
-
-            // Destroy player body.
-            foreach (var player in this.playersByID.Values)
-                player.SetCharacter(null);
-        }
-
         #endregion
         #region Public Static Methods
 
@@ -117,14 +97,36 @@ namespace Cadenza
             singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
         }
 
-        public static int GetCharacterCurrentHealth(int playerID)
+        public static Character SpawnPlayerBody(Player player)
         {
-            return PlayersByID[playerID].Character.GetCurHealth();
+            if (player == null || player.CharacterClass == null || player.CharacterClass.Prefab == null)
+            {
+                Debug.Log("Failed to spawn body for player.");
+                return null;
+            }
+            if (player.Character != null)
+            {
+                Debug.Log("Player already has a body.");
+                return player.Character;
+            }
+
+            var character = Instantiate(player.CharacterClass.Prefab).GetComponent<Character>();
+            player.SetCharacter(character);
+
+            Debug.Log($"Player character body set to {character}. (id={player.ID})");
+            PlayerSpawned?.Invoke(player);
+            return character;
         }
 
-        public static int GetCharacterMaxHealth(int playerID)
+        public static void DespawnPlayerBody(Player player)
         {
-            return PlayersByID[playerID].Character.GetCurHealth();
+            if (player == null)
+            {
+                Debug.Log("Failed to spawn body for player.");
+                return;
+            }
+
+            player.SetCharacter(null);
         }
 
         #endregion
@@ -157,19 +159,6 @@ namespace Cadenza
             PlayerRemoved?.Invoke(player);
 
             Destroy(player);
-        }
-
-        private Character SpawnPlayerBody(Player player)
-        {
-            if (player == null || player.CharacterClass == null || player.CharacterClass.Prefab == null)
-                return null;
-
-            var character = Instantiate(player.CharacterClass.Prefab).GetComponent<Character>();
-            player.SetCharacter(character);
-
-            Debug.Log($"Player character body set to {character}. (id={player.ID})");
-            PlayerSpawned?.Invoke(player);
-            return character;
         }
 
         #endregion

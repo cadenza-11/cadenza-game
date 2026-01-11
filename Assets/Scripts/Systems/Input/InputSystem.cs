@@ -10,7 +10,7 @@ namespace Cadenza
     /// Handles enabling and disabling of input actions, input action maps, and player input.
     /// </summary>
     [RequireComponent(typeof(InputSystemUIInputModule))]
-    public class InputSystem : ApplicationSystem, CadenzaActions.IUIActions
+    public class InputSystem : ApplicationSystem
     {
         public enum InputMap
         {
@@ -26,10 +26,7 @@ namespace Cadenza
 
         private static InputSystem singleton;
 
-        private CadenzaActions inputActions;
-        private CadenzaActions.UIActions uiInputMap;
         private InputSystemUIInputModule uiInputModule;
-        public static CadenzaActions.UIActions UIInputMap => singleton.uiInputMap;
         public static InputSystemUIInputModule UIInputModule => singleton.uiInputModule;
 
         public override void OnInitialize()
@@ -37,19 +34,7 @@ namespace Cadenza
             Debug.Assert(singleton == null);
             singleton = this;
 
-            // Configure input maps.
-            this.inputActions = new CadenzaActions();
-
-            this.uiInputMap = this.inputActions.UI;
-            this.uiInputMap.AddCallbacks(this);
-            this.uiInputMap.Enable();
-
             this.uiInputModule = this.GetComponent<InputSystemUIInputModule>();
-        }
-
-        public override void OnApplicationStop()
-        {
-            this.uiInputMap.Disable();
         }
 
         #region Public Static Methods
@@ -97,56 +82,6 @@ namespace Cadenza
                     return player;
             }
             return null;
-        }
-
-        #endregion
-        #region UI Interface Methods
-
-        public void OnNavigate(InputAction.CallbackContext context)
-        {
-        }
-
-        public void OnSubmit(InputAction.CallbackContext context)
-        {
-        }
-
-        public void OnCancel(InputAction.CallbackContext context)
-        {
-        }
-
-        public void OnPoint(InputAction.CallbackContext context)
-        {
-        }
-
-        public void OnClick(InputAction.CallbackContext context)
-        {
-        }
-
-        public void OnRightClick(InputAction.CallbackContext context)
-        {
-        }
-
-        public void OnMiddleClick(InputAction.CallbackContext context)
-        {
-        }
-
-        public void OnScrollWheel(InputAction.CallbackContext context)
-        {
-        }
-
-        public void OnToggleDebug(InputAction.CallbackContext context)
-        {
-            DebugConsole.ToggleVisibility();
-        }
-
-        public void OnJoin(InputAction.CallbackContext context)
-        {
-        }
-
-        public void OnUnpause(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                ApplicationController.UnpauseGame();
         }
 
         #endregion

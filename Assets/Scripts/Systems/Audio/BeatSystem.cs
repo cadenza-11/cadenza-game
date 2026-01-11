@@ -290,8 +290,6 @@ namespace Cadenza
 
         private void OnFixedBeat()
         {
-            // Notify systems.
-            ApplicationController.PlayBeat();
             BeatPlayed?.Invoke();
 
             // Play debug sound.

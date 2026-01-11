@@ -122,8 +122,6 @@ namespace Cadenza
 
         private int[] playerIdScratch;
         private double[] timestampScratch;
-        private string teamName;
-
         private Dictionary<Player, double> latencyByPlayer;
         private Dictionary<int, ScoreDef> playerHitsThisBeat;
         private Results results;
@@ -155,7 +153,9 @@ namespace Cadenza
             // Prepare streaks.
             this.currentStreak = 0;
 
+            // Listen for events.
             PlayerSystem.PlayerHit += this.OnPlayerHit;
+            BeatSystem.BeatPlayed += this.OnBeat;
         }
 
         public override void OnGameStop()
@@ -167,7 +167,7 @@ namespace Cadenza
             }
         }
 
-        public override void OnBeat()
+        private void OnBeat()
         {
             if (ApplicationController.State != ApplicationState.GameSession)
                 return;

@@ -59,7 +59,7 @@ namespace Cadenza
         private Dictionary<Player, PlayerTracker> playerPhases = new();
         private InputAction submitAction;
         private InputAction cancelAction;
-        private InputAction navigationAction;
+        private InputAction moveAction;
 
         private int playersReady = 0;
 
@@ -73,10 +73,12 @@ namespace Cadenza
             this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
             this.root.style.display = DisplayStyle.None;
 
-            this.submitAction = InputSystem.UIInputMap.Get().FindAction("Submit", throwIfNotFound: true);
-            this.cancelAction = InputSystem.UIInputMap.Get().FindAction("Cancel", throwIfNotFound: true);
-            this.navigationAction = InputSystem.UIInputMap.Get().FindAction("Navigate", throwIfNotFound: true);
-            this.root.style.display = DisplayStyle.None;
+            this.submitAction = InputSystem.UIInputModule.submit.action;
+            this.cancelAction = InputSystem.UIInputModule.cancel.action;
+            this.moveAction = InputSystem.UIInputModule.move.action;
+
+            // Listen for beat.
+            BeatSystem.BeatPlayed += this.OnBeat;
         }
 
         public override void Show()
@@ -104,7 +106,7 @@ namespace Cadenza
             base.Show();
             this.submitAction.performed += this.OnSubmit;
             this.cancelAction.performed += this.OnCancel;
-            this.navigationAction.performed += this.OnNavigation;
+            this.moveAction.performed += this.OnMove;
             ClassManager.CharacterTakenStatusChanged += this.RefreshShownCharacters;
             this.root.style.display = DisplayStyle.Flex;
         }
@@ -118,7 +120,7 @@ namespace Cadenza
             base.Hide();
             this.submitAction.performed -= this.OnSubmit;
             this.cancelAction.performed -= this.OnCancel;
-            this.navigationAction.performed -= this.OnNavigation;
+            this.moveAction.performed -= this.OnMove;
             ClassManager.CharacterTakenStatusChanged -= this.RefreshShownCharacters;
             this.root.style.display = DisplayStyle.None;
         }
@@ -219,7 +221,7 @@ namespace Cadenza
             }
         }
 
-        private void OnNavigation(InputAction.CallbackContext context)
+        private void OnMove(InputAction.CallbackContext context)
         {
             var player = InputSystem.GetPlayerFromDevice(context.control.device);
             if (player == null
@@ -250,7 +252,7 @@ namespace Cadenza
             }
         }
 
-        public override void OnBeat()
+        private void OnBeat()
         {
             foreach (VisualElement blinker in this.root.Query<VisualElement>("icon_Blinker").ToList())
             {

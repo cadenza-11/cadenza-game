@@ -1,0 +1,88 @@
+using System;
+using Cadenza;
+using UnityEngine;
+
+/// <summary>
+/// GameManager is reponsible for game flow and logic, including pausing,
+/// unpausing, and spawning players.
+/// </summary>
+public class GameManager : ApplicationSystem
+{
+    private static GameManager singleton;
+
+    #region Public Variables
+
+    public static event Action<Player> GamePaused;
+    public static event Action GameUnpaused;
+    public static bool IsPaused => singleton.isPaused;
+
+    #endregion
+
+    private bool isPaused;
+
+    #region Application Callbacks
+
+    public override void OnInitialize()
+    {
+        Debug.Assert(singleton == null);
+        singleton = this;
+    }
+
+    public override void OnGameStart()
+    {
+        // Spawn players.
+        foreach (var player in PlayerSystem.Players)
+            PlayerSystem.SpawnPlayerBody(player);
+
+        // Enable input.
+        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+    }
+
+    public override void OnGameStop()
+    {
+        // Unpause game.
+        if (this.isPaused)
+        {
+            Time.timeScale = 1;
+            this.isPaused = false;
+        }
+
+        // Disable input.
+        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
+
+        // Despawn players.
+        foreach (var player in PlayerSystem.Players)
+            PlayerSystem.DespawnPlayerBody(player);
+    }
+
+    #endregion
+    #region Public Static Methods
+
+    public static void PauseGame(Player requestingPlayer)
+    {
+        if (ApplicationController.State != ApplicationState.GameSession || singleton.isPaused || requestingPlayer == null)
+            return;
+
+        Time.timeScale = 0;
+        InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, requestingPlayer);
+
+        singleton.isPaused = true;
+        Debug.Log($"{requestingPlayer.Name} (id={requestingPlayer.ID}) paused the game.");
+        GamePaused?.Invoke(requestingPlayer);
+    }
+
+    public static void UnpauseGame()
+    {
+        if (ApplicationController.State != ApplicationState.GameSession || !singleton.isPaused)
+            return;
+
+        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+        Time.timeScale = 1;
+
+        singleton.isPaused = false;
+        Debug.Log("Game unpaused.");
+        GameUnpaused?.Invoke();
+    }
+
+    #endregion
+}
