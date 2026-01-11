@@ -72,7 +72,7 @@ namespace Cadenza
             base.Show();
 
             BeatSystem.BeatPlayed += this.Blink;
-            AudioSystem.SetParameter(AudioSystem.Param.LowPass, true);
+            AudioSystem.SetMetronomeSoloed(true);
             this.root.style.display = DisplayStyle.Flex;
 
             // TODO: move this elsewhere
@@ -92,7 +92,7 @@ namespace Cadenza
         {
             base.Hide();
             BeatSystem.BeatPlayed -= this.Blink;
-            AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
+            AudioSystem.SetMetronomeSoloed(false);
             this.root.style.display = DisplayStyle.None;
 
             if (this.previousPanel != null)
