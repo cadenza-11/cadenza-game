@@ -122,17 +122,8 @@ namespace Cadenza
 
             // UI map.
             map = actionMaps.FindActionMap("UI", throwIfNotFound: true);
-            var toggleDebugAction = map.FindAction("Toggle/Debug", throwIfNotFound: true);
             var unpauseAction = map.FindAction("Unpause", throwIfNotFound: true);
-
-            toggleDebugAction.performed += this.OnToggleDebug;
             unpauseAction.performed += this.OnUnPause;
-        }
-
-        private void OnToggleDebug(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                DebugConsole.ToggleVisibility();
         }
 
         private void OnPause(InputAction.CallbackContext context)

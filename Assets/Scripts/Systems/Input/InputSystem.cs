@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -27,7 +28,9 @@ namespace Cadenza
         private static InputSystem singleton;
 
         private InputSystemUIInputModule uiInputModule;
-        public static InputSystemUIInputModule UIInputModule => singleton.uiInputModule;
+        public static event Action<Player> UIPlayerSubmit;
+        public static event Action<Player> UIPlayerCancel;
+        public static event Action<Vector2, Player> UIPlayerNavigate;
 
         public override void OnInitialize()
         {
@@ -35,6 +38,31 @@ namespace Cadenza
             singleton = this;
 
             this.uiInputModule = this.GetComponent<InputSystemUIInputModule>();
+            PlayerSystem.PlayerJoined += this.OnPlayerJoined;
+        }
+
+        private void OnPlayerJoined(Player player)
+        {
+            this.RegisterPlayerNavigationEvents(player);
+            this.RegisterPlayerDebugEvents(player);
+        }
+
+        private void RegisterPlayerNavigationEvents(Player player)
+        {
+            // Register for per-player UI actions.
+            var submitAction = player.Input.actions.FindAction("Submit");
+            var cancelAction = player.Input.actions.FindAction("Cancel");
+            var navigateAction = player.Input.actions.FindAction("Navigate");
+
+            submitAction.performed += ctx => { if (ctx.performed) UIPlayerSubmit?.Invoke(player); };
+            cancelAction.performed += ctx => { if (ctx.performed) UIPlayerCancel?.Invoke(player); };
+            navigateAction.performed += ctx => { if (ctx.performed) UIPlayerNavigate?.Invoke(ctx.ReadValue<Vector2>(), player); };
+        }
+
+        private void RegisterPlayerDebugEvents(Player player)
+        {
+            var toggleDebugAction = player.Input.actions.FindAction("Toggle/Debug");
+            toggleDebugAction.performed += ctx => { if (ctx.performed) DebugConsole.ToggleVisibility(); };
         }
 
         #region Public Static Methods

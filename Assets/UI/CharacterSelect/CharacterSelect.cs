@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace Cadenza
@@ -57,9 +56,6 @@ namespace Cadenza
         private PlayerContainer[] playerContainers = new PlayerContainer[4];
 
         private Dictionary<Player, PlayerTracker> playerPhases = new();
-        private InputAction submitAction;
-        private InputAction cancelAction;
-        private InputAction moveAction;
 
         private int playersReady = 0;
 
@@ -72,10 +68,6 @@ namespace Cadenza
             // Set up UI.
             this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
             this.root.style.display = DisplayStyle.None;
-
-            this.submitAction = InputSystem.UIInputModule.submit.action;
-            this.cancelAction = InputSystem.UIInputModule.cancel.action;
-            this.moveAction = InputSystem.UIInputModule.move.action;
 
             // Listen for beat.
             BeatSystem.BeatPlayed += this.OnBeat;
@@ -104,23 +96,28 @@ namespace Cadenza
             PlayerSystem.EnableJoining();
 
             base.Show();
-            this.submitAction.performed += this.OnSubmit;
-            this.cancelAction.performed += this.OnCancel;
-            this.moveAction.performed += this.OnMove;
+
+            // Register for player input.
+            InputSystem.UIPlayerSubmit += this.OnSubmit;
+            InputSystem.UIPlayerCancel += this.OnCancel;
+            InputSystem.UIPlayerNavigate += this.OnMove;
+
             ClassManager.CharacterTakenStatusChanged += this.RefreshShownCharacters;
             this.root.style.display = DisplayStyle.Flex;
         }
 
         public override void Hide()
         {
-
             this.playerPhases = new();
             PlayerSystem.PlayerJoined -= this.OnPlayerJoined;
 
             base.Hide();
-            this.submitAction.performed -= this.OnSubmit;
-            this.cancelAction.performed -= this.OnCancel;
-            this.moveAction.performed -= this.OnMove;
+
+            // Unregister player input.
+            InputSystem.UIPlayerSubmit -= this.OnSubmit;
+            InputSystem.UIPlayerCancel -= this.OnCancel;
+            InputSystem.UIPlayerNavigate -= this.OnMove;
+
             ClassManager.CharacterTakenStatusChanged -= this.RefreshShownCharacters;
             this.root.style.display = DisplayStyle.None;
         }
@@ -147,14 +144,16 @@ namespace Cadenza
                 }
             }
             this.ShowPhase(this.playerContainers[player.ID], SelectPhase.CalibratingInProgress);
+
+            // Enable the new player's UI input.
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
         }
 
         #endregion
         #region Navigation Events
 
-        private void OnSubmit(InputAction.CallbackContext context)
+        private void OnSubmit(Player player)
         {
-            var player = InputSystem.GetPlayerFromDevice(context.control.device);
             if (player == null || !this.playerPhases.TryGetValue(player, out PlayerTracker foundPlayer))
                 return;
 
@@ -180,9 +179,8 @@ namespace Cadenza
             }
         }
 
-        private void OnCancel(InputAction.CallbackContext context)
+        private void OnCancel(Player player)
         {
-            var player = InputSystem.GetPlayerFromDevice(context.control.device);
             if (player == null || !this.playerPhases.TryGetValue(player, out PlayerTracker foundPlayer))
                 return;
 
@@ -221,14 +219,12 @@ namespace Cadenza
             }
         }
 
-        private void OnMove(InputAction.CallbackContext context)
+        private void OnMove(Vector2 moveDirection, Player player)
         {
-            var player = InputSystem.GetPlayerFromDevice(context.control.device);
             if (player == null
                 || !this.playerPhases.TryGetValue(player, out PlayerTracker foundPlayer)
                 || foundPlayer.Phase != SelectPhase.CharacterSelection)
                 return;
-            Vector2 moveDirection = context.ReadValue<Vector2>();
             VisualElement selection = foundPlayer.Elements.CharacterSelectionContainer;
             if (Math.Abs(moveDirection.x) >= Math.Abs(moveDirection.y) && Math.Abs(moveDirection.x) > 0.2f)
             {
