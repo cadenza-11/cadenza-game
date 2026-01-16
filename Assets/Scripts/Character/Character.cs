@@ -230,7 +230,7 @@ namespace Cadenza
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 2;
-            if(comboMove == (int)AttkEffect.Base_Smash)
+            if (comboMove == (int)AttkEffect.Base_Smash)
             {
                 this.slamArea.damage = damage;
                 this.slamArea.comboMove = comboMove;
@@ -274,7 +274,7 @@ namespace Cadenza
         public void StartTeamAttk()
         {
             TeamAttackInitiated?.Invoke();
-            AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 4, immediate: true);
+            AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 4, immediate: false);
         }
         public void JoinTeamAttk()
         {

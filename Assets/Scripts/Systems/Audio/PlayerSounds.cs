@@ -42,7 +42,7 @@ namespace Cadenza
             };
 
             if (soundID != 0)
-                AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", soundID, immediate: true);
+                AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", soundID, immediate: false);
         }
     }
 }
