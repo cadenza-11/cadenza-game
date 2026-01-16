@@ -23,10 +23,9 @@ namespace Cadenza
         }
 
         /// <summary>
-        /// Transitions the fader to a visible state. Optionally lingers for a given duration.
+        /// Transitions the fader to a visible state.
         /// </summary>
-        /// <param name="duration">The number of seconds to wait after the fader finishes its transition</param>
-        public static async Task ShowAsync(float duration = DefaultLingerDuration)
+        public static async Task ShowAsync()
         {
             // Do nothing if panel is already visible.
             if (singleton.fader.ClassListContains(SlideInClassName))
@@ -39,29 +38,33 @@ namespace Cadenza
             singleton.fader.RegisterCallbackOnce<TransitionEndEvent>(_ => transitionCompletion.TrySetResult(true));
             singleton.fader.AddToClassList(SlideInClassName);
 
+            AudioSystem.SetParameter("isFading", true);
+
             // Wait until transition completes.
-            await Task.Delay((int)(duration * 1000));
             await transitionCompletion.Task;
         }
 
         /// <summary>
-        /// Transitions the fader to an invisible state. Optionally lingers for a given duration.
+        /// Transitions the fader to an invisible state.
         /// </summary>
-        /// <param name="duration">The number of seconds to wait after the fader finishes its transition</param>
-        public static async Task HideAsync(float duration = DefaultLingerDuration)
+        public static async Task HideAsync()
         {
             // Panel must already be visible.
             if (!singleton.fader.ClassListContains(SlideInClassName))
                 return;
 
-            var transitionCompletion = new TaskCompletionSource<bool>();
+            // Wait for audio to transition out.
+            await BeatSystem.WaitForNextBeatAsync();
+            {
+                AudioSystem.SetParameter("isFading", false);
+            }
+            await BeatSystem.WaitForMarkerAsync("Menu");
 
             // Transition.
+            var transitionCompletion = new TaskCompletionSource<bool>();
             singleton.fader.RegisterCallbackOnce<TransitionEndEvent>(_ => transitionCompletion.TrySetResult(true));
             singleton.fader.AddToClassList(SlideOutClassName);
 
-            // Wait until transition completes.
-            await Task.Delay((int)(duration * 1000));
             await transitionCompletion.Task;
 
             singleton.Reset();

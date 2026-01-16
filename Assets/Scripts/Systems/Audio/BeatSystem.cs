@@ -8,6 +8,7 @@ using FMODUnity;
 using System.Globalization;
 using FMOD.Studio;
 using Unity.Mathematics;
+using System.Threading.Tasks;
 
 namespace Cadenza
 {
@@ -45,6 +46,7 @@ namespace Cadenza
         public delegate void BeatEventDelegate();
         public static event BeatEventDelegate BeatPlayed;
         public static event BeatEventDelegate UpBeatPlayed;
+        public static event BeatEventDelegate MeasurePassed;
 
         public delegate void TempoUpdateDelegate(float bpm);
         public static event TempoUpdateDelegate TempoChanged;
@@ -237,6 +239,48 @@ namespace Cadenza
             return Mathf.RoundToInt((float)(timestamp / beatPeriod));
         }
 
+        public static Task WaitForMarkerAsync(string markerName)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            void Handler(string markerPassed)
+            {
+                if (markerPassed != markerName)
+                    return;
+
+                MarkerPassed -= Handler;
+                tcs.TrySetResult(true);
+            }
+
+            MarkerPassed += Handler;
+            return tcs.Task;
+        }
+
+        public static Task WaitForNextMeasureAsync()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            void Handler()
+            {
+                MeasurePassed -= Handler;
+                tcs.TrySetResult(true);
+            }
+
+            MeasurePassed += Handler;
+            return tcs.Task;
+        }
+
+        public static Task WaitForNextBeatAsync()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            void Handler()
+            {
+                BeatPlayed -= Handler;
+                tcs.TrySetResult(true);
+            }
+
+            BeatPlayed += Handler;
+            return tcs.Task;
+        }
+
         #endregion
         #region Callback Methods
 
@@ -291,6 +335,8 @@ namespace Cadenza
         private void OnFixedBeat()
         {
             BeatPlayed?.Invoke();
+            if (this.timelineInfo.currentBeat == 1)
+                MeasurePassed?.Invoke();
 
             // Play debug sound.
             if (this.doDebugSounds && this.downbeatDebugSound != null)

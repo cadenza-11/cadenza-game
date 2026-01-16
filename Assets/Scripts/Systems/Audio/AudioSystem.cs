@@ -170,6 +170,11 @@ namespace Cadenza
             RuntimeManager.StudioSystem.setParameterByName(parameterName, enabled ? 1 : 0);
         }
 
+        public static void SetParameter(string parameterName, bool enabled)
+        {
+            RuntimeManager.StudioSystem.setParameterByName(parameterName, enabled ? 1 : 0);
+        }
+
         public static void SetMetronomeSoloed(bool enabled)
         {
             // Play the metronome and change the snapshot, if not already playing.
