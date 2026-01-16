@@ -1,21 +1,107 @@
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Cadenza
 {
-    public abstract class UIPanel : ApplicationSystem
+    public abstract class UIPanel : MonoBehaviour
     {
-        protected CadenzaActions Inputs;
-        protected TemplateContainer root;
-        public UIPanel previousPanel;
-
-        public virtual void Show()
+        public enum InputMode
         {
-            // InputSystem.UIInputMap.Enable();
+            None,
+            Single,
+            Multi,
         }
 
-        public virtual void Hide()
+        [SerializeField] public UIDocument uiDocument;
+        protected virtual InputMode UIInputMode { get; set; } = InputMode.None;
+        protected virtual bool IsWorldSpace { get; set; } = false;
+        protected virtual VisualElement InitialFocus { get; } = null;
+        protected TemplateContainer root;
+        private bool isInitialized;
+
+        public UIPanel previousPanel;
+
+        private bool isVisible => this.root.style.display == DisplayStyle.Flex;
+        public bool IsVisible => this.isVisible;
+
+        void Start()
         {
-            // InputSystem.UIInputMap.Disable();
+            if (this.IsWorldSpace && !this.isInitialized)
+                this.Initialize();
+        }
+
+        public void Initialize()
+        {
+            Debug.Assert(this.uiDocument != null);
+
+            if (this.isInitialized)
+                return;
+
+            this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
+            this.root.style.display = DisplayStyle.None;
+            this.isInitialized = true;
+            this.OnInitialize();
+        }
+
+        public void Show()
+        {
+            if (this.isVisible)
+                return;
+
+            this.root.style.display = DisplayStyle.Flex;
+            this.InitialFocus?.Focus();
+            this.OnShow();
+        }
+
+        public void Hide()
+        {
+            if (!this.isVisible)
+                return;
+
+            this.OnHide();
+            this.root.style.display = DisplayStyle.None;
+
+            if (this.previousPanel != null)
+            {
+                this.previousPanel.Show();
+                this.previousPanel = null;
+            }
+        }
+
+        public void Toggle()
+        {
+            if (this.isVisible)
+                this.Hide();
+            else
+                this.Show();
+        }
+
+        public virtual void OnShow()
+        {
+        }
+
+        public virtual void OnHide()
+        {
+        }
+
+        public virtual void OnInitialize()
+        {
+        }
+
+        public virtual void OnApplicationStop()
+        {
+        }
+
+        public virtual void OnGameStart()
+        {
+        }
+
+        public virtual void OnGameStop()
+        {
+        }
+
+        public virtual void OnUpdate()
+        {
         }
     }
 }

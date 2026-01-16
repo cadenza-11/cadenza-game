@@ -5,19 +5,14 @@ namespace Cadenza
 {
     public class PauseMenu : UIPanel
     {
-
-        [SerializeField] private UIDocument uiDocument;
         [SerializeField] private SettingsMenu settingsMenu;
+        protected override VisualElement InitialFocus => this.unpause;
         private Button unpause;
         private Label playerNumber;
 
         #region System Events
         public override void OnInitialize()
         {
-            // Set up UI.
-            this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
-            this.root.style.display = DisplayStyle.None;
-
             // Grab elements.
             this.unpause = this.root.Q<Button>("b_Unpause");
             this.unpause.clicked += GameManager.UnpauseGame;
@@ -33,17 +28,6 @@ namespace Cadenza
 
             GameManager.GamePaused += this.OnGamePaused;
             GameManager.GameUnpaused += this.OnGameUnpaused;
-        }
-
-        public override void Show()
-        {
-            this.root.style.display = DisplayStyle.Flex;
-            this.unpause.Focus();
-        }
-
-        public override void Hide()
-        {
-            this.root.style.display = DisplayStyle.None;
         }
 
         #endregion

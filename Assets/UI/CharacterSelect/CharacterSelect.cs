@@ -39,14 +39,12 @@ namespace Cadenza
 
         #region Serialized Fields
 
-        [SerializeField] private UIDocument uiDocument;
         [SerializeField] private StartMenu startMenu;
         [SerializeField] private BandNameSelect bandNameSelect;
         [SerializeField] private VisualTreeAsset joiningTemplate;
         [SerializeField] private VisualTreeAsset calibrationTemplate;
         [SerializeField] private VisualTreeAsset characterSelectionTemplate;
         [SerializeField] private VisualTreeAsset readyTemplate;
-
         [SerializeField] private int TotalCalibrationAttempts;
 
         #endregion
@@ -65,15 +63,11 @@ namespace Cadenza
 
         public override void OnInitialize()
         {
-            // Set up UI.
-            this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
-            this.root.style.display = DisplayStyle.None;
-
             // Listen for beat.
             BeatSystem.BeatPlayed += this.OnBeat;
         }
 
-        public override void Show()
+        public override void OnShow()
         {
             this.playersReady = 0;
             ClassManager.ClearCharacterAssignments();
@@ -95,23 +89,18 @@ namespace Cadenza
             PlayerSystem.PlayerJoined += this.OnPlayerJoined;
             PlayerSystem.EnableJoining();
 
-            base.Show();
-
             // Register for player input.
             InputSystem.UIPlayerSubmit += this.OnSubmit;
             InputSystem.UIPlayerCancel += this.OnCancel;
             InputSystem.UIPlayerNavigate += this.OnMove;
 
             ClassManager.CharacterTakenStatusChanged += this.RefreshShownCharacters;
-            this.root.style.display = DisplayStyle.Flex;
         }
 
-        public override void Hide()
+        public override void OnHide()
         {
             this.playerPhases = new();
             PlayerSystem.PlayerJoined -= this.OnPlayerJoined;
-
-            base.Hide();
 
             // Unregister player input.
             InputSystem.UIPlayerSubmit -= this.OnSubmit;
@@ -119,7 +108,6 @@ namespace Cadenza
             InputSystem.UIPlayerNavigate -= this.OnMove;
 
             ClassManager.CharacterTakenStatusChanged -= this.RefreshShownCharacters;
-            this.root.style.display = DisplayStyle.None;
         }
 
         private void OnPlayerJoined(Player player)

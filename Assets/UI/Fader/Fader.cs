@@ -8,7 +8,6 @@ namespace Cadenza
     {
         private static Fader singleton;
 
-        [SerializeField] private UIDocument uiDocument;
         private VisualElement fader;
         private const string SlideInClassName = "slide-in";
         private const string SlideOutClassName = "slide-out";
@@ -20,6 +19,7 @@ namespace Cadenza
             singleton = this;
 
             this.fader = this.uiDocument.rootVisualElement.Q<VisualElement>("fader");
+            this.Show();
         }
 
         /// <summary>

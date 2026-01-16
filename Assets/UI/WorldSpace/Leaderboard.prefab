@@ -179,6 +179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469e4c6238fef8047aa35497a31d4e72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Leaderboard
+  uiDocument: {fileID: 2778734844498184716}
+  previousPanel: {fileID: 0}
   resultLineAsset: {fileID: 9197481963319205126, guid: 717ff2d70b7374dcbb7435b859661e62, type: 3}
 --- !u!114 &324931734504573382
 MonoBehaviour:

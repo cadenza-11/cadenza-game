@@ -5,22 +5,21 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(UIDocument))]
-public class Leaderboard : MonoBehaviour, IInteractable
+public class Leaderboard : UIPanel, IInteractable
 {
     [SerializeField] VisualTreeAsset resultLineAsset;
 
-    private UIDocument uiDocument;
-    private VisualElement root;
+    protected override bool IsWorldSpace => true;
+    protected override InputMode UIInputMode => InputMode.Single;
+    protected override VisualElement InitialFocus => this.exitButton;
     private Button exitButton;
     private Player openingPlayer;
     private Results[] results;
 
-    void Start()
+    public override void OnInitialize()
     {
-        this.uiDocument = this.GetComponent<UIDocument>();
-        this.root = this.uiDocument.rootVisualElement;
-        this.root.style.display = DisplayStyle.None;
         this.root.RegisterCallback<NavigationCancelEvent>(_ => this.Hide(), TrickleDown.TrickleDown);
+        InputSystem.UIPlayerCancel += _ => this.Hide();
 
         // Configure exit button.
         this.exitButton = this.root.Q<Button>("b_Exit");
@@ -34,6 +33,7 @@ public class Leaderboard : MonoBehaviour, IInteractable
             .ToArray();
 
         var resultsElement = this.root.Q<VisualElement>("results");
+        resultsElement.focusable = false;
         int i = 0;
         foreach (var result in this.results)
         {
@@ -57,16 +57,13 @@ public class Leaderboard : MonoBehaviour, IInteractable
         this.Show();
     }
 
-    private void Show()
+    public override void OnShow()
     {
         InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, this.openingPlayer);
-        this.root.style.display = DisplayStyle.Flex;
-        this.exitButton.Focus();
     }
 
-    private void Hide()
+    public override void OnHide()
     {
         InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
-        this.root.style.display = DisplayStyle.None;
     }
 }

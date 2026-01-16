@@ -68,8 +68,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b72efcc10bd7a2e4da3830d02e77491e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.BandNameSelect
-  previousPanel: {fileID: 0}
   uiDocument: {fileID: 3070153359184090518}
+  previousPanel: {fileID: 0}
   articlesFile: {fileID: 4900000, guid: c956a6f114edd4a4e8c1abc10757e34b, type: 3}
   adjectivesFile: {fileID: 4900000, guid: b5d7ccde1ca3006439992a28baab5d5b, type: 3}
   nounsFile: {fileID: 4900000, guid: f0bc5dde8ea0cf7448c617e9b2c4391a, type: 3}
@@ -141,8 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4af36e30f21fd5468de0ba9fd3c85a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.StartMenu
-  previousPanel: {fileID: 0}
   uiDocument: {fileID: 9159775407750005689}
+  previousPanel: {fileID: 0}
   characterSelect: {fileID: 6621624212274879057}
   settingsMenu: {fileID: 7560857650547749923}
 --- !u!1 &2692221720898030820
@@ -154,6 +154,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1820362299702937105}
+  - component: {fileID: 1201447638351026186}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -184,6 +185,18 @@ Transform:
   - {fileID: 2470285422591770758}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1201447638351026186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692221720898030820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 926ad5dbfffaa924e95581443b447f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.UISystem
 --- !u!1 &2695232538160845436
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,8 +265,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a957ffe9021442f40be110a8603e7617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.PauseMenu
-  previousPanel: {fileID: 0}
   uiDocument: {fileID: 7893745333986377073}
+  previousPanel: {fileID: 0}
   settingsMenu: {fileID: 7560857650547749923}
 --- !u!1 &3937496575230460264
 GameObject:
@@ -323,8 +336,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92c04c57e5f0343d495abbc9dd265402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  previousPanel: {fileID: 0}
   uiDocument: {fileID: 556766289688551651}
+  previousPanel: {fileID: 0}
 --- !u!1 &4681667126806716365
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,8 +406,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4adb0a767fcf648cfbc9f4ff81c57364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.HUD
-  previousPanel: {fileID: 0}
   uiDocument: {fileID: 4779149712858911399}
+  previousPanel: {fileID: 0}
   durationToFull: 120
   fillAmount:
     perfectScoreMs: 5
@@ -469,8 +482,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77fc7eb709455b6449109b6a5c0fb989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterSelect
-  previousPanel: {fileID: 0}
   uiDocument: {fileID: 6410242120360780059}
+  previousPanel: {fileID: 0}
   startMenu: {fileID: 404073981900992975}
   bandNameSelect: {fileID: 2221361485290833675}
   joiningTemplate: {fileID: 9197481963319205126, guid: 6ee44ba837057d747af63936c731ab68, type: 3}
@@ -546,8 +559,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c1f0a3746ccc394eb3c77ee8bf2e701, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.SettingsMenu
-  previousPanel: {fileID: 0}
   uiDocument: {fileID: 1303972900527864231}
+  previousPanel: {fileID: 0}
 --- !u!1 &8024687789544267347
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,3 +630,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.DebugConsole
   uiDocument: {fileID: 2472185673363378710}
+  previousPanel: {fileID: 0}

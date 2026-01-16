@@ -5,10 +5,9 @@ using UnityEngine.UIElements;
 
 namespace Cadenza
 {
-    public class DebugConsole : ApplicationSystem
+    public class DebugConsole : UIPanel
     {
         private static DebugConsole singleton;
-        public static bool IsVisible => singleton.root.style.display == DisplayStyle.Flex;
 
         private struct DebugLine
         {
@@ -16,9 +15,7 @@ namespace Cadenza
             public Color color;
         }
 
-        [SerializeField] private UIDocument uiDocument;
-
-        private VisualElement root;
+        protected override VisualElement InitialFocus => this.textField;
         private ListView listView;
         private List<DebugLine> logs;
         private TextField textField;
@@ -28,9 +25,6 @@ namespace Cadenza
         {
             Debug.Assert(singleton == null);
             singleton = this;
-
-            // Set up UI.
-            this.root = this.uiDocument.rootVisualElement.Q("root");
 
             // Show Unity logs in console.
             this.listView = this.root.Q<ListView>();
@@ -57,19 +51,6 @@ namespace Cadenza
         public override void OnApplicationStop()
         {
             Application.logMessageReceived -= this.OnLogMessageReceived;
-        }
-
-        public static void ToggleVisibility()
-        {
-            if (IsVisible)
-            {
-                singleton.root.style.display = DisplayStyle.None;
-            }
-            else
-            {
-                singleton.root.style.display = DisplayStyle.Flex;
-                singleton.textField.Focus();
-            }
         }
 
         private void OnKeyDown(KeyDownEvent evt)

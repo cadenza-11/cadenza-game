@@ -1,27 +1,15 @@
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Cadenza
 {
-    public class InteractionIndicator : MonoBehaviour
+    public class InteractionIndicator : UIPanel
     {
-        [SerializeField] private UIDocument uiDocument;
+        protected override bool IsWorldSpace => true;
         private VisualElement indicator;
 
-        void Start()
+        public override void OnInitialize()
         {
-            var root = this.uiDocument.rootVisualElement;
-            this.indicator = root.Q("indicator");
-        }
-
-        public void Show()
-        {
-            this.indicator.style.display = DisplayStyle.Flex;
-        }
-
-        public void Hide()
-        {
-            this.indicator.style.display = DisplayStyle.None;
+            this.indicator = this.root.Q("indicator");
         }
 
         internal void OnPlayerInteractChanged(IInteractable interactable)
@@ -30,6 +18,16 @@ namespace Cadenza
                 this.Show();
             else
                 this.Hide();
+        }
+
+        public override void OnShow()
+        {
+            this.indicator.style.display = DisplayStyle.Flex;
+        }
+
+        public override void OnHide()
+        {
+            this.indicator.style.display = DisplayStyle.None;
         }
     }
 }

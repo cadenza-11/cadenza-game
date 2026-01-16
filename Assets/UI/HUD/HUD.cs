@@ -6,8 +6,6 @@ namespace Cadenza
 {
     public class HUD : UIPanel
     {
-        [SerializeField] private UIDocument uiDocument;
-
         [Header("Team Meter")]
         [Tooltip("How long should it take (in seconds) for the team meter to fill automatically?")]
         [SerializeField] private float durationToFull;
@@ -32,8 +30,7 @@ namespace Cadenza
 
         public override void OnInitialize()
         {
-            this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
-            this.root.style.display = DisplayStyle.None;
+            this.Hide();
 
             // Initialize team meter.
             this.teamMeter = this.root.Q<ProgressBar>("meter_TeamMeter");
@@ -64,11 +61,10 @@ namespace Cadenza
         public override void OnGameStart()
         {
             this.Show();
-            this.root.style.display = DisplayStyle.Flex;
 
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
-                if(PlayerSystem.TryGetPlayerByID(i, out Player player))
+                if (PlayerSystem.TryGetPlayerByID(i, out Player player))
                 {
                     this.healthBars[i].style.opacity = 1;
                     this.healthBars[i].Q<Label>("update_CharacterName").text = player.CharacterClass.Name;
@@ -90,7 +86,6 @@ namespace Cadenza
         public override void OnGameStop()
         {
             this.Hide();
-            this.root.style.display = DisplayStyle.None;
 
             this.teamMeter.value = 0;
 

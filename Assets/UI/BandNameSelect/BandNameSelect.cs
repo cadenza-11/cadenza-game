@@ -5,8 +5,6 @@ namespace Cadenza
 {
     public class BandNameSelect : UIPanel
     {
-
-        [SerializeField] private UIDocument uiDocument;
         [SerializeField] private TextAsset articlesFile;
         [SerializeField] private TextAsset adjectivesFile;
         [SerializeField] private TextAsset nounsFile;
@@ -21,10 +19,6 @@ namespace Cadenza
         #region System Events
         public override void OnInitialize()
         {
-            // Set up UI.
-            this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
-            this.root.style.display = DisplayStyle.None;
-
             // Grab elements.
             this.randomizeName = this.root.Q<Button>("b_RandomName");
             this.randomizeName.clicked += this.OnRandomizeName;
@@ -37,19 +31,6 @@ namespace Cadenza
             this.articles = this.articlesFile.text.Split('\n');
             this.adjectives = this.adjectivesFile.text.Split('\n');
             this.nouns = this.nounsFile.text.Split('\n');
-        }
-
-        public override void Show()
-        {
-            base.Show();
-            this.root.style.display = DisplayStyle.Flex;
-            this.randomizeName.Focus();
-        }
-
-        public override void Hide()
-        {
-            base.Hide();
-            this.root.style.display = DisplayStyle.None;
         }
 
         #endregion

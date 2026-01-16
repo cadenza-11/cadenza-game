@@ -1,14 +1,9 @@
-using System;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Cadenza
 {
     public class SettingsMenu : UIPanel
     {
-
-        [SerializeField] private UIDocument uiDocument;
-
         private VisualElement blinker;
         private Button[] tabButtons;
         private VisualElement[] tabViews;
@@ -18,10 +13,6 @@ namespace Cadenza
         #region System Events
         public override void OnInitialize()
         {
-            // Set up UI.
-            this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
-            this.root.style.display = DisplayStyle.None;
-
             // Configure tab buttons.
             var tabButtons = this.root.Q<VisualElement>("tab-buttons");
             this.tabButtons = new Button[tabButtons.childCount];
@@ -64,16 +55,12 @@ namespace Cadenza
             this.blinker = this.root.Q<VisualElement>("icon_Blinker");
 
             this.SwitchToTab(0);
-            this.Hide();
         }
 
-        public override void Show()
+        public override void OnShow()
         {
-            base.Show();
-
             BeatSystem.BeatPlayed += this.Blink;
             AudioSystem.SetMetronomeSoloed(true);
-            this.root.style.display = DisplayStyle.Flex;
 
             // TODO: move this elsewhere
             this.root.Q<Button>("b_DeleteSaveData").SetEnabled(
@@ -88,18 +75,11 @@ namespace Cadenza
             this.blinker.ToggleInClassList("blink");
         }
 
-        public override void Hide()
+        public override void OnHide()
         {
-            base.Hide();
+            UnityEngine.Debug.Log("Hiding");
             BeatSystem.BeatPlayed -= this.Blink;
             AudioSystem.SetMetronomeSoloed(false);
-            this.root.style.display = DisplayStyle.None;
-
-            if (this.previousPanel != null)
-            {
-                this.previousPanel.Show();
-                this.previousPanel = null;
-            }
         }
 
         #endregion

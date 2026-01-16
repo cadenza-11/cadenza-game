@@ -5,8 +5,6 @@ namespace Cadenza
 {
     public class StartMenu : UIPanel
     {
-
-        [SerializeField] private UIDocument uiDocument;
         [SerializeField] private UIPanel characterSelect;
         [SerializeField] private UIPanel settingsMenu;
 
@@ -17,15 +15,10 @@ namespace Cadenza
         private Button buttonLastRun;
         private Button buttonSettings;
         private Button buttonExit;
-        private bool isInitialized;
 
         #region System Events
         public override void OnInitialize()
         {
-            // Set up UI.
-            this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
-            this.root.style.display = DisplayStyle.None;
-
             this.containerJoin = this.root.Q<VisualElement>("phase_Join");
             this.containerOptions = this.root.Q<VisualElement>("phase_Select");
 
@@ -34,17 +27,23 @@ namespace Cadenza
             this.buttonSettings = this.root.Q<Button>("b_Settings");
             this.buttonExit = this.root.Q<Button>("b_Exit");
 
+            this.buttonStartGame.clicked += this.OnCharacterSelect;
+            this.buttonLastRun.clicked += this.OnLastRun;
+            this.buttonSettings.clicked += this.OnSettings;
+            this.buttonExit.clicked += this.OnExit;
+
             // Configure "continue last run" button.
             this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
             SaveSystem.TeamFileDeleted += () => this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
 
-            this.root.style.display = DisplayStyle.None;
+            this.Show();
         }
 
-        public override void Show()
+        public override void OnShow()
         {
             this.containerJoin.style.display = DisplayStyle.Flex;
             this.containerOptions.style.display = DisplayStyle.None;
+            AudioSystem.SetParameter(AudioSystem.Param.LowPass, true);
 
             // Give single-player input to the first player.
             if (PlayerSystem.PlayerCount < 1)
@@ -56,21 +55,11 @@ namespace Cadenza
             {
                 this.OnPlayerJoined(PlayerSystem.Players[0]);
             }
-
-            this.root.style.display = DisplayStyle.Flex;
-            AudioSystem.SetParameter(AudioSystem.Param.LowPass, true);
         }
 
-        public override void Hide()
+        public override void OnHide()
         {
-            base.Hide();
-            this.root.style.display = DisplayStyle.None;
             AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
-        }
-
-        public override void OnStart()
-        {
-            this.Show();
         }
 
         public override void OnGameStop()
@@ -91,22 +80,14 @@ namespace Cadenza
             // Only get input from the first player to join the game.
             PlayerSystem.PlayerJoined -= this.OnPlayerJoined;
 
-            InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, player);
-            PlayerSystem.DisableJoining();
-            AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
-
-            // Swap from Join phase to Options phase display
+            // Swap from Join phase to Options phase display.
             this.containerJoin.style.display = DisplayStyle.None;
             this.containerOptions.style.display = DisplayStyle.Flex;
+            AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
 
-            if (!this.isInitialized)
-            {
-                this.buttonStartGame.clicked += this.OnCharacterSelect;
-                this.buttonLastRun.clicked += this.OnLastRun;
-                this.buttonSettings.clicked += this.OnSettings;
-                this.buttonExit.clicked += this.OnExit;
-                this.isInitialized = true;
-            }
+            // Set multiplayer.
+            PlayerSystem.DisableJoining();
+            InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, player);
 
             this.buttonStartGame.Focus();
         }

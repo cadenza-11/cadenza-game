@@ -62,7 +62,7 @@ namespace Cadenza
         private void RegisterPlayerDebugEvents(Player player)
         {
             var toggleDebugAction = player.Input.actions.FindAction("Toggle/Debug");
-            toggleDebugAction.performed += ctx => { if (ctx.performed) DebugConsole.ToggleVisibility(); };
+            toggleDebugAction.performed += ctx => { if (ctx.performed) UISystem.FindPanel<DebugConsole>().Toggle(); };
         }
 
         #region Public Static Methods
