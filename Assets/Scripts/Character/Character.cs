@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cadenza.Combo;
 
 namespace Cadenza
 {
@@ -64,6 +65,8 @@ namespace Cadenza
 
         private int baseLight = 3;
         private int baseHeavy = 6;
+
+        public ComboManager ComboM;
 
         internal void SetPlayer(Player player)
         {
@@ -202,9 +205,9 @@ namespace Cadenza
             this.move = input;
         }
 
-        private void LightAttack(int damage, int comboMove)
+        private void LightAttack(int damage, AttkEffect comboMove)
         {
-            if (comboMove == 2)
+            if (comboMove == AttkEffect.Projectile)
             {
                 GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
                 projectileInstance.GetComponent<Projectile>().direction = this.direction;
@@ -297,12 +300,14 @@ namespace Cadenza
 
         public void OnAttackLight(InputAction.CallbackContext context)
         {
-            this.ComboManager((int)AttkTypes.Light);
+            ComboM.ProcessCombo(AttkTypes.Light, out var reward);
+            this.LightAttack(this.baseLight * reward.Multiplier, reward.AttackEffect);
+            //put enums in attack area with namespace
         }
 
         public void OnAttackHeavy(InputAction.CallbackContext context)
         {
-            this.ComboManager((int)AttkTypes.Heavy);
+            this.HeavyAttack(this.baseHeavy, (int)AttkEffect.None);
         }
 
         public void OnAttackSpecial(InputAction.CallbackContext context)
@@ -313,179 +318,6 @@ namespace Cadenza
         public void OnAttackTeam(InputAction.CallbackContext context)
         {
             this.StartTeamAttk();
-        }
-
-        #endregion
-        #region Combo Management
-        /// <summary>
-        /// All attacks go through the combo manager, which uses a series of switch statememnts to determine what part of the combo the attack falls in.
-        /// From there it triggers the attack, with aditional parameters passed for special moves or more damage.
-        /// A combo timer set up in update will reset the combo if there is too much time between the last attack and the next.
-        /// </summary>
-        /// <param name="attType"> The type of attack that is being done (0 for none, 1 for light, 2 for heavy) </param>
-        public void ComboManager(int attType)
-        {
-            for (int i = 0; i < 2; i++)
-            {
-                if (this.comboArray[i] != 0 && this.comboArray[i] != 1 && this.comboArray[i] != 2)
-                {
-                    this.comboArray[i] = (int)AttkTypes.None;
-                }
-            }
-
-            if (this.comboTimer >= 2.0f)
-            {
-                Debug.Log("Combo Timeout");
-                this.ResetCombo();
-            }
-            else
-            {
-                this.comboTimer = 0.0f;
-            }
-
-            switch (attType)
-            {
-                //No Attack Inputted, reset combo
-                case (int)AttkTypes.None:
-                    this.ResetCombo();
-                    break;
-
-                //Input Light
-                case (int)AttkTypes.Light:
-                    switch (this.comboArray[0])
-                    {
-                        //Light -> [None, None, None]
-                        case (int)AttkTypes.None:
-                            this.comboArray[0] = 1;
-                            this.comboWaiting = true;
-                            this.LightAttack(this.baseLight, (int)AttkEffect.None);
-                            break;
-
-                        //Light -> [Light, ?, None]
-                        case (int)AttkTypes.Light:
-                            switch (this.comboArray[1])
-                            {
-                                //1 -> [Light, None, None]
-                                case (int)AttkTypes.None:
-                                    this.comboArray[1] = 1;
-                                    this.LightAttack(this.baseLight, (int)AttkEffect.None);
-                                    break;
-
-                                //Light -> [Light, Light, None]
-                                case (int)AttkTypes.Light:
-                                    this.ResetCombo();
-                                    this.LightAttack((int)(this.baseLight * 1.5), (int)AttkEffect.Light_Knockback);
-                                    break;
-
-                                //Light -> [Light, Heavy, None]
-                                case (int)AttkTypes.Heavy:
-                                    this.ResetCombo();
-                                    this.LightAttack(this.baseLight, (int)AttkEffect.Projectile);
-                                    break;
-                            }
-                            break;
-
-                        case (int)AttkTypes.Heavy:
-                            switch (this.comboArray[1])
-                            {
-                                //Light -> [Heavy, None, None]
-                                case (int)AttkTypes.None:
-                                    this.comboArray[1] = 1;
-                                    this.LightAttack(this.baseLight * 2, (int)AttkEffect.None);
-                                    break;
-
-                                //Light -> [Heavy, Light, None]
-                                case (int)AttkTypes.Light:
-                                    this.ResetCombo();
-                                    this.LightAttack(this.baseLight * 2, (int)AttkEffect.None);
-                                    break;
-
-                                //Light -> [Heavy, Heavy, None]
-                                case (int)AttkTypes.Heavy:
-                                    this.ResetCombo();
-                                    this.LightAttack((int)(this.baseLight * 1.5), (int)AttkEffect.Heavy_Knockback);
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
-
-                //Input Heavy
-                case (int)AttkTypes.Heavy:
-                    switch (this.comboArray[0])
-                    {
-                        //Heavy -> [None, None, None]
-                        case (int)AttkTypes.None:
-                            this.comboArray[0] = 2;
-                            this.comboWaiting = true;
-                            this.HeavyAttack(this.baseHeavy, (int)AttkEffect.None);
-                            break;
-
-                        //Heavy -> [Light, ?, None]
-                        case (int)AttkTypes.Light:
-                            switch (this.comboArray[1])
-                            {
-                                //Heavy -> [Light, None, None]
-                                case (int)AttkTypes.None:
-                                    this.comboArray[1] = 2;
-                                    this.HeavyAttack(this.baseHeavy, (int)AttkEffect.None);
-                                    break;
-
-                                //Heavy -> [Light, Light, None]
-                                case (int)AttkTypes.Light:
-                                    this.ResetCombo();
-                                    this.HeavyAttack((int)(this.baseHeavy * 2), (int)AttkEffect.None);
-                                    break;
-
-                                //Heavy -> [Light, Heavy, None]
-                                case (int)AttkTypes.Heavy:
-                                    this.ResetCombo();
-                                    this.HeavyAttack((int)(this.baseHeavy * 0.5f), (int)AttkEffect.Area_Smash);
-                                    break;
-                            }
-                            break;
-
-                        case (int)AttkTypes.Heavy:
-                            switch (this.comboArray[1])
-                            {
-                                //Heavy -> [Heavy, None, None]
-                                case (int)AttkTypes.None:
-                                    this.comboArray[1] = 2;
-                                    this.HeavyAttack(this.baseHeavy, (int)AttkEffect.None);
-                                    break;
-
-                                //Heavy -> [Heavy, Light, None]
-                                case (int)AttkTypes.Light:
-                                    this.ResetCombo();
-                                    this.HeavyAttack((int)(this.baseHeavy * 1.5), (int)AttkEffect.None);
-                                    break;
-
-                                //Heavy -> [Heavy, Heavy, None]
-                                case (int)AttkTypes.Heavy:
-                                    this.ResetCombo();
-                                    this.HeavyAttack((int)(this.baseHeavy * 0.75f), (int)AttkEffect.Base_Smash);
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
-            }
-
-        }
-
-        public void ResetCombo()
-        {
-            this.comboWaiting = false;
-            this.comboTimer = 0.0f;
-            for (int i = 0; i < 2; i++)
-            {
-                this.comboArray[i] = (int)AttkTypes.None;
-            }
-            Debug.Log("Combo Reset");
-        }
-
-        public void OnPause(InputAction.CallbackContext context)
-        {
         }
 
         #endregion
