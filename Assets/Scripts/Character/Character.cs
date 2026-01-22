@@ -227,20 +227,20 @@ namespace Cadenza
             // Play animation
             this.anim.SetTrigger("LightAttack");
         }
-        private void HeavyAttack(int damage, int comboMove)
+        private void HeavyAttack(int damage, AttkEffect comboMove)
         {
             this.ManageAttackDirection();
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 2;
-            if (comboMove == (int)AttkEffect.Base_Smash)
+            if (comboMove == AttkEffect.Base_Smash)
             {
                 this.slamArea.damage = damage;
                 this.slamArea.comboMove = comboMove;
                 this.slamArea.gameObject.GetComponent<SphereCollider>().radius = 1;
                 this.slamArea.gameObject.SetActive(this.isAttacking);
             }
-            else if (comboMove == (int)AttkEffect.Area_Smash)
+            else if (comboMove == AttkEffect.Area_Smash)
             {
                 this.slamArea.damage = damage;
                 this.slamArea.comboMove = comboMove;
@@ -318,6 +318,11 @@ namespace Cadenza
         public void OnAttackTeam(InputAction.CallbackContext context)
         {
             this.StartTeamAttk();
+        }
+
+        public void OnPause(InputAction.CallbackContext context)
+        {
+
         }
 
         #endregion

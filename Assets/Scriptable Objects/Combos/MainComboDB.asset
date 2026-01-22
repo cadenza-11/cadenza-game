@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e154a82472029f648a575dd9b42b5ff9, type: 3}
   m_Name: MainComboDB
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Combo.ComboDatabase
-  ComboTimeout: 0
-  ComboDefinitions: []
+  ComboTimeout: 1
+  ComboDefinitions:
+  - {fileID: 11400000, guid: 99d5e36eb1835204dbcd00afda7e3b73, type: 2}
+  - {fileID: 0}
