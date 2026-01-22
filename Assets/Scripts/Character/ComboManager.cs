@@ -1,8 +1,3 @@
-using Cadenza;
-using NUnit.Framework;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Cadenza.Combo
@@ -21,7 +16,7 @@ namespace Cadenza.Combo
 
         public void Start()
         {
-            m_ComboRoot = ComboDB.BuildTree();
+            this.m_ComboRoot = this.ComboDB.BuildTree();
         }
 
         public bool ProcessCombo(AttkTypes move, out ComboReward reward)
@@ -32,39 +27,39 @@ namespace Cadenza.Combo
                 Multiplier = 1
             };
 
-            if (m_CurrentComboNode.Children.TryGetValue(move, out var next))
+            if (this.m_CurrentComboNode.Children.TryGetValue(move, out var next))
             {
-                m_InProgress = true;
-                m_CurrentComboNode = next;
+                this.m_InProgress = true;
+                this.m_CurrentComboNode = next;
 
-                if (m_CurrentComboNode.IsEnd)
+                if (this.m_CurrentComboNode.IsEnd)
                 {
-                    reward = m_CurrentComboNode.Reward;
-                    ResetComboProgress();
+                    reward = this.m_CurrentComboNode.Reward;
+                    this.ResetComboProgress();
                 }
 
                 return true;
             }
 
-            ResetComboProgress();
+            this.ResetComboProgress();
             return false;
         }
 
         private void ResetComboProgress()
         {
-            m_CurrentComboNode = m_ComboRoot;
-            m_InProgress = false;
-            m_Timer = ComboDB.ComboTimeout;
+            this.m_CurrentComboNode = this.m_ComboRoot;
+            this.m_InProgress = false;
+            this.m_Timer = this.ComboDB.ComboTimeout;
         }
 
         public void Update()
         {
-            if (!m_InProgress) return;
+            if (!this.m_InProgress) return;
 
-            m_Timer -= Time.deltaTime;
-            if (m_Timer <= 0)
+            this.m_Timer -= Time.deltaTime;
+            if (this.m_Timer <= 0)
             {
-                ResetComboProgress();
+                this.ResetComboProgress();
             }
         }
     }

@@ -10,12 +10,9 @@ namespace Cadenza
     /// </summary>
     public enum AttkEffect
     {
-        None, //Basic effect of attack
-        Light_Knockback, //Light knockback, performed after a L L L combo
-        Projectile, //Shoots a projectile forward, performed after a L H L combo
-        Area_Smash, //Larger but weaker ground slam, performed after a L H H combo
-        Heavy_Knockback, //Shoots a projectile forward, performed after a H H L combo
-        Base_Smash //Base AOE ground slam, performed after a H H H combo
+        None,
+        AbilityOne,
+        AbilityTwo
     }
 
     public enum AttkTypes
@@ -26,6 +23,7 @@ namespace Cadenza
     }
     public class Character : MonoBehaviour, CadenzaActions.IPlayerActions
     {
+        #region Variables
         [Header("Player Values")]
         [SerializeField] private float speed;
         [SerializeField] private float jumpForce;
@@ -46,6 +44,7 @@ namespace Cadenza
         [SerializeField] private AccuracyBar accuracyBar;
         [SerializeField] private InteractionIndicator interactionIndicator;
         [SerializeField] private GameObject projectile;
+        [SerializeField] private ComboManager ComboM;
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
@@ -65,8 +64,7 @@ namespace Cadenza
 
         private int baseLight = 3;
         private int baseHeavy = 6;
-
-        public ComboManager ComboM;
+        #endregion
 
         internal void SetPlayer(Player player)
         {
@@ -207,21 +205,21 @@ namespace Cadenza
 
         private void LightAttack(int damage, AttkEffect comboMove)
         {
-            if (comboMove == AttkEffect.Projectile)
+            this.ManageAttackDirection();
+            //Sets attacking to true and activated the hitbox for the attack
+            this.isAttacking = true;
+            this.attackMod = 1;
+            this.attackArea.damage = damage;
+            this.attackArea.comboMove = comboMove;
+            this.attackArea.gameObject.SetActive(this.isAttacking);
+
+            if (comboMove == AttkEffect.AbilityOne)
             {
-                GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
-                projectileInstance.GetComponent<Projectile>().direction = this.direction;
-                projectileInstance.GetComponent<Projectile>().speedSet = false;
+                this.AbilityOne();
             }
-            else
+            else if (comboMove == AttkEffect.AbilityTwo)
             {
-                this.ManageAttackDirection();
-                //Sets attacking to true and activated the hitbox for the attack
-                this.isAttacking = true;
-                this.attackMod = 1;
-                this.attackArea.damage = damage;
-                this.attackArea.comboMove = comboMove;
-                this.attackArea.gameObject.SetActive(this.isAttacking);
+                this.AbilityTwo();
             }
 
             // Play animation
@@ -233,6 +231,7 @@ namespace Cadenza
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 2;
+            /*
             if (comboMove == AttkEffect.Base_Smash)
             {
                 this.slamArea.damage = damage;
@@ -247,11 +246,18 @@ namespace Cadenza
                 this.slamArea.gameObject.GetComponent<SphereCollider>().radius = 1.5f;
                 this.slamArea.gameObject.SetActive(this.isAttacking);
             }
-            else
+            */
+            this.attackArea.damage = damage;
+            this.attackArea.comboMove = comboMove;
+            this.attackArea.gameObject.SetActive(this.isAttacking);
+
+            if (comboMove == AttkEffect.AbilityOne)
             {
-                this.attackArea.damage = damage;
-                this.attackArea.comboMove = comboMove;
-                this.attackArea.gameObject.SetActive(this.isAttacking);
+                this.AbilityOne();
+            }
+            else if (comboMove == AttkEffect.AbilityTwo)
+            {
+                this.AbilityTwo();
             }
 
             // Play animation
@@ -260,6 +266,8 @@ namespace Cadenza
 
         private void SpecialAttack()
         {
+            // Code kept just in case, but will be removing special attack at some point
+            /*
             if (this.direction == true)
             {
                 this.chargeForce = Mathf.Abs(this.chargeForce);
@@ -273,6 +281,7 @@ namespace Cadenza
             this.chargeArea.SetActive(this.isCharging);
             this.rb.linearVelocity = new Vector3(0.0f, 0.0f, 0.0f);
             this.rb.AddForce(Vector3.right * this.chargeForce, ForceMode.VelocityChange);
+            */
         }
         public void StartTeamAttk()
         {
@@ -307,7 +316,8 @@ namespace Cadenza
 
         public void OnAttackHeavy(InputAction.CallbackContext context)
         {
-            this.HeavyAttack(this.baseHeavy, (int)AttkEffect.None);
+            ComboM.ProcessCombo(AttkTypes.Heavy, out var reward);
+            this.HeavyAttack(this.baseHeavy * reward.Multiplier, reward.AttackEffect);
         }
 
         public void OnAttackSpecial(InputAction.CallbackContext context)
@@ -326,5 +336,15 @@ namespace Cadenza
         }
 
         #endregion
+
+        public void AbilityOne()
+        {
+
+        }
+
+        public void AbilityTwo()
+        {
+
+        }
     }
 }

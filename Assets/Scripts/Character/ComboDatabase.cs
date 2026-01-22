@@ -1,7 +1,3 @@
-using Cadenza;
-using NUnit.Framework;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +13,7 @@ namespace Cadenza.Combo
         {
             var root = new ComboNode();
 
-            foreach (var combo in ComboDefinitions)
+            foreach (var combo in this.ComboDefinitions)
             {
                 var current = root;
                 foreach (var move in combo.Moves)

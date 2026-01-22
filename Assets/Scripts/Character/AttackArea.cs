@@ -37,6 +37,8 @@ public class AttackArea : MonoBehaviour
             Enemy hitEntity = collider.gameObject.GetComponent<Enemy>();
             hitEntity.DoDamage(2);
         }
+        //Check back with this code in case you want to impliment knockback
+        /*
         switch (this.comboMove)
         {
             case AttkEffect.Light_Knockback:
@@ -64,7 +66,7 @@ public class AttackArea : MonoBehaviour
                 break;
 
         }
-
+        */
         this.comboMove = AttkEffect.None;
     }
 }
