@@ -339,12 +339,12 @@ namespace Cadenza
 
         public void AbilityOne()
         {
-
+            Debug.Log("Ability 1");
         }
 
         public void AbilityTwo()
         {
-
+            Debug.Log("Ability 2");
         }
     }
 }

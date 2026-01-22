@@ -17,6 +17,7 @@ namespace Cadenza.Combo
         public void Start()
         {
             this.m_ComboRoot = this.ComboDB.BuildTree();
+            this.ResetComboProgress();
         }
 
         public bool ProcessCombo(AttkTypes move, out ComboReward reward)
@@ -26,7 +27,6 @@ namespace Cadenza.Combo
                 AttackEffect = AttkEffect.None,
                 Multiplier = 1
             };
-
             if (this.m_CurrentComboNode.Children.TryGetValue(move, out var next))
             {
                 this.m_InProgress = true;
@@ -37,6 +37,8 @@ namespace Cadenza.Combo
                     reward = this.m_CurrentComboNode.Reward;
                     this.ResetComboProgress();
                 }
+
+                this.m_Timer = this.ComboDB.ComboTimeout;
 
                 return true;
             }
