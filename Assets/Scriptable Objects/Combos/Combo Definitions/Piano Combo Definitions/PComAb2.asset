@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5efeaaa2f24fc349bd738beaee02a5c, type: 3}
   m_Name: PComAb2
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Combo.ComboDefinition
-  Moves: 
+  Moves: 02000000020000000200000002000000
   Reward:
     Multiplier: 0
     AttackEffect: 0

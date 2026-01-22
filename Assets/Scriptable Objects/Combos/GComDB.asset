@@ -15,4 +15,4 @@ MonoBehaviour:
   ComboTimeout: 1
   ComboDefinitions:
   - {fileID: 11400000, guid: 99d5e36eb1835204dbcd00afda7e3b73, type: 2}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: e550bbc2011c42f4b998d6d4bff3d3f7, type: 2}
