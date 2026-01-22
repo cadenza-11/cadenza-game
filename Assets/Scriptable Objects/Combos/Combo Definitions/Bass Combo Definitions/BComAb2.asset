@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b5efeaaa2f24fc349bd738beaee02a5c, type: 3}
-  m_Name: ComboDef
+  m_Name: BComAb2
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Combo.ComboDefinition
-  Moves: 01000000010000000200000002000000
+  Moves: 
   Reward:
-    Multiplier: 2
-    AttackEffect: 3
+    Multiplier: 0
+    AttackEffect: 0
