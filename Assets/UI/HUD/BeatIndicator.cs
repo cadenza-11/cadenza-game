@@ -5,17 +5,21 @@ using UnityEngine.UIElements.Experimental;
 
 namespace Cadenza
 {
-    public class BeatIndicator : UIPanel
+    [UxmlElement]
+    public partial class BeatIndicator : VisualElement
     {
-        private const int BeatsToCompletion = 4;
+        private const int DefaultBeatsToCompletion = 4;
+        private const string RootClass = "beat-indicator-root";
+        private const string IndicatorName = "c_BeatIndicator";
+        private const string CenterName = "c_Center";
         private const string ArrowRightClass = "arrow-right";
         private const string ArrowLeftClass = "arrow-left";
 
+        private readonly List<ArrowInstance> arrows = new();
         private VisualElement indicator;
         private VisualElement centerMarker;
-        private readonly List<ArrowInstance> arrows = new();
-
         private float indicatorWidth;
+        private bool isListening;
 
         private class ArrowInstance
         {
@@ -25,47 +29,65 @@ namespace Cadenza
             public float elapsed;
         }
 
-        public override void OnInitialize()
+        public int BeatsToCompletion { get; private set; } = DefaultBeatsToCompletion;
+
+        public BeatIndicator()
         {
-            this.Hide();
-
-            this.indicator = this.root.Q<VisualElement>("c_BeatIndicator");
-            this.centerMarker = this.root.Q<VisualElement>("c_Center");
-
-            this.indicator?.RegisterCallback<GeometryChangedEvent>(this.OnGeometryChanged);
+            this.AddToClassList(RootClass);
+            this.BuildVisualTree();
         }
 
-        public override void OnGameStart()
+        private void BuildVisualTree()
         {
-            this.Show();
+            this.indicator = new VisualElement { name = IndicatorName };
+            this.indicator.AddToClassList("beat-indicator");
+
+            this.centerMarker = new VisualElement { name = CenterName };
+            this.centerMarker.AddToClassList("center-marker");
+
+            this.hierarchy.Add(this.indicator);
+            this.hierarchy.Add(this.centerMarker);
+
+            this.indicator.RegisterCallback<GeometryChangedEvent>(this.OnGeometryChanged);
         }
 
-        public override void OnGameStop()
+        /// <summary>
+        /// Begin listening to the BeatSystem in order to pulse the UI.
+        /// </summary>
+        public void Start()
         {
-            this.Hide();
+            if (!this.isListening)
+            {
+                BeatSystem.BeatPlayed += this.OnBeatPlayed;
+                this.isListening = true;
+            }
         }
 
-        public override void OnShow()
+        /// <summary>
+        /// Stop listening to the BeatSystem.
+        /// </summary>
+        public void Stop()
         {
-            BeatSystem.BeatPlayed += this.OnBeatPlayed;
-        }
-
-        public override void OnHide()
-        {
-            BeatSystem.BeatPlayed -= this.OnBeatPlayed;
+            if (this.isListening)
+            {
+                BeatSystem.BeatPlayed -= this.OnBeatPlayed;
+                this.isListening = false;
+            }
             this.ClearArrows();
         }
 
-        public override void OnUpdate()
+        /// <summary>
+        /// Updates positions of the arrows.
+        /// </summary>
+        public void Update()
         {
-            if (!this.IsVisible)
-                return;
-
             if (this.arrows.Count == 0)
                 return;
 
-            // Update arrow positions.
-            float deltaTime = Time.deltaTime;
+            if (this.indicator == null)
+                return;
+
+            float deltaTime = Time.unscaledDeltaTime;
             for (int i = this.arrows.Count - 1; i >= 0; i--)
             {
                 var arrow = this.arrows[i];
@@ -73,7 +95,6 @@ namespace Cadenza
                 float t = (arrow.duration > 0f) ? arrow.elapsed / arrow.duration : 1f;
                 if (t >= 1f)
                 {
-                    // Remove arrow after it passes the middle.
                     arrow.element.RemoveFromHierarchy();
                     this.arrows.RemoveAt(i);
                     continue;
@@ -92,8 +113,12 @@ namespace Cadenza
 
         private void OnBeatPlayed()
         {
-            this.Pulse(this.centerMarker, Color.white, Color.orange, 1.0f, 1.2f, 100);
-            this.SpawnArrowPair(durationOverride: (float)BeatSystem.SecondsPerBeat * BeatsToCompletion, initialElapsed: 0f);
+            Debug.Log($"Beat played, spawning arrow pair. (beat={BeatSystem.GetClosestBeat(BeatSystem.CurrentTrackTime)})");
+            if (this.centerMarker != null)
+                this.Pulse(this.centerMarker, Color.white, new Color(1f, 0.5f, 0f, 1f), 1.0f, 1.2f, 100);
+
+            float duration = (float)BeatSystem.SecondsPerBeat * this.BeatsToCompletion;
+            this.SpawnArrowPair(durationOverride: duration, initialElapsed: 0f);
         }
 
         private void SpawnArrowPair(float durationOverride, float initialElapsed)
@@ -111,35 +136,40 @@ namespace Cadenza
 
         private void CreateArrow(bool fromLeft, float duration, float initialElapsed)
         {
+            if (this.indicator == null)
+                return;
+
             var arrowElement = new VisualElement();
             arrowElement.visible = false;
+            arrowElement.AddToClassList(fromLeft ? ArrowRightClass : ArrowLeftClass);
+            arrowElement.style.position = Position.Absolute;
+            this.indicator.Add(arrowElement);
+
+            var arrow = new ArrowInstance
             {
-                arrowElement.AddToClassList(fromLeft ? ArrowRightClass : ArrowLeftClass);
-                arrowElement.style.position = Position.Absolute;
-                this.indicator.Add(arrowElement);
+                element = arrowElement,
+                fromLeft = fromLeft,
+                duration = duration,
+                elapsed = initialElapsed,
+            };
+            this.arrows.Add(arrow);
 
-                var arrow = new ArrowInstance
-                {
-                    element = arrowElement,
-                    fromLeft = fromLeft,
-                    duration = duration,
-                    elapsed = initialElapsed,
-                };
-                this.arrows.Add(arrow);
+            if (duration > 0f)
+                this.UpdateArrowPosition(arrow, Mathf.Clamp01(initialElapsed / duration));
 
-                if (duration > 0f)
-                    this.UpdateArrowPosition(arrow, Mathf.Clamp01(initialElapsed / duration));
-            }
             arrowElement.visible = true;
         }
 
         private void UpdateArrowPosition(ArrowInstance arrow, float t)
         {
-            float arrowWidth = arrow.element.resolvedStyle.width;
+            float currentWidth = this.indicatorWidth;
+            if (currentWidth <= 0f && this.indicator != null)
+                currentWidth = this.indicator.resolvedStyle.width;
 
-            float centerX = this.indicatorWidth * 0.5f;
+            float arrowWidth = arrow.element.resolvedStyle.width;
+            float centerX = currentWidth * 0.5f;
             float endX = centerX - (arrowWidth * 0.5f);
-            float startX = arrow.fromLeft ? -arrowWidth : this.indicatorWidth;
+            float startX = arrow.fromLeft ? -arrowWidth : currentWidth;
             float x = Mathf.Lerp(startX, endX, t);
 
             arrow.element.style.left = x;
@@ -160,7 +190,6 @@ namespace Cadenza
             float toScale,
             int durationMs)
         {
-            // Color animation
             element.experimental.animation
                 .Start(
                     fromColor,
@@ -187,7 +216,6 @@ namespace Cadenza
                         .Ease(Easing.InOutSine);
                 });
 
-            // Scale animation
             element.experimental.animation
                 .Start(
                     fromScale,

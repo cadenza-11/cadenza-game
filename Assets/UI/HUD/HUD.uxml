@@ -1,5 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <ui:Template name="PlayerHealth" src="project://database/Assets/UI/HUD/PlayerHealth.uxml?fileID=9197481963319205126&amp;guid=67b20bb446c4307418530de934451dcf&amp;type=3#PlayerHealth" />
+    <ui:Template name="BeatIndicator" src="project://database/Assets/UI/HUD/BeatIndicator.uxml?fileID=9197481963319205126&amp;guid=cbf1d30a071004101a447a3898dda7b6&amp;type=3#BeatIndicator" />
     <Style src="project://database/Assets/UI/HUD/HUD.uss?fileID=7433441132597879392&amp;guid=4de103f55db4bec47bc80b1527dd0a56&amp;type=3#HUD" />
     <ui:VisualElement name="root" style="flex-grow: 1;">
         <ui:VisualElement name="c_TeamStats" style="flex-grow: 0; flex-direction: row; margin-top: 0; margin-right: 20px; margin-bottom: 0; margin-left: 20px; align-items: center; justify-content: center;">
@@ -12,5 +13,6 @@
             <ui:Instance template="PlayerHealth" name="c_PlayerHealth" class="player_health" />
             <ui:Instance template="PlayerHealth" name="c_PlayerHealth" class="player_health" />
         </ui:VisualElement>
+        <ui:Instance template="BeatIndicator" name="c_BeatIndicator" style="position: absolute; right: 0; left: 0; bottom: 12px;" />
     </ui:VisualElement>
 </ui:UXML>
