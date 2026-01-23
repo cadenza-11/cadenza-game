@@ -1,0 +1,11 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/UI/HUD/BeatIndicator.uss?fileID=7433441132597879392&amp;guid=9dd899e7d96a4304b4699b09edb0f4e4&amp;type=3#BeatIndicator" />
+    <ui:VisualElement name="root" style="width: 100%; margin-bottom: 48px; justify-content: center;">
+        <ui:VisualElement name="c_BeatIndicator" class="beat-indicator" />
+        <ui:VisualElement name="c_Center" class="center-marker" />
+    </ui:VisualElement>
+    <ui:VisualElement name="hidden" picking-mode="Ignore" enabled="false" style="flex-grow: 1; display: none;">
+        <ui:VisualElement name="c_ArrowRight" class="arrow-right" />
+        <ui:VisualElement name="c_ArrowLeft" class="arrow-left" />
+    </ui:VisualElement>
+</ui:UXML>
