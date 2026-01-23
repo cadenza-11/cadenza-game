@@ -54,6 +54,9 @@ namespace Cadenza
         public delegate void MarkerListenerDelegate(string markerName);
         public static event MarkerListenerDelegate MarkerPassed;
 
+        public delegate void OffsetChangedDelegate();
+        public static event OffsetChangedDelegate OffsetChanged;
+
         #endregion
         #region Public Static Variables
 
@@ -214,6 +217,7 @@ namespace Cadenza
         {
             float offset = Mathf.Repeat(offsetMs, (float)singleton.beatPeriod * 1000);
             singleton.systemOffsetTime = offset;
+            OffsetChanged?.Invoke();
         }
 
         /// <summary>

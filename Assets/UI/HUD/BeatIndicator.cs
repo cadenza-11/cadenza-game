@@ -59,6 +59,7 @@ namespace Cadenza
             if (!this.isListening)
             {
                 BeatSystem.BeatPlayed += this.OnBeatPlayed;
+                BeatSystem.OffsetChanged += this.ClearArrows;
                 this.isListening = true;
             }
         }
@@ -71,6 +72,7 @@ namespace Cadenza
             if (this.isListening)
             {
                 BeatSystem.BeatPlayed -= this.OnBeatPlayed;
+                BeatSystem.OffsetChanged -= this.ClearArrows;
                 this.isListening = false;
             }
             this.ClearArrows();
