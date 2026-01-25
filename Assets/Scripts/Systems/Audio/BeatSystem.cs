@@ -54,6 +54,9 @@ namespace Cadenza
         public delegate void MarkerListenerDelegate(string markerName);
         public static event MarkerListenerDelegate MarkerPassed;
 
+        public delegate void OffsetChangedDelegate();
+        public static event OffsetChangedDelegate OffsetChanged;
+
         #endregion
         #region Public Static Variables
 
@@ -146,6 +149,7 @@ namespace Cadenza
         private double offsetTime => (this.systemOffsetTime + FMODOffsetTime) / 1000;
 
         private bool wasMarkerPassedThisFrame = false;
+        private bool wasOffsetChangedThisFrame = false;
         private int markerTime;
 
         private EventInstance globalTrack;
@@ -191,6 +195,12 @@ namespace Cadenza
             this.globalTrack.getTimelinePosition(out this.timelineInfo.currentPosition);
             this.UpdateDSPClock();
 
+            if (this.wasOffsetChangedThisFrame)
+            {
+                this.wasOffsetChangedThisFrame = false;
+                return;
+            }
+
             // Check for tempo change. If so, update tempo.
             this.CheckForTempoChange();
 
@@ -212,8 +222,22 @@ namespace Cadenza
         /// <param name="offset">How much time (in milliseconds) to shift the time estimation.</param>
         public static void SetOffset(int offsetMs)
         {
-            float offset = Mathf.Repeat(offsetMs, (float)singleton.beatPeriod * 1000);
+            double beatMs = singleton.beatPeriod * 1000;
+            double offset = offsetMs;
+            if (beatMs > 0)
+            {
+                // Clamp values to (-1/2 beat, +1/2 beat].
+                offset = Cadenza.Utils.Math.Repeat(offsetMs, beatMs);
+                if (offset > beatMs / 2)
+                    offset -= beatMs;
+            }
+
             singleton.systemOffsetTime = offset;
+            singleton.ResyncBeatPhase();
+            singleton.OnUpdate();
+
+            singleton.wasOffsetChangedThisFrame = true;
+            OffsetChanged?.Invoke();
         }
 
         /// <summary>
@@ -531,6 +555,23 @@ namespace Cadenza
             this.previousBeatTimeDSP = this.trackStartTimeDSP;
             this.previousBeatTime = 0f;
             this.previousUpBeatTime = 0f;
+        }
+
+        private void ResyncBeatPhase()
+        {
+            this.UpdateDSPClock();
+
+            double elapsedTrackTime = this.elapsedTimeDSP - this.trackStartTimeDSP + this.offsetTime;
+            double beatPhase = Cadenza.Utils.Math.Repeat(elapsedTrackTime, this.beatPeriod);
+
+            this.previousBeatTime = elapsedTrackTime;
+            this.previousBeatTimeDSP = this.elapsedTimeDSP - beatPhase;
+
+            double lastUpBeatTime = this.previousBeatTime + this.beatPeriod * this.swingPercent;
+            if (elapsedTrackTime < lastUpBeatTime)
+                lastUpBeatTime -= this.beatPeriod;
+
+            this.previousUpBeatTime = lastUpBeatTime;
         }
 
         /// <summary>

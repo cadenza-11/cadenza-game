@@ -1,12 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles" />
-    <ui:VisualElement name="c_Ready" style="flex-grow: 1; position: absolute; top: 25%; max-width: 90%; align-self: center;">
+    <ui:VisualElement name="c_Ready" style="flex-grow: 1; justify-content: center;">
         <ui:Label text="Ready!" name="txt_Ready1" class="temp_text" />
-        <ui:VisualElement name="c_NumReady" class="temp_text" style="flex-grow: 1; flex-direction: row; justify-content: center;">
-            <ui:Label text="0&#10;" name="update_NumReady" class="temp_text" />
-            <ui:Label text="/" name="txt_Slash" />
-            <ui:Label text="X" name="update_TotalPlayers" />
-        </ui:VisualElement>
-        <ui:Label text="players ready" name="txt_Ready2" class="temp_text" />
     </ui:VisualElement>
 </ui:UXML>

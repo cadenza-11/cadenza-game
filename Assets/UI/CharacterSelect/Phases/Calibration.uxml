@@ -1,9 +1,8 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles" />
-    <ui:VisualElement name="phase_Calibrating" style="flex-grow: 1; display: flex;">
-        <ui:VisualElement name="c_Blinker" style="flex-grow: 1; justify-content: center; width: 100%; align-items: center;">
-            <ui:VisualElement name="icon_Blinker" class="blinker" style="width: 30%; height: 30%;" />
-        </ui:VisualElement>
+    <Style src="project://database/Assets/UI/HUD/BeatIndicator.uss?fileID=7433441132597879392&amp;guid=9dd899e7d96a4304b4699b09edb0f4e4&amp;type=3#BeatIndicator" />
+    <ui:VisualElement name="phase_Calibrating" style="flex-grow: 1; display: flex; justify-content: center;">
+        <Cadenza.BeatIndicator beats-to-completion="2" />
         <ui:VisualElement name="c_Text" style="height: 30%;">
             <ui:VisualElement name="c_Counter" style="flex-grow: 1; flex-direction: row; justify-content: center;">
                 <ui:Label text="0&#10;" name="update_Counter" />

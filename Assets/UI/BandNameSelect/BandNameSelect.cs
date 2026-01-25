@@ -53,8 +53,8 @@ namespace Cadenza
         private void OnSetName()
         {
             TeamSystem.CreateTeam(this.bandNameField.value);
-            _ = ApplicationController.SetSceneAsync(1);
             this.Hide();
+            GameManager.StartGame();
         }
 
         #endregion

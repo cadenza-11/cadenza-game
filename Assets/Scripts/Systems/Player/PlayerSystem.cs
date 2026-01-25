@@ -16,15 +16,16 @@ namespace Cadenza
 
         [Header("Assign in Inspector")]
         [SerializeField] private GameObject characterPrefab;
-        [SerializeField] private int maxPlayersInRoster = 4;
         [SerializeField] private CharacterClass[] characterClasses;
 
         private PlayerInputManager playerInputManager;
-
         private Dictionary<int, Player> playersByID;
         public static IReadOnlyDictionary<int, Player> PlayersByID => singleton.playersByID;
         public static int PlayerCount => singleton.playersByID.Count;
-        public static Player[] Players => PlayersByID.Values.ToArray();
+
+        private Player[] players;
+        public static Player[] Players => singleton.players;
+
         public static CharacterClass[] CharacterClasses => singleton.characterClasses;
 
         public static event Action<Player> PlayerJoined;
@@ -141,6 +142,7 @@ namespace Cadenza
             int id = playerInput.playerIndex;
             player.Initialize(id, playerInput);
             this.playersByID[id] = player;
+            this.players = this.playersByID.Values.ToArray();
 
             // Register for hit events.
             player.PlayerHit += (score) => PlayerHit?.Invoke(score);
@@ -154,6 +156,7 @@ namespace Cadenza
             int id = playerInput.playerIndex;
             var player = this.playersByID[id];
             this.playersByID.Remove(id);
+            this.players = this.playersByID.Values.ToArray();
 
             Debug.Log($"Player using device scheme {playerInput.currentControlScheme} left. (id={id})");
             PlayerRemoved?.Invoke(player);

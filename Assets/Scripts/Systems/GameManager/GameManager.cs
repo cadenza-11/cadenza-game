@@ -58,6 +58,22 @@ public class GameManager : ApplicationSystem
     #endregion
     #region Public Static Methods
 
+    public static void StartGame()
+    {
+        if (ApplicationController.State != ApplicationState.Pregame)
+            return;
+
+        _ = ApplicationController.SetSceneAsync(1);
+    }
+
+    public static void ExitToPregame()
+    {
+        if (ApplicationController.State != ApplicationState.GameSession)
+            return;
+
+        _ = ApplicationController.SetSceneAsync(0);
+    }
+
     public static void PauseGame(Player requestingPlayer)
     {
         if (ApplicationController.State != ApplicationState.GameSession || singleton.isPaused || requestingPlayer == null)

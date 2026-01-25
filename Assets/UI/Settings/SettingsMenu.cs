@@ -4,7 +4,7 @@ namespace Cadenza
 {
     public class SettingsMenu : UIPanel
     {
-        private VisualElement blinker;
+        private BeatIndicator blinker;
         private Button[] tabButtons;
         private VisualElement[] tabViews;
         private int tabIndex = -1;
@@ -50,40 +50,55 @@ namespace Cadenza
 
             // Configure calibration.
             var latencySlider = this.root.Q<SliderInt>("slider_Latency");
-            latencySlider.RegisterValueChangedCallback(evt => BeatSystem.SetOffset(evt.newValue));
-            this.root.Q<Button>("b_SaveCalibration").clicked += () => BeatSystem.SetOffset(latencySlider.value);
-            this.blinker = this.root.Q<VisualElement>("icon_Blinker");
+            var latencyLabel = this.root.Q<Label>("label_Latency");
+
+            // Clamp allowed latency by the current BPM.
+            BeatSystem.TempoChanged += _ =>
+            {
+                int beatDurationMs = (int)(BeatSystem.SecondsPerBeat * 1000 / 2);
+                latencySlider.highValue = +beatDurationMs;
+                latencySlider.lowValue = -beatDurationMs;
+            };
+
+            latencySlider.RegisterValueChangedCallback(evt =>
+            {
+                BeatSystem.SetOffset(evt.newValue);
+                latencyLabel.text = $"{evt.newValue:+#;-#;0}ms";
+            });
+            this.blinker = this.root.Q<BeatIndicator>();
 
             this.SwitchToTab(0);
         }
 
         public override void OnShow()
         {
-            BeatSystem.BeatPlayed += this.Blink;
             AudioSystem.SetMetronomeSoloed(true);
 
             // TODO: move this elsewhere
+            this.blinker.Start();
+
             this.root.Q<Button>("b_DeleteSaveData").SetEnabled(
                 ApplicationController.State != ApplicationState.GameSession
                 && SaveSystem.SaveFileExists);
+            //
 
             this.backButton.Focus();
         }
 
-        private void Blink()
+        public override void OnUpdate()
         {
-            this.blinker.ToggleInClassList("blink");
+            this.blinker.Update();
         }
 
         public override void OnHide()
         {
-            UnityEngine.Debug.Log("Hiding");
-            BeatSystem.BeatPlayed -= this.Blink;
             AudioSystem.SetMetronomeSoloed(false);
+
+            this.blinker.Stop();
         }
 
         #endregion
-        #region Navigation Events
+        #region Private Methods
 
         private void SwitchToTab(int tabIndex)
         {
@@ -100,11 +115,6 @@ namespace Cadenza
             this.tabViews[this.tabIndex].style.display = DisplayStyle.Flex;
             this.tabButtons[this.tabIndex].ToggleInClassList("selected");
         }
-
-        #endregion
-        #region Private Functions
-
-        // Container updates
 
         #endregion
     }

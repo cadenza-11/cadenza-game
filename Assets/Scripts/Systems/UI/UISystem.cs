@@ -42,7 +42,10 @@ namespace Cadenza
         public override void OnUpdate()
         {
             foreach (var panel in this.panels)
-                panel.OnUpdate();
+            {
+                if (panel.IsVisible)
+                    panel.OnUpdate();
+            }
         }
 
         public static T FindPanel<T>() where T : UIPanel

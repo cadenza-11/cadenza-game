@@ -17,6 +17,7 @@ namespace Cadenza
         [SerializeField, Min(1.0f)] private float comboMultiplier;
 
         private ProgressBar teamMeter;
+        private BeatIndicator beatIndicator;
         private Label teamStreak;
         private Dictionary<int, string> streakLabels = new();
         private VisualElement[] healthBars = new VisualElement[4];
@@ -40,6 +41,9 @@ namespace Cadenza
             // Initialize team streak.
             this.teamStreak = this.root.Q<Label>("update_TeamStreak");
             ScoreSystem.StreakUpdated += this.OnStreakUpdated;
+
+            // Initialize beat indicator bar.
+            this.beatIndicator = this.root.Q<BeatIndicator>();
 
             // Get health bars.
             int i = 0;
@@ -78,6 +82,7 @@ namespace Cadenza
             }
 
             this.teamMeter.value = 0;
+            this.beatIndicator.Start();
 
             ScoreSystem.TeamHit += this.OnTeamHit;
             Character.TeamAttackInitiated += this.OnTeamAttackInitiated;
@@ -88,6 +93,7 @@ namespace Cadenza
             this.Hide();
 
             this.teamMeter.value = 0;
+            this.beatIndicator.Stop();
 
             ScoreSystem.TeamHit -= this.OnTeamHit;
             Character.TeamAttackInitiated -= this.OnTeamAttackInitiated;
@@ -98,10 +104,13 @@ namespace Cadenza
             if (ApplicationController.State != ApplicationState.GameSession)
                 return;
 
+            // Update meter.
             var nextState = this.GetMeterState();
-
             if (nextState != MeterState.Filled)
                 this.FillMeter(Time.deltaTime);
+
+            // Update beat indicator.
+            this.beatIndicator.Update();
         }
 
         private void OnTeamHit(TeamScoreDef def)
