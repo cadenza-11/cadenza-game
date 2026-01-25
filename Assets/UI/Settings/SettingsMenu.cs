@@ -50,7 +50,21 @@ namespace Cadenza
 
             // Configure calibration.
             var latencySlider = this.root.Q<SliderInt>("slider_Latency");
-            latencySlider.RegisterValueChangedCallback(evt => BeatSystem.SetOffset(evt.newValue));
+            var latencyLabel = this.root.Q<Label>("label_Latency");
+
+            // Clamp allowed latency by the current BPM.
+            BeatSystem.TempoChanged += _ =>
+            {
+                int beatDurationMs = (int)(BeatSystem.SecondsPerBeat * 1000 / 2);
+                latencySlider.highValue = +beatDurationMs;
+                latencySlider.lowValue = -beatDurationMs;
+            };
+
+            latencySlider.RegisterValueChangedCallback(evt =>
+            {
+                BeatSystem.SetOffset(evt.newValue);
+                latencyLabel.text = $"{evt.newValue:+#;-#;0}ms";
+            });
             this.blinker = this.root.Q<BeatIndicator>();
 
             this.SwitchToTab(0);

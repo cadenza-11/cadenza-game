@@ -23,6 +23,7 @@
                 <ui:Slider label="SFX" value="42" high-value="1" name="slider_SFX" fill="true" />
             </ui:VisualElement>
             <ui:VisualElement name="c_CalibrationTab" style="flex-grow: 1; display: flex; justify-content: center;">
+                <ui:Label text="0ms" name="label_Latency" style="align-self: center; color: rgb(255, 255, 255); -unity-font-style: bold; font-size: 64px; -unity-text-align: middle-center;" />
                 <Cadenza.BeatIndicator name="c_Blinker" style="padding-top: 64px; padding-right: 64px; padding-bottom: 64px; padding-left: 64px;" />
                 <ui:SliderInt name="slider_Latency" style="color: rgb(255, 255, 255); font-size: 40px; margin-top: 10px; margin-right: 200px; margin-bottom: 10px; margin-left: 200px;" />
                 <ui:Label text="Adjust the slider until the beat matches the flashing light!" style="align-self: center; color: rgb(255, 255, 255); -unity-font-style: italic; font-size: 29px;" />
