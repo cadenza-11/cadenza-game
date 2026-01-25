@@ -5,10 +5,6 @@ using Cadenza.Combo;
 
 namespace Cadenza
 {
-    /// <summary>
-    /// Designed to make the combo system easier to read. In description, L is light and H is heavy.
-    /// </summary>
-
     public class Character : MonoBehaviour, CadenzaActions.IPlayerActions
     {
         #region Variables

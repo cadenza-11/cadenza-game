@@ -1,12 +1,7 @@
-using System;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using Cadenza.Combo;
-
 namespace Cadenza
 {
     /// <summary>
-    /// Designed to make the combo system easier to read. In description, L is light and H is heavy.
+    /// Script to hold all the enums utilized by the character script
     /// </summary>
     public enum AttkEffect
     {

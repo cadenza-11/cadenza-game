@@ -6,7 +6,7 @@ using Cadenza.Combo;
 namespace Cadenza
 {
     /// <summary>
-    /// Designed to make the combo system easier to read. In description, L is light and H is heavy.
+    /// SCRIPT IS NOT UTILIZED RIGHT NOW. EXAMPLE OF EXTRAPOLATION. WILL BE REPLACED
     /// </summary>
     public class GuitarChar : MonoBehaviour, CadenzaActions.IPlayerActions
     {
