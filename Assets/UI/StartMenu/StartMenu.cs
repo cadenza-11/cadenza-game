@@ -86,7 +86,6 @@ namespace Cadenza
             AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
 
             // Set multiplayer.
-            PlayerSystem.DisableJoining();
             InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, player);
 
             this.buttonStartGame.Focus();

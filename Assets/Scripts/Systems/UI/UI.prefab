@@ -490,7 +490,7 @@ MonoBehaviour:
   calibrationTemplate: {fileID: 9197481963319205126, guid: ae3a027b0a7e9db4084daba4f8738a42, type: 3}
   characterSelectionTemplate: {fileID: 9197481963319205126, guid: e4afe7d3158a4f64cbb51db220e56c30, type: 3}
   readyTemplate: {fileID: 9197481963319205126, guid: 1b13ae536d2e7e44b8064fc2396375e3, type: 3}
-  TotalCalibrationAttempts: 5
+  requiredCalibrationAttempts: 4
 --- !u!1 &6869839045911253032
 GameObject:
   m_ObjectHideFlags: 0
