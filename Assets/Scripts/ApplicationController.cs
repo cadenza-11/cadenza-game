@@ -98,11 +98,6 @@ namespace Cadenza
             await Fader.HideAsync();
         }
 
-        public static void ExitToPregame()
-        {
-            _ = SetSceneAsync(0);
-        }
-
         public static void RequestQuit()
         {
             if (singleton.state == ApplicationState.Quitting)

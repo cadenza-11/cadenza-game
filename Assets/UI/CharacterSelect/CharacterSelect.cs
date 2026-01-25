@@ -393,9 +393,9 @@ namespace Cadenza
                 if (TeamSystem.Team == null)
                     this.bandNameSelect.Show();
                 else
-                    _ = ApplicationController.SetSceneAsync(1);
                 this.Hide();
             }
+                GameManager.StartGame();
         }
 
         private void DisconnectPlayer(Player player, PlayerTracker tracker)

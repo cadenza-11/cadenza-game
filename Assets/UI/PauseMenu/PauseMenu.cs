@@ -53,7 +53,7 @@ namespace Cadenza
 
         private void OnMainMenu()
         {
-            ApplicationController.ExitToPregame();
+            GameManager.ExitToPregame();
             this.Hide();
         }
 
