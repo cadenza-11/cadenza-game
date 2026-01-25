@@ -236,11 +236,17 @@ namespace Cadenza
             }
         }
 
-        private void OnBeat()
+        public override void OnUpdate()
         {
-            foreach (VisualElement blinker in this.root.Query<VisualElement>("icon_Blinker").ToList())
+            // Update calibration blinkers.
+            foreach ((var player, var phase) in this.playerTrackers)
             {
-                blinker.ToggleInClassList("alt");
+                if (phase.Phase == SelectPhase.CalibratingInProgress)
+                {
+                    var blinker = this.playerContainers[player.ID].CalibrationContainer.Q<BeatIndicator>();
+                    blinker.Start();
+                    blinker.Update();
+                }
             }
         }
 

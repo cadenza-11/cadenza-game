@@ -29,7 +29,8 @@ namespace Cadenza
             public float elapsed;
         }
 
-        public int BeatsToCompletion { get; private set; } = DefaultBeatsToCompletion;
+        [UxmlAttribute("beats-to-completion")]
+        public int BeatsToCompletion { get; set; } = DefaultBeatsToCompletion;
 
         public BeatIndicator()
         {
@@ -115,7 +116,6 @@ namespace Cadenza
 
         private void OnBeatPlayed()
         {
-            Debug.Log($"Beat played, spawning arrow pair. (beat={BeatSystem.GetClosestBeat(BeatSystem.CurrentTrackTime)})");
             if (this.centerMarker != null)
                 this.Pulse(this.centerMarker, Color.white, new Color(1f, 0.5f, 0f, 1f), 1.0f, 1.2f, 100);
 

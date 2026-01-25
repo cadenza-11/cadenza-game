@@ -1,6 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Template name="BeatIndicator" src="project://database/Assets/UI/HUD/BeatIndicator.uxml?fileID=9197481963319205126&amp;guid=cbf1d30a071004101a447a3898dda7b6&amp;type=3#BeatIndicator" />
     <Style src="project://database/Assets/UI/Settings/Settings.uss?fileID=7433441132597879392&amp;guid=b5e1e074dd830e4428a37e9aabfb347d&amp;type=3#Settings" />
+    <Style src="project://database/Assets/UI/HUD/BeatIndicator.uss?fileID=7433441132597879392&amp;guid=9dd899e7d96a4304b4699b09edb0f4e4&amp;type=3#BeatIndicator" />
     <ui:VisualElement name="root" class="root">
         <ui:VisualElement name="ribbon" style="flex-direction: row;">
             <ui:Button name="b_Back" icon-image="project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=5866165431930342980&amp;guid=f95dbedc287fb481ca8a830e99c754e3&amp;type=3#Remove@2x" style="font-size: 50px; align-self: flex-start; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;" />
@@ -23,8 +23,8 @@
                 <ui:Slider label="SFX" value="42" high-value="1" name="slider_SFX" fill="true" />
             </ui:VisualElement>
             <ui:VisualElement name="c_CalibrationTab" style="flex-grow: 1; display: flex; justify-content: center;">
-                <ui:Instance template="BeatIndicator" name="c_BeatIndicator" />
-                <ui:SliderInt value="0" high-value="250" name="slider_Latency" fill="true" low-value="-250" direction="Horizontal" inverted="false" show-input-field="false" style="color: rgb(255, 255, 255); font-size: 40px; margin-top: 10px; margin-right: 200px; margin-bottom: 10px; margin-left: 200px;" />
+                <Cadenza.BeatIndicator name="c_Blinker" style="padding-top: 64px; padding-right: 64px; padding-bottom: 64px; padding-left: 64px;" />
+                <ui:SliderInt name="slider_Latency" style="color: rgb(255, 255, 255); font-size: 40px; margin-top: 10px; margin-right: 200px; margin-bottom: 10px; margin-left: 200px;" />
                 <ui:Label text="Adjust the slider until the beat matches the flashing light!" style="align-self: center; color: rgb(255, 255, 255); -unity-font-style: italic; font-size: 29px;" />
             </ui:VisualElement>
         </ui:VisualElement>
