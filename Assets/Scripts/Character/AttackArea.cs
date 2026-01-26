@@ -8,6 +8,7 @@ using UnityEngine;
 public class AttackArea : MonoBehaviour
 {
     public int damage = 0;
+    public float knockbackScale;
     public AttkEffect comboMove = AttkEffect.None;
     private GameObject go = null;
 
@@ -37,6 +38,12 @@ public class AttackArea : MonoBehaviour
             Enemy hitEntity = collider.gameObject.GetComponent<Enemy>();
             hitEntity.DoDamage(2);
         }
+
+        Vector3 direction = collider.transform.position - this.transform.position;
+        Vector3 force = direction.normalized * this.knockbackScale;
+        force.y = 1f; // Add a small upward knockback.
+        collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
+
         //Check back with this code in case you want to impliment knockback
         /*
         switch (this.comboMove)
