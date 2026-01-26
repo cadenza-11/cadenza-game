@@ -279,6 +279,11 @@ namespace Cadenza
         public void DoDamage(int damage)
         {
             this.currentHealth -= damage;
+            this.anim.SetTrigger("IsHit");
+
+            if (this.currentHealth <= 0)
+                this.anim.SetBool("IsFainted", true);
+
             HealthChanged?.Invoke(this.currentHealth);
         }
 

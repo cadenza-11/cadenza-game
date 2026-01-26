@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
 using System;
 
 //Royce Ortega
@@ -123,6 +122,7 @@ namespace Cadenza
         public void DoDamage(int damage)
         {
             this.currentHealth -= damage;
+            this.anim.SetTrigger("IsHit");
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 3, immediate: true);
         }
 
@@ -374,6 +374,7 @@ namespace Cadenza
 
         private void DeadState()
         {
+            this.anim.SetBool("IsFainted", true);
             this.rb.linearVelocity = Vector3.zero;
             this.enemyMgr.RemoveEnemy(this.gameObject);
         }
