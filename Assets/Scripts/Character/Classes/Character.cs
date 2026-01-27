@@ -42,6 +42,7 @@ namespace Cadenza
         private float chargeTimer = 0.0f;
         private Coroutine actionableRoutine;
         private int attackMod;
+        private int streak = 0;
 
         private Vector2 move;
         private bool isMove, isAttacking, isCharging;
@@ -172,15 +173,6 @@ namespace Cadenza
                 this.slamArea.gameObject.SetActive(this.isAttacking);
             });
 
-            if (comboMove == AttkEffect.AbilityOne)
-            {
-                this.AbilityOne();
-            }
-            else if (comboMove == AttkEffect.AbilityTwo)
-            {
-                this.AbilityTwo();
-            }
-
             // Play animation
             this.anim.SetTrigger("LightAttack");
         }
@@ -205,38 +197,13 @@ namespace Cadenza
                 this.slamArea.gameObject.SetActive(this.isAttacking);
             });
 
-
-            if (comboMove == AttkEffect.AbilityOne)
-            {
-                this.AbilityOne();
-            }
-            else if (comboMove == AttkEffect.AbilityTwo)
-            {
-                this.AbilityTwo();
-            }
-
             // Play animation
             this.anim.SetTrigger("HeavyAttack");
         }
 
         private void SpecialAttack()
         {
-            // Code kept just in case, but will be removing special attack at some point
-            /*
-            if (this.direction == true)
-            {
-                this.chargeForce = Mathf.Abs(this.chargeForce);
-            }
-            else if (this.direction == false)
-            {
-                this.chargeForce = -Mathf.Abs(this.chargeForce);
-            }
-            this.isCharging = true;
-            this.chargeArea.damage = 10;
-            this.chargeArea.SetActive(this.isCharging);
-            this.rb.linearVelocity = new Vector3(0.0f, 0.0f, 0.0f);
-            this.rb.AddForce(Vector3.right * this.chargeForce, ForceMode.VelocityChange);
-            */
+
         }
         public void StartTeamAttk()
         {
@@ -321,14 +288,16 @@ namespace Cadenza
 
         #endregion
 
-        public void AbilityOne()
+        public void updateStreak(ScoreClass lastHitScore)
         {
-            Debug.Log("Ability 1");
-        }
-
-        public void AbilityTwo()
-        {
-            Debug.Log("Ability 2");
+            if (lastHitScore == ScoreClass.Great || lastHitScore == ScoreClass.Perfect)
+            {
+                this.streak++;
+            }
+            else
+            {
+                this.streak = 0;
+            }
         }
     }
 }
