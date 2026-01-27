@@ -34,41 +34,18 @@ public class AttackArea : MonoBehaviour
             hitEntity.DoDamage(2);
         }
 
+        // Stop current horizontal movement.
+        // Vector3 v = collider.attachedRigidbody.linearVelocity;
+        // v.x = 0;
+        // v.z = 0;
+        // collider.attachedRigidbody.linearVelocity = v;
+
+        // Add knockback.
         Vector3 direction = collider.transform.position - this.transform.position;
         Vector3 force = direction.normalized * this.knockbackScale;
-        force.y = 1f; // Add a small upward knockback.
+        force.y = 2f;
         collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
 
-        //Check back with this code in case you want to impliment knockback
-        /*
-        switch (this.comboMove)
-        {
-            case AttkEffect.Light_Knockback:
-                Vector3 lightDirection = this.transform.position - collider.transform.position;
-                Vector3 lightNormalDirection = lightDirection.normalized;
-                collider.attachedRigidbody.AddForce(lightNormalDirection * -3.0f, ForceMode.Impulse);
-                break;
-
-            case AttkEffect.Area_Smash:
-                Vector3 areaDirection = this.transform.position - collider.transform.position;
-                Vector3 areaNormalDirection = areaDirection.normalized;
-                collider.attachedRigidbody.AddForce(areaNormalDirection * -3.0f, ForceMode.Impulse);
-                break;
-
-            case AttkEffect.Heavy_Knockback:
-                Vector3 heavyDirection = this.transform.position - collider.transform.position;
-                Vector3 heavyNormalDirection = heavyDirection.normalized;
-                collider.attachedRigidbody.AddForce(heavyNormalDirection * -6.0f, ForceMode.Impulse);
-                break;
-
-            case AttkEffect.Base_Smash:
-                Vector3 baseDirection = this.transform.position - collider.transform.position;
-                Vector3 baseNormalDirection = baseDirection.normalized;
-                collider.attachedRigidbody.AddForce(baseNormalDirection * -4.0f, ForceMode.Impulse);
-                break;
-
-        }
-        */
         this.comboMove = AttkEffect.None;
     }
 }
