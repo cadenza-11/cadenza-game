@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 using System;
 
 //Royce Ortega
@@ -18,10 +17,9 @@ namespace Cadenza
 
     public class Enemy : MonoBehaviour
     {
-        [SerializeField] private Transform Transform;
         [SerializeField] public float speed;
-        [SerializeField] private float meleeDuration = 0.25f;
-        [SerializeField] private float rangedDuration = 0.25f;
+        [SerializeField] private float meleeDuration;
+        [SerializeField] private float rangedDuration;
         [SerializeField] private int maxHealth;
         [SerializeField] public int currentHealth;
         [SerializeField] private AttackArea attackArea;
@@ -29,7 +27,7 @@ namespace Cadenza
         [SerializeField] private SpriteRenderer sr;
         [SerializeField] private Animator anim;
         [SerializeField] private GameObject projectile;
-        private float attackTimer = 0f;
+
         private float rangedAttackInterval = 0f;
         [SerializeField] private EnemyState curState = EnemyState.Idle;
         [SerializeField] private EnemyManager enemyMgr;
@@ -50,8 +48,6 @@ namespace Cadenza
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            int i = PlayerSystem.PlayerCount;
-            this.Transform = this.GetComponent<Transform>();
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
             this.speed = 1.5f;
@@ -62,31 +58,19 @@ namespace Cadenza
         // Update is called once per frame
         void FixedUpdate()
         {
-            if (!this.CheckIsGrounded())
+            if (!this.IsGrounded())
             {
                 this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
             }
             if (this.curAngle * (180 / Math.PI) > -90 && this.curAngle * (180 / Math.PI) < 90)
             {
-                Debug.Log(this.curAngle * (180 / Math.PI) + " No Rotation Needed");
-                this.Transform.rotation = Quaternion.Euler(0, 0, 0);
+                // No rotation needed.
+                this.transform.rotation = Quaternion.Euler(0, 0, 0);
             }
             else
             {
-                Debug.Log("Turns Character to the left");
-                this.Transform.rotation = Quaternion.Euler(0, 180, 0);
-            }
-            //Handles Melee Attack animation
-            if (this.isAttacking)
-            {
-                this.attackTimer += Time.deltaTime;
-
-                if (this.attackTimer >= (this.meleeDuration * this.attackMod))
-                {
-                    this.attackTimer = 0;
-                    this.isAttacking = false;
-                    this.attackArea.SetActive(this.isAttacking);
-                }
+                // Turn character to the left.
+                this.transform.rotation = Quaternion.Euler(0, 180, 0);
             }
 
             //Checks if the Enemy's state needs to change
@@ -97,9 +81,15 @@ namespace Cadenza
         private void MeleeAttack()
         {
             this.isAttacking = true;
+            this.attackArea.SetActive(true);
             this.attackMod = 1;
             this.attackArea.damage = 1;
-            this.attackArea.SetActive(this.isAttacking);
+
+            this.Schedule(this.meleeDuration * this.attackMod, () =>
+            {
+                this.isAttacking = false;
+                this.attackArea.SetActive(false);
+            });
 
             // Play animation
             this.anim.SetTrigger("LightAttack");
@@ -114,11 +104,6 @@ namespace Cadenza
             this.anim.SetTrigger("LightAttack");
         }
 
-        private void SpecialAttack()
-        {
-            //To implement later
-        }
-
         public void DoDamage(int damage)
         {
             this.currentHealth -= damage;
@@ -126,14 +111,9 @@ namespace Cadenza
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 3, immediate: true);
         }
 
-        public void TakeDamage()
+        private bool IsGrounded()
         {
-
-        }
-
-        bool CheckIsGrounded()
-        {
-            return Physics.Raycast(this.transform.position, -Vector3.up, 0.5f);
+            return Physics.Raycast(this.transform.position, Vector3.down, maxDistance: 0.1f);
         }
 
         /// <summary>
@@ -237,46 +217,44 @@ namespace Cadenza
         private void MeleeState()
         {
             this.rb.linearVelocity = Vector3.zero;
-            if (!this.isAttacking)
+            if (this.isAttacking)
+                return;
+
+            this.FindNearestPlayerDist();
+            if (this.nearestPlayerDist > rangedDistance)
             {
-                this.FindNearestPlayerDist();
-                if (this.nearestPlayerDist > rangedDistance)
-                {
-                    this.curState = EnemyState.Idle;
-                }
-                else if (this.nearestPlayerDist < rangedDistance && this.nearestPlayerDist > chaseDistance)
-                {
-                    this.meleeState = false;
-                    this.curState = EnemyState.Ranged;
-                }
-                else if (this.nearestPlayerDist < chaseDistance && this.nearestPlayerDist > meleeDistance)
-                {
-                    this.curState = EnemyState.Chase;
-                }
+                this.curState = EnemyState.Idle;
+            }
+            else if (this.nearestPlayerDist < rangedDistance && this.nearestPlayerDist > chaseDistance)
+            {
+                this.meleeState = false;
+                this.curState = EnemyState.Ranged;
+            }
+            else if (this.nearestPlayerDist < chaseDistance && this.nearestPlayerDist > meleeDistance)
+            {
+                this.curState = EnemyState.Chase;
+            }
 
-                if (this.currentHealth <= this.runHealth & this.currentHealth > 0)
-                {
-                    this.curState = EnemyState.Run;
-                }
-                else if (this.currentHealth <= 0)
-                {
-                    this.curState = EnemyState.Dead;
-                }
+            if (this.currentHealth <= this.runHealth & this.currentHealth > 0)
+            {
+                this.curState = EnemyState.Run;
+            }
+            else if (this.currentHealth <= 0)
+            {
+                this.curState = EnemyState.Dead;
+            }
 
-                System.Random rand = new System.Random();
-                if (rand.Next(1, 100) <= 10)
-                {
-                    this.curState = EnemyState.Special;
-                }
-
-                if (this.curState == EnemyState.Melee)
-                {
-                    this.MeleeAttack();
-                }
-                else
-                {
-                    this.isAttacking = false;
-                }
+            if (UnityEngine.Random.Range(1, 100) <= 10)
+            {
+                this.curState = EnemyState.Special;
+            }
+            if (this.curState == EnemyState.Melee)
+            {
+                this.MeleeAttack();
+            }
+            else
+            {
+                this.isAttacking = false;
             }
         }
 
@@ -306,21 +284,20 @@ namespace Cadenza
 
         private void RunState()
         {
-            Debug.Log("In run state");
             if (!this.hasRun)
             {
                 this.hasRun = true;
                 this.TargetLocation = this.FindRunLocation();
             }
 
-            Vector3 pos = this.Transform.position;
+            Vector3 pos = this.transform.position;
             this.curAngle = (float)Math.Atan2(this.TargetLocation.y - pos.z, this.TargetLocation.x - pos.x);
 
             Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
             this.rb.linearVelocity = moveDir;
 
-            if (Math.Abs(this.Transform.position.x - this.TargetLocation.x) <= 0.1 &&
-                Math.Abs(this.Transform.position.z - this.TargetLocation.y) <= 0.1)
+            if (Math.Abs(this.transform.position.x - this.TargetLocation.x) <= 0.1 &&
+                Math.Abs(this.transform.position.z - this.TargetLocation.y) <= 0.1)
             {
                 this.meleeState = false;
                 this.curState = EnemyState.Ranged;
@@ -381,28 +358,31 @@ namespace Cadenza
 
         private void FindNearestPlayerDist()
         {
-            float nearest = 99999999999999;
-            foreach (KeyValuePair<int, Player> player in PlayerSystem.PlayersByID)
+            float nearest = float.MaxValue;
+            foreach (var player in PlayerSystem.Players)
             {
-                Vector3 playerPos = player.Value.Character.GetComponent<Transform>().position;
-                float curDistance = (float)Math.Sqrt(Math.Pow(this.Transform.position.x - playerPos.x, 2) +
-                                                Math.Pow(this.Transform.position.z - playerPos.z, 2));
+                if (player.Character == null || player.Character.IsFainted)
+                    continue;
+
+                Vector3 playerPos = player.Character.transform.position;
+                float curDistance = (float)Math.Sqrt(Math.Pow(this.transform.position.x - playerPos.x, 2) +
+                                                Math.Pow(this.transform.position.z - playerPos.z, 2));
                 if (curDistance < nearest)
                 {
                     nearest = curDistance;
-                    this.follow = player.Value;
+                    this.follow = player;
                 }
             }
-            this.TargetLocation = this.follow.Character.GetLocation();
+            this.TargetLocation = this.follow.Character.transform.position;
             this.nearestPlayerDist = nearest;
         }
 
         private Vector2 FindRunLocation()
         {
             this.FindNearestPlayerDist();
-            Vector2 displacement = new Vector2(this.TargetLocation.x - this.Transform.position.x, this.TargetLocation.y - this.Transform.position.z);
+            Vector2 displacement = new Vector2(this.TargetLocation.x - this.transform.position.x, this.TargetLocation.y - this.transform.position.z);
             Vector2 runDirection = new Vector2(-1 * displacement.x / displacement.magnitude, -1 * displacement.y / displacement.magnitude);
-            return new Vector3(this.Transform.position.x + runDirection.x * 10, this.Transform.position.y, this.Transform.position.z + runDirection.y * 10);
+            return new Vector3(this.transform.position.x + runDirection.x * 10, this.transform.position.y, this.transform.position.z + runDirection.y * 10);
         }
 
         public bool CheckIsDead()

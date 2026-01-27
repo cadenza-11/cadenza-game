@@ -13,10 +13,10 @@ namespace Cadenza
         [SerializeField] private float jumpForce;
         [SerializeField] private float chargeForce;
 
-        [SerializeField] private float attackDuration = 0.25f;
-        [SerializeField] private float chargeDuration = 0.5f;
-        [SerializeField] private int currentHealth = 20;
-        [SerializeField] private int maxHealth = 20;
+        [SerializeField] private float attackDuration;
+        [SerializeField] private float chargeDuration;
+        [SerializeField] private int currentHealth;
+        [SerializeField] private int maxHealth;
 
         [Header("Assign in Inspector")]
         [SerializeField] private AttackArea attackArea;
@@ -29,25 +29,26 @@ namespace Cadenza
         [SerializeField] private InteractionIndicator interactionIndicator;
         [SerializeField] private GameObject projectile;
         [SerializeField] private ComboManager ComboM;
+        [SerializeField] private int baseLightDamage;
+        [SerializeField] private int baseHeavyDamage;
+
+        public float MaxHealth => this.maxHealth;
+        public bool IsFainted => this.isFainted;
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
         public event Action<int> HealthChanged;
 
-        private float attackTimer = 0.0f;
         private float chargeTimer = 0.0f;
+        private Coroutine actionableRoutine;
         private int attackMod;
 
         private Vector2 move;
-        private bool isMove, isAttacking, isGrounded, isCharging;
+        private bool isMove, isAttacking, isCharging;
         private bool direction; //true = right, false = left
+        private bool isActionable = true;
+        private bool isFainted = false;
 
-        private int[] comboArray = new int[2];
-        private float comboTimer = 0.0f;
-        private bool comboWaiting = false;
-
-        private int baseLight = 3;
-        private int baseHeavy = 6;
         #endregion
 
         internal void SetPlayer(Player player)
@@ -55,14 +56,13 @@ namespace Cadenza
             this.Player = player;
             player.PlayerHit += this.accuracyBar.OnPlayerHit;
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
+            this.isActionable = true;
         }
 
         void FixedUpdate()
         {
-            //Only adds gravity if not charging
-            this.isGrounded = this.CheckIsGrounded();
-
-            if (!this.isCharging)
+            // Apply gravity.
+            if (!this.IsGrounded() && !this.isCharging)
             {
                 this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
             }
@@ -71,7 +71,9 @@ namespace Cadenza
 
             if (!this.isCharging)
             {
-                Vector3 moveDir = new Vector3(this.move.x * this.speed, this.rb.linearVelocity.y, this.move.y * this.speed);
+                Vector3 moveDir = this.isActionable
+                    ? new Vector3(this.move.x * this.speed, this.rb.linearVelocity.y, this.move.y * this.speed)
+                    : new Vector3(0, this.rb.linearVelocity.y, 0);
                 this.rb.linearVelocity = moveDir;
 
                 if (moveDir.x != 0 && moveDir.x < 0)
@@ -94,61 +96,25 @@ namespace Cadenza
                 {
                     this.isMove = false;
                 }
-            }
-
-            this.anim.SetBool("IsMove", this.isMove);
-
-            //Runs timer so player cant attack more than once (may become an IEnumerator later if more effective)
-            if (this.isAttacking && !this.isCharging)
-            {
-                this.attackTimer += Time.deltaTime;
-
-                if (this.attackTimer >= (this.attackDuration * this.attackMod))
-                {
-                    this.attackTimer = 0.0f;
-                    this.isAttacking = false;
-                    this.attackArea.gameObject.SetActive(this.isAttacking);
-                    this.slamArea.gameObject.SetActive(this.isAttacking);
-                }
+                this.anim.SetBool("IsMove", this.isMove);
             }
 
             if (this.isCharging)
             {
                 this.chargeTimer += Time.deltaTime;
 
-                if (this.chargeTimer >= (this.chargeDuration))
+                if (this.chargeTimer >= this.chargeDuration)
                 {
                     this.chargeTimer = 0.0f;
                     this.isCharging = false;
                     this.chargeArea.gameObject.SetActive(this.isCharging);
                 }
             }
-
-            if (this.comboWaiting)
-            {
-                this.comboTimer += Time.deltaTime;
-            }
         }
 
-        public Vector2 GetLocation()
+        private bool IsGrounded()
         {
-            Vector3 pos = this.GetComponent<Transform>().position;
-            return new Vector2(pos.x, pos.z);
-        }
-
-        bool CheckIsGrounded()
-        {
-            //Returns a raycast result to determine if on the ground
-            return Physics.Raycast(this.transform.position, -Vector3.up, 0.5f);
-        }
-
-        private void JumpCommand()
-        {
-            //Jump input action command, only jumps if on the ground
-            if (this.isGrounded)
-            {
-                this.rb.AddForce(Vector3.up * this.jumpForce, ForceMode.Impulse);
-            }
+            return Physics.Raycast(this.transform.position, Vector3.down, 0.5f);
         }
 
         /// <summary>
@@ -169,26 +135,28 @@ namespace Cadenza
             this.attackArea.gameObject.transform.localPosition = localPos;
         }
 
-        public int GetCurHealth()
+        private bool TryPerformAction(float duration)
         {
-            return this.currentHealth;
-        }
+            if (!this.isActionable)
+                return false;
 
-        public int GetMaxHealth()
-        {
-            return this.maxHealth;
+            // Perform action.
+            this.isActionable = false;
+            {
+                if (this.actionableRoutine != null)
+                    this.StopCoroutine(this.actionableRoutine);
+                this.actionableRoutine = this.Schedule(duration, () => this.isActionable = true);
+            }
+            return true;
         }
 
         #region ICharacter Interface
-        private int specialMeter { get; set; }
-
-        private void Move(Vector2 input)
-        {
-            this.move = input;
-        }
 
         private void LightAttack(int damage, AttkEffect comboMove)
         {
+            if (this.isAttacking || !this.TryPerformAction(this.attackDuration * this.attackMod))
+                return;
+
             this.ManageAttackDirection();
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
@@ -196,6 +164,13 @@ namespace Cadenza
             this.attackArea.damage = damage;
             this.attackArea.comboMove = comboMove;
             this.attackArea.gameObject.SetActive(this.isAttacking);
+
+            this.Schedule(this.attackDuration * this.attackMod, () =>
+            {
+                this.isAttacking = false;
+                this.attackArea.gameObject.SetActive(this.isAttacking);
+                this.slamArea.gameObject.SetActive(this.isAttacking);
+            });
 
             if (comboMove == AttkEffect.AbilityOne)
             {
@@ -211,29 +186,25 @@ namespace Cadenza
         }
         private void HeavyAttack(int damage, AttkEffect comboMove)
         {
+            if (this.isAttacking || !this.TryPerformAction(this.attackDuration))
+                return;
+
             this.ManageAttackDirection();
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 2;
-            /*
-            if (comboMove == AttkEffect.Base_Smash)
-            {
-                this.slamArea.damage = damage;
-                this.slamArea.comboMove = comboMove;
-                this.slamArea.gameObject.GetComponent<SphereCollider>().radius = 1;
-                this.slamArea.gameObject.SetActive(this.isAttacking);
-            }
-            else if (comboMove == AttkEffect.Area_Smash)
-            {
-                this.slamArea.damage = damage;
-                this.slamArea.comboMove = comboMove;
-                this.slamArea.gameObject.GetComponent<SphereCollider>().radius = 1.5f;
-                this.slamArea.gameObject.SetActive(this.isAttacking);
-            }
-            */
+
             this.attackArea.damage = damage;
             this.attackArea.comboMove = comboMove;
             this.attackArea.gameObject.SetActive(this.isAttacking);
+
+            this.Schedule(this.attackDuration * this.attackMod, () =>
+            {
+                this.isAttacking = false;
+                this.attackArea.gameObject.SetActive(this.isAttacking);
+                this.slamArea.gameObject.SetActive(this.isAttacking);
+            });
+
 
             if (comboMove == AttkEffect.AbilityOne)
             {
@@ -281,8 +252,33 @@ namespace Cadenza
             this.currentHealth -= damage;
             this.anim.SetTrigger("IsHit");
 
+            // Hit stun.
+            this.isActionable = false;
+            {
+                if (this.actionableRoutine != null)
+                    this.StopCoroutine(this.actionableRoutine);
+                this.actionableRoutine = this.Schedule(this.attackDuration, () => this.isActionable = true);
+            }
+
             if (this.currentHealth <= 0)
+            {
+                // Faint.
+                this.isActionable = false;
+                this.isFainted = true;
                 this.anim.SetBool("IsFainted", true);
+
+                // TEMP: Respawn with full health.
+                if (this.actionableRoutine != null)
+                    this.StopCoroutine(this.actionableRoutine);
+                this.actionableRoutine = this.Schedule(2.0f, () =>
+                {
+                    this.isActionable = true;
+                    this.isFainted = false;
+                    this.anim.SetBool("IsFainted", false);
+                    this.currentHealth = this.maxHealth;
+                    HealthChanged?.Invoke(this.currentHealth);
+                });
+            }
 
             HealthChanged?.Invoke(this.currentHealth);
         }
@@ -292,21 +288,20 @@ namespace Cadenza
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            var input = context.performed ? context.ReadValue<Vector2>() : Vector2.zero;
-            this.Move(input);
+            this.move = context.ReadValue<Vector2>();
         }
 
         public void OnAttackLight(InputAction.CallbackContext context)
         {
-            ComboM.ProcessCombo(AttkTypes.Light, out var reward);
-            this.LightAttack(this.baseLight * reward.Multiplier, reward.AttackEffect);
+            this.ComboM.ProcessCombo(AttkTypes.Light, out var reward);
+            this.LightAttack(this.baseLightDamage * reward.Multiplier, reward.AttackEffect);
             //put enums in attack area with namespace
         }
 
         public void OnAttackHeavy(InputAction.CallbackContext context)
         {
-            ComboM.ProcessCombo(AttkTypes.Heavy, out var reward);
-            this.HeavyAttack(this.baseHeavy * reward.Multiplier, reward.AttackEffect);
+            this.ComboM.ProcessCombo(AttkTypes.Heavy, out var reward);
+            this.HeavyAttack(this.baseHeavyDamage * reward.Multiplier, reward.AttackEffect);
         }
 
         public void OnAttackSpecial(InputAction.CallbackContext context)

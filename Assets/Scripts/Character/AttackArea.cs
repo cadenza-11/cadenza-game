@@ -23,18 +23,13 @@ public class AttackArea : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if(collider.CompareTag("Player"))
+        if (collider.CompareTag("Player"))
         {
             Character hitEntity = collider.gameObject.GetComponent<Character>();
             hitEntity.DoDamage(this.damage);
         }
-        else
+        if (collider.CompareTag("Enemy"))
         {
-            Debug.Log("dealt" + this.damage + "damage");
-        }
-        if(collider.CompareTag("Enemy"))
-        {
-            Debug.Log("AttackArea: Area collided with Enemy");
             Enemy hitEntity = collider.gameObject.GetComponent<Enemy>();
             hitEntity.DoDamage(2);
         }

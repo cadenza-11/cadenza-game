@@ -109,10 +109,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dc5988cebcb4f8408761a211cbdd4c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Enemy
-  Transform: {fileID: 2003244786977031834}
   speed: 1.5
-  meleeDuration: 2
-  rangedDuration: 2
+  meleeDuration: 0.25
+  rangedDuration: 0.25
   maxHealth: 10
   currentHealth: 10
   attackArea: {fileID: 4501090668073902876}

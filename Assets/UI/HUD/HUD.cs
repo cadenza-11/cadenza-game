@@ -74,7 +74,7 @@ namespace Cadenza
                     this.healthBars[i].Q<Label>("update_CharacterName").text = player.CharacterClass.Name;
                     this.healthBars[i].Q<VisualElement>("portrait_Character").style.backgroundImage = player.CharacterClass.Portrait;
                     ProgressBar health = this.healthBars[i].Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
-                    health.highValue = player.Character.GetMaxHealth();
+                    health.highValue = player.Character.MaxHealth;
                     player.Character.HealthChanged += (healthValue) => this.OnHealthChanged(healthValue, health);
                 }
                 else
