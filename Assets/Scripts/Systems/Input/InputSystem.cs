@@ -75,7 +75,8 @@ namespace Cadenza
         /// <param name="hostPlayer">The player to give sole input</param>
         public static void SwitchInputMapSinglePlayer(InputMap inputMap, Player hostPlayer)
         {
-            Debug.Assert(mapNames.TryGetValue(inputMap, out string mapName));
+            if (!mapNames.TryGetValue(inputMap, out string mapName))
+                return;
 
             foreach (var player in PlayerSystem.PlayersByID.Values)
                 player.Input.DeactivateInput();
@@ -91,7 +92,8 @@ namespace Cadenza
         /// <param name="inputMap">The input map to enable</param>
         public static void SwitchInputMapMultiPlayer(InputMap inputMap)
         {
-            Debug.Assert(mapNames.TryGetValue(inputMap, out string mapName));
+            if (!mapNames.TryGetValue(inputMap, out string mapName))
+                return;
 
             foreach (var player in PlayerSystem.PlayersByID.Values)
             {

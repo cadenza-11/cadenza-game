@@ -32,9 +32,7 @@ namespace Cadenza
 
         public void Initialize()
         {
-            Debug.Assert(this.uiDocument != null);
-
-            if (this.isInitialized)
+            if (this.uiDocument == null || this.isInitialized)
                 return;
 
             this.root = (TemplateContainer)this.uiDocument.rootVisualElement;
