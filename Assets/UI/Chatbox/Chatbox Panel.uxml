@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Chatbox/Chatbox%20Panel.uss?fileID=7433441132597879392&amp;guid=099f4d36a610d5e4290ded0b0caf32d4&amp;type=3#Chatbox Panel" />
+    <ui:VisualElement name="c_Background" class="enemy" style="flex-grow: 1;">
+        <ui:VisualElement name="portrait_Character" class="portrait" />
+        <ui:VisualElement name="c_Dialogue" class="dialogue_container">
+            <ui:Label text="dialogue" name="txt_Dialogue" class="dialogue" />
+            <ui:Label text="name" name="txt_CharacterName" class="name" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

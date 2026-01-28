@@ -1,0 +1,58 @@
+:root {
+}
+
+.portrait {
+    height: 60%;
+    width: 30%;
+    align-self: flex-end;
+    top: 10%;
+    right: 10%;
+    background-image: url("project://database/Assets/Art/TEMPORARY_ASSETS/Instruments/bass.png?fileID=2800000&guid=d90997637ec104c41bbdde065bd9b2c9&type=3#bass");
+}
+
+.dialogue_container {
+    flex-grow: 0;
+    bottom: 2%;
+    flex-shrink: 0;
+    width: 90%;
+    height: 33%;
+    align-self: center;
+    position: absolute;
+    background-color: rgb(255, 255, 255);
+    border-top-width: 20px;
+    border-right-width: 20px;
+    border-bottom-width: 20px;
+    border-left-width: 20px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    padding-top: 40px;
+    padding-right: 40px;
+    padding-bottom: 40px;
+    padding-left: 40px;
+}
+
+.dialogue {
+}
+
+.name {
+    font-size: 80px;
+    position: absolute;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    -unity-text-outline-width: 4px;
+    color: rgb(255, 255, 255);
+    letter-spacing: -5px;
+    top: -35%;
+}
+
+.enemy .portrait {
+    align-self: flex-start;
+    left: 10%;
+    right: 0%;
+}
+
+.enemy .name {
+    align-self: flex-end;
+    right: 2%;
+}
