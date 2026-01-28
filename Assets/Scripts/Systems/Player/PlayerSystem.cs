@@ -30,7 +30,6 @@ namespace Cadenza
 
         public static event Action<Player> PlayerJoined;
         public static event Action<Player> PlayerRemoved;
-        public static event Action<ScoreDef> PlayerHit;
         public static event Action<Player> PlayerSpawned;
 
         #region Application Callbacks
@@ -143,9 +142,6 @@ namespace Cadenza
             player.Initialize(id, playerInput);
             this.playersByID[id] = player;
             this.players = this.playersByID.Values.ToArray();
-
-            // Register for hit events.
-            player.PlayerHit += (score) => PlayerHit?.Invoke(score);
 
             Debug.Log($"Player joined using device scheme {playerInput.currentControlScheme}. (id={id})");
             PlayerJoined?.Invoke(player);

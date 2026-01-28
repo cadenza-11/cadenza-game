@@ -112,6 +112,7 @@ namespace Cadenza
         #region Public Accessors
 
         public static Thresholds IndividualThresholds => singleton.individualThresholds;
+        public static event Action<ScoreDef> AnyPlayerHit;
         public static event Action<TeamScoreDef> TeamHit;
         public static event Action<int> StreakUpdated;
 
@@ -123,7 +124,7 @@ namespace Cadenza
         private int[] playerIdScratch;
         private double[] timestampScratch;
         private Dictionary<Player, double> latencyByPlayer;
-        private Dictionary<int, ScoreDef> playerHitsThisBeat;
+        private Dictionary<Player, ScoreDef> playerHitsThisBeat;
         private Results results;
 
         public override void OnInitialize()
@@ -138,6 +139,9 @@ namespace Cadenza
             this.latencyByPlayer = new();
             this.playerHitsThisBeat = new();
             SaveSystem.GetPreviousRuns(out Results[] results);
+
+            // Register for player hit.
+            PlayerSystem.PlayerJoined += player => player.PlayerHit += this.OnPlayerHit;
         }
 
         public override void OnGameStart()
@@ -154,7 +158,6 @@ namespace Cadenza
             this.currentStreak = 0;
 
             // Listen for events.
-            PlayerSystem.PlayerHit += this.OnPlayerHit;
             BeatSystem.BeatPlayed += this.OnBeat;
         }
 
@@ -197,7 +200,7 @@ namespace Cadenza
 
             // Register team hit.
             {
-                this.playerHitsThisBeat[def.PlayerID] = def;
+                this.playerHitsThisBeat[def.Player] = def;
 
                 // Have all players have hit this beat?
                 if (this.playerHitsThisBeat.Count == PlayerSystem.PlayerCount)
@@ -220,14 +223,17 @@ namespace Cadenza
                     TeamHit?.Invoke(teamScore);
                 }
             }
+
+            // Forward "any player hit" event.
+            AnyPlayerHit?.Invoke(def);
         }
 
-        private void GetPlayersAndHits(Dictionary<int, ScoreDef> playerHitsThisBeat, int[] players, double[] timestamps)
+        private void GetPlayersAndHits(Dictionary<Player, ScoreDef> playerHitsThisBeat, int[] players, double[] timestamps)
         {
             int i = 0;
-            foreach ((int id, ScoreDef score) in playerHitsThisBeat)
+            foreach ((Player player, ScoreDef score) in playerHitsThisBeat)
             {
-                players[i] = id;
+                players[i] = player.ID;
                 timestamps[i] = score.Timestamp;
                 i++;
             }
