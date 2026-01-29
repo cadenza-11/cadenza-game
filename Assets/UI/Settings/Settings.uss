@@ -56,3 +56,7 @@ Button:focus {
 Button:hover {
     background-color: rgb(255, 138, 0);
 }
+
+.spacer {
+    max-height: 50px;
+}

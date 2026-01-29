@@ -42,6 +42,7 @@ namespace Cadenza
                 SaveSystem.DeletePreviousRuns();
                 SaveSystem.DeleteTeamFile();
             };
+            this.root.Q<Toggle>("toggle_Haptics").RegisterValueChangedCallback(evt => InputSystem.SetHapticsEnabled(evt.newValue));
 
             // Configure audio.
             this.root.Q<Slider>("slider_Master").RegisterValueChangedCallback(evt => AudioSystem.SetVolume(AudioSystem.Group.Master, evt.newValue));

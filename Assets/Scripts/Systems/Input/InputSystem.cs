@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Haptics;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.InputSystem.Users;
 
@@ -18,6 +19,14 @@ namespace Cadenza
             Player,
             UI,
         }
+
+        [SerializeField]
+        private float beatHapticsDuration;
+
+        [SerializeField, Range(0, 1)]
+        private float beatHapticsMagnitude;
+
+        private bool hapticsEnabled = true;
 
         private static readonly Dictionary<InputMap, string> mapNames = new()
         {
@@ -41,10 +50,16 @@ namespace Cadenza
             PlayerSystem.PlayerJoined += this.OnPlayerJoined;
         }
 
+        public override void OnApplicationStop()
+        {
+            this.UnregisterAllHaptics();
+        }
+
         private void OnPlayerJoined(Player player)
         {
             this.RegisterPlayerNavigationEvents(player);
             this.RegisterPlayerDebugEvents(player);
+            this.RegisterPlayerBeatHaptics(player);
         }
 
         private void RegisterPlayerNavigationEvents(Player player)
@@ -63,6 +78,31 @@ namespace Cadenza
         {
             var toggleDebugAction = player.Input.actions.FindAction("Toggle/Debug");
             toggleDebugAction.performed += ctx => { if (ctx.performed) UISystem.FindPanel<DebugConsole>().Toggle(); };
+        }
+
+        private void RegisterPlayerBeatHaptics(Player player)
+        {
+            // Register haptics.
+            foreach (var device in player.Input.devices)
+            {
+                if (device is not IDualMotorRumble haptics)
+                    continue;
+
+                BeatSystem.BeatPlayed += () =>
+                {
+                    PulseHaptics(
+                        haptics,
+                        this.beatHapticsMagnitude,
+                        this.beatHapticsMagnitude,
+                        this.beatHapticsDuration);
+                };
+            }
+        }
+
+        private void UnregisterAllHaptics()
+        {
+            foreach (var device in Gamepad.all)
+                device.ResetHaptics();
         }
 
         #region Public Static Methods
@@ -112,6 +152,32 @@ namespace Cadenza
                     return player;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Globally enable or disable controller rumble haptics.
+        /// </summary>
+        public static void SetHapticsEnabled(bool enabled)
+        {
+            singleton.hapticsEnabled = enabled;
+        }
+
+        /// <summary>
+        /// Enables rumble haptics on a device for a set period of time.
+        /// Device must be a Gamepad or implement the IDualMotorRumble interface.
+        /// </summary>
+        /// <param name="haptics">The device to enable haptics on</param>
+        /// <param name="lowFrequency">The requested speed of the left motor on the controller, from 0-1</param>
+        /// <param name="highFrequency">The requested speed of the right motor on the controller, from 0-1</param>
+        /// <param name="duration">The amount of time before the motors are turned off</param>
+        public static void PulseHaptics(IDualMotorRumble haptics, float lowFrequency, float highFrequency, float duration)
+        {
+            if (!singleton.hapticsEnabled)
+                return;
+
+            haptics.SetMotorSpeeds(lowFrequency, highFrequency);
+            haptics.ResumeHaptics();
+            Timer.ScheduleAsync(duration, () => haptics.SetMotorSpeeds(0, 0));
         }
 
         #endregion
