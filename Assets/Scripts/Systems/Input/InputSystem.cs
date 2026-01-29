@@ -11,7 +11,7 @@ namespace Cadenza
     /// <summary>
     /// Handles enabling and disabling of input actions, input action maps, and player input.
     /// </summary>
-    [RequireComponent(typeof(InputSystemUIInputModule))]
+    [RequireComponent(typeof(InputSystemUIInputModule), typeof(PlayerInputManager))]
     public class InputSystem : ApplicationSystem
     {
         public enum InputMap
@@ -36,6 +36,12 @@ namespace Cadenza
 
         private static InputSystem singleton;
 
+        private PlayerInputManager playerInputManager;
+        private Dictionary<int, Player> joinedPlayersByID;
+        public static IReadOnlyDictionary<int, Player> JoinedPlayersByID => singleton.joinedPlayersByID;
+        public static event Action<Player> PlayerJoined;
+        public static event Action<Player> PlayerLeft;
+
         private InputSystemUIInputModule uiInputModule;
         public static event Action<Player> UIPlayerSubmit;
         public static event Action<Player> UIPlayerCancel;
@@ -47,7 +53,13 @@ namespace Cadenza
             singleton = this;
 
             this.uiInputModule = this.GetComponent<InputSystemUIInputModule>();
-            PlayerSystem.PlayerJoined += this.OnPlayerJoined;
+
+            // Configure player input manager.
+            this.joinedPlayersByID = new();
+            this.playerInputManager = this.GetComponent<PlayerInputManager>();
+            this.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
+            this.playerInputManager.onPlayerJoined += this.OnPlayerJoined;
+            this.playerInputManager.onPlayerLeft += this.OnPlayerLeft;
         }
 
         public override void OnApplicationStop()
@@ -55,11 +67,34 @@ namespace Cadenza
             this.UnregisterAllHaptics();
         }
 
-        private void OnPlayerJoined(Player player)
+        private void OnPlayerJoined(PlayerInput playerInput)
         {
+            playerInput.transform.SetParent(this.transform);
+            var player = playerInput.GetComponent<Player>();
+
+            // Configure ID.
+            int id = playerInput.playerIndex;
+            player.Initialize(id, playerInput);
+            this.joinedPlayersByID[id] = player;
+
             this.RegisterPlayerNavigationEvents(player);
             this.RegisterPlayerDebugEvents(player);
             this.RegisterPlayerBeatHaptics(player);
+
+            playerInput.onDeviceLost += input => PlayerLeft?.Invoke(player);
+            playerInput.onDeviceRegained += input => PlayerJoined?.Invoke(player);
+
+            Debug.Log($"Player joined using device scheme {playerInput.currentControlScheme}. (id={id})");
+            PlayerJoined?.Invoke(player);
+        }
+
+        private void OnPlayerLeft(PlayerInput playerInput)
+        {
+            if (this.joinedPlayersByID.TryGetValue(playerInput.playerIndex, out Player player))
+            {
+                this.joinedPlayersByID.Remove(playerInput.playerIndex);
+                PlayerLeft?.Invoke(player);
+            }
         }
 
         private void RegisterPlayerNavigationEvents(Player player)
@@ -107,6 +142,28 @@ namespace Cadenza
 
         #region Public Static Methods
 
+        public static bool IsPlayerJoined(int id)
+        {
+            return singleton.joinedPlayersByID.TryGetValue(id, out _);
+        }
+
+        /// <summary>
+        /// Allow new devices/players to join when pressing a button.
+        /// </summary>
+        public static void EnableJoining()
+        {
+            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenJoinActionIsTriggered;
+        }
+
+
+        /// <summary>
+        /// Prevent new devices/players from joining automatically upon button press.
+        /// </summary>
+        public static void DisableJoining()
+        {
+            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+        }
+
         /// <summary>
         /// Enables the requested input map on the host player and disables all
         /// other input maps. Disables all input for players other than the host player.
@@ -118,7 +175,7 @@ namespace Cadenza
             if (!mapNames.TryGetValue(inputMap, out string mapName))
                 return;
 
-            foreach (var player in PlayerSystem.PlayersByID.Values)
+            foreach (var player in JoinedPlayersByID.Values)
                 player.Input.DeactivateInput();
 
             hostPlayer.Input.SwitchCurrentActionMap(mapName);
@@ -135,7 +192,7 @@ namespace Cadenza
             if (!mapNames.TryGetValue(inputMap, out string mapName))
                 return;
 
-            foreach (var player in PlayerSystem.PlayersByID.Values)
+            foreach (var player in JoinedPlayersByID.Values)
             {
                 player.Input.DeactivateInput();
                 player.Input.SwitchCurrentActionMap(mapName);
@@ -146,7 +203,7 @@ namespace Cadenza
         public static Player GetPlayerFromDevice(InputDevice device)
         {
             var user = InputUser.FindUserPairedToDevice(device);
-            foreach (var player in PlayerSystem.PlayersByID.Values)
+            foreach (var player in JoinedPlayersByID.Values)
             {
                 if (player.Input.user == user)
                     return player;

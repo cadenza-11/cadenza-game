@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1258511441156281435}
   - component: {fileID: 4205834215503494168}
-  - component: {fileID: 7326972724028805928}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -46,77 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.PlayerSystem
   characterPrefab: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  maxPlayersInRoster: 4
   characterClasses:
   - {fileID: 11400000, guid: cda20754fcd514e8f8d90723ac11b9e5, type: 2}
   - {fileID: 11400000, guid: a8016ff13eb5642c990da52e9c2eb5e0, type: 2}
   - {fileID: 11400000, guid: ae8914c139d804a62b31a3c14bbf57d4, type: 2}
   - {fileID: 11400000, guid: efd3ab957a08649749161d487cdc17d4, type: 2}
---- !u!114 &7326972724028805928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2709396287823410310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInputManager
-  m_NotificationBehavior: 3
-  m_MaxPlayerCount: -1
-  m_AllowJoining: 1
-  m_JoinBehavior: 1
-  m_PlayerJoinedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_PlayerLeftEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_JoinAction:
-    m_UseReference: 0
-    m_Action:
-      m_Name: Join
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: 40ea183c-3d94-45bd-9ce3-02e525559d9c
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings:
-      - m_Name: 
-        m_Id: 9d855729-7153-4acd-a54d-48bd6b608c80
-        m_Path: <Mouse>/leftButton
-        m_Interactions: 
-        m_Processors: 
-        m_Groups: 
-        m_Action: Join
-        m_Flags: 0
-      - m_Name: 
-        m_Id: 38808d5b-868a-4936-88ec-93fb9f77f311
-        m_Path: <Gamepad>/start
-        m_Interactions: 
-        m_Processors: 
-        m_Groups: 
-        m_Action: Join
-        m_Flags: 0
-      - m_Name: 
-        m_Id: a29d8ade-eca7-4c84-b598-fa99660a2ff6
-        m_Path: <Keyboard>/anyKey
-        m_Interactions: 
-        m_Processors: 
-        m_Groups: 
-        m_Action: Join
-        m_Flags: 0
-      m_Flags: 0
-    m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 8890650822834165431, guid: 0a84a4a5a6dc34a01b6a395f8a7fcedf, type: 3}
-  m_SplitScreen: 0
-  m_MaintainAspectRatioInSplitScreen: 0
-  m_FixedNumberOfSplitScreens: -1
-  m_SplitScreenRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
