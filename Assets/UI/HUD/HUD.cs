@@ -29,6 +29,8 @@ namespace Cadenza
             Filled
         }
 
+        #region Application Callbacks
+
         public override void OnInitialize()
         {
             this.Hide();
@@ -40,7 +42,8 @@ namespace Cadenza
 
             // Initialize team streak.
             this.teamStreak = this.root.Q<Label>("update_TeamStreak");
-            ScoreSystem.StreakUpdated += this.OnStreakUpdated;
+            ScoreSystem.RegisterTeamStreakCallbacks(this.OnTeamStreakStarted, this.OnTeamStreakEnded, this.OnTeamStreakUpdated);
+            ScoreSystem.RegisterPlayerStreakCallbacks(this.OnPlayerStreakStarted, this.OnPlayerStreakEnded, this.OnPlayerStreakUpdated);
 
             // Initialize beat indicator bar.
             this.beatIndicator = this.root.Q<BeatIndicator>();
@@ -54,20 +57,13 @@ namespace Cadenza
             }
         }
 
-        private void OnStreakUpdated(int streak)
-        {
-            if (!this.streakLabels.ContainsKey(streak))
-                this.streakLabels[streak] = $"x{streak}";
-
-            this.teamStreak.text = this.streakLabels[streak];
-        }
-
         public override void OnGameStart()
         {
             this.Show();
 
             for (int i = 0; i < 4; i++)
             {
+                // Initialize health bars.
                 if (PlayerSystem.TryGetPlayerByID(i, out Player player))
                 {
                     this.healthBars[i].style.opacity = 1;
@@ -113,6 +109,9 @@ namespace Cadenza
             this.beatIndicator.Update();
         }
 
+        #endregion
+        #region Team Combo Meter
+
         private void OnTeamHit(TeamScoreDef def)
         {
             if (this.GetMeterState() == MeterState.Filled)
@@ -152,11 +151,51 @@ namespace Cadenza
             return MeterState.Filling;
         }
 
+        #endregion
         #region Health Bar
 
         private void OnHealthChanged(int health, ProgressBar bar)
         {
             bar.value = health;
+        }
+
+        #endregion
+        #region Streaks
+
+        private void OnPlayerStreakStarted(StreakManager.PlayerStreakEvent evt)
+        {
+        }
+
+        private void OnPlayerStreakEnded(StreakManager.PlayerStreakEvent evt)
+        {
+        }
+
+        private void OnPlayerStreakUpdated(StreakManager.PlayerStreakEvent evt)
+        {
+            // Cache formatted string.
+            if (!this.streakLabels.ContainsKey(evt.Value))
+                this.streakLabels[evt.Value] = $"x{evt.Value}";
+
+            // Update player streak.
+            Debug.Log($"Player {evt.Player.ID} streak updated: x{evt.Value}");
+        }
+
+        private void OnTeamStreakStarted(StreakManager.TeamStreakEvent evt)
+        {
+        }
+
+        private void OnTeamStreakEnded(StreakManager.TeamStreakEvent evt)
+        {
+        }
+
+        private void OnTeamStreakUpdated(StreakManager.TeamStreakEvent evt)
+        {
+            // Cache formatted string.
+            if (!this.streakLabels.ContainsKey(evt.Value))
+                this.streakLabels[evt.Value] = $"x{evt.Value}";
+
+            // Update team streak.
+            this.teamStreak.text = this.streakLabels[evt.Value];
         }
 
         #endregion
