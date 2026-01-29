@@ -21,10 +21,12 @@ namespace Cadenza
         }
 
         [SerializeField]
-        private float beatHapticsDuration = 0.1f;
+        private float beatHapticsDuration;
 
         [SerializeField, Range(0, 1)]
-        private float beatHapticsMagnitude = 0.5f;
+        private float beatHapticsMagnitude;
+
+        private bool hapticsEnabled = true;
 
         private static readonly Dictionary<InputMap, string> mapNames = new()
         {
@@ -83,10 +85,13 @@ namespace Cadenza
             // Register haptics.
             foreach (var device in player.Input.devices)
             {
+                if (device is not IDualMotorRumble haptics)
+                    continue;
+
                 BeatSystem.BeatPlayed += () =>
                 {
                     PulseHaptics(
-                        device,
+                        haptics,
                         this.beatHapticsMagnitude,
                         this.beatHapticsMagnitude,
                         this.beatHapticsDuration);
@@ -150,16 +155,24 @@ namespace Cadenza
         }
 
         /// <summary>
+        /// Globally enable or disable controller rumble haptics.
+        /// </summary>
+        public static void SetHapticsEnabled(bool enabled)
+        {
+            singleton.hapticsEnabled = enabled;
+        }
+
+        /// <summary>
         /// Enables rumble haptics on a device for a set period of time.
         /// Device must be a Gamepad or implement the IDualMotorRumble interface.
         /// </summary>
-        /// <param name="device">The device to enable haptics on</param>
+        /// <param name="haptics">The device to enable haptics on</param>
         /// <param name="lowFrequency">The requested speed of the left motor on the controller, from 0-1</param>
         /// <param name="highFrequency">The requested speed of the right motor on the controller, from 0-1</param>
         /// <param name="duration">The amount of time before the motors are turned off</param>
-        public static void PulseHaptics(InputDevice device, float lowFrequency, float highFrequency, float duration)
+        public static void PulseHaptics(IDualMotorRumble haptics, float lowFrequency, float highFrequency, float duration)
         {
-            if (device is not IDualMotorRumble haptics)
+            if (!singleton.hapticsEnabled)
                 return;
 
             haptics.SetMotorSpeeds(lowFrequency, highFrequency);
