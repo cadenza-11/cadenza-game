@@ -9,7 +9,6 @@ namespace Cadenza
     /// <summary>
     /// Handles creation, removal, and tracking of players.
     /// </summary>
-    [RequireComponent(typeof(PlayerInputManager))]
     public class PlayerSystem : ApplicationSystem
     {
         private static PlayerSystem singleton;
@@ -18,7 +17,6 @@ namespace Cadenza
         [SerializeField] private GameObject characterPrefab;
         [SerializeField] private CharacterClass[] characterClasses;
 
-        private PlayerInputManager playerInputManager;
         private Dictionary<int, Player> playersByID;
         public static IReadOnlyDictionary<int, Player> PlayersByID => singleton.playersByID;
         public static int PlayerCount => singleton.playersByID.Count;
@@ -40,16 +38,21 @@ namespace Cadenza
             singleton = this;
 
             this.playersByID = new();
-
-            // Configure player input manager.
-            this.playerInputManager = this.GetComponent<PlayerInputManager>();
-            this.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
-            this.playerInputManager.onPlayerJoined += this.OnPlayerJoined;
-            this.playerInputManager.onPlayerLeft += this.OnPlayerLeft;
         }
 
         #endregion
         #region Public Static Methods
+
+        public static bool AddPlayer(int id)
+        {
+            // Join if there is a valid input user but no existing player for a given ID.
+            if (InputSystem.TryGetInputUserByID(id, out var input) && !TryGetPlayerByID(id, out _))
+            {
+                singleton.OnPlayerJoined(input);
+                return true;
+            }
+            return false;
+        }
 
         public static bool TryGetPlayerByID(int id, out Player player)
         {
@@ -78,23 +81,6 @@ namespace Cadenza
 
             singleton.OnPlayerLeft(p.Input);
             return singleton.playersByID.Remove(id);
-        }
-
-        /// <summary>
-        /// Allow new devices/players to join when pressing a button.
-        /// </summary>
-        public static void EnableJoining()
-        {
-            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenJoinActionIsTriggered;
-        }
-
-
-        /// <summary>
-        /// Prevent new devices/players from joining automatically upon button press.
-        /// </summary>
-        public static void DisableJoining()
-        {
-            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
         }
 
         public static Character SpawnPlayerBody(Player player)
@@ -134,12 +120,10 @@ namespace Cadenza
 
         private void OnPlayerJoined(PlayerInput playerInput)
         {
-            playerInput.transform.SetParent(this.transform);
             var player = playerInput.GetComponent<Player>();
 
             // Configure ID.
             int id = playerInput.playerIndex;
-            player.Initialize(id, playerInput);
             this.playersByID[id] = player;
             this.players = this.playersByID.Values.ToArray();
 
@@ -156,8 +140,6 @@ namespace Cadenza
 
             Debug.Log($"Player using device scheme {playerInput.currentControlScheme} left. (id={id})");
             PlayerRemoved?.Invoke(player);
-
-            Destroy(player);
         }
 
         #endregion

@@ -89,8 +89,8 @@ namespace Cadenza
 
             // Create tracker for newly joined players.
             InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
-            PlayerSystem.PlayerJoined += this.OnPlayerJoined;
-            PlayerSystem.EnableJoining();
+            InputSystem.InputUserJoined += this.OnInputUserJoined;
+            InputSystem.EnableJoining();
 
             // Handle player disconnect.
             PlayerSystem.PlayerRemoved += this.DisconnectPlayer;
@@ -117,7 +117,7 @@ namespace Cadenza
             ClassManager.CharacterTakenStatusChanged -= this.RefreshShownCharacters;
         }
 
-        private void OnPlayerJoined(Player player)
+        private void OnInputUserJoined(Player player)
         {
             this.ConnectPlayer(player);
         }
@@ -482,6 +482,8 @@ namespace Cadenza
 
         private void ConnectPlayer(Player player)
         {
+            PlayerSystem.AddPlayer()
+
             // Create a tracker if the player doesn't already have one.
             if (!this.playerTrackers.ContainsKey(player))
                 this.playerTrackers[player] = new PlayerTracker();
@@ -502,6 +504,7 @@ namespace Cadenza
         {
             this.ResetContainerView(this.playerContainers[player.ID]);
             this.playerTrackers.Remove(player);
+            PlayerSystem.RemovePlayer(player);
         }
 
         #endregion
