@@ -5,7 +5,7 @@ namespace Cadenza
         public void Initialize()
         {
             // Register for player hit events.
-            PlayerSystem.PlayerHit += this.OnPlayerHit;
+            ScoreSystem.AnyPlayerHit += this.OnPlayerHit;
             ScoreSystem.TeamHit += this.OnTeamHit;
         }
 

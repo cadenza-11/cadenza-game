@@ -303,5 +303,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   damage: 0
-  knockbackScale: 20
+  knockbackScale: 5
   comboMove: 0

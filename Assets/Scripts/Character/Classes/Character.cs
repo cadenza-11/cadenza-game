@@ -70,11 +70,12 @@ namespace Cadenza
 
             //Reads in a Vector2, converts it to a Vector3, and flips sprite based on direction
 
-            if (!this.isCharging)
+            if (this.isActionable && !this.isCharging)
             {
-                Vector3 moveDir = this.isActionable
-                    ? new Vector3(this.move.x * this.speed, this.rb.linearVelocity.y, this.move.y * this.speed)
-                    : new Vector3(0, this.rb.linearVelocity.y, 0);
+                Vector3 moveDir = new(
+                    this.move.x * this.speed,
+                    this.rb.linearVelocity.y,
+                    this.move.y * this.speed);
                 this.rb.linearVelocity = moveDir;
 
                 if (moveDir.x != 0 && moveDir.x < 0)
@@ -143,6 +144,7 @@ namespace Cadenza
 
             // Perform action.
             this.isActionable = false;
+            this.rb.linearVelocity = new Vector3(0, this.rb.linearVelocity.y, 0);
             {
                 if (this.actionableRoutine != null)
                     this.StopCoroutine(this.actionableRoutine);
@@ -221,6 +223,7 @@ namespace Cadenza
 
             // Hit stun.
             this.isActionable = false;
+            this.rb.linearVelocity = new Vector3(0, this.rb.linearVelocity.y, 0);
             {
                 if (this.actionableRoutine != null)
                     this.StopCoroutine(this.actionableRoutine);
@@ -231,6 +234,7 @@ namespace Cadenza
             {
                 // Faint.
                 this.isActionable = false;
+                this.rb.linearVelocity = new Vector3(0, this.rb.linearVelocity.y, 0);
                 this.isFainted = true;
                 this.anim.SetBool("IsFainted", true);
 

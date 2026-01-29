@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   damage: 0
-  knockbackScale: 20
+  knockbackScale: 5
   comboMove: 0
 --- !u!1 &4273684722368562779
 GameObject:
@@ -439,6 +439,8 @@ MonoBehaviour:
   interactionIndicator: {fileID: 6171001511222046999}
   projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
   ComboM: {fileID: 0}
+  baseLightDamage: 0
+  baseHeavyDamage: 0
 --- !u!1001 &1003460141613909193
 PrefabInstance:
   m_ObjectHideFlags: 0

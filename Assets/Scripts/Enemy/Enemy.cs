@@ -43,6 +43,7 @@ namespace Cadenza
         private float curAngle;
         private Player follow;
         private Vector2 TargetLocation;
+        private bool isActionable;
 
         //May want a character manager to see character locations
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -53,6 +54,7 @@ namespace Cadenza
             this.speed = 1.5f;
             this.isAttacking = false;
             this.enemyMgr.AddEnemy(this.gameObject);
+            this.isActionable = true;
         }
 
         // Update is called once per frame
@@ -108,6 +110,11 @@ namespace Cadenza
         {
             this.currentHealth -= damage;
             this.anim.SetTrigger("IsHit");
+
+            // Hit stun.
+            this.isActionable = false;
+            this.Schedule(this.meleeDuration, () => this.isActionable = true);
+
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 3, immediate: true);
         }
 
@@ -121,6 +128,9 @@ namespace Cadenza
         /// </summary>
         private void CheckState()
         {
+            if (!this.isActionable)
+                return;
+
             switch (this.curState)
             {
                 case EnemyState.Idle:

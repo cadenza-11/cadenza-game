@@ -112,18 +112,17 @@ namespace Cadenza
         #region Public Accessors
 
         public static Thresholds IndividualThresholds => singleton.individualThresholds;
+        public static event Action<ScoreDef> AnyPlayerHit;
         public static event Action<TeamScoreDef> TeamHit;
-        public static event Action<int> StreakUpdated;
 
         #endregion
 
+        private readonly StreakManager streakManager = new();
         private TeamScoreDef? teamScoreThisBeat;
-        private int currentStreak;
-
         private int[] playerIdScratch;
         private double[] timestampScratch;
         private Dictionary<Player, double> latencyByPlayer;
-        private Dictionary<int, ScoreDef> playerHitsThisBeat;
+        private Dictionary<Player, ScoreDef> playerHitsThisBeat;
         private Results results;
 
         public override void OnInitialize()
@@ -138,6 +137,9 @@ namespace Cadenza
             this.latencyByPlayer = new();
             this.playerHitsThisBeat = new();
             SaveSystem.GetPreviousRuns(out Results[] results);
+
+            // Register for player hit.
+            PlayerSystem.PlayerJoined += player => player.PlayerHit += this.OnPlayerHit;
         }
 
         public override void OnGameStart()
@@ -151,10 +153,9 @@ namespace Cadenza
             this.timestampScratch = new double[PlayerSystem.PlayerCount];
 
             // Prepare streaks.
-            this.currentStreak = 0;
+            this.streakManager.Reset();
 
             // Listen for events.
-            PlayerSystem.PlayerHit += this.OnPlayerHit;
             BeatSystem.BeatPlayed += this.OnBeat;
         }
 
@@ -172,13 +173,16 @@ namespace Cadenza
             if (ApplicationController.State != ApplicationState.GameSession)
                 return;
 
-            if (this.teamScoreThisBeat.HasValue && this.teamScoreThisBeat.Value.Class != ScoreClass.Bad)
-                this.currentStreak++;
-            else
-                this.currentStreak = 0;
+            // Reset team streaks.
+            if (!this.teamScoreThisBeat.HasValue)
+                this.streakManager.ResetTeamStreak();
 
-            this.results.AddStreak(this.currentStreak);
-            StreakUpdated?.Invoke(this.currentStreak);
+            // Reset player streaks.
+            foreach (var player in PlayerSystem.Players)
+            {
+                if (!this.playerHitsThisBeat.ContainsKey(player))
+                    this.streakManager.ResetPlayerStreak(player);
+            }
 
             // Reset team hit tracking.
             this.playerHitsThisBeat.Clear();
@@ -190,6 +194,7 @@ namespace Cadenza
             // Register individual hit.
             {
                 this.results.AddPlayerScore(def.PlayerID, def.Class);
+                this.streakManager.UpdatePlayerStreak(def);
             }
 
             if (this.teamScoreThisBeat.HasValue)
@@ -197,7 +202,7 @@ namespace Cadenza
 
             // Register team hit.
             {
-                this.playerHitsThisBeat[def.PlayerID] = def;
+                this.playerHitsThisBeat[def.Player] = def;
 
                 // Have all players have hit this beat?
                 if (this.playerHitsThisBeat.Count == PlayerSystem.PlayerCount)
@@ -218,23 +223,30 @@ namespace Cadenza
 
                     this.results.AddTeamScore(teamScore.Class);
                     TeamHit?.Invoke(teamScore);
+
+                    // Handle streak.
+                    int teamStreak = this.streakManager.UpdateTeamStreak(teamScore);
+                    this.results.AddStreak(teamStreak);
                 }
             }
+
+            // Forward "any player hit" event.
+            AnyPlayerHit?.Invoke(def);
         }
 
-        private void GetPlayersAndHits(Dictionary<int, ScoreDef> playerHitsThisBeat, int[] players, double[] timestamps)
+        private void GetPlayersAndHits(Dictionary<Player, ScoreDef> playerHitsThisBeat, int[] players, double[] timestamps)
         {
             int i = 0;
-            foreach ((int id, ScoreDef score) in playerHitsThisBeat)
+            foreach ((Player player, ScoreDef score) in playerHitsThisBeat)
             {
-                players[i] = id;
+                players[i] = player.ID;
                 timestamps[i] = score.Timestamp;
                 i++;
             }
         }
 
 
-        #region Scoring Methods
+        #region Public Static Methods
 
         /// <summary>
         /// Returns a value and descriptor of a player's accuracy, given their latency from the beat.
@@ -312,6 +324,36 @@ namespace Cadenza
         public static void ResetCalibrationDataForPlayer(Player player)
         {
             singleton.latencyByPlayer.Remove(player);
+        }
+
+        /// <summary>
+        /// Subscribe to when a team streak starts, ends, or updates.
+        /// </summary>
+        public static void RegisterTeamStreakCallbacks(
+            StreakManager.TeamStreakCallback onStreakStarted,
+            StreakManager.TeamStreakCallback onStreakEnded,
+            StreakManager.TeamStreakCallback onStreakUpdated)
+        {
+            singleton.streakManager.RegisterTeamStreakCallbacks(
+                onStreakStarted,
+                onStreakEnded,
+                onStreakUpdated
+            );
+        }
+
+        /// <summary>
+        /// Subscribe to when a player streak starts, ends, or updates.
+        /// </summary>
+        public static void RegisterPlayerStreakCallbacks(
+            StreakManager.PlayerStreakCallback onStreakStarted,
+            StreakManager.PlayerStreakCallback onStreakEnded,
+            StreakManager.PlayerStreakCallback onStreakUpdated)
+        {
+            singleton.streakManager.RegisterPlayerStreakCallbacks(
+                onStreakStarted,
+                onStreakEnded,
+                onStreakUpdated
+            );
         }
 
         #endregion
