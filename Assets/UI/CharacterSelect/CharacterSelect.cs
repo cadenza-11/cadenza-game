@@ -25,6 +25,7 @@ namespace Cadenza
 
         private enum SelectPhase
         {
+            None,
             Joining,
             CalibratingInProgress,
             CalibratingDone,
@@ -73,41 +74,41 @@ namespace Cadenza
             // Bind a new PlayerContainer to the container element.
             for (int i = 0; i < containers.Count; i++)
                 this.playerContainers[i] = this.GetNewContainer(containers[i]);
+
+            InputSystem.PlayerJoined += this.OnPlayerJoined;
+            InputSystem.PlayerLeft += this.OnPlayerLeft;
         }
 
         public override void OnShow()
         {
+            InputSystem.EnableJoining();
             ClassManager.ClearCharacterAssignments();
 
-            // Reset views.
-            foreach (var container in this.playerContainers)
-                this.ResetContainerView(container);
+            // Register player roster updates.
+            PlayerSystem.PlayerAdded += this.OnPlayerAdded;
+            PlayerSystem.PlayerRemoved += this.OnPlayerRemoved;
 
-            // Create tracker for existing players.
-            foreach (var player in PlayerSystem.PlayersByID.Values)
-                this.OnPlayerJoined(player);
-
-            // Create tracker for newly joined players.
-            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
-            InputSystem.InputUserJoined += this.OnInputUserJoined;
-            InputSystem.EnableJoining();
-
-            // Handle player disconnect.
-            PlayerSystem.PlayerRemoved += this.DisconnectPlayer;
+            // Clear roster.
+            foreach (var player in PlayerSystem.Players)
+                PlayerSystem.RemovePlayer(player);
 
             // Register for player input.
             InputSystem.UIPlayerSubmit += this.OnSubmit;
             InputSystem.UIPlayerCancel += this.OnCancel;
             InputSystem.UIPlayerNavigate += this.OnNavigate;
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
 
             ClassManager.CharacterTakenStatusChanged += this.RefreshShownCharacters;
         }
 
         public override void OnHide()
         {
-            this.playerTrackers = new();
-            PlayerSystem.PlayerJoined -= this.OnPlayerJoined;
-            PlayerSystem.PlayerRemoved -= this.DisconnectPlayer;
+            InputSystem.DisableJoining();
+            this.playerTrackers.Clear();
+
+            // Unregister player roster updates.
+            PlayerSystem.PlayerAdded -= this.OnPlayerAdded;
+            PlayerSystem.PlayerRemoved -= this.OnPlayerRemoved;
 
             // Unregister player input.
             InputSystem.UIPlayerSubmit -= this.OnSubmit;
@@ -117,27 +118,25 @@ namespace Cadenza
             ClassManager.CharacterTakenStatusChanged -= this.RefreshShownCharacters;
         }
 
-        private void OnInputUserJoined(Player player)
-        {
-            this.ConnectPlayer(player);
-        }
-
         #endregion
         #region Navigation Events
 
         private void OnSubmit(Player player)
         {
-            // Ignore input from unjoined players.
-            if (player == null || !this.playerTrackers.TryGetValue(player, out PlayerTracker tracker))
+            if (player == null)
                 return;
 
+            if (!this.playerTrackers.ContainsKey(player))
+                this.OnPlayerJoined(player);
+
+            var tracker = this.playerTrackers[player];
             var playerContainer = this.playerContainers[player.ID];
 
             switch (tracker.Phase)
             {
                 // Proceed to calibration.
                 case SelectPhase.Joining:
-                    this.ResetCalibration(player);
+                    PlayerSystem.AddPlayer(player);
                     tracker.Phase = SelectPhase.CalibratingInProgress;
                     break;
 
@@ -170,10 +169,13 @@ namespace Cadenza
 
         private void OnCancel(Player player)
         {
-            // Ignore input from unjoined players.
-            if (player == null || !this.playerTrackers.TryGetValue(player, out PlayerTracker tracker))
+            if (player == null)
                 return;
 
+            if (!this.playerTrackers.ContainsKey(player))
+                this.OnPlayerJoined(player);
+
+            var tracker = this.playerTrackers[player];
             var playerContainer = this.playerContainers[player.ID];
 
             switch (tracker.Phase)
@@ -185,6 +187,7 @@ namespace Cadenza
 
                 // Disconnect.
                 case SelectPhase.CalibratingInProgress:
+                    PlayerSystem.RemovePlayer(player);
                     tracker.Phase = SelectPhase.Joining;
                     break;
 
@@ -296,23 +299,8 @@ namespace Cadenza
                 NavNextHint = element.Q<VisualElement>("c_NavNext"),
             };
 
-            this.ResetContainerView(container);
+            this.ShowPhase(container, SelectPhase.None);
             return container;
-        }
-
-        private void ResetContainerView(PlayerContainer container)
-        {
-            // Reset calibration text.
-            container.CalibrationContainer.Q<Label>("update_MaxAttempts").text = this.requiredCalibrationAttempts.ToString();
-            container.CalibrationContainer.Q<Label>("update_Counter").text = 0.ToString();
-
-            // Reset shown character.
-            this.ChangeShownCharacter(container.CharacterSelectionContainer, ClassManager.GetNextCharacter(""));
-            container.CharacterSelectionContainer.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
-            container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
-
-            // Show default phase.
-            this.ShowPhase(container, SelectPhase.Joining);
         }
 
         private void ShowPhase(PlayerContainer playerContainer, SelectPhase phase)
@@ -395,9 +383,9 @@ namespace Cadenza
                 this.IsCalibrationComplete(tracker))
                 return;
 
-            var calibrationConainer = this.playerContainers[player.ID].CalibrationContainer;
-            var attemptCounter = calibrationConainer.Q<Label>("update_Counter");
-            var latencyLabel = calibrationConainer.Q<Label>("update_Latency");
+            var calibrationContainer = this.playerContainers[player.ID].CalibrationContainer;
+            var attemptCounter = calibrationContainer.Q<Label>("update_Counter");
+            var latencyLabel = calibrationContainer.Q<Label>("update_Latency");
 
             // Add a calibration attempt.
             double latency = BeatSystem.GetLatency(BeatSystem.CurrentTrackTime);
@@ -412,13 +400,15 @@ namespace Cadenza
             if (!this.playerTrackers.TryGetValue(player, out var tracker))
                 return;
 
-            var calibrationConainer = this.playerContainers[player.ID].CalibrationContainer;
-            var attemptCounter = calibrationConainer.Q<Label>("update_Counter");
-            var latencyLabel = calibrationConainer.Q<Label>("update_Latency");
+            var calibrationContainer = this.playerContainers[player.ID].CalibrationContainer;
+            var attemptCounter = calibrationContainer.Q<Label>("update_Counter");
+            var latencyLabel = calibrationContainer.Q<Label>("update_Latency");
+            var maxAttemptsLabel = calibrationContainer.Q<Label>("update_MaxAttempts");
 
             attemptCounter.text = "0";
             latencyLabel.text = "0";
             tracker.CalibrationAttempts = 0;
+            maxAttemptsLabel.text = this.requiredCalibrationAttempts.ToString();
         }
 
         private bool TrySelectCharacter(Player player)
@@ -444,14 +434,30 @@ namespace Cadenza
             ClassManager.UnselectCharacter(player);
         }
 
-        private bool TryStartGame()
+        private bool CanStartGame()
         {
-            // Check every player is ready.
-            foreach (var phase in this.playerTrackers.Values)
+            bool hasReady = false;
+
+            foreach (var tracker in this.playerTrackers.Values)
             {
-                if (phase.Phase != SelectPhase.Ready)
+                if (tracker.Phase == SelectPhase.Ready)
+                    hasReady = true;
+
+                // Don't start if a joined player is in the
+                // middle of calibrating or selecting a character.
+                else if (tracker.Phase != SelectPhase.None
+                    && tracker.Phase != SelectPhase.Joining)
                     return false;
             }
+
+            // Don't start if no player is Ready.
+            return hasReady;
+        }
+
+        private bool TryStartGame()
+        {
+            if (!this.CanStartGame())
+                return false;
 
             // Open team creation UI if this is a new run.
             if (TeamSystem.Team == null)
@@ -480,31 +486,65 @@ namespace Cadenza
             return true;
         }
 
-        private void ConnectPlayer(Player player)
+        private void OnPlayerAdded(Player player)
         {
-            PlayerSystem.AddPlayer()
-
-            // Create a tracker if the player doesn't already have one.
-            if (!this.playerTrackers.ContainsKey(player))
-                this.playerTrackers[player] = new PlayerTracker();
-
             // Reset the tracker.
             var tracker = this.playerTrackers[player];
             tracker.Phase = SelectPhase.CalibratingInProgress;
-            tracker.CalibrationAttempts = 0;
+
+            // Reset calibration.
+            this.ResetCalibration(player);
+
+            // Reset shown character.
+            var container = this.playerContainers[player.ID];
+            this.ChangeShownCharacter(container.CharacterSelectionContainer, ClassManager.GetNextCharacter(""));
+            container.CharacterSelectionContainer.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
+            container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
 
             // Advance phase.
-            this.ShowPhase(this.playerContainers[player.ID], SelectPhase.CalibratingInProgress);
+            this.ShowPhase(container, SelectPhase.CalibratingInProgress);
+        }
+
+        private void OnPlayerRemoved(Player player)
+        {
+            // Reset the tracker.
+            var tracker = this.playerTrackers[player];
+            tracker.Phase = SelectPhase.Joining;
+
+            // Reset calibration.
+            this.ResetCalibration(player);
+
+            // Reset shown character.
+            var container = this.playerContainers[player.ID];
+            this.ChangeShownCharacter(container.CharacterSelectionContainer, ClassManager.GetNextCharacter(""));
+            container.CharacterSelectionContainer.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
+            container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
+
+            // Show default phase.
+            this.ShowPhase(container, SelectPhase.Joining);
+        }
+
+        private void OnPlayerJoined(Player player)
+        {
+            // Create a tracker for the player.
+            if (!this.playerTrackers.ContainsKey(player))
+                this.playerTrackers[player] = new PlayerTracker();
+
+            // Show initial phase.
+            this.playerTrackers[player].Phase = SelectPhase.Joining;
+            this.ShowPhase(this.playerContainers[player.ID], SelectPhase.Joining);
 
             // Enable the new player's UI input.
             InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
         }
 
-        private void DisconnectPlayer(Player player)
+        private void OnPlayerLeft(Player player)
         {
-            this.ResetContainerView(this.playerContainers[player.ID]);
+            // Remove tracker.
             this.playerTrackers.Remove(player);
-            PlayerSystem.RemovePlayer(player);
+
+            // Show disconnected phase.
+            this.ShowPhase(this.playerContainers[player.ID], SelectPhase.None);
         }
 
         #endregion

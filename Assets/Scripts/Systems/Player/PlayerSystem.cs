@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Cadenza
 {
@@ -21,12 +20,12 @@ namespace Cadenza
         public static IReadOnlyDictionary<int, Player> PlayersByID => singleton.playersByID;
         public static int PlayerCount => singleton.playersByID.Count;
 
-        private Player[] players;
+        private Player[] players = Array.Empty<Player>();
         public static Player[] Players => singleton.players;
 
         public static CharacterClass[] CharacterClasses => singleton.characterClasses;
 
-        public static event Action<Player> PlayerJoined;
+        public static event Action<Player> PlayerAdded;
         public static event Action<Player> PlayerRemoved;
         public static event Action<Player> PlayerSpawned;
 
@@ -43,12 +42,12 @@ namespace Cadenza
         #endregion
         #region Public Static Methods
 
-        public static bool AddPlayer(int id)
+        public static bool AddPlayer(Player player)
         {
-            // Join if there is a valid input user but no existing player for a given ID.
-            if (InputSystem.TryGetInputUserByID(id, out var input) && !TryGetPlayerByID(id, out _))
+            // Add if there is a  but no existing player for a given ID.
+            if (InputSystem.IsPlayerJoined(player.ID) && !TryGetPlayerByID(player.ID, out _))
             {
-                singleton.OnPlayerJoined(input);
+                singleton.OnPlayerAdded(player);
                 return true;
             }
             return false;
@@ -79,7 +78,7 @@ namespace Cadenza
             if (!TryGetPlayerByID(id, out Player p))
                 return false;
 
-            singleton.OnPlayerLeft(p.Input);
+            singleton.OnPlayerLeft(p);
             return singleton.playersByID.Remove(id);
         }
 
@@ -118,27 +117,24 @@ namespace Cadenza
         #endregion
         #region Private Methods
 
-        private void OnPlayerJoined(PlayerInput playerInput)
+        private void OnPlayerAdded(Player player)
         {
-            var player = playerInput.GetComponent<Player>();
-
-            // Configure ID.
-            int id = playerInput.playerIndex;
-            this.playersByID[id] = player;
+            this.playersByID[player.ID] = player;
             this.players = this.playersByID.Values.ToArray();
 
-            Debug.Log($"Player joined using device scheme {playerInput.currentControlScheme}. (id={id})");
-            PlayerJoined?.Invoke(player);
+            Debug.Log($"Player registered with PlayerSystem. (id={player.ID})");
+            PlayerAdded?.Invoke(player);
         }
 
-        private void OnPlayerLeft(PlayerInput playerInput)
+        private void OnPlayerLeft(Player player)
         {
-            int id = playerInput.playerIndex;
-            var player = this.playersByID[id];
-            this.playersByID.Remove(id);
+            if (!this.playersByID.TryGetValue(player.ID, out _))
+                return;
+
+            this.playersByID.Remove(player.ID);
             this.players = this.playersByID.Values.ToArray();
 
-            Debug.Log($"Player using device scheme {playerInput.currentControlScheme} left. (id={id})");
+            Debug.Log($"Player unregistered with PlayerSystem. (id={player.ID})");
             PlayerRemoved?.Invoke(player);
         }
 
