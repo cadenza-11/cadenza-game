@@ -143,7 +143,6 @@ namespace Cadenza
             if (context.performed)
             {
                 var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
-                this.Character.updateStreak(ScoreSystem.GetScoreClass(ScoreSystem.IndividualThresholds, score.Latency));
                 this.PlayerHit?.Invoke(score);
             }
         }

@@ -42,7 +42,7 @@ namespace Cadenza
         private float chargeTimer = 0.0f;
         private Coroutine actionableRoutine;
         private int attackMod;
-        private int streak = 0;
+        private float flow = 0;
 
         private Vector2 move;
         private bool isMove, isAttacking, isCharging;
@@ -56,6 +56,7 @@ namespace Cadenza
         {
             this.Player = player;
             player.PlayerHit += this.accuracyBar.OnPlayerHit;
+            player.PlayerHit += this.UpdateFlow;
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
             this.isActionable = true;
         }
@@ -111,6 +112,19 @@ namespace Cadenza
                     this.isCharging = false;
                     this.chargeArea.gameObject.SetActive(this.isCharging);
                 }
+            }
+
+            if (this.flow > 0.0f && this.flow <= 20.0f)
+            {
+                this.flow -= 0.03f;
+            }
+            else if (this.flow > 20.0f)
+            {
+                this.flow = 20.0f;
+            }
+            else
+            {
+                this.flow = 0.0f;
             }
         }
 
@@ -292,15 +306,19 @@ namespace Cadenza
 
         #endregion
 
-        public void updateStreak(ScoreClass lastHitScore)
+        public void UpdateFlow(ScoreDef def)
         {
-            if (lastHitScore == ScoreClass.Great || lastHitScore == ScoreClass.Perfect)
+            switch (def.Class)
             {
-                this.streak++;
-            }
-            else
-            {
-                this.streak = 0;
+                case (ScoreClass.Perfect):
+                    this.flow += 3.0f;
+                    break;
+                case (ScoreClass.Great):
+                    this.flow++;
+                    break;
+                case (ScoreClass.Bad):
+                    this.flow--;
+                    break;
             }
         }
     }
