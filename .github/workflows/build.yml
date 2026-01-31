@@ -32,6 +32,9 @@ env:
   UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
   REPO_NAME: ${{ github.event.repository.name }}
+  STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+  STEAM_CONFIG_VDF: ${{ secrets.STEAM_CONFIG_VDF }}
+  STEAM_APP_ID: 4382010
 
 jobs:
   buildForAllSupportedPlatforms:
@@ -83,9 +86,9 @@ jobs:
       - name: Build project
         uses: game-ci/unity-builder@v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ env.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ env.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ env.UNITY_PASSWORD }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildName: ${{ env.REPO_NAME }}
@@ -118,6 +121,22 @@ jobs:
         with:
           name: ${{ env.REPO_NAME }}-macOS.tar.gz
           path: ${{ env.REPO_NAME }}-macOS.tar.gz
+
+      # Deploy to Steam
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Steam
+        if: matrix.targetPlatform == 'StandaloneWindows64'
+        uses: game-ci/steam-deploy@v3
+        with:
+          username: ${{ env.STEAM_USERNAME }}
+          configVdf: ${{ env.STEAM_CONFIG_VDF }}
+          appId: ${{ env.STEAM_APP_ID }}
+          buildDescription: ${{ github.event.inputs.release_tag }}
+          rootPath: build
+          depot1Path: StandaloneWindows64
+          releaseBranch: release
 
   release:
       permissions:
