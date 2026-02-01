@@ -94,6 +94,12 @@ jobs:
           buildName: ${{ env.REPO_NAME }}
           buildsPath: build
 
+      # Upload uncompressed builds
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+
       # Create archive files for each platform
       - name: Create Windows zip
         if: matrix.targetPlatform == 'StandaloneWindows64'
@@ -122,13 +128,20 @@ jobs:
           name: ${{ env.REPO_NAME }}-macOS.tar.gz
           path: ${{ env.REPO_NAME }}-macOS.tar.gz
 
-      # Deploy to Steam
+  deployToSteam:
+    needs: [buildForAllSupportedPlatforms]
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Deploy to Steam
-        if: matrix.targetPlatform == 'StandaloneWindows64'
-        uses: game-ci/steam-deploy@v3
+        with:
+          fetch-depth: 0
+      - name: Download StandaloneWindows64 Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Build-StandaloneWindows64
+          path: build/StandaloneWindows64
+      - uses: game-ci/steam-deploy@v3
         with:
           username: ${{ env.STEAM_USERNAME }}
           configVdf: ${{ env.STEAM_CONFIG_VDF }}
@@ -136,6 +149,7 @@ jobs:
           buildDescription: ${{ github.event.inputs.release_tag }}
           rootPath: build
           depot1Path: StandaloneWindows64
+          depot1InstallScriptPath: StandaloneWindows64/install_script.vdf
           releaseBranch: release
 
   release:
