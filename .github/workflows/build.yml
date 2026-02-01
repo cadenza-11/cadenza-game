@@ -3,6 +3,11 @@ name: Unity Build and Release
 on:
   workflow_dispatch:
     inputs:
+      run_name:
+        description: 'Run name'
+        required: false
+        default: 'Unity Build and Release'
+        type: string
       create_release:
         description: 'Create a release after build'
         required: false
@@ -26,6 +31,8 @@ on:
         required: false
         default: ''
         type: string
+
+run-name: ${{ github.event.inputs.run_name }}
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -70,6 +77,7 @@ jobs:
           git add .
           git reset --hard
 
+      # Free disk space
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@v1.3.1
 
@@ -91,66 +99,43 @@ jobs:
           UNITY_PASSWORD: ${{ env.UNITY_PASSWORD }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildName: ${{ env.REPO_NAME }}
+          buildName: ${{ matrix.targetPlatform }}
           buildsPath: build
+          versioning: Semantic
 
       # Upload uncompressed builds
       - uses: actions/upload-artifact@v4
         with:
-          name: Build-${{ matrix.targetPlatform }}
+          name: ${{ env.REPO_NAME }}-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
 
-      # Create archive files for each platform
-      - name: Create Windows zip
-        if: matrix.targetPlatform == 'StandaloneWindows64'
-        run: |
-          cd build/${{ matrix.targetPlatform }}
-          zip -r ../../${{ env.REPO_NAME }}-Windows.zip .
-
-      - name: Create macOS tar
-        if: matrix.targetPlatform == 'StandaloneOSX'
-        run: |
-          cd build/${{ matrix.targetPlatform }}
-          tar -czf ../../${{ env.REPO_NAME }}-macOS.tar.gz .
-
-      # Upload compressed archives
-      - name: Upload Windows Archive
-        if: matrix.targetPlatform == 'StandaloneWindows64'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.REPO_NAME }}-Windows.zip
-          path: ${{ env.REPO_NAME }}-Windows.zip
-
-      - name: Upload macOS Archive
-        if: matrix.targetPlatform == 'StandaloneOSX'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.REPO_NAME }}-macOS.tar.gz
-          path: ${{ env.REPO_NAME }}-macOS.tar.gz
-
   deployToSteam:
-    needs: [buildForAllSupportedPlatforms]
+    name: Deploy to Steam
+    needs: buildForAllSupportedPlatforms
     runs-on: ubuntu-latest
     steps:
+      # Checkout
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Download StandaloneWindows64 Artifact
+
+      # Deploy Windows build
+      - name: Download Windows build artifact
         uses: actions/download-artifact@v4
         with:
-          name: Build-StandaloneWindows64
+          name: ${{ env.REPO_NAME }}-StandaloneWindows64
           path: build/StandaloneWindows64
       - uses: game-ci/steam-deploy@v3
         with:
           username: ${{ env.STEAM_USERNAME }}
           configVdf: ${{ env.STEAM_CONFIG_VDF }}
           appId: ${{ env.STEAM_APP_ID }}
-          buildDescription: ${{ github.event.inputs.release_tag }}
+          buildDescription: ${{ github.event.inputs.release_description }}
           rootPath: build
           depot1Path: StandaloneWindows64
           depot1InstallScriptPath: StandaloneWindows64/install_script.vdf
-          releaseBranch: release
+          releaseBranch: default
 
   release:
       permissions:
@@ -166,11 +151,10 @@ jobs:
           with:
             fetch-depth: 0
 
-        # Download compressed archives
+        # Download build archives
         - name: Download Archive Artifacts
           uses: actions/download-artifact@v4
           with:
-            pattern: ${{ env.REPO_NAME }}-*
             path: releases/
             merge-multiple: true
 
@@ -179,15 +163,6 @@ jobs:
           run: |
             echo "Downloaded release files:"
             ls -la releases/
-            find releases/ -name "*.zip" -o -name "*.tar.gz"
-
-        # Get version info from user input
-        - name: Get Version Info
-          id: version
-          run: |
-            VERSION="${{ github.event.inputs.release_tag }}"
-            echo "version=$VERSION" >> $GITHUB_OUTPUT
-            echo "Release version: $VERSION"
 
         # Create Release
         - name: Create Release
@@ -196,7 +171,7 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
-            tag_name: ${{ steps.version.outputs.version }}
+            tag_name: ${{ github.event.inputs.release_tag }}
             release_name: ${{ github.event.inputs.release_name }}
             body: |
               ## ${{ github.event.inputs.release_name }}
@@ -210,7 +185,13 @@ jobs:
             draft: false
             prerelease: false
 
-        # Upload Release Assets
+        # Compress Windows build
+        - name: Compress Windows Build
+          run: |
+            cd releases/${{ env.REPO_NAME }}-StandaloneWindows64
+            zip -r ../${{ env.REPO_NAME }}-Windows.zip .
+
+        # Upload Windows build
         - name: Upload Windows Build
           uses: actions/upload-release-asset@v1
           env:
@@ -221,6 +202,13 @@ jobs:
             asset_name: ${{ env.REPO_NAME }}-Windows.zip
             asset_content_type: application/zip
 
+        # Compress macOS build
+        - name: Compress macOS Build
+          run: |
+            cd releases/${{ env.REPO_NAME }}-StandaloneOSX
+            tar -czf ../${{ env.REPO_NAME }}-macOS.tar.gz .
+
+        # Upload macOS build
         - name: Upload macOS Build
           uses: actions/upload-release-asset@v1
           env:
