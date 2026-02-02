@@ -9,7 +9,15 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 756949604230155057, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: flowM
+      value: 
+      objectReference: {fileID: 11400000, guid: e3d3ea605f564f140aec6bee81e600c7, type: 2}
+    - target: {fileID: 756949604230155057, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: ComboM
+      value: 
+      objectReference: {fileID: -5347380999704208309}
+    - target: {fileID: 756949604230155057, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: comboM
       value: 
       objectReference: {fileID: -5347380999704208309}
     - target: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}

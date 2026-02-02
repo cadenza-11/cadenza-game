@@ -17,6 +17,7 @@ namespace Cadenza
         [SerializeField] private float chargeDuration;
         [SerializeField] private int currentHealth;
         [SerializeField] private int maxHealth;
+        [SerializeField] private float flow;
 
         [Header("Assign in Inspector")]
         [SerializeField] private AttackArea attackArea;
@@ -28,12 +29,14 @@ namespace Cadenza
         [SerializeField] private AccuracyBar accuracyBar;
         [SerializeField] private InteractionIndicator interactionIndicator;
         [SerializeField] private GameObject projectile;
-        [SerializeField] private ComboManager ComboM;
+        [SerializeField] private ComboManager comboM;
+        [SerializeField] private FlowManagerSO flowM;
         [SerializeField] private int baseLightDamage;
         [SerializeField] private int baseHeavyDamage;
 
         public float MaxHealth => this.maxHealth;
         public bool IsFainted => this.isFainted;
+        public float Flow => this.flow;
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
@@ -42,7 +45,6 @@ namespace Cadenza
         private float chargeTimer = 0.0f;
         private Coroutine actionableRoutine;
         private int attackMod;
-        private float flow = 0;
 
         private Vector2 move;
         private bool isMove, isAttacking, isCharging;
@@ -57,6 +59,7 @@ namespace Cadenza
             this.Player = player;
             player.PlayerHit += this.accuracyBar.OnPlayerHit;
             player.PlayerHit += this.UpdateFlow;
+            BeatSystem.BeatPlayed += this.UpdateFlowBuffs;
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
             this.isActionable = true;
         }
@@ -278,14 +281,14 @@ namespace Cadenza
 
         public void OnAttackLight(InputAction.CallbackContext context)
         {
-            this.ComboM.ProcessCombo(AttkTypes.Light, out var reward);
+            this.comboM.ProcessCombo(AttkTypes.Light, out var reward);
             this.LightAttack(this.baseLightDamage * reward.Multiplier, reward.AttackEffect);
             //put enums in attack area with namespace
         }
 
         public void OnAttackHeavy(InputAction.CallbackContext context)
         {
-            this.ComboM.ProcessCombo(AttkTypes.Heavy, out var reward);
+            this.comboM.ProcessCombo(AttkTypes.Heavy, out var reward);
             this.HeavyAttack(this.baseHeavyDamage * reward.Multiplier, reward.AttackEffect);
         }
 
@@ -319,6 +322,30 @@ namespace Cadenza
                 case (ScoreClass.Bad):
                     this.flow--;
                     break;
+            }
+        }
+
+        public void UpdateFlowBuffs()
+        {
+            if (this.flow >= 5.0f)
+            {
+                this.flowM.playerFlows[this.Player.ID] = true;
+            }
+            else
+            {
+                this.flowM.playerFlows[this.Player.ID] = false;
+            }
+
+            for (int i = 0; i < this.flowM.playerFlows.Length; i++)
+            {
+                if (this.flowM.playerFlows[i])
+                {
+                    Debug.Log("Player ID " + i + " is in the flow state");
+                }
+                else
+                {
+                    Debug.Log("Player ID " + i + " is not in the flow state");
+                }
             }
         }
     }
