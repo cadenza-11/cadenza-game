@@ -139,7 +139,7 @@ namespace Cadenza
             SaveSystem.GetPreviousRuns(out Results[] results);
 
             // Register for player hit.
-            PlayerSystem.PlayerJoined += player => player.PlayerHit += this.OnPlayerHit;
+            PlayerSystem.PlayerAdded += player => player.PlayerHit += this.OnPlayerHit;
         }
 
         public override void OnGameStart()
