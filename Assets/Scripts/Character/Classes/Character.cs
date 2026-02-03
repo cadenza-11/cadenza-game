@@ -70,10 +70,11 @@ namespace Cadenza
             if (this.isActionable)
             {
                 int flowSpeed = this.flowM.playerFlows[0] ? 1 : 0;
+                int isFlowInt = this.isFlowing ? 1 : 0;
                 Vector3 moveDir = new(
-                    this.move.x * (this.speed + (this.speed * 0.25f * flowSpeed)),
+                    this.move.x * (this.speed + (this.speed * 0.25f * flowSpeed * isFlowInt)),
                     this.rb.linearVelocity.y,
-                    this.move.y * this.speed);
+                    this.move.y * (this.speed + (this.speed * 0.25f * flowSpeed * isFlowInt)));
                 this.rb.linearVelocity = moveDir;
 
                 if (moveDir.x != 0 && moveDir.x < 0)
@@ -112,7 +113,7 @@ namespace Cadenza
                 this.flow = 0.0f;
             }
 
-            if (this.flowM.playerFlows[3] && this.currentHealth < this.maxHealth)
+            if (this.flowM.playerFlows[3] && this.currentHealth < this.maxHealth && this.isFlowing)
             {
                 this.currentHealth += 0.01f;
             }
@@ -166,10 +167,11 @@ namespace Cadenza
 
             this.ManageAttackDirection();
             int flowDamage = this.flowM.playerFlows[2] ? 1 : 0;
+            int isFlowInt = this.isFlowing ? 1 : 0;
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 1;
-            this.attackArea.damage = damage + ((damage / 2) * flowDamage);
+            this.attackArea.damage = damage + ((damage / 2) * flowDamage * isFlowInt);
             this.attackArea.comboMove = comboMove;
             this.attackArea.gameObject.SetActive(this.isAttacking);
 
@@ -189,10 +191,11 @@ namespace Cadenza
 
             this.ManageAttackDirection();
             int flowDamage = this.flowM.playerFlows[2] ? 1 : 0;
+            int isFlowInt = this.isFlowing ? 1 : 0;
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 2;
-            this.attackArea.damage = damage + ((damage / 2) * flowDamage);
+            this.attackArea.damage = damage + ((damage / 2) * flowDamage * isFlowInt);
             this.attackArea.comboMove = comboMove;
             this.attackArea.gameObject.SetActive(this.isAttacking);
 
@@ -318,21 +321,6 @@ namespace Cadenza
             {
                 this.flowM.playerFlows[this.cClass.ID - 1] = false;
                 this.isFlowing = false;
-            }
-
-            for (int i = 0; i < this.flowM.playerFlows.Length; i++)
-            {
-                if (this.isFlowing)
-                {
-                    if (this.flowM.playerFlows[i])
-                    {
-                        Debug.Log("Player ID " + i + " is in the flow state");
-                    }
-                    else
-                    {
-                        Debug.Log("Player ID " + i + " is not in the flow state");
-                    }
-                }
             }
         }
     }
