@@ -10,25 +10,19 @@ namespace Cadenza
         #region Variables
         [Header("Player Values")]
         [SerializeField] private float speed;
-        [SerializeField] private float jumpForce;
-        [SerializeField] private float chargeForce;
 
         [SerializeField] private float attackDuration;
-        [SerializeField] private float chargeDuration;
         [SerializeField] private int currentHealth;
         [SerializeField] private int maxHealth;
         [SerializeField] private float flow;
 
         [Header("Assign in Inspector")]
         [SerializeField] private AttackArea attackArea;
-        [SerializeField] private AttackArea chargeArea;
-        [SerializeField] private AttackArea slamArea;
         [SerializeField] private Rigidbody rb;
         [SerializeField] private SpriteRenderer sr;
         [SerializeField] private Animator anim;
         [SerializeField] private AccuracyBar accuracyBar;
         [SerializeField] private InteractionIndicator interactionIndicator;
-        [SerializeField] private GameObject projectile;
         [SerializeField] private ComboManager comboM;
         [SerializeField] private FlowManagerSO flowM;
         [SerializeField] private CharacterClass cClass;
@@ -42,12 +36,11 @@ namespace Cadenza
         public static event Action TeamAttackInitiated;
         public event Action<int> HealthChanged;
 
-        private float chargeTimer = 0.0f;
         private Coroutine actionableRoutine;
         private int attackMod;
 
         private Vector2 move;
-        private bool isMove, isAttacking, isCharging;
+        private bool isMove, isAttacking;
         private bool direction; //true = right, false = left
         private bool isActionable = true;
         private bool isFainted = false;
@@ -67,14 +60,14 @@ namespace Cadenza
         void FixedUpdate()
         {
             // Apply gravity.
-            if (!this.IsGrounded() && !this.isCharging)
+            if (!this.IsGrounded())
             {
                 this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
             }
 
             //Reads in a Vector2, converts it to a Vector3, and flips sprite based on direction
 
-            if (this.isActionable && !this.isCharging)
+            if (this.isActionable)
             {
                 Vector3 moveDir = new(
                     this.move.x * this.speed,
@@ -103,18 +96,6 @@ namespace Cadenza
                     this.isMove = false;
                 }
                 this.anim.SetBool("IsMove", this.isMove);
-            }
-
-            if (this.isCharging)
-            {
-                this.chargeTimer += Time.deltaTime;
-
-                if (this.chargeTimer >= this.chargeDuration)
-                {
-                    this.chargeTimer = 0.0f;
-                    this.isCharging = false;
-                    this.chargeArea.gameObject.SetActive(this.isCharging);
-                }
             }
 
             if (this.flow > 0.0f && this.flow <= 20.0f)
@@ -189,7 +170,6 @@ namespace Cadenza
             {
                 this.isAttacking = false;
                 this.attackArea.gameObject.SetActive(this.isAttacking);
-                this.slamArea.gameObject.SetActive(this.isAttacking);
             });
 
             // Play animation
@@ -213,7 +193,6 @@ namespace Cadenza
             {
                 this.isAttacking = false;
                 this.attackArea.gameObject.SetActive(this.isAttacking);
-                this.slamArea.gameObject.SetActive(this.isAttacking);
             });
 
             // Play animation
