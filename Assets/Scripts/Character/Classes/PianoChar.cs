@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Cadenza
 {
-    public class GuitarChar : Character
+    public class PianoChar : Character
     {
         private void Start()
         {

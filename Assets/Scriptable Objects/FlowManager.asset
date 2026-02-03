@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39c258c96bd577648a3c102519d7270f, type: 3}
   m_Name: FlowManager
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.FlowManagerSO
+  playerFlows: 00000000

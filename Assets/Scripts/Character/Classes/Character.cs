@@ -31,12 +31,12 @@ namespace Cadenza
         [SerializeField] private GameObject projectile;
         [SerializeField] private ComboManager comboM;
         [SerializeField] private FlowManagerSO flowM;
+        [SerializeField] private CharacterClass cClass;
         [SerializeField] private int baseLightDamage;
         [SerializeField] private int baseHeavyDamage;
 
         public float MaxHealth => this.maxHealth;
         public bool IsFainted => this.isFainted;
-        public float Flow => this.flow;
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
@@ -172,7 +172,7 @@ namespace Cadenza
 
         #region ICharacter Interface
 
-        private void LightAttack(int damage, AttkEffect comboMove)
+        public virtual void LightAttack(int damage, AttkEffect comboMove)
         {
             if (this.isAttacking || !this.TryPerformAction(this.attackDuration * this.attackMod))
                 return;
@@ -195,7 +195,7 @@ namespace Cadenza
             // Play animation
             this.anim.SetTrigger("LightAttack");
         }
-        private void HeavyAttack(int damage, AttkEffect comboMove)
+        public virtual void HeavyAttack(int damage, AttkEffect comboMove)
         {
             if (this.isAttacking || !this.TryPerformAction(this.attackDuration))
                 return;
@@ -220,10 +220,6 @@ namespace Cadenza
             this.anim.SetTrigger("HeavyAttack");
         }
 
-        private void SpecialAttack()
-        {
-
-        }
         public void StartTeamAttk()
         {
             TeamAttackInitiated?.Invoke();
@@ -294,7 +290,7 @@ namespace Cadenza
 
         public void OnAttackSpecial(InputAction.CallbackContext context)
         {
-            this.SpecialAttack();
+            //change controls later
         }
 
         public void OnAttackTeam(InputAction.CallbackContext context)
@@ -329,11 +325,11 @@ namespace Cadenza
         {
             if (this.flow >= 5.0f)
             {
-                this.flowM.playerFlows[this.Player.ID] = true;
+                this.flowM.playerFlows[this.cClass.ID - 1] = true;
             }
             else
             {
-                this.flowM.playerFlows[this.Player.ID] = false;
+                this.flowM.playerFlows[this.cClass.ID - 1] = false;
             }
 
             for (int i = 0; i < this.flowM.playerFlows.Length; i++)
