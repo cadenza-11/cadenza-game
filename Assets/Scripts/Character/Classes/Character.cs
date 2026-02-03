@@ -12,8 +12,8 @@ namespace Cadenza
         [SerializeField] private float speed;
 
         [SerializeField] private float attackDuration;
-        [SerializeField] private int currentHealth;
-        [SerializeField] private int maxHealth;
+        [SerializeField] private float currentHealth;
+        [SerializeField] private float maxHealth;
         [SerializeField] private float flow;
 
         [Header("Assign in Inspector")]
@@ -34,13 +34,13 @@ namespace Cadenza
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
-        public event Action<int> HealthChanged;
+        public event Action<float> HealthChanged;
 
         private Coroutine actionableRoutine;
         private int attackMod;
 
         private Vector2 move;
-        private bool isMove, isAttacking;
+        private bool isMove, isAttacking, isFlowing;
         private bool direction; //true = right, false = left
         private bool isActionable = true;
         private bool isFainted = false;
@@ -69,8 +69,9 @@ namespace Cadenza
 
             if (this.isActionable)
             {
+                int flowSpeed = this.flowM.playerFlows[0] ? 1 : 0;
                 Vector3 moveDir = new(
-                    this.move.x * this.speed,
+                    this.move.x * (this.speed + (this.speed * 0.25f * flowSpeed)),
                     this.rb.linearVelocity.y,
                     this.move.y * this.speed);
                 this.rb.linearVelocity = moveDir;
@@ -109,6 +110,11 @@ namespace Cadenza
             else
             {
                 this.flow = 0.0f;
+            }
+
+            if (this.flowM.playerFlows[3] && this.currentHealth < this.maxHealth)
+            {
+                this.currentHealth += 0.01f;
             }
         }
 
@@ -159,10 +165,11 @@ namespace Cadenza
                 return;
 
             this.ManageAttackDirection();
+            int flowDamage = this.flowM.playerFlows[2] ? 1 : 0;
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 1;
-            this.attackArea.damage = damage;
+            this.attackArea.damage = damage + ((damage / 2) * flowDamage);
             this.attackArea.comboMove = comboMove;
             this.attackArea.gameObject.SetActive(this.isAttacking);
 
@@ -181,11 +188,11 @@ namespace Cadenza
                 return;
 
             this.ManageAttackDirection();
+            int flowDamage = this.flowM.playerFlows[2] ? 1 : 0;
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
             this.attackMod = 2;
-
-            this.attackArea.damage = damage;
+            this.attackArea.damage = damage + ((damage / 2) * flowDamage);
             this.attackArea.comboMove = comboMove;
             this.attackArea.gameObject.SetActive(this.isAttacking);
 
@@ -305,21 +312,26 @@ namespace Cadenza
             if (this.flow >= 5.0f)
             {
                 this.flowM.playerFlows[this.cClass.ID - 1] = true;
+                this.isFlowing = true;
             }
             else
             {
                 this.flowM.playerFlows[this.cClass.ID - 1] = false;
+                this.isFlowing = false;
             }
 
             for (int i = 0; i < this.flowM.playerFlows.Length; i++)
             {
-                if (this.flowM.playerFlows[i])
+                if (this.isFlowing)
                 {
-                    Debug.Log("Player ID " + i + " is in the flow state");
-                }
-                else
-                {
-                    Debug.Log("Player ID " + i + " is not in the flow state");
+                    if (this.flowM.playerFlows[i])
+                    {
+                        Debug.Log("Player ID " + i + " is in the flow state");
+                    }
+                    else
+                    {
+                        Debug.Log("Player ID " + i + " is not in the flow state");
+                    }
                 }
             }
         }

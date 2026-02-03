@@ -154,7 +154,7 @@ namespace Cadenza
         #endregion
         #region Health Bar
 
-        private void OnHealthChanged(int health, ProgressBar bar)
+        private void OnHealthChanged(float health, ProgressBar bar)
         {
             bar.value = health;
         }
