@@ -112,10 +112,15 @@ namespace Cadenza
 
         private void OnCommandLevel(string[] args)
         {
-            if (args.Length > 0 && int.TryParse(args[0], out int sceneIndex))
+            if (args.Length > 0)
             {
-                _ = ApplicationController.SetSceneAsync(sceneIndex);
-                Debug.Log($"Loading scene with build index {sceneIndex}.");
+                Level nextLevel = null;
+                foreach (var level in ApplicationController.Levels)
+                {
+                    if (string.Equals(level.Name, args[0]))
+                        nextLevel = level;
+                }
+                ApplicationController.SetLevelAsync(nextLevel);
             }
         }
 

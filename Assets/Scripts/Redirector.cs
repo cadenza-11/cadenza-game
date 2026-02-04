@@ -1,6 +1,5 @@
 using Cadenza;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// A collider that redirects to another scene once contacted.
@@ -8,26 +7,22 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Collider))]
 public class Redirector : MonoBehaviour
 {
-    [SerializeField] private int sceneBuildIndex;
-    private bool isSceneValid =>
-        this.sceneBuildIndex >= 0 &&
-        this.sceneBuildIndex < SceneManager.sceneCountInBuildSettings;
-
+    [SerializeField] private Level targetLevel;
     private bool hasRedirected = false;
 
     void OnValidate()
     {
         // If a scene is not in the build scene list, Unity returns a greater out-of-bounds value.
-        if (!this.isSceneValid)
-            Debug.LogWarning("Redirector assigned scene that is not currently in the build scene list. Add the scene in the Build Settings or choose a different scene.");
+        if (this.targetLevel == null || !this.targetLevel.IsValid)
+            Debug.LogWarning("Redirector assigned level with a scene that is not currently in the build scene list. Add the scene in the Build Settings or choose a different level.");
     }
 
     void OnTriggerEnter(Collider player)
     {
-        if (!this.isSceneValid || this.hasRedirected)
+        if (this.targetLevel == null || !this.targetLevel.IsValid || this.hasRedirected)
             return;
 
         this.hasRedirected = true;
-        _ = ApplicationController.SetSceneAsync(this.sceneBuildIndex);
+        ApplicationController.SetLevelAsync(this.targetLevel);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,6 +19,11 @@ namespace Cadenza
         private ApplicationSystem[] systems;
         private ApplicationState state;
         public static ApplicationState State => singleton.state;
+
+        [SerializeField] private List<Level> levels;
+        private Level currentLevel;
+        public static IReadOnlyList<Level> Levels => singleton.levels;
+        public static Level CurrentLevel => singleton.currentLevel;
 
         #region Unity Callbacks
 
@@ -85,17 +91,9 @@ namespace Cadenza
         #endregion
         #region Public Static Methods
 
-        public static async Task SetSceneAsync(int sceneIndex)
+        public static void SetLevelAsync(Level level)
         {
-            await Fader.ShowAsync();
-            singleton.ChangeState(ApplicationState.Pregame);
-            {
-                // Set the scene.
-                await singleton.SetSceneImplAsync(sceneIndex);
-            }
-            if (sceneIndex != 0)
-                singleton.ChangeState(ApplicationState.GameSession);
-            await Fader.HideAsync();
+            _ = singleton.SetLevelAsyncImpl(level);
         }
 
         public static void RequestQuit()
@@ -119,22 +117,39 @@ namespace Cadenza
             return true;
         }
 
-        private async Task SetSceneImplAsync(int sceneIndex)
+        private async Task SetLevelAsyncImpl(Level level)
         {
-            Scene currentScene = SceneManager.GetActiveScene();
-            if (currentScene.buildIndex == sceneIndex)
-                return;
+            int sceneIndex = 0;
 
-            // Unload the current scene if it isn't the root scene.
-            if (currentScene.buildIndex != 0)
-                await SceneManager.UnloadSceneAsync(currentScene);
+            if (level == null)
+                Debug.Log($"Attempted to set a null level. Quitting current level.");
+            else if (!level.IsValid)
+                Debug.LogWarning($"Attempted to load level {level.Name} (id={level.ID}) with invalid scene. Exiting current level.");
+            else
+                sceneIndex = level.BuildIndex;
 
-            // Load the given scene.
+            await Fader.ShowAsync();
+            singleton.ChangeState(ApplicationState.Pregame);
+            {
+                // Set the scene.
+                Scene currentScene = SceneManager.GetActiveScene();
+                if (currentScene.buildIndex != sceneIndex)
+                {
+                    // Unload the current scene if it isn't the root scene.
+                    if (currentScene.buildIndex != 0)
+                        await SceneManager.UnloadSceneAsync(currentScene);
+
+                    // Load the given scene.
+                    if (sceneIndex != 0)
+                        await SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
+
+                    Scene nextScene = SceneManager.GetSceneByBuildIndex(sceneIndex);
+                    SceneManager.SetActiveScene(nextScene);
+                }
+            }
             if (sceneIndex != 0)
-                await SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
-
-            Scene nextScene = SceneManager.GetSceneByBuildIndex(sceneIndex);
-            SceneManager.SetActiveScene(nextScene);
+                singleton.ChangeState(ApplicationState.GameSession);
+            await Fader.HideAsync();
         }
 
         private void ChangeState(ApplicationState newState)

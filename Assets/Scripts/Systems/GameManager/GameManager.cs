@@ -12,6 +12,7 @@ public class GameManager : ApplicationSystem
 
     #region Public Variables
 
+    [SerializeField] private Level startingLevel;
     public static event Action<Player> GamePaused;
     public static event Action GameUnpaused;
     public static bool IsPaused => singleton.isPaused;
@@ -63,7 +64,7 @@ public class GameManager : ApplicationSystem
         if (ApplicationController.State != ApplicationState.Pregame)
             return;
 
-        _ = ApplicationController.SetSceneAsync(1);
+        ApplicationController.SetLevelAsync(singleton.startingLevel);
     }
 
     public static void ExitToPregame()
@@ -71,7 +72,7 @@ public class GameManager : ApplicationSystem
         if (ApplicationController.State != ApplicationState.GameSession)
             return;
 
-        _ = ApplicationController.SetSceneAsync(0);
+        ApplicationController.SetLevelAsync(null);
     }
 
     public static void PauseGame(Player requestingPlayer)
