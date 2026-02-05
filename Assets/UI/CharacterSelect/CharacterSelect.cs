@@ -105,7 +105,6 @@ namespace Cadenza
         public override void OnHide()
         {
             InputSystem.DisableJoining();
-            this.playerTrackers.Clear();
 
             // Unregister player roster updates.
             PlayerSystem.PlayerAdded -= this.OnPlayerAdded;
