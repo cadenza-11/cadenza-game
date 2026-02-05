@@ -414,7 +414,7 @@ namespace Cadenza
             // Store sample rate.
             RuntimeManager.CoreSystem.getSoftwareFormat(out this.sampleRate, out _, out _);
 
-            Debug.Log($"Initialized global track {track.Path}.");
+            Debug.Log($"Initialized global track (GUID={track}).");
         }
 
         /// <summary>
@@ -428,7 +428,7 @@ namespace Cadenza
                 return;
             }
             this.globalTrack.start();
-            Debug.Log($"Starting global track {this.globalTrackReference.Path}.");
+            Debug.Log($"Starting global track (GUID={this.globalTrackReference}).");
         }
 
         private void UpdateDSPClock()
