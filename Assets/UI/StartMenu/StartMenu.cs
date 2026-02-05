@@ -73,6 +73,7 @@ namespace Cadenza
 
         private void OnPlayerJoined(Player player)
         {
+            AudioSystem.PlayOneShot(Sound.UI.InitialJoin);
             this.ShowMenu(player);
         }
 

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Cadenza
 {
+    // Updating any of these enums will modify all SoundCollection ScriptableObjects.
     public static class Sound
     {
         public enum UI
