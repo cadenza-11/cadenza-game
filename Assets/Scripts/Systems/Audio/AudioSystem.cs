@@ -72,12 +72,12 @@ namespace Cadenza
         [SerializeField] private EventReference globalBeatEvent;
         [SerializeField] private EventReference beatCallbackDebugEvent;
         [SerializeField] private EventReference playerOneShotsEvent;
+        [SerializeField] private SoundCollection soundCollection;
 
         public static EventReference PlayerOneShotsEvent => singleton.playerOneShotsEvent;
         private HashSet<AudioEvent> beatSetOneShot;
         private PlayerSounds playerSounds;
-        private EventInstance metronomeEventInstance;
-        private EventInstance metronomeSnapshotInstance;
+        private UISounds uiSounds;
 
         private Bus masterBus;
         private Bus musicBus;
@@ -102,11 +102,13 @@ namespace Cadenza
         public override void OnGameStart()
         {
             this.playerSounds?.OnGameStart();
+            this.uiSounds?.OnGameStart();
         }
 
         public override void OnGameStop()
         {
             this.playerSounds?.OnGameStop();
+            this.uiSounds?.OnGameStop();
         }
 
         private void OnBeat()
@@ -120,6 +122,20 @@ namespace Cadenza
         #endregion
         #region Public Static Methods
 
+        public static void PlayOneShot(Sound.Gameplay sound, bool immediate = false)
+        {
+            var eventRef = singleton.soundCollection.Get(sound);
+            if (!eventRef.IsNull)
+                PlayOneShot(eventRef, immediate);
+        }
+
+        public static void PlayOneShot(Sound.UI sound, bool immediate = false)
+        {
+            var eventRef = singleton.soundCollection.Get(sound);
+            if (!eventRef.IsNull)
+                PlayOneShot(eventRef, immediate);
+        }
+
         public static void PlayOneShot(EventReference sound, bool immediate = false)
         {
             var evt = new AudioEvent(sound);
@@ -128,7 +144,6 @@ namespace Cadenza
                 evt.PlayOneShot();
             else
                 singleton.beatSetOneShot.Add(evt);
-
         }
 
         public static void PlayOneShotWithParameter(EventReference sound, string parameterName, float value, bool immediate = false)
@@ -192,6 +207,9 @@ namespace Cadenza
 
             this.playerSounds = new();
             this.playerSounds.Initialize();
+
+            this.uiSounds = new();
+            this.uiSounds.Initialize();
 
             Debug.Log("Loaded all banks from FMOD.");
         }
