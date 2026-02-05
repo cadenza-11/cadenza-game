@@ -17,33 +17,36 @@ namespace Cadenza
 
     public class Enemy : MonoBehaviour
     {
+        #region Variables
         [SerializeField] public float speed;
-        [SerializeField] private float meleeDuration;
-        [SerializeField] private float rangedDuration;
-        [SerializeField] private int maxHealth;
+        [SerializeField] protected float meleeDuration;
+        [SerializeField] protected float rangedDuration;
+        [SerializeField] protected int maxHealth;
         [SerializeField] public int currentHealth;
-        [SerializeField] private AttackArea attackArea;
-        [SerializeField] private Rigidbody rb;
-        [SerializeField] private SpriteRenderer sr;
-        [SerializeField] private Animator anim;
-        [SerializeField] private GameObject projectile;
+        [SerializeField] protected AttackArea attackArea;
+        [SerializeField] protected Rigidbody rb;
+        [SerializeField] protected SpriteRenderer sr;
+        [SerializeField] protected Animator anim;
+        [SerializeField] protected GameObject projectile;
 
-        private float rangedAttackInterval = 0f;
-        [SerializeField] private EnemyState curState = EnemyState.Idle;
-        [SerializeField] private EnemyManager enemyMgr;
-        private const int chaseDistance = 20;
-        private const int meleeDistance = 1;
-        private const int rangedDistance = 50;
-        private bool meleeState;
-        private bool hasRun;
-        private bool isAttacking;
-        private int attackMod;
-        private int runHealth;
-        private float nearestPlayerDist;
-        private float curAngle;
-        private Player follow;
-        private Vector2 TargetLocation;
-        private bool isActionable;
+        protected float rangedAttackInterval = 0f;
+        [SerializeField] protected EnemyState curState = EnemyState.Idle;
+        [SerializeField] protected EnemyManager enemyMgr;
+        protected const int chaseDistance = 20;
+        protected const int meleeDistance = 1;
+        protected const int rangedDistance = 50;
+        protected bool meleeState;
+        protected bool hasRun;
+        protected bool isAttacking;
+        protected int attackMod;
+        protected int runHealth;
+        protected float nearestPlayerDist;
+        protected float curAngle;
+        protected Player follow;
+        protected Vector2 TargetLocation;
+        protected bool isActionable;
+
+        #endregion
 
         //May want a character manager to see character locations
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -80,7 +83,7 @@ namespace Cadenza
         }
 
         #region IEnemy Interface
-        private void MeleeAttack()
+        protected void MeleeAttack()
         {
             this.isAttacking = true;
             this.attackArea.SetActive(true);
@@ -97,7 +100,7 @@ namespace Cadenza
             this.anim.SetTrigger("LightAttack");
         }
 
-        private void RangedAttack()
+        protected virtual void RangedAttack()
         {
             GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
             projectileInstance.GetComponent<Projectile>().direction =
@@ -118,7 +121,7 @@ namespace Cadenza
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 3, immediate: true);
         }
 
-        private bool IsGrounded()
+        protected bool IsGrounded()
         {
             return Physics.Raycast(this.transform.position, Vector3.down, maxDistance: 0.1f);
         }
@@ -126,7 +129,7 @@ namespace Cadenza
         /// <summary>
         /// Checks the enemy's current state and then goes into the proper State function for actions/state changes
         /// </summary>
-        private void CheckState()
+        protected void CheckState()
         {
             if (!this.isActionable)
                 return;
@@ -161,7 +164,7 @@ namespace Cadenza
         /// Enemy's Idle State. Finds Enemy's distance to the nearest player and checks if it is within the bounds to enter the Ranged, Melee, or
         /// Chase states. Also checks health to see if Enemy should die.
         /// </summary>
-        private void IdleState()
+        protected virtual void IdleState()
         {
             this.rb.linearVelocity = Vector3.zero;
             this.FindNearestPlayerDist();
@@ -184,7 +187,7 @@ namespace Cadenza
         /// <summary>
         /// Enemy's Chase State. Moves the enemy towards the selected closest Player.
         /// </summary>
-        private void ChaseState()
+        protected void ChaseState()
         {
             this.FindNearestPlayerDist();
             this.curAngle = (float)Math.Atan2(this.TargetLocation.y - this.transform.position.z, this.TargetLocation.x - this.transform.position.x);
@@ -224,7 +227,7 @@ namespace Cadenza
             }
         }
 
-        private void MeleeState()
+        protected void MeleeState()
         {
             this.rb.linearVelocity = Vector3.zero;
             if (this.isAttacking)
@@ -268,7 +271,7 @@ namespace Cadenza
             }
         }
 
-        private void SpecialState()
+        protected void SpecialState()
         {
             this.rb.linearVelocity = Vector3.zero;
             //Do Special Move
@@ -292,7 +295,7 @@ namespace Cadenza
             }
         }
 
-        private void RunState()
+        protected virtual void RunState()
         {
             if (!this.hasRun)
             {
@@ -320,7 +323,7 @@ namespace Cadenza
             }
         }
 
-        private void RangedState()
+        protected virtual void RangedState()
         {
             this.rb.linearVelocity = Vector3.zero;
             this.FindNearestPlayerDist();
@@ -359,14 +362,14 @@ namespace Cadenza
 
         }
 
-        private void DeadState()
+        protected void DeadState()
         {
             this.anim.SetBool("IsFainted", true);
             this.rb.linearVelocity = Vector3.zero;
             this.enemyMgr.RemoveEnemy(this.gameObject);
         }
 
-        private void FindNearestPlayerDist()
+        protected void FindNearestPlayerDist()
         {
             float nearest = float.MaxValue;
             foreach (var player in PlayerSystem.Players)
@@ -387,7 +390,7 @@ namespace Cadenza
             this.nearestPlayerDist = nearest;
         }
 
-        private Vector2 FindRunLocation()
+        protected Vector2 FindRunLocation()
         {
             this.FindNearestPlayerDist();
             Vector2 displacement = new Vector2(this.TargetLocation.x - this.transform.position.x, this.TargetLocation.y - this.transform.position.z);
