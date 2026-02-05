@@ -18,12 +18,16 @@ namespace Cadenza
             SFX
         }
 
-        public enum Param
+        // This enum and its order are mirrored in an FMOD parameter.
+        public enum State
         {
-            LowPass,
+            Paused,
+            Menu,
+            CharacterSelect,
+            Game,
         }
 
-        private const string ParamNameLowPass = "isLowPass";
+        private const string ParamNameState = "GameState";
 
         private struct AudioEvent : IEquatable<AudioEvent>
         {
@@ -69,9 +73,6 @@ namespace Cadenza
         [SerializeField] private EventReference beatCallbackDebugEvent;
         [SerializeField] private EventReference playerOneShotsEvent;
 
-        [Header("Metronome")]
-        [SerializeField] private EventReference metronomeEvent;
-        [SerializeField] private EventReference metronomeSnapshot;
         public static EventReference PlayerOneShotsEvent => singleton.playerOneShotsEvent;
         private HashSet<AudioEvent> beatSetOneShot;
         private PlayerSounds playerSounds;
@@ -159,40 +160,14 @@ namespace Cadenza
                 RuntimeManager.StudioSystem.setParameterByName(characterClass.Name, enabled ? 1 : 0);
         }
 
-        public static void SetParameter(Param parameter, bool enabled)
+        public static void SetState(State state)
         {
-            string parameterName = parameter switch
-            {
-                Param.LowPass => ParamNameLowPass,
-                _ => string.Empty
-            };
-
-            RuntimeManager.StudioSystem.setParameterByName(parameterName, enabled ? 1 : 0);
+            RuntimeManager.StudioSystem.setParameterByName(ParamNameState, (int)state);
         }
 
         public static void SetParameter(string parameterName, bool enabled)
         {
             RuntimeManager.StudioSystem.setParameterByName(parameterName, enabled ? 1 : 0);
-        }
-
-        public static void SetMetronomeSoloed(bool enabled)
-        {
-            // Play the metronome and change the snapshot, if not already playing.
-            if (!singleton.metronomeSnapshotInstance.isValid())
-                singleton.metronomeSnapshotInstance = RuntimeManager.CreateInstance(singleton.metronomeSnapshot);
-            if (!singleton.metronomeEventInstance.isValid())
-                singleton.metronomeEventInstance = RuntimeManager.CreateInstance(singleton.metronomeEvent);
-
-            if (enabled)
-            {
-                singleton.metronomeSnapshotInstance.start();
-                singleton.metronomeEventInstance.start();
-            }
-            else
-            {
-                singleton.metronomeSnapshotInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                singleton.metronomeEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            }
         }
 
         #endregion

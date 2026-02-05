@@ -31,6 +31,8 @@ public class GameManager : ApplicationSystem
 
     public override void OnGameStart()
     {
+        AudioSystem.SetState(AudioSystem.State.Game);
+
         // Spawn players.
         foreach (var player in PlayerSystem.Players)
             PlayerSystem.SpawnPlayerBody(player);
@@ -41,6 +43,8 @@ public class GameManager : ApplicationSystem
 
     public override void OnGameStop()
     {
+        AudioSystem.SetState(AudioSystem.State.Menu);
+
         // Unpause game.
         if (this.isPaused)
         {

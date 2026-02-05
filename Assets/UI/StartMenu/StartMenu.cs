@@ -43,11 +43,11 @@ namespace Cadenza
         {
             this.containerJoin.style.display = DisplayStyle.Flex;
             this.containerOptions.style.display = DisplayStyle.None;
-            AudioSystem.SetParameter(AudioSystem.Param.LowPass, true);
 
             // Give single-player input to the first player.
             if (InputSystem.JoinedPlayersByID.Count < 1)
             {
+                AudioSystem.SetState(AudioSystem.State.Paused);
                 InputSystem.PlayerJoined += this.OnPlayerJoined;
                 InputSystem.EnableJoining();
             }
@@ -55,11 +55,6 @@ namespace Cadenza
             {
                 this.OnPlayerJoined(InputSystem.JoinedPlayersByID[0]);
             }
-        }
-
-        public override void OnHide()
-        {
-            AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
         }
 
         public override void OnGameStop()
@@ -83,7 +78,7 @@ namespace Cadenza
             // Swap from Join phase to Options phase display.
             this.containerJoin.style.display = DisplayStyle.None;
             this.containerOptions.style.display = DisplayStyle.Flex;
-            AudioSystem.SetParameter(AudioSystem.Param.LowPass, false);
+            AudioSystem.SetState(AudioSystem.State.Menu);
 
             // Set multiplayer.
             InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, player);

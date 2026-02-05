@@ -73,8 +73,6 @@ namespace Cadenza
 
         public override void OnShow()
         {
-            AudioSystem.SetMetronomeSoloed(true);
-
             // TODO: move this elsewhere
             this.blinker.Start();
 
@@ -93,8 +91,6 @@ namespace Cadenza
 
         public override void OnHide()
         {
-            AudioSystem.SetMetronomeSoloed(false);
-
             this.blinker.Stop();
         }
 

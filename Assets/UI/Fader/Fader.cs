@@ -12,6 +12,7 @@ namespace Cadenza
         private const string SlideInClassName = "slide-in";
         private const string SlideOutClassName = "slide-out";
         private const float DefaultLingerDuration = 0.5f; // seconds
+        private const string FMODFadingMarkerName = "Fading";
 
         public override void OnInitialize()
         {
@@ -54,11 +55,8 @@ namespace Cadenza
                 return;
 
             // Wait for audio to transition out.
-            await BeatSystem.WaitForNextBeatAsync();
-            {
-                AudioSystem.SetParameter("isFading", false);
-            }
-            await BeatSystem.WaitForMarkerAsync("Menu");
+            AudioSystem.SetParameter("isFading", false);
+            await WaitForNonFadingMarkerAsync();
 
             // Transition.
             var transitionCompletion = new TaskCompletionSource<bool>();
@@ -68,6 +66,21 @@ namespace Cadenza
             await transitionCompletion.Task;
 
             singleton.Reset();
+        }
+
+        public static Task WaitForNonFadingMarkerAsync()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            void Handler(string markerName)
+            {
+                if (string.Equals(markerName, FMODFadingMarkerName))
+                    return;
+                BeatSystem.MarkerPassed -= Handler;
+                tcs.TrySetResult(true);
+            }
+
+            BeatSystem.MarkerPassed += Handler;
+            return tcs.Task;
         }
 
         private void Reset()

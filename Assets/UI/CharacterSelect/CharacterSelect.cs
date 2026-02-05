@@ -81,6 +81,7 @@ namespace Cadenza
 
         public override void OnShow()
         {
+            AudioSystem.SetState(AudioSystem.State.CharacterSelect);
             InputSystem.EnableJoining();
             ClassManager.ClearCharacterAssignments();
 

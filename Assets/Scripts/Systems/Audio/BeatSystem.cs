@@ -413,6 +413,8 @@ namespace Cadenza
 
             // Store sample rate.
             RuntimeManager.CoreSystem.getSoftwareFormat(out this.sampleRate, out _, out _);
+
+            Debug.Log($"Initialized global track {track.Path}.");
         }
 
         /// <summary>
@@ -422,10 +424,11 @@ namespace Cadenza
         {
             if (!this.globalTrack.isValid())
             {
-                Debug.LogWarning("BeatManager: Attempted to play an unloaded global track. Try calling SetGlobalTrack() first.");
+                Debug.LogWarning("Attempted to play an unloaded global track. Try calling SetGlobalTrack() first.");
                 return;
             }
             this.globalTrack.start();
+            Debug.Log($"Starting global track {this.globalTrackReference.Path}.");
         }
 
         private void UpdateDSPClock()
