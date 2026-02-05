@@ -72,12 +72,11 @@ namespace Cadenza
         [SerializeField] private EventReference globalBeatEvent;
         [SerializeField] private EventReference beatCallbackDebugEvent;
         [SerializeField] private EventReference playerOneShotsEvent;
+        [SerializeField] private SoundCollection soundCollection;
 
         public static EventReference PlayerOneShotsEvent => singleton.playerOneShotsEvent;
         private HashSet<AudioEvent> beatSetOneShot;
         private PlayerSounds playerSounds;
-        private EventInstance metronomeEventInstance;
-        private EventInstance metronomeSnapshotInstance;
 
         private Bus masterBus;
         private Bus musicBus;
@@ -120,6 +119,11 @@ namespace Cadenza
         #endregion
         #region Public Static Methods
 
+        public static void PlayOneShot()
+        {
+
+        }
+
         public static void PlayOneShot(EventReference sound, bool immediate = false)
         {
             var evt = new AudioEvent(sound);
@@ -128,7 +132,6 @@ namespace Cadenza
                 evt.PlayOneShot();
             else
                 singleton.beatSetOneShot.Add(evt);
-
         }
 
         public static void PlayOneShotWithParameter(EventReference sound, string parameterName, float value, bool immediate = false)
