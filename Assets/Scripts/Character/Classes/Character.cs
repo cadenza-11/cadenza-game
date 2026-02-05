@@ -24,7 +24,6 @@ namespace Cadenza
         [SerializeField] private AccuracyBar accuracyBar;
         [SerializeField] private InteractionIndicator interactionIndicator;
         [SerializeField] private ComboManager comboM;
-        [SerializeField] private FlowManagerSO flowM;
         [SerializeField] private CharacterClass cClass;
         [SerializeField] private int baseLightDamage;
         [SerializeField] private int baseHeavyDamage;
@@ -69,7 +68,7 @@ namespace Cadenza
 
             if (this.isActionable)
             {
-                int flowSpeed = this.flowM.playerFlows[0] ? 1 : 0;
+                int flowSpeed = FlowManager.Singleton.playerFlows[0] ? 1 : 0;
                 int isFlowInt = this.isFlowing ? 1 : 0;
                 Vector3 moveDir = new(
                     this.move.x * (this.speed + (this.speed * 0.25f * flowSpeed * isFlowInt)),
@@ -113,7 +112,7 @@ namespace Cadenza
                 this.flow = 0.0f;
             }
 
-            if (this.flowM.playerFlows[3] && this.currentHealth < this.maxHealth && this.isFlowing)
+            if (FlowManager.Singleton.playerFlows[3] && this.currentHealth < this.maxHealth && this.isFlowing)
             {
                 this.currentHealth += 0.01f;
             }
@@ -166,7 +165,7 @@ namespace Cadenza
                 return;
 
             this.ManageAttackDirection();
-            int flowDamage = this.flowM.playerFlows[2] ? 1 : 0;
+            int flowDamage = FlowManager.Singleton.playerFlows[2] ? 1 : 0;
             int isFlowInt = this.isFlowing ? 1 : 0;
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
@@ -190,7 +189,7 @@ namespace Cadenza
                 return;
 
             this.ManageAttackDirection();
-            int flowDamage = this.flowM.playerFlows[2] ? 1 : 0;
+            int flowDamage = FlowManager.Singleton.playerFlows[2] ? 1 : 0;
             int isFlowInt = this.isFlowing ? 1 : 0;
             //Sets attacking to true and activated the hitbox for the attack
             this.isAttacking = true;
@@ -314,12 +313,12 @@ namespace Cadenza
         {
             if (this.flow >= 5.0f)
             {
-                this.flowM.playerFlows[this.cClass.ID - 1] = true;
+                FlowManager.Singleton.playerFlows[this.cClass.ID - 1] = true;
                 this.isFlowing = true;
             }
             else
             {
-                this.flowM.playerFlows[this.cClass.ID - 1] = false;
+                FlowManager.Singleton.playerFlows[this.cClass.ID - 1] = false;
                 this.isFlowing = false;
             }
         }
