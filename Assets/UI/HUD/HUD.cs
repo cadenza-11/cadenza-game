@@ -72,6 +72,9 @@ namespace Cadenza
                     ProgressBar health = this.healthBars[i].Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
                     health.highValue = player.Character.MaxHealth;
                     player.Character.HealthChanged += (healthValue) => this.OnHealthChanged(healthValue, health);
+                    ProgressBar flow = this.healthBars[i].Q<VisualElement>("c_FlowBar").Q<ProgressBar>("bar");
+                    flow.highValue = player.Character.FlowThreshold;
+                    player.Character.FlowChanged += (flowValue) => this.OnFlowChanged(flowValue, flow);
                 }
                 else
                     this.healthBars[i].style.opacity = 0;
@@ -159,6 +162,14 @@ namespace Cadenza
             bar.value = health;
         }
 
+        #endregion
+        #region Flow Bar
+
+        private void OnFlowChanged(float flow, ProgressBar bar)
+        {
+            bar.value = Mathf.Min(flow, bar.highValue);
+        }
+        
         #endregion
         #region Streaks
 

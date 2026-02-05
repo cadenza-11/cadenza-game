@@ -1,25 +1,25 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/HUD/PlayerHealth.uss?fileID=7433441132597879392&amp;guid=a544beee23391654ca8484f1aba7da89&amp;type=3#PlayerHealth" />
+    <Style src="project://database/Assets/UI/HUD/PlayerHealth.uss?fileID=7433441132597879392&amp;guid=a544beee23391654ca8484f1aba7da89&amp;type=3#PlayerHealth"/>
     <ui:VisualElement name="c_Player" style="flex-direction: row; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; background-color: rgba(0, 0, 0, 0.31); border-top-width: 5px; border-right-width: 5px; border-bottom-width: 5px; border-left-width: 5px; border-left-color: rgba(255, 255, 255, 0.5); border-right-color: rgba(255, 255, 255, 0.5); border-top-color: rgba(255, 255, 255, 0.5); border-bottom-color: rgba(255, 255, 255, 0.5); align-items: center;">
-        <ui:VisualElement name="portrait_Character" style="flex-grow: 1; height: 100px; width: 100px; max-width: 100px; max-height: 100px; min-width: 100px; min-height: 100px; background-color: rgb(0, 0, 0); border-top-width: 5px; border-right-width: 5px; border-bottom-width: 5px; border-left-width: 5px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255);" />
+        <ui:VisualElement name="portrait_Character" style="flex-grow: 1; height: 100px; width: 100px; max-width: 100px; max-height: 100px; min-width: 100px; min-height: 100px; background-color: rgb(0, 0, 0); border-top-width: 5px; border-right-width: 5px; border-bottom-width: 5px; border-left-width: 5px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255);"/>
         <ui:VisualElement name="c_Info" style="flex-grow: 1;">
-            <ui:Label text="Character Name" name="update_CharacterName" style="font-size: 30px; -unity-font-style: bold; -unity-text-outline-color: rgb(26, 26, 26); -unity-text-outline-width: 3px; color: rgb(255, 255, 255);" />
+            <ui:Label text="Character Name" name="update_CharacterName" style="font-size: 30px; -unity-font-style: bold; -unity-text-outline-color: rgb(26, 26, 26); -unity-text-outline-width: 3px; color: rgb(255, 255, 255);"/>
             <ui:VisualElement name="c_Bars" style="flex-grow: 1; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; justify-content: center;">
                 <ui:VisualElement name="c_HealthBar" class="player_meter health">
-                    <ui:VisualElement name="icon" class="meter_icon" />
-                    <ui:ProgressBar value="22" name="bar" class="meter" style="width: 75%;" />
+                    <ui:VisualElement name="icon" class="meter_icon"/>
+                    <ui:ProgressBar value="22" name="bar" class="meter" style="width: 75%;"/>
                 </ui:VisualElement>
-                <ui:VisualElement name="TEMP_ACCURACY" class="player_meter accuracy" style="display: none;">
-                    <ui:VisualElement name="icon" class="meter_icon" />
-                    <ui:ProgressBar value="22" name="bar" class="meter" style="width: 75%;" />
+                <ui:VisualElement name="c_FlowBar" class="player_meter flowstate">
+                    <ui:VisualElement name="icon" class="meter_icon"/>
+                    <ui:ProgressBar value="22" name="bar" class="meter" style="width: 75%;"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="c_Accuracy" class="accuracy_markers">
-            <ui:Label text="Eh..." name="Bad" class="accuracy_splash" style="color: rgb(255, 0, 0);" />
-            <ui:Label text="COOL!" name="OK" class="accuracy_splash" style="color: rgb(255, 165, 0);" />
-            <ui:Label text="SICK!!" name="Great" class="accuracy_splash" style="color: rgb(255, 235, 4);" />
-            <ui:Label text="RADICAL!!!" name="Perfect" class="accuracy_splash" style="color: rgb(0, 255, 0);" />
+            <ui:Label text="Eh..." name="Bad" class="accuracy_splash" style="color: rgb(255, 0, 0);"/>
+            <ui:Label text="COOL!" name="OK" class="accuracy_splash" style="color: rgb(255, 165, 0);"/>
+            <ui:Label text="SICK!!" name="Great" class="accuracy_splash" style="color: rgb(255, 235, 4);"/>
+            <ui:Label text="RADICAL!!!" name="Perfect" class="accuracy_splash" style="color: rgb(0, 255, 0);"/>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

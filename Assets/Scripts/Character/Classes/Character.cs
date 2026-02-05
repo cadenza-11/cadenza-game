@@ -29,14 +29,17 @@ namespace Cadenza
         [SerializeField] private int baseHeavyDamage;
 
         public float MaxHealth => this.maxHealth;
+        public float FlowThreshold => this.flowThreshold;
         public bool IsFainted => this.isFainted;
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
         public event Action<float> HealthChanged;
+        public event Action<float> FlowChanged;
 
         private Coroutine actionableRoutine;
         private int attackMod;
+        private float flowThreshold = 5f;
 
         private Vector2 move;
         private bool isMove, isAttacking, isFlowing;
@@ -115,7 +118,10 @@ namespace Cadenza
             if (FlowManager.Singleton.playerFlows[3] && this.currentHealth < this.maxHealth && this.isFlowing)
             {
                 this.currentHealth += 0.01f;
+                HealthChanged?.Invoke(this.currentHealth);
             }
+
+            FlowChanged?.Invoke(this.flow);
         }
 
         private bool IsGrounded()
@@ -311,7 +317,7 @@ namespace Cadenza
 
         public void UpdateFlowBuffs()
         {
-            if (this.flow >= 5.0f)
+            if (this.flow >= this.flowThreshold)
             {
                 FlowManager.Singleton.playerFlows[this.cClass.ID - 1] = true;
                 this.isFlowing = true;
