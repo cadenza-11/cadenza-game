@@ -78,6 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 756949604230155057, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+    - {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -88,28 +89,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 248890856230418022}
   m_SourcePrefab: {fileID: 100100000, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
---- !u!114 &54904982192232449 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4036822961007657625, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 4091136334406032024}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackArea
---- !u!114 &1865816069271972778 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2387496068521455922, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 4091136334406032024}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackArea
 --- !u!114 &2238050212761436460 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2866967900350389172, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
@@ -173,27 +152,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.GuitarChar
   speed: 3
-  jumpForce: 4
-  chargeForce: 10
   attackDuration: 0.25
-  chargeDuration: 0.5
-  currentHealth: 20
   maxHealth: 20
-  flow: 0
-  attackArea: {fileID: 3774706828326766197}
-  chargeArea: {fileID: 1865816069271972778}
-  slamArea: {fileID: 54904982192232449}
-  rb: {fileID: 3240942462605138174}
-  sr: {fileID: 7408952991493493817}
-  anim: {fileID: 4051950153305780472}
+  AttackArea: {fileID: 3774706828326766197}
+  Rigidbody: {fileID: 3240942462605138174}
+  Sprite: {fileID: 7408952991493493817}
+  Animator: {fileID: 4051950153305780472}
   accuracyBar: {fileID: 2238050212761436460}
   interactionIndicator: {fileID: 7882829867467598735}
-  projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
   comboM: {fileID: 4023698549463242690}
-  flowM: {fileID: 11400000, guid: e3d3ea605f564f140aec6bee81e600c7, type: 2}
   cClass: {fileID: 11400000, guid: ae8914c139d804a62b31a3c14bbf57d4, type: 2}
-  baseLightDamage: 0
-  baseHeavyDamage: 0
+  baseLightDamage: 2
+  baseHeavyDamage: 5
 --- !u!212 &7408952991493493817 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}

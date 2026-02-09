@@ -61,7 +61,7 @@ namespace Cadenza
             // Give input to new character body.
             if (this.Character != null)
             {
-                this.Character.SetPlayer(this);
+                this.Character.Initialize(this);
                 this.RegisterCharacterCallbacks(this.Input.actions, this.Character);
             }
         }

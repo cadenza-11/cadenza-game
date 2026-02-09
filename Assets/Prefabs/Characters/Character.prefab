@@ -71,144 +71,6 @@ MonoBehaviour:
   damage: 0
   knockbackScale: 5
   comboMove: 0
---- !u!1 &4273684722368562779
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3450669493368049639}
-  - component: {fileID: 8006032454909153215}
-  - component: {fileID: 2387496068521455922}
-  m_Layer: 0
-  m_Name: ChargeArea
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &3450669493368049639
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4273684722368562779}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7813739055769483968}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8006032454909153215
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4273684722368562779}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 8
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 119
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2387496068521455922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4273684722368562779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackArea
-  damage: 0
-  knockbackScale: 20
-  comboMove: 0
---- !u!1 &5360770480013504754
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3126811329095483840}
-  - component: {fileID: 3900377679940917123}
-  - component: {fileID: 4036822961007657625}
-  m_Layer: 0
-  m_Name: SlamArea
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &3126811329095483840
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5360770480013504754}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7813739055769483968}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &3900377679940917123
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5360770480013504754}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 8
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 119
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4036822961007657625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5360770480013504754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackArea
-  damage: 0
-  knockbackScale: 20
-  comboMove: 0
 --- !u!1 &8363881908035172195
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +196,7 @@ GameObject:
   - component: {fileID: 7813739055769483968}
   - component: {fileID: 385595547923433363}
   - component: {fileID: 1458182412301763174}
-  - component: {fileID: 756949604230155057}
+  - component: {fileID: 1620169153954812086}
   m_Layer: 7
   m_Name: Character
   m_TagString: Player
@@ -356,8 +218,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7239182979401787694}
-  - {fileID: 3450669493368049639}
-  - {fileID: 3126811329095483840}
   - {fileID: 7459484215511399675}
   - {fileID: 989529698284251720}
   - {fileID: 4163983894870712180}
@@ -411,7 +271,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &756949604230155057
+--- !u!114 &1620169153954812086
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -420,28 +280,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 8586129573200258111}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8189824090067ef4f8f41dffda3edbea, type: 3}
+  m_Script: {fileID: 11500000, guid: c6a8d5168068741eca1e4da9e8476970, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Character
   speed: 3
-  jumpForce: 4
-  chargeForce: 10
   attackDuration: 0.25
-  chargeDuration: 0.5
-  currentHealth: 20
   maxHealth: 20
-  attackArea: {fileID: 911082884614298861}
-  chargeArea: {fileID: 2387496068521455922}
-  slamArea: {fileID: 4036822961007657625}
-  rb: {fileID: 1458182412301763174}
-  sr: {fileID: 6779959987335499425}
-  anim: {fileID: 71435134034143840}
+  AttackArea: {fileID: 0}
+  Rigidbody: {fileID: 1458182412301763174}
+  Sprite: {fileID: 6779959987335499425}
+  Animator: {fileID: 71435134034143840}
   accuracyBar: {fileID: 2866967900350389172}
   interactionIndicator: {fileID: 6171001511222046999}
-  projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
-  ComboM: {fileID: 0}
+  comboM: {fileID: 0}
+  cClass: {fileID: 0}
   baseLightDamage: 0
   baseHeavyDamage: 0
+  isFainted: 0
 --- !u!1001 &1003460141613909193
 PrefabInstance:
   m_ObjectHideFlags: 0
