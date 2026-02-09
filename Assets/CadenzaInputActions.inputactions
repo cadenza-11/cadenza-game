@@ -34,15 +34,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack/Special",
-                    "type": "Button",
-                    "id": "811969d1-c5c4-4b82-873b-316db499dd49",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Attack/Team",
                     "type": "Button",
                     "id": "3b9afcc6-581f-45bf-acce-81822e0fc17e",
@@ -235,28 +226,6 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Attack/Heavy",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1e92ca5d-28ac-42a3-bc85-ac9dab703775",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Attack/Special",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "645c21fc-58eb-4d27-b512-c3dcc7a1861b",
-                    "path": "<Keyboard>/k",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Attack/Special",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

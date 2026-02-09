@@ -5,7 +5,7 @@ using Cadenza.Combo;
 
 namespace Cadenza
 {
-    public class Character : MonoBehaviour, CadenzaActions.IPlayerActions
+    public class Character : MonoBehaviour
     {
         #region Variables
         [Header("Player Values")]
@@ -95,8 +95,10 @@ namespace Cadenza
 
             this.state?.FixedUpdate(this);
 
+            // Update flow.
             this.SetFlow(this.flow - 0.03f);
-            if (this.isFlowing && FlowManager.Singleton.playerFlows[3])
+
+            if (this.HasFlowBuff(3))
                 this.SetHealth(this.currentHealth + 0.01f);
         }
 
@@ -219,18 +221,10 @@ namespace Cadenza
                 this.input.wantHeavy = true;
         }
 
-        public void OnAttackSpecial(InputAction.CallbackContext context)
-        {
-        }
-
         public void OnAttackTeam(InputAction.CallbackContext context)
         {
             if (context.performed)
                 this.input.wantTeam = true;
-        }
-
-        public void OnPause(InputAction.CallbackContext context)
-        {
         }
 
         #endregion
