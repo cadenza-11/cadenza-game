@@ -424,22 +424,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  jumpForce: 4
-  chargeForce: 10
   attackDuration: 0.25
-  chargeDuration: 0.5
   currentHealth: 20
   maxHealth: 20
+  flow: 0
   attackArea: {fileID: 911082884614298861}
-  chargeArea: {fileID: 2387496068521455922}
-  slamArea: {fileID: 4036822961007657625}
   rb: {fileID: 1458182412301763174}
   sr: {fileID: 6779959987335499425}
   anim: {fileID: 71435134034143840}
   accuracyBar: {fileID: 2866967900350389172}
   interactionIndicator: {fileID: 6171001511222046999}
-  projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
-  ComboM: {fileID: 0}
+  comboM: {fileID: 0}
+  cClass: {fileID: 0}
   baseLightDamage: 0
   baseHeavyDamage: 0
 --- !u!1001 &1003460141613909193
@@ -493,6 +489,10 @@ PrefabInstance:
     - target: {fileID: 7266076112721194893, guid: 0a85af06795b5784db5bc590ee4c9eaf, type: 3}
       propertyPath: m_Name
       value: AccuracyBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 7266076112721194893, guid: 0a85af06795b5784db5bc590ee4c9eaf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

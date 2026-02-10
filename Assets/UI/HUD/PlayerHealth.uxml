@@ -15,11 +15,6 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="c_Accuracy" class="accuracy_markers">
-            <ui:Label text="Eh..." name="Bad" class="accuracy_splash" style="color: rgb(255, 0, 0);"/>
-            <ui:Label text="COOL!" name="OK" class="accuracy_splash" style="color: rgb(255, 165, 0);"/>
-            <ui:Label text="SICK!!" name="Great" class="accuracy_splash" style="color: rgb(255, 235, 4);"/>
-            <ui:Label text="RADICAL!!!" name="Perfect" class="accuracy_splash" style="color: rgb(0, 255, 0);"/>
-        </ui:VisualElement>
+        <ui:VisualElement name="c_Accuracy" class="accuracy_markers"/>
     </ui:VisualElement>
 </ui:UXML>
