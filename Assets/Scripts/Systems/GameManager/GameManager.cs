@@ -19,6 +19,7 @@ public class GameManager : ApplicationSystem
 
     #endregion
 
+    private bool isCombatActive;
     private bool isPaused;
 
     #region Application Callbacks
@@ -37,27 +38,27 @@ public class GameManager : ApplicationSystem
         foreach (var player in PlayerSystem.Players)
             PlayerSystem.SpawnPlayerBody(player);
 
-        // Enable input.
-        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+        this.Schedule(5f, () => this.StartCombat());
     }
 
     public override void OnGameStop()
     {
         AudioSystem.SetState(AudioSystem.State.Menu);
 
-        // Unpause game.
-        if (this.isPaused)
-        {
-            Time.timeScale = 1;
-            this.isPaused = false;
-        }
-
-        // Disable input.
-        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
-
         // Despawn players.
         foreach (var player in PlayerSystem.Players)
             PlayerSystem.DespawnPlayerBody(player);
+    }
+
+    public override void OnUpdate()
+    {
+        if (ApplicationController.State != ApplicationState.GameSession)
+            return;
+
+        if (this.isCombatActive && this.CheckWinLoss())
+        {
+            this.StopCombat();
+        }
     }
 
     #endregion
@@ -106,4 +107,39 @@ public class GameManager : ApplicationSystem
     }
 
     #endregion
+
+    private void StartCombat()
+    {
+        if (this.isCombatActive)
+            return;
+
+        this.isCombatActive = true;
+
+        // Enable input.
+        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+    }
+
+    private void StopCombat()
+    {
+        if (!this.isCombatActive)
+            return;
+
+        this.isCombatActive = false;
+
+        // Unpause game.
+        if (this.isPaused)
+        {
+            Time.timeScale = 1;
+            this.isPaused = false;
+        }
+
+        // Disable input.
+        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
+    }
+
+    private bool CheckWinLoss()
+    {
+        // TODO: Implement
+        return false;
+    }
 }
