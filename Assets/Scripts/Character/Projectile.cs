@@ -6,7 +6,7 @@ public class Projectile : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private float timer = 0.0f;
     private Rigidbody rb;
-    public bool direction;
+    public Vector2 direction;
     public bool speedSet = true;
     public float knockbackScale;
     [SerializeField] private int speed = 0;
@@ -25,8 +25,8 @@ public class Projectile : MonoBehaviour
 
         if (this.speedSet == false)
         {
-            int dirNum = this.direction ? 1 : -1;
-            Vector3 moveDir = new Vector3(this.speed * dirNum, 0, 0);
+            
+            Vector3 moveDir = new Vector3(this.speed * this.direction.x, 0, this.speed * this.direction.y);
             this.rb.linearVelocity = moveDir;
             this.speedSet = true;
         }

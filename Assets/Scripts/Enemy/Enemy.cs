@@ -50,7 +50,7 @@ namespace Cadenza
 
         //May want a character manager to see character locations
         // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        protected virtual void Start()
         {
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
@@ -61,7 +61,7 @@ namespace Cadenza
         }
 
         // Update is called once per frame
-        void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             if (!this.IsGrounded())
             {
@@ -103,8 +103,9 @@ namespace Cadenza
         protected virtual void RangedAttack()
         {
             GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
-            projectileInstance.GetComponent<Projectile>().direction =
-                (this.curAngle * (180 / Math.PI) > -90 && this.curAngle * (180 / Math.PI) < 90) ? true : false;
+            int direction =
+                (this.curAngle * (180 / Math.PI) > -90 && this.curAngle * (180 / Math.PI) < 90) ? 1 : -1;
+            projectileInstance.GetComponent<Projectile>().direction.x = direction;
             projectileInstance.GetComponent<Projectile>().speedSet = false;
             this.anim.SetTrigger("LightAttack");
         }
@@ -129,7 +130,7 @@ namespace Cadenza
         /// <summary>
         /// Checks the enemy's current state and then goes into the proper State function for actions/state changes
         /// </summary>
-        protected void CheckState()
+        protected virtual void CheckState()
         {
             if (!this.isActionable)
                 return;
@@ -297,11 +298,13 @@ namespace Cadenza
 
         protected virtual void RunState()
         {
-            if (!this.hasRun)
+            /*if (!this.hasRun)
             {
                 this.hasRun = true;
                 this.TargetLocation = this.FindRunLocation();
             }
+            This section could be useful for some enemies, but not for all. Will implement it in child enemy classes if need be.
+            */
 
             Vector3 pos = this.transform.position;
             this.curAngle = (float)Math.Atan2(this.TargetLocation.y - pos.z, this.TargetLocation.x - pos.x);
