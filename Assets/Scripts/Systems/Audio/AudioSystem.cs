@@ -28,6 +28,7 @@ namespace Cadenza
         }
 
         private const string ParamNameState = "GameState";
+        private const string ParamNameStage = "Stage";
 
         private struct AudioEvent : IEquatable<AudioEvent>
         {
@@ -156,6 +157,7 @@ namespace Cadenza
                 singleton.beatSetOneShot.Add(evt);
         }
 
+
         public static void SetVolume(Group group, float value)
         {
             Bus bus = group switch
@@ -173,6 +175,12 @@ namespace Cadenza
         {
             if (characterClass != null)
                 RuntimeManager.StudioSystem.setParameterByName(characterClass.Name, enabled ? 1 : 0);
+
+        }
+
+        public static void SetStage(Level level)
+        {
+            RuntimeManager.StudioSystem.setParameterByName(ParamNameStage, level == null ? 0 : level.ID);
         }
 
         public static void SetState(State state)
