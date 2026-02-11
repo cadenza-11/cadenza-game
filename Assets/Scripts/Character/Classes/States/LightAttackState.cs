@@ -5,15 +5,7 @@ namespace Cadenza
         public void Enter(Character character)
         {
             // Light attack.
-            character.comboM.ProcessCombo(AttkTypes.Light, out var reward);
-            character.ManageAttackDirection();
-
-            int flowDamage = character.HasFlowBuff(2) ? 1 : 0;
-            float damageModifier = character.baseLightDamage / 2 * flowDamage * reward.Multiplier;
-
-            character.AttackArea.damage = (int)(character.baseLightDamage * damageModifier); // TEMP: should be flaot.
-            character.AttackArea.comboMove = reward.AttackEffect;
-            character.AttackArea.gameObject.SetActive(true);
+            character.AttackArea.StartAttack(character);
 
             character.Animator.SetTrigger("LightAttack");
 
@@ -24,7 +16,7 @@ namespace Cadenza
 
         public void Exit(Character character)
         {
-            character.AttackArea.gameObject.SetActive(false);
+            character.AttackArea.EndAttack();
         }
 
         public void Update(Character character)

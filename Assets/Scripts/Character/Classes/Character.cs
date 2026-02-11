@@ -14,7 +14,7 @@ namespace Cadenza
         [SerializeField] public float maxHealth;
 
         [Header("Assign in Inspector")]
-        [SerializeField] public AttackArea AttackArea;
+        [SerializeField] public GameObject AttackAreaObject;
         [SerializeField] public Rigidbody Rigidbody;
         [SerializeField] public SpriteRenderer Sprite;
         [SerializeField] public Animator Animator;
@@ -29,6 +29,7 @@ namespace Cadenza
         public float MaxHealth => this.maxHealth;
         public float FlowThreshold => this.flowThreshold;
         public bool IsFainted => this.isFainted;
+        public IAttackArea AttackArea => this.attackArea;
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
@@ -63,6 +64,8 @@ namespace Cadenza
         public readonly HitStunState hitStun = new();
         public readonly FaintedState fainted = new();
 
+        private IAttackArea attackArea;
+
         private bool isFlowing = false;
         [NonSerialized] public bool isFainted = false;
         #endregion
@@ -74,6 +77,7 @@ namespace Cadenza
             player.PlayerHit += this.OnPlayerHit;
             BeatSystem.BeatPlayed += this.UpdateFlowBuffs;
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
+            this.attackArea = this.AttackAreaObject.GetComponent<IAttackArea>();
 
             this.input = new();
             this.SetHealth(this.maxHealth);
@@ -147,10 +151,10 @@ namespace Cadenza
 
         public void ManageAttackDirection()
         {
-            Vector3 localPos = this.AttackArea.transform.localPosition;
+            Vector3 localPos = this.AttackAreaObject.transform.localPosition;
             float absLocalX = Mathf.Abs(localPos.x);
             localPos.x = this.facingRight ? absLocalX : -absLocalX;
-            this.AttackArea.transform.localPosition = localPos;
+            this.AttackAreaObject.transform.localPosition = localPos;
         }
 
         public bool HasFlowBuff(int idx)
