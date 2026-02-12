@@ -4,19 +4,10 @@ namespace Cadenza
     {
         public void Enter(Character character)
         {
+            //Heavy Attack.
+            character.AttackArea.StartHeavyAttack(character);
+
             character.Animator.SetTrigger("HeavyAttack");
-
-            // Heavy attack.
-            character.comboM.ProcessCombo(AttkTypes.Heavy, out var reward);
-
-            character.ManageAttackDirection();
-            int flowDamage = character.HasFlowBuff(2) ? 1 : 0;
-            float damageModifier = character.baseHeavyDamage / 2 * flowDamage * reward.Multiplier;
-
-            //character.AttackArea.damage = (int)(character.baseHeavyDamage * damageModifier); // TEMP: should be a float
-            //character.AttackArea.comboMove = reward.AttackEffect;
-            //character.AttackArea.gameObject.SetActive(true);
-
 
             character.Schedule(
                 character.attackDuration * 2f,
@@ -25,7 +16,7 @@ namespace Cadenza
 
         public void Exit(Character character)
         {
-            //character.AttackArea.gameObject.SetActive(false);
+            character.AttackArea.EndAttack();
         }
 
         public void Update(Character character)

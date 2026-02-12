@@ -5,7 +5,6 @@ namespace Cadenza
 {
     public class GuitarArea : MonoBehaviour, IAttackArea
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
         public int damage = 0;
         public float knockbackScale;
         public AttkEffect comboMove = AttkEffect.None;
@@ -19,7 +18,7 @@ namespace Cadenza
             this.go.SetActive(enabled);
         }
 
-        public void StartAttack(Character character)
+        public void StartLightAttack(Character character)
         {
             character.comboM.ProcessCombo(AttkTypes.Light, out var reward);
             character.ManageAttackDirection();
@@ -28,6 +27,19 @@ namespace Cadenza
             float damageModifier = character.baseLightDamage / 2 * flowDamage * reward.Multiplier;
 
             this.damage = (int)(character.baseLightDamage * damageModifier); // TEMP: should be flaot.
+            this.comboMove = reward.AttackEffect;
+            this.gameObject.SetActive(true);
+        }
+
+        public void StartHeavyAttack(Character character)
+        {
+            character.comboM.ProcessCombo(AttkTypes.Heavy, out var reward);
+            character.ManageAttackDirection();
+
+            int flowDamage = character.HasFlowBuff(2) ? 1 : 0;
+            float damageModifier = character.baseHeavyDamage / 2 * flowDamage * reward.Multiplier;
+
+            this.damage = (int)(character.baseHeavyDamage * damageModifier); // TEMP: should be flaot.
             this.comboMove = reward.AttackEffect;
             this.gameObject.SetActive(true);
         }

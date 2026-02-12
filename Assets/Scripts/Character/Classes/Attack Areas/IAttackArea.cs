@@ -3,7 +3,8 @@ namespace Cadenza
     public interface IAttackArea
     {
         void SetActive(bool enabled);
-        void StartAttack(Character character);
+        void StartLightAttack(Character character);
+        void StartHeavyAttack(Character character);
         void EndAttack();
     }
 }

@@ -5,7 +5,7 @@ namespace Cadenza
         public void Enter(Character character)
         {
             // Light attack.
-            character.AttackArea.StartAttack(character);
+            character.AttackArea.StartLightAttack(character);
 
             character.Animator.SetTrigger("LightAttack");
 
