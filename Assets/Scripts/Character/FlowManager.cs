@@ -19,6 +19,11 @@ namespace Cadenza
                 singleton = this;
             }
         }
+
+        public void UpdateFlows(bool flow, int id)
+        {
+            this.playerFlows[id - 1] = flow;
+        }
     }
 
 }

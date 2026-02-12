@@ -21,7 +21,6 @@ namespace Cadenza
         [SerializeField] private AccuracyBar accuracyBar;
         [SerializeField] private InteractionIndicator interactionIndicator;
         [SerializeField] public ComboManager comboM;
-        [SerializeField] private CharacterClass cClass;
         [SerializeField] public int baseLightDamage;
         [SerializeField] public int baseHeavyDamage;
 
@@ -66,6 +65,8 @@ namespace Cadenza
 
         private IAttackArea attackArea;
 
+        private CharacterClass cClass;
+
         private bool isFlowing = false;
         [NonSerialized] public bool isFainted = false;
         #endregion
@@ -78,6 +79,7 @@ namespace Cadenza
             BeatSystem.BeatPlayed += this.UpdateFlowBuffs;
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
             this.attackArea = this.AttackAreaObject.GetComponent<IAttackArea>();
+            this.cClass = player.CharacterClass;
 
             this.input = new();
             this.SetHealth(this.maxHealth);
@@ -245,12 +247,12 @@ namespace Cadenza
         {
             if (this.flow >= this.flowThreshold)
             {
-                FlowManager.Singleton.playerFlows[this.cClass.ID - 1] = true;
+                FlowManager.Singleton.UpdateFlows(true, this.cClass.ID);
                 this.isFlowing = true;
             }
             else
             {
-                FlowManager.Singleton.playerFlows[this.cClass.ID - 1] = false;
+                FlowManager.Singleton.UpdateFlows(false, this.cClass.ID);
                 this.isFlowing = false;
             }
         }
