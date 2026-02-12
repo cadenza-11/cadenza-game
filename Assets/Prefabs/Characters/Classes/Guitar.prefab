@@ -29,6 +29,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4023698549463242690}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: baseHeavyDamage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: baseLightDamage
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: AttackAreaObject
       value: 
       objectReference: {fileID: 1819034417208150137}
@@ -119,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.GuitarArea
   damage: 0
-  knockbackScale: 0
+  knockbackScale: 5
   comboMove: 0
 --- !u!1 &5759731777474461351 stripped
 GameObject:

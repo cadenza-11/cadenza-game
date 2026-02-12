@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Cadenza
 {
-    public class GuitarArea : MonoBehaviour, IAttackArea
+    public class DrumArea : MonoBehaviour, IAttackArea
     {
         public int damage = 0;
         public float knockbackScale;
@@ -55,7 +55,6 @@ namespace Cadenza
             {
                 Enemy hitEntity = collider.gameObject.GetComponent<Enemy>();
                 hitEntity.DoDamage(this.damage);
-                Debug.Log(this.damage);
             }
 
             // Stop current horizontal movement.
@@ -74,3 +73,4 @@ namespace Cadenza
         }
     }
 }
+

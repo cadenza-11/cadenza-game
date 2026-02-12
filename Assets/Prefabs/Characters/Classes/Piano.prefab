@@ -20,6 +20,26 @@ PrefabInstance:
       propertyPath: comboM
       value: 
       objectReference: {fileID: -7228706056705483593}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: cClass
+      value: 
+      objectReference: {fileID: 11400000, guid: efd3ab957a08649749161d487cdc17d4, type: 2}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: comboM
+      value: 
+      objectReference: {fileID: -7228706056705483593}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: baseHeavyDamage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: baseLightDamage
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: AttackAreaObject
+      value: 
+      objectReference: {fileID: 4738841478477733116}
     - target: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: m_Color.b
       value: 0.94804657
@@ -77,17 +97,17 @@ PrefabInstance:
       value: Piano
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 756949604230155057, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-    - {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+    - {fileID: 0}
+    - {fileID: 911082884614298861, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: -7228706056705483593}
-    - targetCorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6080110654524326455}
+      addedObject: {fileID: 6447419184624183868}
   m_SourcePrefab: {fileID: 100100000, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
 --- !u!1 &1662831655738370594 stripped
 GameObject:
@@ -107,76 +127,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Combo.ComboManager
   ComboDB: {fileID: 11400000, guid: f722608b4306c644d8bff559041b7bd1, type: 2}
---- !u!114 &6080110654524326455
+--- !u!1 &4738841478477733116 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+  m_PrefabInstance: {fileID: 6934311765754547741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6447419184624183868
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1662831655738370594}
+  m_GameObject: {fileID: 4738841478477733116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 134f3863fd4313b4780d54b991826e89, type: 3}
+  m_Script: {fileID: 11500000, guid: f7fc7c2da5c23864eb7cc9997a0ca955, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.PianoChar
-  speed: 3
-  attackDuration: 0.25
-  maxHealth: 20
-  AttackArea: {fileID: 7827061271546761968}
-  Rigidbody: {fileID: 8360685189942512763}
-  Sprite: {fileID: 4480200235303436476}
-  Animator: {fileID: 6973355835225990269}
-  accuracyBar: {fileID: 5184236710439523753}
-  interactionIndicator: {fileID: 3861927812954160906}
-  comboM: {fileID: -7228706056705483593}
-  cClass: {fileID: 11400000, guid: efd3ab957a08649749161d487cdc17d4, type: 2}
-  baseLightDamage: 2
-  baseHeavyDamage: 5
---- !u!114 &3861927812954160906 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6171001511222046999, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 6934311765754547741}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5136ee3869c646ff87223033f1283de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.InteractionIndicator
---- !u!212 &4480200235303436476 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 6934311765754547741}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5184236710439523753 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2866967900350389172, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 6934311765754547741}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a350f567dbb8f664fb69e7cfe98c3e4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
---- !u!95 &6973355835225990269 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 71435134034143840, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 6934311765754547741}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7827061271546761968 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 911082884614298861, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 6934311765754547741}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
---- !u!54 &8360685189942512763 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 1458182412301763174, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 6934311765754547741}
-  m_PrefabAsset: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.GuitarArea
+  damage: 0
+  knockbackScale: 5
+  comboMove: 0
