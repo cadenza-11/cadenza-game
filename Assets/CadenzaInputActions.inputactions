@@ -343,15 +343,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Toggle/Debug",
-                    "type": "Button",
-                    "id": "feab28e9-369f-45b5-b939-6e73cec0c992",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Point",
                     "type": "PassThrough",
                     "id": "1a4d4158-e8d6-4668-876c-ef256f89e7ce",
@@ -745,17 +736,6 @@
                 },
                 {
                     "name": "",
-                    "id": "279e7fc2-0771-4337-aca7-f204caa26a38",
-                    "path": "<Keyboard>/backquote",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Toggle/Debug",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "7a1a5ac8-6009-4157-a458-286d74fd260e",
                     "path": "<Pointer>/position",
                     "interactions": "",
@@ -828,6 +808,34 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Unpause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Debug",
+            "id": "e8ec19d8-1343-46d2-96ce-c0e2bf1c61d0",
+            "actions": [
+                {
+                    "name": "ToggleVisibility",
+                    "type": "Button",
+                    "id": "d0b5c7d9-8ceb-43a9-9e1f-da48a3e16141",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d989bb47-c96e-4dbb-a655-ffe830678225",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ToggleVisibility",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

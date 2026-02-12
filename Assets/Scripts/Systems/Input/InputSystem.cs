@@ -100,9 +100,9 @@ namespace Cadenza
         private void RegisterPlayerNavigationEvents(Player player)
         {
             // Register for per-player UI actions.
-            var submitAction = player.Input.actions.FindAction("Submit");
-            var cancelAction = player.Input.actions.FindAction("Cancel");
-            var navigateAction = player.Input.actions.FindAction("Navigate");
+            var submitAction = player.Input.actions.FindAction("Submit", throwIfNotFound: true);
+            var cancelAction = player.Input.actions.FindAction("Cancel", throwIfNotFound: true);
+            var navigateAction = player.Input.actions.FindAction("Navigate", throwIfNotFound: true);
 
             submitAction.performed += ctx => { if (ctx.performed) UIPlayerSubmit?.Invoke(player); };
             cancelAction.performed += ctx => { if (ctx.performed) UIPlayerCancel?.Invoke(player); };
@@ -111,7 +111,11 @@ namespace Cadenza
 
         private void RegisterPlayerDebugEvents(Player player)
         {
-            var toggleDebugAction = player.Input.actions.FindAction("Toggle/Debug");
+            // Keep the debug map always active.
+            var map = player.Input.actions.FindActionMap("Debug", throwIfNotFound: true);
+            map.Enable();
+
+            var toggleDebugAction = map.FindAction("ToggleVisibility", throwIfNotFound: true);
             toggleDebugAction.performed += ctx => { if (ctx.performed) UISystem.FindPanel<DebugConsole>().Toggle(); };
         }
 
