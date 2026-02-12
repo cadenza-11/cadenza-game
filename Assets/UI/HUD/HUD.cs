@@ -173,7 +173,7 @@ namespace Cadenza
         {
             bar.value = Mathf.Min(flow, bar.highValue);
         }
-        
+
         #endregion
         #region Accuracy
 
@@ -183,7 +183,7 @@ namespace Cadenza
             accuracyText.AddToClassList("accuracy_splash");
             accuracyText.AddToClassList(def.Class.ToString());
             accuracyText.text = def.Class.ToString();
-            
+
             Sequence sequence = DOTween.Sequence();
             accuracy.Add(accuracyText);
             sequence.Append(DOTween.To(
@@ -195,11 +195,11 @@ namespace Cadenza
             sequence.Append(DOTween.To(
                 () => accuracyText.resolvedStyle.opacity,
                 x => accuracyText.style.opacity = x,
-                endValue: 0,    
+                endValue: 0,
                 duration: 0.5f
             ));
-            sequence.OnComplete(() => {
-                Debug.Log("Removing accuracy text from hierarchy.");
+            sequence.OnComplete(() =>
+            {
                 accuracyText.RemoveFromHierarchy();
             });
         }
@@ -221,8 +221,7 @@ namespace Cadenza
             if (!this.streakLabels.ContainsKey(evt.Value))
                 this.streakLabels[evt.Value] = $"x{evt.Value}";
 
-            // Update player streak.
-            Debug.Log($"Player {evt.Player.ID} streak updated: x{evt.Value}");
+            // TODO: Update player streak.
         }
 
         private void OnTeamStreakStarted(StreakManager.TeamStreakEvent evt)

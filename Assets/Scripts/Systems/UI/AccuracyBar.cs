@@ -20,6 +20,9 @@ public class AccuracyBar : MonoBehaviour
 
     public void OnPlayerHit(ScoreDef def)
     {
+        if (!this.gameObject.activeInHierarchy)
+            return;
+
         this.accuracyBar.value = (float)def.Latency;
         this.accuracyText.text = def.Class.ToString();
     }

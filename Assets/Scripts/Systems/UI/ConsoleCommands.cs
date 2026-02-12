@@ -138,6 +138,28 @@ namespace Cadenza
                         Debug.Log($"Set latency for player (id={playerID}) to {latency}ms");
                     }
                     break;
+
+                case "accuracy":
+                    if (args.Length >= 3)
+                    {
+                        if (string.Equals(args[2], "on"))
+                        {
+                            foreach (Player playerP in PlayerSystem.Players)
+                            {
+                                if (playerP.Character != null)
+                                    playerP.Character.GetComponentInChildren<AccuracyBar>().gameObject.SetActive(true);
+                            }
+                        }
+                        else if (string.Equals(args[2], "off"))
+                        {
+                            foreach (Player playerP in PlayerSystem.Players)
+                            {
+                                if (playerP.Character != null)
+                                    playerP.Character.GetComponentInChildren<AccuracyBar>().gameObject.SetActive(false);
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
