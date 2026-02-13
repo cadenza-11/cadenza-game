@@ -1,81 +1,76 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Cadenza
 {
-    public class ClassManager : ApplicationSystem
+    /// <summary>
+    /// Used for UI management of characters by the <see cref="CharacterSelect"> panel.
+    /// </summary>
+    public class UIClassManager
     {
         public struct CharacterSelectInfo
         {
             public CharacterClass Class;
             public bool IsTaken;
         }
-        private static ClassManager singleton;
-        [SerializeField] CharacterClass[] classes;
+
         private Dictionary<Player, int> takenCharacters = new();
-        public static event Action CharacterTakenStatusChanged;
+        public event Action CharacterTakenStatusChanged;
+        private CharacterClass[] classes => TeamSystem.AvailableClasses.Values;
 
-        public override void OnInitialize()
+        public CharacterClass SelectCharacter(Player p, string newClass)
         {
-            Debug.Assert(singleton == null);
-            singleton = this;
-        }
-
-        public static CharacterClass SelectCharacter(Player p, string newClass)
-        {
-            int index = singleton.ClassNameIndex(newClass);
-            if (singleton.takenCharacters.ContainsValue(index) || index == -1)
+            int index = this.ClassNameIndex(newClass);
+            if (this.takenCharacters.ContainsValue(index) || index == -1)
                 return null;
-            singleton.takenCharacters.Add(p, index);
+            this.takenCharacters.Add(p, index);
             CharacterTakenStatusChanged?.Invoke();
-            return singleton.classes[index];
+            return this.classes[index];
         }
 
-        public static void UnselectCharacter(Player p)
+        public void UnselectCharacter(Player p)
         {
-            if(singleton.takenCharacters.TryGetValue(p, out int prevClass))
-            {
+            if (this.takenCharacters.TryGetValue(p, out int prevClass))
                 CharacterTakenStatusChanged?.Invoke();
-            }
-            singleton.takenCharacters.Remove(p);
+
+            this.takenCharacters.Remove(p);
         }
 
-        public static CharacterSelectInfo GetNextCharacter(string currentClass)
+        public CharacterSelectInfo GetNextCharacter(string currentClass)
         {
-            int nextIndex = singleton.ClassNameIndex(currentClass) + 1; // Broken strings (resulting in -1) are automatically set to 0
-            if (nextIndex == singleton.classes.Length)
+            int nextIndex = this.ClassNameIndex(currentClass) + 1; // Broken strings (resulting in -1) are automatically set to 0
+            if (nextIndex == this.classes.Length)
                 nextIndex = 0;
             return new CharacterSelectInfo()
             {
-                Class = singleton.classes[nextIndex], 
-                IsTaken = singleton.takenCharacters.ContainsValue(nextIndex) 
+                Class = this.classes[nextIndex],
+                IsTaken = this.takenCharacters.ContainsValue(nextIndex)
             };
         }
 
-        public static CharacterSelectInfo GetCharacter(string currentClass)
+        public CharacterSelectInfo GetCharacter(string currentClass)
         {
-            int index = singleton.ClassNameIndex(currentClass);
+            int index = this.ClassNameIndex(currentClass);
             if (index == -1)
                 index = 0;
             return new CharacterSelectInfo()
             {
-                Class = singleton.classes[index], 
-                IsTaken = singleton.takenCharacters.ContainsValue(index) 
+                Class = this.classes[index],
+                IsTaken = this.takenCharacters.ContainsValue(index)
             };
         }
 
-        public static CharacterSelectInfo GetPreviousCharacter(string currentClass)
+        public CharacterSelectInfo GetPreviousCharacter(string currentClass)
         {
-            int previousIndex = singleton.ClassNameIndex(currentClass) - 1;
+            int previousIndex = this.ClassNameIndex(currentClass) - 1;
             if (previousIndex < -1) // Deals with broken strings (-1)
                 previousIndex = 0;
             else if (previousIndex < 0) // Deals with class at [0]
-                previousIndex = singleton.classes.Length - 1;
+                previousIndex = this.classes.Length - 1;
             return new CharacterSelectInfo()
             {
-                Class = singleton.classes[previousIndex], 
-                IsTaken = singleton.takenCharacters.ContainsValue(previousIndex) 
+                Class = this.classes[previousIndex],
+                IsTaken = this.takenCharacters.ContainsValue(previousIndex)
             };
         }
 
@@ -89,9 +84,9 @@ namespace Cadenza
             return -1;
         }
 
-        public static void ClearCharacterAssignments()
+        public void ClearCharacterAssignments()
         {
-            singleton.takenCharacters = new();
+            this.takenCharacters.Clear();
         }
     }
 }

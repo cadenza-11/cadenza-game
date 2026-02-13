@@ -161,7 +161,7 @@ namespace Cadenza
 
         public bool HasFlowBuff(int idx)
         {
-            return this.isFlowing && FlowManager.Singleton.playerFlows[idx];
+            return this.isFlowing && TeamSystem.IsClassFlowing(idx);
         }
 
         #endregion
@@ -247,12 +247,12 @@ namespace Cadenza
         {
             if (this.flow >= this.flowThreshold)
             {
-                FlowManager.Singleton.UpdateFlows(true, this.cClass.ID);
+                TeamSystem.SetClassFlowing(this.cClass.ID, true);
                 this.isFlowing = true;
             }
             else
             {
-                FlowManager.Singleton.UpdateFlows(false, this.cClass.ID);
+                TeamSystem.SetClassFlowing(this.cClass.ID, false);
                 this.isFlowing = false;
             }
         }
