@@ -35,6 +35,7 @@ namespace Cadenza
             // Configure "continue last run" button.
             this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
             SaveSystem.TeamFileDeleted += () => this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
+            SaveSystem.TeamFileCreated += () => this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
 
             this.Show();
         }
