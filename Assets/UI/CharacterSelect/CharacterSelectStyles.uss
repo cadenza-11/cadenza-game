@@ -41,13 +41,7 @@
     background-color: rgba(0, 0, 0, 0.71);
 }
 
-.temp_text {
-    flex-wrap: wrap;
-    white-space: normal;
-    font-size: 80px;
-    color: rgb(255, 255, 255);
-    -unity-text-align: upper-center;
-}
+
 
 .player_container {
     flex-grow: 1;
@@ -79,12 +73,11 @@
 }
 
 .navigation_back {
-    flex-grow: 1;
     flex-direction: row;
+    opacity: 1;
 }
 
 .navigation_next {
-    flex-grow: 1;
     flex-direction: row;
     justify-content: flex-end;
     align-content: flex-end;
@@ -93,7 +86,7 @@
 
 .navigation_icon {
     -unity-background-scale-mode: scale-to-fit;
-    width: 15%;
+    width: 50px;
     height: 100%;
 }
 

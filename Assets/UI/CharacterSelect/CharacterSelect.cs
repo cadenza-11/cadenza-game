@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.DualShock;
+using UnityEngine.InputSystem.XInput;
 using UnityEngine.UIElements;
+using static Cadenza.InputHint;
 
 namespace Cadenza
 {
@@ -330,13 +334,14 @@ namespace Cadenza
                 phase == SelectPhase.Ready
                 ? DisplayStyle.Flex : DisplayStyle.None;
 
-            playerContainer.NavNextHint.style.opacity =
-                (phase == SelectPhase.Joining)
+            playerContainer.NavBackHint.style.opacity =
+                (phase == SelectPhase.None || phase == SelectPhase.Joining)
                 ? 0 : 1;
 
             playerContainer.NavNextHint.style.opacity =
-                (phase == SelectPhase.Ready && phase == SelectPhase.CalibratingInProgress)
+                (phase == SelectPhase.None || phase == SelectPhase.Joining || phase == SelectPhase.Ready || phase == SelectPhase.CalibratingInProgress)
                 ? 0 : 1;
+                
             if (phase == SelectPhase.Joining)
                 playerContainer.Container.RemoveFromClassList("joined");
             else
@@ -536,6 +541,28 @@ namespace Cadenza
 
             // Enable the new player's UI input.
             InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
+            Debug.Log($"Player {player.ID} joined with controller: {player.Input.devices[0]}");
+            var device = player.Input.devices[0];
+            if (device is Keyboard || device is Mouse)
+            {
+                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.Keyboard);
+                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.Keyboard);
+            }
+            else if (device is XInputController)
+            {
+                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.Xbox);
+                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.Xbox);
+            }
+            else if (device is DualShockGamepad)
+            {
+                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.PlayStation);
+                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.PlayStation);
+            }
+            else
+            {
+                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.All);
+                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.All);
+            }
         }
 
         private void OnPlayerLeft(Player player)
