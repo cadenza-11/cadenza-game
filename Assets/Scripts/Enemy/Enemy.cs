@@ -41,7 +41,7 @@ namespace Cadenza
         protected int attackMod;
         protected int runHealth;
         protected float nearestPlayerDist;
-        protected float curAngle;
+        [SerializeField] protected float curAngle;
         protected Player follow;
         protected Vector2 TargetLocation;
         protected bool isActionable;
@@ -372,7 +372,7 @@ namespace Cadenza
             this.enemyMgr.RemoveEnemy(this.gameObject);
         }
 
-        protected void FindNearestPlayerDist()
+        protected Vector2 FindNearestPlayerDist()
         {
             float nearest = float.MaxValue;
             foreach (var player in PlayerSystem.Players)
@@ -389,8 +389,10 @@ namespace Cadenza
                     this.follow = player;
                 }
             }
-            this.TargetLocation = this.follow.Character.transform.position;
+            //this.TargetLocation = this.follow.Character.transform.position;
+            //The above line cannot be used in Multi-Directional. Will reimplement in future child-classes if needed
             this.nearestPlayerDist = nearest;
+            return new Vector2(this.follow.Character.transform.position.x, this.follow.Character.transform.position.z);
         }
 
         protected Vector2 FindRunLocation()
@@ -399,6 +401,11 @@ namespace Cadenza
             Vector2 displacement = new Vector2(this.TargetLocation.x - this.transform.position.x, this.TargetLocation.y - this.transform.position.z);
             Vector2 runDirection = new Vector2(-1 * displacement.x / displacement.magnitude, -1 * displacement.y / displacement.magnitude);
             return new Vector3(this.transform.position.x + runDirection.x * 10, this.transform.position.y, this.transform.position.z + runDirection.y * 10);
+        }
+
+        protected void ChangeLinearVelocity()
+        {
+            
         }
 
         public bool CheckIsDead()

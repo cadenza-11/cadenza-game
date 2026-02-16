@@ -23,6 +23,19 @@ namespace Cadenza
             this.TargetLocation.y = this.startYPosition;
         }
 
+        protected override void RangedAttack()
+        {
+            if (this.rangedAttackInterval <= 0)
+            {
+                base.RangedAttack();
+                this.rangedAttackInterval = 1.5f;
+            }
+            else
+            {
+                this.rangedAttackInterval -= Time.deltaTime;
+            }
+        }
+
         protected override void IdleState()
         {
             this.rb.linearVelocity = Vector3.zero;
@@ -31,24 +44,67 @@ namespace Cadenza
 
         protected override void RangedState()
         {
-            //Checks whether or not the enemy is aligned with its given x or y axis
-            if(this.horizontal && Math.Abs(this.startXPosition - this.transform.position.x) > 10)
-            {
-                this.TargetLocation.y = this.transform.position.y;
-                this.curState = EnemyState.Run;
-            }
-            else if(!this.horizontal && Math.Abs(this.startYPosition - this.transform.position.y) > 10)
+            //Checks whether or not the enemy its attacks are aligned with the x or "z" axis
+            //For the purposes of this code the "z" axis will be referred to as the y-axis (might change later not sure ;-;)
+            if(this.horizontal && Math.Abs(this.startYPosition - this.transform.position.z) > 10)
             {
                 this.TargetLocation.x = this.transform.position.x;
                 this.curState = EnemyState.Run;
+                return;
+            }
+            else if(!this.horizontal && Math.Abs(this.startXPosition - this.transform.position.x) > 10)
+            {
+                this.TargetLocation.y = this.transform.position.z;
+                this.curState = EnemyState.Run;
+                return;
             }
 
-            this.RangedAttack();
+            Vector2 playerPos = this.FindNearestPlayerDist();
+            if(this.horizontal)
+            {
+                this.TargetLocation.x = playerPos.x;
+            }
+            else
+            {
+                this.TargetLocation.y = playerPos.y;
+            }
+            //Above code follows the nearest player in either the x or y-axis.
+
+            base.RunState();
+
+            if(this.nearestPlayerDist < 5) //May want to change this value to an in-editor variable?
+            {
+                /*If a player is within a certain distance, have a 50% of doing a melee attack
+                This attack will knock the player away from the enemy. The other 50% chance is to do a ranged attack */
+                if(UnityEngine.Random.Range(1, 20) <= 10)
+                {
+                    Debug.Log("Does a melee attack");
+                    this.MeleeAttack();
+                }
+                else
+                {
+                    Debug.Log("Does a ranged attack");
+                    this.RangedAttack();
+                }
+            }
+            else
+            {
+                //Otherwise just do a ranged attack like normal.
+                this.RangedAttack();
+            }
         }
 
         protected override void RunState()
         {
             base.RunState();
+            if(!this.horizontal && !this.posDirection)
+            {
+                this.curAngle = (float)Math.PI;
+            }
+            else
+            {
+                this.curAngle = 0;
+            }
         }
 
         protected override void FixedUpdate()
