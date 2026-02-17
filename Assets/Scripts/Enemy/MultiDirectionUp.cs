@@ -70,7 +70,7 @@ namespace Cadenza
             }
             //Above code follows the nearest player in either the x or y-axis.
 
-            base.RunState();
+            this.RunState();
 
             if(this.nearestPlayerDist < 5) //May want to change this value to an in-editor variable?
             {
@@ -78,12 +78,10 @@ namespace Cadenza
                 This attack will knock the player away from the enemy. The other 50% chance is to do a ranged attack */
                 if(UnityEngine.Random.Range(1, 20) <= 10)
                 {
-                    Debug.Log("Does a melee attack");
                     this.MeleeAttack();
                 }
                 else
                 {
-                    Debug.Log("Does a ranged attack");
                     this.RangedAttack();
                 }
             }
@@ -99,7 +97,7 @@ namespace Cadenza
             base.RunState();
             if(!this.horizontal && !this.posDirection)
             {
-                this.curAngle = (float)Math.PI;
+                this.curAngle = 180;
             }
             else
             {

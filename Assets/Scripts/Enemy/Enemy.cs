@@ -41,7 +41,7 @@ namespace Cadenza
         protected int attackMod;
         protected int runHealth;
         protected float nearestPlayerDist;
-        [SerializeField] protected float curAngle;
+        protected float curAngle;
         protected Player follow;
         protected Vector2 TargetLocation;
         protected bool isActionable;
