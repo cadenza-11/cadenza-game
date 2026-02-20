@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 6800297298057825910}
   - component: {fileID: 188282329646281594}
   - component: {fileID: 2477996042757381313}
-  - component: {fileID: 9140043128385117967}
-  - component: {fileID: 2709541460386201468}
   - component: {fileID: 8913711581152241770}
   m_Layer: 3
   m_Name: MultiDirectional-1
@@ -86,42 +84,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &9140043128385117967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1431053245464678585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fd7ead00c82eb24f801c4a061f03186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
---- !u!114 &2709541460386201468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1431053245464678585}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8dc5988cebcb4f8408761a211cbdd4c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Enemy
-  speed: 1.5
-  meleeDuration: 0.25
-  rangedDuration: 0.25
-  maxHealth: 10
-  currentHealth: 10
-  attackArea: {fileID: 1688700895392145866}
-  rb: {fileID: 2477996042757381313}
-  sr: {fileID: 1699248264823131694}
-  anim: {fileID: 4901401106918319228}
-  projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
-  curState: 0
-  enemyMgr: {fileID: 440276601815438109, guid: ab0db344855b6ba449958ed864656141, type: 3}
 --- !u!114 &8913711581152241770
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -28,10 +28,11 @@ namespace Cadenza
         [SerializeField] protected SpriteRenderer sr;
         [SerializeField] protected Animator anim;
         [SerializeField] protected GameObject projectile;
+        [SerializeField] protected EnemyState curState = EnemyState.Idle;
+
+        public float CurrentHealth => this.currentHealth;
 
         protected float rangedAttackInterval = 0f;
-        [SerializeField] protected EnemyState curState = EnemyState.Idle;
-        [SerializeField] protected EnemyManager enemyMgr;
         protected const int chaseDistance = 20;
         protected const int meleeDistance = 1;
         protected const int rangedDistance = 50;
@@ -48,19 +49,21 @@ namespace Cadenza
 
         #endregion
 
-        //May want a character manager to see character locations
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        protected virtual void Start()
+        // Do this in Start so that EnemyManager is initialized.
+        void Start()
+        {
+            EnemyManager.AddEnemy(this);
+        }
+
+        public virtual void Initialize()
         {
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
             this.speed = 1.5f;
             this.isAttacking = false;
-            this.enemyMgr.AddEnemy(this.gameObject);
             this.isActionable = true;
         }
 
-        // Update is called once per frame
         protected virtual void FixedUpdate()
         {
             if (!this.IsGrounded())
@@ -369,7 +372,7 @@ namespace Cadenza
         {
             this.anim.SetBool("IsFainted", true);
             this.rb.linearVelocity = Vector3.zero;
-            this.enemyMgr.RemoveEnemy(this.gameObject);
+            EnemyManager.RemoveEnemy(this);
         }
 
         protected Vector2 FindNearestPlayerDist()
@@ -405,7 +408,7 @@ namespace Cadenza
 
         protected void ChangeLinearVelocity()
         {
-            
+
         }
 
         public bool CheckIsDead()

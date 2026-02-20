@@ -15,6 +15,8 @@ namespace Cadenza
         #region Public Variables
 
         [SerializeField] private Level startingLevel;
+        [SerializeField] private float combatDelay;
+
         public static event Action<Player> GamePaused;
         public static event Action GameUnpaused;
         public static bool IsPaused => singleton.isPaused;
@@ -44,6 +46,10 @@ namespace Cadenza
         public override void OnGameStop()
         {
             AudioSystem.SetState(AudioSystem.State.Menu);
+
+            // Stop combat.
+            if (this.isCombatActive)
+                this.StopCombat();
 
             // Unpause game.
             if (this.isPaused)
@@ -75,6 +81,26 @@ namespace Cadenza
             // Enable input.
             InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
 
+            // Start combat.
+            if (ApplicationController.CurrentLevel.IsBattleLevel)
+                this.StartCombat();
+        }
+
+        public override void OnUpdate()
+        {
+            if (ApplicationController.State != ApplicationState.GameSession || !this.isCombatActive)
+                return;
+
+            if (this.CheckLoss())
+            {
+                Debug.Log("Loss");
+                this.StopCombat();
+            }
+            else if (this.CheckVictory())
+            {
+                Debug.Log("Victory");
+                this.StopCombat();
+            }
         }
 
         #endregion
@@ -120,6 +146,44 @@ namespace Cadenza
             singleton.isPaused = false;
             Debug.Log("Game unpaused.");
             GameUnpaused?.Invoke();
+        }
+
+        #endregion
+        #region Combat Methods
+
+        private void StartCombat()
+        {
+            this.isCombatActive = true;
+            Debug.Log("Started combat.");
+            CombatStarted?.Invoke();
+        }
+
+        private void StopCombat()
+        {
+            this.isCombatActive = false;
+            Debug.Log("Stopped combat.");
+            CombatStopped?.Invoke();
+        }
+
+        private bool CheckLoss()
+        {
+            // All players are downed.
+            foreach (var player in PlayerSystem.Players)
+            {
+                if (player.Character?.currentHealth > 0)
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckVictory()
+        {
+            // No enemies remain.
+            if (EnemyManager.EnemyCount > 0)
+                return false;
+
+            return true;
         }
 
         #endregion

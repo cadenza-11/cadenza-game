@@ -1,7 +1,5 @@
 using UnityEngine;
 using System;
-using System.Security;
-using UnityEditor.ShaderKeywordFilter;
 
 //Royce Ortega
 namespace Cadenza
@@ -10,15 +8,15 @@ namespace Cadenza
     extra in them they will be removed */
     public class MultiDirectionUp : Enemy
     {
-        [SerializeField] float startXPosition; 
+        [SerializeField] float startXPosition;
         [SerializeField] float startYPosition; //Both Positions give the position the enemy should start at.
-        [SerializeField] bool horizontal; /* Gives whether or not the enemy should be aligned with a vertical or horizontal axis. 
+        [SerializeField] bool horizontal; /* Gives whether or not the enemy should be aligned with a vertical or horizontal axis.
                                              (moves left/right or up/down) */
         [SerializeField] bool posDirection; //If true the enemy is Up/Right, if false the enemy is Down/Left
 
-        protected override void Start()
+        public override void Initialize()
         {
-            base.Start();
+            base.Initialize();
             this.TargetLocation.x = this.startXPosition;
             this.TargetLocation.y = this.startYPosition;
         }
@@ -46,13 +44,13 @@ namespace Cadenza
         {
             //Checks whether or not the enemy its attacks are aligned with the x or "z" axis
             //For the purposes of this code the "z" axis will be referred to as the y-axis (might change later not sure ;-;)
-            if(this.horizontal && Math.Abs(this.startYPosition - this.transform.position.z) > 10)
+            if (this.horizontal && Math.Abs(this.startYPosition - this.transform.position.z) > 10)
             {
                 this.TargetLocation.x = this.transform.position.x;
                 this.curState = EnemyState.Run;
                 return;
             }
-            else if(!this.horizontal && Math.Abs(this.startXPosition - this.transform.position.x) > 10)
+            else if (!this.horizontal && Math.Abs(this.startXPosition - this.transform.position.x) > 10)
             {
                 this.TargetLocation.y = this.transform.position.z;
                 this.curState = EnemyState.Run;
@@ -60,7 +58,7 @@ namespace Cadenza
             }
 
             Vector2 playerPos = this.FindNearestPlayerDist();
-            if(this.horizontal)
+            if (this.horizontal)
             {
                 this.TargetLocation.x = playerPos.x;
             }
@@ -72,11 +70,11 @@ namespace Cadenza
 
             this.RunState();
 
-            if(this.nearestPlayerDist < 5) //May want to change this value to an in-editor variable?
+            if (this.nearestPlayerDist < 5) //May want to change this value to an in-editor variable?
             {
                 /*If a player is within a certain distance, have a 50% of doing a melee attack
                 This attack will knock the player away from the enemy. The other 50% chance is to do a ranged attack */
-                if(UnityEngine.Random.Range(1, 20) <= 10)
+                if (UnityEngine.Random.Range(1, 20) <= 10)
                 {
                     this.MeleeAttack();
                 }
@@ -95,7 +93,7 @@ namespace Cadenza
         protected override void RunState()
         {
             base.RunState();
-            if(!this.horizontal && !this.posDirection)
+            if (!this.horizontal && !this.posDirection)
             {
                 this.curAngle = 180;
             }

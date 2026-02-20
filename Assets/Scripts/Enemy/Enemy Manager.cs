@@ -5,68 +5,49 @@ namespace Cadenza
 {
     public class EnemyManager : MonoBehaviour
     {
-        public static EnemyManager singleton;
-        //Initial enemies in a scene will be placed in editor
-        [SerializeField] private List<GameObject> enemies;
+        private static EnemyManager singleton;
+
         [SerializeField] private GameObject enemyPrefab;
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
 
+        private readonly HashSet<Enemy> enemies = new();
+
+        public static int EnemyCount => singleton.enemies.Count;
+
+        void Awake()
+        {
+            Debug.Assert(singleton == null);
+            singleton = this;
+
+            if (GameManager.IsCombatActive)
+                this.OnCombatStart();
+            else
+                GameManager.CombatStarted += this.OnCombatStart;
         }
 
-        // Update is called once per frame
-        void FixedUpdate()
+        private void OnCombatStart()
         {
-            /*if(this.enemies.Count < PlayerSystem.PlayerCount)
-            {
-                Debug.Log("Need more enemies");
-                for(int i = this.enemies.Count; i <= PlayerSystem.PlayerCount; i++) {
-                    GameObject newEnemy = Instantiate(this.enemyPrefab, Vector3.zero, Quaternion.identity);
-                    this.AddEnemy(newEnemy);
-                }
-            }*/
-            if (this.enemies.Count == 0)
-            {
-                Debug.Log("No enemies");
-                GameObject newEnemy = Instantiate(this.enemyPrefab, Vector3.zero, Quaternion.identity);
-                this.AddEnemy(newEnemy);
-            }
-            else if (this.enemies[0] == null)
-            {
-                Debug.Log("First enemy is null");
-                GameObject newEnemy = Instantiate(this.enemyPrefab, Vector3.zero, Quaternion.identity);
-                this.AddEnemy(newEnemy);
-                this.enemies.RemoveAt(0);
-            }
+            foreach (var enemy in this.enemies)
+                enemy.Initialize();
         }
 
-        //Removes an enemy as being in the scene once they die. Death logic will be placed in another script
-        //May want to put an equals operator for enemy to not rely on references (?)
-        public bool RemoveEnemy(GameObject enemy)
+        public static bool RemoveEnemy(Enemy enemy)
         {
-            Debug.Log("Goes into Remove Enemy");
-            /*for (int i = 0; i < this.enemies.Count; i++)
+            if (singleton.enemies.Remove(enemy))
             {
-                if (ReferenceEquals(this.enemies[i], enemy))
-                {
-                    Debug.Log("Tries to Remove Enemy");
-                    GameObject enemyToDestroy = this.enemies[i];
-                    this.enemies.RemoveAt(i);
-                    Destroy(enemyToDestroy);
-                    return true;
-                }
-            }*/
-            this.enemies.Remove(enemy);
-            Destroy(enemy);
-            this.enemies.RemoveAll(x => !x);
+                Destroy(enemy.gameObject);
+                return true;
+            }
             return false;
         }
 
-        public void AddEnemy(GameObject enemy)
+        public static bool AddEnemy(Enemy enemy)
         {
-            Debug.Log("Adds Enemy");
-            this.enemies.Add(enemy);
+            if (!singleton.enemies.Contains(enemy))
+            {
+                singleton.enemies.Add(enemy);
+                return true;
+            }
+            return false;
         }
     }
 }
