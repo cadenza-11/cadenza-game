@@ -3,6 +3,7 @@
 
 .player_health {
     width: 24%;
+    margin-right: 22px;
 }
 
 .team-streak {

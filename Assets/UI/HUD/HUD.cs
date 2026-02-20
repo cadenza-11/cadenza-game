@@ -22,7 +22,8 @@ namespace Cadenza
         private BeatIndicator beatIndicator;
         private Label teamStreak;
         private Dictionary<int, string> streakLabels = new();
-        private VisualElement[] healthBars = new VisualElement[4];
+        private List<VisualElement> availableContainers = new();
+        private Dictionary<Player, VisualElement> assignedContainers = new();
 
         public enum MeterState
         {
@@ -50,38 +51,39 @@ namespace Cadenza
             // Initialize beat indicator bar.
             this.beatIndicator = this.root.Q<BeatIndicator>();
 
-            // Get health bars.
-            int i = 0;
-            foreach (VisualElement container in this.root.Query<VisualElement>("c_PlayerHealth").ToList())
-            {
-                this.healthBars[i] = container;
-                i++;
-            }
+            // Initialize player HUD containers.
+            this.availableContainers = this.root.Query<VisualElement>("c_PlayerHealth").ToList();
+
+            for (int i = 0; i < this.availableContainers.Count; i++)
+                this.availableContainers[i].style.display = DisplayStyle.None;
         }
 
         public override void OnGameStart()
         {
-            this.Show();
-
-            for (int i = 0; i < 4; i++)
+            // Assign player HUD containers to active players.
+            for (int i = 0; i < Mathf.Min(PlayerSystem.Players.Length, this.availableContainers.Count); i++)
             {
-                // Initialize health bars.
-                if (PlayerSystem.TryGetPlayerByID(i, out Player player))
-                {
-                    this.healthBars[i].style.opacity = 1;
-                    this.healthBars[i].Q<Label>("update_CharacterName").text = player.CharacterClass.Name;
-                    this.healthBars[i].Q<VisualElement>("portrait_Character").style.backgroundImage = player.CharacterClass.Portrait;
-                    ProgressBar health = this.healthBars[i].Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
-                    health.highValue = player.Character.MaxHealth;
-                    player.Character.HealthChanged += (healthValue) => this.OnHealthChanged(healthValue, health);
-                    ProgressBar flow = this.healthBars[i].Q<VisualElement>("c_FlowBar").Q<ProgressBar>("bar");
-                    flow.highValue = player.Character.FlowThreshold;
-                    player.Character.FlowChanged += (flowValue) => this.OnFlowChanged(flowValue, flow);
-                    VisualElement accuracy = this.healthBars[i].Q<VisualElement>("c_Accuracy");
-                    player.PlayerHit += (def) => this.OnPlayerHit(def, accuracy);
-                }
-                else
-                    this.healthBars[i].style.opacity = 0;
+                Player player = PlayerSystem.Players[i];
+                VisualElement container = this.availableContainers[i];
+                this.assignedContainers[player] = container;
+
+                // Initialize player container.
+                container.style.display = DisplayStyle.Flex;
+                container.Q<Label>("update_CharacterName").text = player.CharacterClass.Name;
+                container.Q<VisualElement>("portrait_Character").style.backgroundImage = player.CharacterClass.Portrait;
+
+                // Initialize health.
+                ProgressBar health = container.Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
+                health.highValue = player.Character.MaxHealth;
+                player.Character.HealthChanged += (healthValue) => this.OnHealthChanged(healthValue, health);
+
+                // Initialize flow.
+                ProgressBar flow = container.Q<VisualElement>("c_FlowBar").Q<ProgressBar>("bar");
+                flow.highValue = player.Character.FlowThreshold;
+                player.Character.FlowChanged += (flowValue) => this.OnFlowChanged(flowValue, flow);
+
+                // Initialize accuracy.
+                player.PlayerHit += this.OnPlayerHit;
             }
 
             this.teamMeter.value = 0;
@@ -89,11 +91,22 @@ namespace Cadenza
 
             ScoreSystem.TeamHit += this.OnTeamHit;
             Character.TeamAttackInitiated += this.OnTeamAttackInitiated;
+
+            this.Show();
         }
 
         public override void OnGameStop()
         {
             this.Hide();
+
+            // Reset player containers.
+            foreach ((var player, var container) in this.assignedContainers)
+            {
+                player.PlayerHit -= this.OnPlayerHit;
+                container.style.display = DisplayStyle.None;
+            }
+
+            this.assignedContainers.Clear();
 
             this.teamMeter.value = 0;
             this.beatIndicator.Stop();
@@ -174,8 +187,13 @@ namespace Cadenza
         #endregion
         #region Accuracy
 
-        private void OnPlayerHit(ScoreDef def, VisualElement accuracy)
+        private void OnPlayerHit(ScoreDef def)
         {
+            if (!this.assignedContainers.TryGetValue(def.Player, out VisualElement container))
+                return;
+
+            VisualElement accuracy = container.Q<VisualElement>("c_Accuracy");
+
             Label accuracyText = new();
             accuracyText.AddToClassList("accuracy_splash");
             accuracyText.AddToClassList(def.Class.ToString());
