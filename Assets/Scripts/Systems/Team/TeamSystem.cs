@@ -21,6 +21,8 @@ namespace Cadenza
         {
             Debug.Assert(singleton == null);
             singleton = this;
+
+            this.isCharacterFlowing = new(singleton.availableClasses.Values.Length);
         }
 
         #region Team Creation
@@ -66,22 +68,22 @@ namespace Cadenza
 
         [SerializeField] private CharacterSet availableClasses;
         public static CharacterSet AvailableClasses => singleton.availableClasses;
-        private static readonly BitArray isCharacterFlowing = new(singleton.availableClasses.Values.Length);
+        private BitArray isCharacterFlowing;
 
         public static void SetClassFlowing(int classID, bool isFlowing)
         {
-            if (classID < 0 || classID >= isCharacterFlowing.Length)
+            if (classID < 0 || classID >= singleton.isCharacterFlowing.Length)
                 return;
 
-            isCharacterFlowing[classID] = isFlowing;
+            singleton.isCharacterFlowing[classID] = isFlowing;
         }
 
         public static bool IsClassFlowing(int classID)
         {
-            if (classID < 0 || classID >= isCharacterFlowing.Length)
+            if (classID < 0 || classID >= singleton.isCharacterFlowing.Length)
                 return false;
 
-            return isCharacterFlowing[classID];
+            return singleton.isCharacterFlowing[classID];
         }
 
         #endregion
