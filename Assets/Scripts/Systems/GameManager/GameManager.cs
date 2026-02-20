@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -18,6 +19,11 @@ namespace Cadenza
         public static event Action GameUnpaused;
         public static bool IsPaused => singleton.isPaused;
 
+        private bool isCombatActive;
+        public static bool IsCombatActive => singleton.isCombatActive;
+        public static event Action CombatStarted;
+        public static event Action CombatStopped;
+
         #endregion
 
         private bool isPaused;
@@ -32,14 +38,7 @@ namespace Cadenza
 
         public override void OnGameStart()
         {
-            AudioSystem.SetState(AudioSystem.State.Game);
-
-            // Spawn players.
-            foreach (var player in PlayerSystem.Players)
-                PlayerSystem.SpawnPlayerBody(player);
-
-            // Enable input.
-            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+            _ = this.OnGameStartAsync();
         }
 
         public override void OnGameStop()
@@ -59,6 +58,23 @@ namespace Cadenza
             // Despawn players.
             foreach (var player in PlayerSystem.Players)
                 PlayerSystem.DespawnPlayerBody(player);
+        }
+
+        private async Task OnGameStartAsync()
+        {
+            // Set audio.
+            AudioSystem.SetState(AudioSystem.State.Game);
+
+            // Spawn players.
+            foreach (var player in PlayerSystem.Players)
+                PlayerSystem.SpawnPlayerBody(player);
+
+            // Wait for game to stop transitioning.
+            await Fader.WaitUntilHiddenAsync();
+
+            // Enable input.
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+
         }
 
         #endregion

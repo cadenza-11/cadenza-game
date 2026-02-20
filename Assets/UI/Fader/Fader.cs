@@ -68,7 +68,19 @@ namespace Cadenza
             singleton.Reset();
         }
 
-        public static Task WaitForNonFadingMarkerAsync()
+        public static async Task WaitUntilHiddenAsync()
+        {
+            while (singleton.fader.style.display == DisplayStyle.Flex)
+                await Task.Delay(100);
+        }
+
+        public static async Task WaitUntilVisibleAsync()
+        {
+            while (singleton.fader.style.display == DisplayStyle.None)
+                await Task.Delay(100);
+        }
+
+        private static Task WaitForNonFadingMarkerAsync()
         {
             var tcs = new TaskCompletionSource<bool>();
             void Handler(string markerName)
