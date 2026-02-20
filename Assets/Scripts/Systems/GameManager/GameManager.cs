@@ -1,109 +1,111 @@
 using System;
-using Cadenza;
 using UnityEngine;
 
 /// <summary>
 /// GameManager is reponsible for game flow and logic, including pausing,
 /// unpausing, and spawning players.
 /// </summary>
-public class GameManager : ApplicationSystem
+namespace Cadenza
 {
-    private static GameManager singleton;
-
-    #region Public Variables
-
-    [SerializeField] private Level startingLevel;
-    public static event Action<Player> GamePaused;
-    public static event Action GameUnpaused;
-    public static bool IsPaused => singleton.isPaused;
-
-    #endregion
-
-    private bool isPaused;
-
-    #region Application Callbacks
-
-    public override void OnInitialize()
+    public class GameManager : ApplicationSystem
     {
-        Debug.Assert(singleton == null);
-        singleton = this;
-    }
+        private static GameManager singleton;
 
-    public override void OnGameStart()
-    {
-        AudioSystem.SetState(AudioSystem.State.Game);
+        #region Public Variables
 
-        // Spawn players.
-        foreach (var player in PlayerSystem.Players)
-            PlayerSystem.SpawnPlayerBody(player);
+        [SerializeField] private Level startingLevel;
+        public static event Action<Player> GamePaused;
+        public static event Action GameUnpaused;
+        public static bool IsPaused => singleton.isPaused;
 
-        // Enable input.
-        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
-    }
+        #endregion
 
-    public override void OnGameStop()
-    {
-        AudioSystem.SetState(AudioSystem.State.Menu);
+        private bool isPaused;
 
-        // Unpause game.
-        if (this.isPaused)
+        #region Application Callbacks
+
+        public override void OnInitialize()
         {
-            Time.timeScale = 1;
-            this.isPaused = false;
+            Debug.Assert(singleton == null);
+            singleton = this;
         }
 
-        // Disable input.
-        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
+        public override void OnGameStart()
+        {
+            AudioSystem.SetState(AudioSystem.State.Game);
 
-        // Despawn players.
-        foreach (var player in PlayerSystem.Players)
-            PlayerSystem.DespawnPlayerBody(player);
+            // Spawn players.
+            foreach (var player in PlayerSystem.Players)
+                PlayerSystem.SpawnPlayerBody(player);
+
+            // Enable input.
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+        }
+
+        public override void OnGameStop()
+        {
+            AudioSystem.SetState(AudioSystem.State.Menu);
+
+            // Unpause game.
+            if (this.isPaused)
+            {
+                Time.timeScale = 1;
+                this.isPaused = false;
+            }
+
+            // Disable input.
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
+
+            // Despawn players.
+            foreach (var player in PlayerSystem.Players)
+                PlayerSystem.DespawnPlayerBody(player);
+        }
+
+        #endregion
+        #region Public Static Methods
+
+        public static void StartGame()
+        {
+            if (ApplicationController.State != ApplicationState.Pregame)
+                return;
+
+            ApplicationController.SetLevelAsync(singleton.startingLevel);
+        }
+
+        public static void ExitToPregame()
+        {
+            if (ApplicationController.State != ApplicationState.GameSession)
+                return;
+
+            ApplicationController.SetLevelAsync(null);
+        }
+
+        public static void PauseGame(Player requestingPlayer)
+        {
+            if (ApplicationController.State != ApplicationState.GameSession || singleton.isPaused || requestingPlayer == null)
+                return;
+
+            Time.timeScale = 0;
+            InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, requestingPlayer);
+
+            singleton.isPaused = true;
+            Debug.Log($"{requestingPlayer.Name} (id={requestingPlayer.ID}) paused the game.");
+            GamePaused?.Invoke(requestingPlayer);
+        }
+
+        public static void UnpauseGame()
+        {
+            if (ApplicationController.State != ApplicationState.GameSession || !singleton.isPaused)
+                return;
+
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+            Time.timeScale = 1;
+
+            singleton.isPaused = false;
+            Debug.Log("Game unpaused.");
+            GameUnpaused?.Invoke();
+        }
+
+        #endregion
     }
-
-    #endregion
-    #region Public Static Methods
-
-    public static void StartGame()
-    {
-        if (ApplicationController.State != ApplicationState.Pregame)
-            return;
-
-        ApplicationController.SetLevelAsync(singleton.startingLevel);
-    }
-
-    public static void ExitToPregame()
-    {
-        if (ApplicationController.State != ApplicationState.GameSession)
-            return;
-
-        ApplicationController.SetLevelAsync(null);
-    }
-
-    public static void PauseGame(Player requestingPlayer)
-    {
-        if (ApplicationController.State != ApplicationState.GameSession || singleton.isPaused || requestingPlayer == null)
-            return;
-
-        Time.timeScale = 0;
-        InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, requestingPlayer);
-
-        singleton.isPaused = true;
-        Debug.Log($"{requestingPlayer.Name} (id={requestingPlayer.ID}) paused the game.");
-        GamePaused?.Invoke(requestingPlayer);
-    }
-
-    public static void UnpauseGame()
-    {
-        if (ApplicationController.State != ApplicationState.GameSession || !singleton.isPaused)
-            return;
-
-        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
-        Time.timeScale = 1;
-
-        singleton.isPaused = false;
-        Debug.Log("Game unpaused.");
-        GameUnpaused?.Invoke();
-    }
-
-    #endregion
 }
