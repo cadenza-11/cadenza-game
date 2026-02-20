@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using DG.Tweening;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -72,6 +74,11 @@ namespace Cadenza
                     ProgressBar health = this.healthBars[i].Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
                     health.highValue = player.Character.MaxHealth;
                     player.Character.HealthChanged += (healthValue) => this.OnHealthChanged(healthValue, health);
+                    ProgressBar flow = this.healthBars[i].Q<VisualElement>("c_FlowBar").Q<ProgressBar>("bar");
+                    flow.highValue = player.Character.FlowThreshold;
+                    player.Character.FlowChanged += (flowValue) => this.OnFlowChanged(flowValue, flow);
+                    VisualElement accuracy = this.healthBars[i].Q<VisualElement>("c_Accuracy");
+                    player.PlayerHit += (def) => this.OnPlayerHit(def, accuracy);
                 }
                 else
                     this.healthBars[i].style.opacity = 0;
@@ -160,6 +167,44 @@ namespace Cadenza
         }
 
         #endregion
+        #region Flow Bar
+
+        private void OnFlowChanged(float flow, ProgressBar bar)
+        {
+            bar.value = Mathf.Min(flow, bar.highValue);
+        }
+
+        #endregion
+        #region Accuracy
+
+        private void OnPlayerHit(ScoreDef def, VisualElement accuracy)
+        {
+            Label accuracyText = new();
+            accuracyText.AddToClassList("accuracy_splash");
+            accuracyText.AddToClassList(def.Class.ToString());
+            accuracyText.text = def.Class.ToString();
+
+            Sequence sequence = DOTween.Sequence();
+            accuracy.Add(accuracyText);
+            sequence.Append(DOTween.To(
+                () => accuracyText.resolvedStyle.top,
+                x => accuracyText.style.top = x,
+                endValue: 0,
+                duration: 0.3f
+            ));
+            sequence.Append(DOTween.To(
+                () => accuracyText.resolvedStyle.opacity,
+                x => accuracyText.style.opacity = x,
+                endValue: 0,
+                duration: 0.5f
+            ));
+            sequence.OnComplete(() =>
+            {
+                accuracyText.RemoveFromHierarchy();
+            });
+        }
+
+        #endregion
         #region Streaks
 
         private void OnPlayerStreakStarted(StreakManager.PlayerStreakEvent evt)
@@ -176,8 +221,7 @@ namespace Cadenza
             if (!this.streakLabels.ContainsKey(evt.Value))
                 this.streakLabels[evt.Value] = $"x{evt.Value}";
 
-            // Update player streak.
-            Debug.Log($"Player {evt.Player.ID} streak updated: x{evt.Value}");
+            // TODO: Update player streak.
         }
 
         private void OnTeamStreakStarted(StreakManager.TeamStreakEvent evt)

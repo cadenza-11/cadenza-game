@@ -1,10 +1,18 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.DualShock;
+using UnityEngine.InputSystem.XInput;
 using UnityEngine.UIElements;
+using static Cadenza.InputHint;
 
 namespace Cadenza
 {
+    /// <summary>
+    /// UI screen used for selecting the subset of players that will continue
+    /// to the main game, and which unique character they will play as.
+    /// </summary>
     public class CharacterSelect : UIPanel
     {
         #region Structures
@@ -58,6 +66,7 @@ namespace Cadenza
 
         #region Variables
 
+        private readonly UIClassManager classManager = new();
         private PlayerContainer[] playerContainers;
         private Dictionary<Player, PlayerTracker> playerTrackers = new();
 
@@ -83,7 +92,7 @@ namespace Cadenza
         {
             AudioSystem.SetState(AudioSystem.State.CharacterSelect);
             InputSystem.EnableJoining();
-            ClassManager.ClearCharacterAssignments();
+            this.classManager.ClearCharacterAssignments();
 
             // Register player roster updates.
             PlayerSystem.PlayerAdded += this.OnPlayerAdded;
@@ -99,13 +108,12 @@ namespace Cadenza
             InputSystem.UIPlayerNavigate += this.OnNavigate;
             InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
 
-            ClassManager.CharacterTakenStatusChanged += this.RefreshShownCharacters;
+            this.classManager.CharacterTakenStatusChanged += this.RefreshShownCharacters;
         }
 
         public override void OnHide()
         {
             InputSystem.DisableJoining();
-            this.playerTrackers.Clear();
 
             // Unregister player roster updates.
             PlayerSystem.PlayerAdded -= this.OnPlayerAdded;
@@ -116,7 +124,7 @@ namespace Cadenza
             InputSystem.UIPlayerCancel -= this.OnCancel;
             InputSystem.UIPlayerNavigate -= this.OnNavigate;
 
-            ClassManager.CharacterTakenStatusChanged -= this.RefreshShownCharacters;
+            this.classManager.CharacterTakenStatusChanged -= this.RefreshShownCharacters;
         }
 
         #endregion
@@ -242,8 +250,8 @@ namespace Cadenza
                 // Select character.
                 string currentChar = container.Q<Label>("update_CharacterName").text;
                 var shownCharacter = (moveDirection.x > 0)
-                    ? ClassManager.GetNextCharacter(currentChar)
-                    : ClassManager.GetPreviousCharacter(currentChar);
+                    ? this.classManager.GetNextCharacter(currentChar)
+                    : this.classManager.GetPreviousCharacter(currentChar);
 
                 this.ChangeShownCharacter(container, shownCharacter);
             }
@@ -331,20 +339,21 @@ namespace Cadenza
                 phase == SelectPhase.Ready
                 ? DisplayStyle.Flex : DisplayStyle.None;
 
-            playerContainer.NavNextHint.style.opacity =
-                (phase == SelectPhase.Joining)
+            playerContainer.NavBackHint.style.opacity =
+                (phase == SelectPhase.None || phase == SelectPhase.Joining)
                 ? 0 : 1;
 
             playerContainer.NavNextHint.style.opacity =
-                (phase == SelectPhase.Ready && phase == SelectPhase.CalibratingInProgress)
+                (phase == SelectPhase.None || phase == SelectPhase.Joining || phase == SelectPhase.Ready || phase == SelectPhase.CalibratingInProgress)
                 ? 0 : 1;
+
             if (phase == SelectPhase.Joining)
                 playerContainer.Container.RemoveFromClassList("joined");
             else
                 playerContainer.Container.AddToClassList("joined");
         }
 
-        private void ChangeShownCharacter(VisualElement characterSelectContainer, ClassManager.CharacterSelectInfo shownClass)
+        private void ChangeShownCharacter(VisualElement characterSelectContainer, UIClassManager.CharacterSelectInfo shownClass)
         {
             // Update label.
             characterSelectContainer.Q<Label>("update_CharacterName").text = shownClass.Class.Name;
@@ -367,7 +376,7 @@ namespace Cadenza
             foreach (var container in this.playerContainers)
             {
                 string currentClassName = container.CharacterSelectionContainer.Q<Label>("update_CharacterName").text;
-                var currentCharacter = ClassManager.GetCharacter(currentClassName);
+                var currentCharacter = this.classManager.GetCharacter(currentClassName);
                 this.ChangeShownCharacter(container.CharacterSelectionContainer, currentCharacter);
             }
         }
@@ -416,7 +425,7 @@ namespace Cadenza
         {
             var playerContainer = this.playerContainers[player.ID];
 
-            CharacterClass selectedCharacter = ClassManager.SelectCharacter
+            CharacterClass selectedCharacter = this.classManager.SelectCharacter
             (
                 player,
                 playerContainer.CharacterSelectionContainer.Q<Label>("update_CharacterName").text
@@ -432,7 +441,7 @@ namespace Cadenza
         {
             AudioSystem.SetInstrumentActive(player.CharacterClass, false);
             player.SetCharacterClass(null);
-            ClassManager.UnselectCharacter(player);
+            this.classManager.UnselectCharacter(player);
         }
 
         private bool CanStartGame()
@@ -498,7 +507,7 @@ namespace Cadenza
 
             // Reset shown character.
             var container = this.playerContainers[player.ID];
-            this.ChangeShownCharacter(container.CharacterSelectionContainer, ClassManager.GetNextCharacter(""));
+            this.ChangeShownCharacter(container.CharacterSelectionContainer, this.classManager.GetNextCharacter(""));
             container.CharacterSelectionContainer.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
             container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
 
@@ -517,7 +526,7 @@ namespace Cadenza
 
             // Reset shown character.
             var container = this.playerContainers[player.ID];
-            this.ChangeShownCharacter(container.CharacterSelectionContainer, ClassManager.GetNextCharacter(""));
+            this.ChangeShownCharacter(container.CharacterSelectionContainer, this.classManager.GetNextCharacter(""));
             container.CharacterSelectionContainer.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
             container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
 
@@ -537,6 +546,28 @@ namespace Cadenza
 
             // Enable the new player's UI input.
             InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
+            Debug.Log($"Player {player.ID} joined with controller: {player.Input.devices[0]}");
+            var device = player.Input.devices[0];
+            if (device is Keyboard || device is Mouse)
+            {
+                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.Keyboard);
+                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.Keyboard);
+            }
+            else if (device is XInputController)
+            {
+                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.Xbox);
+                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.Xbox);
+            }
+            else if (device is DualShockGamepad)
+            {
+                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.PlayStation);
+                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.PlayStation);
+            }
+            else
+            {
+                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.All);
+                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.All);
+            }
         }
 
         private void OnPlayerLeft(Player player)

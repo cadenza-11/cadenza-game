@@ -13,6 +13,7 @@ public static class SaveSystem
     private const string TeamJSONFileName = "team.json";
     private static readonly string TeamFilePath = Path.Combine(Application.persistentDataPath, TeamJSONFileName);
     public static event Action TeamFileDeleted;
+    public static event Action TeamFileCreated;
 
     // Results
     private const string ResultsJSONFileName = "results.json";
@@ -20,6 +21,7 @@ public static class SaveSystem
     private static readonly System.Array scoreClassNames = System.Enum.GetNames(typeof(ScoreClass));
     private static readonly string ResultsFilePath = Path.Combine(Application.persistentDataPath, ResultsJSONFileName);
     public static event Action ResultsFileDeleted;
+    public static event Action ResultsFileCreated;
 
     #region Team
 
@@ -48,6 +50,7 @@ public static class SaveSystem
         if (SaveFileExists)
         {
             Debug.Log($"Saved team to {TeamFilePath}.");
+            TeamFileCreated?.Invoke();
             return true;
         }
         else
@@ -128,6 +131,7 @@ public static class SaveSystem
         File.WriteAllText(ResultsFilePath, json);
 
         Debug.Log($"Saved results to {ResultsFilePath}.");
+        ResultsFileCreated?.Invoke();
         return true;
     }
 

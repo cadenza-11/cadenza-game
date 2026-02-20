@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0663a6fc70d7a894a9d6167e31a27b14, type: 3}
+  m_Name: SoundCollection
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.SoundCollection
+  uiEvents:
+  - Guid:
+      Data1: 1305738793
+      Data2: 1276862105
+      Data3: -1336398931
+      Data4: -1054999081
+    Path: event:/SFX/UI/SFX_UI_Submit
+  - Guid:
+      Data1: 25989168
+      Data2: 1156840762
+      Data3: 2131286917
+      Data4: 249452889
+    Path: event:/SFX/UI/SFX_UI_Navigate
+  - Guid:
+      Data1: 663196091
+      Data2: 1218437803
+      Data3: 586768293
+      Data4: 904876202
+    Path: event:/SFX/UI/SFX_UI_Back
+  - Guid:
+      Data1: -2139383242
+      Data2: 1148983987
+      Data3: 1390449297
+      Data4: 958140434
+    Path: event:/SFX/UI/SFX_UI_InitialJoin
+  - Guid:
+      Data1: -1153758052
+      Data2: 1119906361
+      Data3: -840979791
+      Data4: -858877786
+    Path: event:/SFX/UI/SFX_UI_CharacterSelected
+  gameplayEvents:
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 

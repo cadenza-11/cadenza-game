@@ -20,6 +20,26 @@ PrefabInstance:
       propertyPath: comboM
       value: 
       objectReference: {fileID: -2046023753822415213}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: cClass
+      value: 
+      objectReference: {fileID: 11400000, guid: cda20754fcd514e8f8d90723ac11b9e5, type: 2}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: comboM
+      value: 
+      objectReference: {fileID: -2046023753822415213}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: baseHeavyDamage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: baseLightDamage
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: AttackAreaObject
+      value: 
+      objectReference: {fileID: 647962606392273746}
     - target: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: m_Color.b
       value: 0.5235849
@@ -77,71 +97,38 @@ PrefabInstance:
       value: Bass
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 756949604230155057, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+    - {fileID: 0}
+    - {fileID: 911082884614298861, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: -2046023753822415213}
-    - targetCorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4716353096324801265}
+      addedObject: {fileID: 5421686540435717293}
   m_SourcePrefab: {fileID: 100100000, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
---- !u!114 &586648211850152065 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2387496068521455922, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+--- !u!1 &647962606392273746 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   m_PrefabInstance: {fileID: 2956092496241670579}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+--- !u!114 &5421686540435717293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647962606392273746}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
+  m_Script: {fileID: 11500000, guid: f7fc7c2da5c23864eb7cc9997a0ca955, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackArea
---- !u!114 &1067250217347949063 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2866967900350389172, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 2956092496241670579}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a350f567dbb8f664fb69e7cfe98c3e4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
---- !u!114 &1225976831588317994 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4036822961007657625, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 2956092496241670579}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackArea
---- !u!114 &2712002024357045598 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 911082884614298861, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 2956092496241670579}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
---- !u!95 &3025275005005517779 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 71435134034143840, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 2956092496241670579}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &4412022794369809365 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 1458182412301763174, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 2956092496241670579}
-  m_PrefabAsset: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.GuitarArea
+  damage: 0
+  knockbackScale: 5
+  comboMove: 0
 --- !u!1 &6786406964424170892 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
@@ -160,53 +147,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Combo.ComboManager
   ComboDB: {fileID: 11400000, guid: 98703c146d1712748911ddb70bb0d6cb, type: 2}
---- !u!114 &4716353096324801265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6786406964424170892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29f24dfa2f5b5ba429f7ae1519c326d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.BassChar
-  speed: 3
-  jumpForce: 4
-  chargeForce: 10
-  attackDuration: 0.25
-  chargeDuration: 0.5
-  currentHealth: 20
-  maxHealth: 20
-  flow: 0
-  attackArea: {fileID: 2712002024357045598}
-  chargeArea: {fileID: 586648211850152065}
-  slamArea: {fileID: 1225976831588317994}
-  rb: {fileID: 4412022794369809365}
-  sr: {fileID: 8579752948262778642}
-  anim: {fileID: 3025275005005517779}
-  accuracyBar: {fileID: 1067250217347949063}
-  interactionIndicator: {fileID: 8981843809032161444}
-  projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
-  comboM: {fileID: -2046023753822415213}
-  flowM: {fileID: 11400000, guid: e3d3ea605f564f140aec6bee81e600c7, type: 2}
-  cClass: {fileID: 11400000, guid: cda20754fcd514e8f8d90723ac11b9e5, type: 2}
-  baseLightDamage: 0
-  baseHeavyDamage: 0
---- !u!212 &8579752948262778642 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 2956092496241670579}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8981843809032161444 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6171001511222046999, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-  m_PrefabInstance: {fileID: 2956092496241670579}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5136ee3869c646ff87223033f1283de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.InteractionIndicator

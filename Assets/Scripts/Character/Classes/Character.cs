@@ -5,322 +5,257 @@ using Cadenza.Combo;
 
 namespace Cadenza
 {
-    public class Character : MonoBehaviour, CadenzaActions.IPlayerActions
+    public class Character : MonoBehaviour
     {
         #region Variables
         [Header("Player Values")]
-        [SerializeField] private float speed;
-
-        [SerializeField] private float attackDuration;
-        [SerializeField] private float currentHealth;
-        [SerializeField] private float maxHealth;
-        [SerializeField] private float flow;
+        [SerializeField] public float speed;
+        [SerializeField] public float attackDuration;
+        [SerializeField] public float maxHealth;
 
         [Header("Assign in Inspector")]
-        [SerializeField] private AttackArea attackArea;
-        [SerializeField] private Rigidbody rb;
-        [SerializeField] private SpriteRenderer sr;
-        [SerializeField] private Animator anim;
+        [SerializeField] public GameObject AttackAreaObject;
+        [SerializeField] public Rigidbody Rigidbody;
+        [SerializeField] public SpriteRenderer Sprite;
+        [SerializeField] public Animator Animator;
         [SerializeField] private AccuracyBar accuracyBar;
         [SerializeField] private InteractionIndicator interactionIndicator;
-        [SerializeField] private ComboManager comboM;
-        [SerializeField] private CharacterClass cClass;
-        [SerializeField] private int baseLightDamage;
-        [SerializeField] private int baseHeavyDamage;
+        [SerializeField] public ComboManager comboM;
+        [SerializeField] public int baseLightDamage;
+        [SerializeField] public int baseHeavyDamage;
 
+        [NonSerialized] public float currentHealth;
         public float MaxHealth => this.maxHealth;
+        public float FlowThreshold => this.flowThreshold;
         public bool IsFainted => this.isFainted;
+        public IAttackArea AttackArea => this.attackArea;
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
         public event Action<float> HealthChanged;
+        public event Action<float> FlowChanged;
 
-        private Coroutine actionableRoutine;
-        private int attackMod;
+        private float flow;
+        private float flowThreshold = 5f;
 
-        private Vector2 move;
-        private bool isMove, isAttacking, isFlowing;
-        private bool direction; //true = right, false = left
-        private bool isActionable = true;
-        private bool isFainted = false;
+        public class Input
+        {
+            public Vector2 move;
+            public bool wantLight;
+            public bool wantHeavy;
+            public bool wantTeam;
 
+            public void Consume()
+            {
+                this.wantHeavy = false;
+                this.wantLight = false;
+                this.wantTeam = false;
+            }
+        }
+
+        public Input input;
+        private bool facingRight = true;
+
+        private IState state;
+        public readonly WalkingState walking = new();
+        public readonly LightAttackState lightAttack = new();
+        public readonly HeavyAttackState heavyAttack = new();
+        public readonly HitStunState hitStun = new();
+        public readonly FaintedState fainted = new();
+
+        private IAttackArea attackArea;
+
+        private CharacterClass cClass;
+
+        private bool isFlowing = false;
+        [NonSerialized] public bool isFainted = false;
         #endregion
 
-        internal void SetPlayer(Player player)
+        internal void Initialize(Player player)
         {
+            // Set player.
             this.Player = player;
-            player.PlayerHit += this.accuracyBar.OnPlayerHit;
-            player.PlayerHit += this.UpdateFlow;
+            player.PlayerHit += this.OnPlayerHit;
             BeatSystem.BeatPlayed += this.UpdateFlowBuffs;
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
-            this.isActionable = true;
+            this.attackArea = this.AttackAreaObject.GetComponent<IAttackArea>();
+            this.cClass = player.CharacterClass;
+
+            this.input = new();
+            this.SetHealth(this.maxHealth);
+            this.SetFlow(0);
+
+            // Defualt state.
+            this.ChangeState(this.walking);
+        }
+
+        void Update()
+        {
+            this.state?.Update(this);
         }
 
         void FixedUpdate()
         {
-            // Apply gravity.
             if (!this.IsGrounded())
-            {
-                this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
-            }
+                this.ApplyGravity();
 
-            //Reads in a Vector2, converts it to a Vector3, and flips sprite based on direction
+            this.state?.FixedUpdate(this);
 
-            if (this.isActionable)
-            {
-                int flowSpeed = FlowManager.Singleton.playerFlows[0] ? 1 : 0;
-                int isFlowInt = this.isFlowing ? 1 : 0;
-                Vector3 moveDir = new(
-                    this.move.x * (this.speed + (this.speed * 0.25f * flowSpeed * isFlowInt)),
-                    this.rb.linearVelocity.y,
-                    this.move.y * (this.speed + (this.speed * 0.25f * flowSpeed * isFlowInt)));
-                this.rb.linearVelocity = moveDir;
+            // Update flow.
+            this.SetFlow(this.flow - 0.03f);
 
-                if (moveDir.x != 0 && moveDir.x < 0)
-                {
-                    this.sr.flipX = true;
-                    this.isMove = true;
-                    this.direction = false;
-                }
-                else if (moveDir.x != 0 && moveDir.x > 0)
-                {
-                    this.sr.flipX = false;
-                    this.isMove = true;
-                    this.direction = true;
-                }
-                else if (Mathf.Abs(moveDir.z) > 0)
-                {
-                    this.isMove = true;
-                }
-                else if (moveDir.x == 0)
-                {
-                    this.isMove = false;
-                }
-                this.anim.SetBool("IsMove", this.isMove);
-            }
-
-            if (this.flow > 0.0f && this.flow <= 20.0f)
-            {
-                this.flow -= 0.03f;
-            }
-            else if (this.flow > 20.0f)
-            {
-                this.flow = 20.0f;
-            }
-            else
-            {
-                this.flow = 0.0f;
-            }
-
-            if (FlowManager.Singleton.playerFlows[3] && this.currentHealth < this.maxHealth && this.isFlowing)
-            {
-                this.currentHealth += 0.01f;
-            }
+            if (this.HasFlowBuff(3))
+                this.SetHealth(this.currentHealth + 0.01f);
         }
 
+        void LateUpdate()
+        {
+            this.input.Consume();
+        }
+
+        #region States
+        public void ChangeState(IState next)
+        {
+            if (this.state == next)
+                return;
+
+            this.state?.Exit(this);
+            this.state = next;
+            this.state?.Enter(this);
+        }
+
+        #endregion
+
+        #region Utility
         private bool IsGrounded()
         {
             return Physics.Raycast(this.transform.position, Vector3.down, 0.5f);
         }
 
-        /// <summary>
-        /// Calculates the absolute x value of the hitbox's vector3 local position, then changes it if the attack is in a different direction
-        /// </summary>
+        private void ApplyGravity()
+        {
+            this.Rigidbody.AddForce(Physics.gravity, ForceMode.Acceleration);
+        }
+
+        public void FlipSpriteFromVelocity(Vector3 velocity)
+        {
+            if (velocity.x < 0f)
+            {
+                this.Sprite.flipX = true;
+                this.facingRight = false;
+            }
+            else if (velocity.x > 0f)
+            {
+                this.Sprite.flipX = false;
+                this.facingRight = true;
+            }
+        }
+
         public void ManageAttackDirection()
         {
-            Vector3 localPos = this.attackArea.gameObject.transform.localPosition;
+            Vector3 localPos = this.AttackAreaObject.transform.localPosition;
             float absLocalX = Mathf.Abs(localPos.x);
-            if (this.direction == true)
-            {
-                localPos.x = absLocalX;
-            }
-            else if (this.direction == false)
-            {
-                localPos.x = absLocalX * -1;
-            }
-            this.attackArea.gameObject.transform.localPosition = localPos;
+            localPos.x = this.facingRight ? absLocalX : -absLocalX;
+            this.AttackAreaObject.transform.localPosition = localPos;
         }
 
-        private bool TryPerformAction(float duration)
+        public bool HasFlowBuff(int idx)
         {
-            if (!this.isActionable)
-                return false;
-
-            // Perform action.
-            this.isActionable = false;
-            this.rb.linearVelocity = new Vector3(0, this.rb.linearVelocity.y, 0);
-            {
-                if (this.actionableRoutine != null)
-                    this.StopCoroutine(this.actionableRoutine);
-                this.actionableRoutine = this.Schedule(duration, () => this.isActionable = true);
-            }
-            return true;
+            return this.isFlowing && TeamSystem.IsClassFlowing(idx);
         }
 
-        #region ICharacter Interface
+        #endregion
 
-        public virtual void LightAttack(int damage, AttkEffect comboMove)
-        {
-            if (this.isAttacking || !this.TryPerformAction(this.attackDuration * this.attackMod))
-                return;
+        #region Combat
 
-            this.ManageAttackDirection();
-            int flowDamage = FlowManager.Singleton.playerFlows[2] ? 1 : 0;
-            int isFlowInt = this.isFlowing ? 1 : 0;
-            //Sets attacking to true and activated the hitbox for the attack
-            this.isAttacking = true;
-            this.attackMod = 1;
-            this.attackArea.damage = damage + ((damage / 2) * flowDamage * isFlowInt);
-            this.attackArea.comboMove = comboMove;
-            this.attackArea.gameObject.SetActive(this.isAttacking);
-
-            this.Schedule(this.attackDuration * this.attackMod, () =>
-            {
-                this.isAttacking = false;
-                this.attackArea.gameObject.SetActive(this.isAttacking);
-            });
-
-            // Play animation
-            this.anim.SetTrigger("LightAttack");
-        }
-        public virtual void HeavyAttack(int damage, AttkEffect comboMove)
-        {
-            if (this.isAttacking || !this.TryPerformAction(this.attackDuration))
-                return;
-
-            this.ManageAttackDirection();
-            int flowDamage = FlowManager.Singleton.playerFlows[2] ? 1 : 0;
-            int isFlowInt = this.isFlowing ? 1 : 0;
-            //Sets attacking to true and activated the hitbox for the attack
-            this.isAttacking = true;
-            this.attackMod = 2;
-            this.attackArea.damage = damage + ((damage / 2) * flowDamage * isFlowInt);
-            this.attackArea.comboMove = comboMove;
-            this.attackArea.gameObject.SetActive(this.isAttacking);
-
-            this.Schedule(this.attackDuration * this.attackMod, () =>
-            {
-                this.isAttacking = false;
-                this.attackArea.gameObject.SetActive(this.isAttacking);
-            });
-
-            // Play animation
-            this.anim.SetTrigger("HeavyAttack");
-        }
-
-        public void StartTeamAttk()
+        public void StartTeamAttack()
         {
             TeamAttackInitiated?.Invoke();
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 4, immediate: false);
         }
-        public void JoinTeamAttk()
-        {
 
-        }
         public void DoDamage(int damage)
         {
-            this.currentHealth -= damage;
-            this.anim.SetTrigger("IsHit");
+            this.SetHealth(this.currentHealth - damage);
+            this.Animator.SetTrigger("IsHit");
+        }
 
-            // Hit stun.
-            this.isActionable = false;
-            this.rb.linearVelocity = new Vector3(0, this.rb.linearVelocity.y, 0);
-            {
-                if (this.actionableRoutine != null)
-                    this.StopCoroutine(this.actionableRoutine);
-                this.actionableRoutine = this.Schedule(this.attackDuration, () => this.isActionable = true);
-            }
-
-            if (this.currentHealth <= 0)
-            {
-                // Faint.
-                this.isActionable = false;
-                this.rb.linearVelocity = new Vector3(0, this.rb.linearVelocity.y, 0);
-                this.isFainted = true;
-                this.anim.SetBool("IsFainted", true);
-
-                // TEMP: Respawn with full health.
-                if (this.actionableRoutine != null)
-                    this.StopCoroutine(this.actionableRoutine);
-                this.actionableRoutine = this.Schedule(2.0f, () =>
-                {
-                    this.isActionable = true;
-                    this.isFainted = false;
-                    this.anim.SetBool("IsFainted", false);
-                    this.currentHealth = this.maxHealth;
-                    HealthChanged?.Invoke(this.currentHealth);
-                });
-            }
-
+        public void SetHealth(float health)
+        {
+            this.currentHealth = Mathf.Clamp(this.currentHealth + health, 0.0f, this.maxHealth);
             HealthChanged?.Invoke(this.currentHealth);
+
+            if (this.currentHealth <= 0f)
+                this.ChangeState(this.fainted);
+            else
+                this.ChangeState(this.hitStun.WithDuration(this.attackDuration));
+        }
+
+        private void OnPlayerHit(ScoreDef def)
+        {
+            // Update accuracy.
+            this.accuracyBar.OnPlayerHit(def);
+
+            // Update flow.
+            float value = def.Class switch
+            {
+                ScoreClass.Perfect => +3.0f,
+                ScoreClass.Great => +1.0f,
+                ScoreClass.Bad => -1.0f,
+                _ => 0.0f
+            };
+            this.SetFlow(this.flow + value);
         }
 
         #endregion
-        #region IPlayerActions Interface
 
+        #region Input
         public void OnMove(InputAction.CallbackContext context)
         {
-            this.move = context.ReadValue<Vector2>();
+            this.input.move = context.ReadValue<Vector2>();
         }
 
         public void OnAttackLight(InputAction.CallbackContext context)
         {
-            this.comboM.ProcessCombo(AttkTypes.Light, out var reward);
-            this.LightAttack(this.baseLightDamage * reward.Multiplier, reward.AttackEffect);
-            //put enums in attack area with namespace
+            if (context.performed)
+                this.input.wantLight = true;
         }
 
         public void OnAttackHeavy(InputAction.CallbackContext context)
         {
-            this.comboM.ProcessCombo(AttkTypes.Heavy, out var reward);
-            this.HeavyAttack(this.baseHeavyDamage * reward.Multiplier, reward.AttackEffect);
-        }
-
-        public void OnAttackSpecial(InputAction.CallbackContext context)
-        {
-            //change controls later
+            if (context.performed)
+                this.input.wantHeavy = true;
         }
 
         public void OnAttackTeam(InputAction.CallbackContext context)
         {
-            this.StartTeamAttk();
-        }
-
-        public void OnPause(InputAction.CallbackContext context)
-        {
-
+            if (context.performed)
+                this.input.wantTeam = true;
         }
 
         #endregion
 
-        public void UpdateFlow(ScoreDef def)
+        #region Flow
+
+        private void SetFlow(float flow)
         {
-            switch (def.Class)
-            {
-                case (ScoreClass.Perfect):
-                    this.flow += 3.0f;
-                    break;
-                case (ScoreClass.Great):
-                    this.flow++;
-                    break;
-                case (ScoreClass.Bad):
-                    this.flow--;
-                    break;
-            }
+            this.flow = Mathf.Clamp(flow, 0.0f, 20.0f);
+            FlowChanged?.Invoke(this.flow);
         }
 
         public void UpdateFlowBuffs()
         {
-            if (this.flow >= 5.0f)
+            if (this.flow >= this.flowThreshold)
             {
-                FlowManager.Singleton.playerFlows[this.cClass.ID - 1] = true;
+                TeamSystem.SetClassFlowing(this.cClass.ID, true);
                 this.isFlowing = true;
             }
             else
             {
-                FlowManager.Singleton.playerFlows[this.cClass.ID - 1] = false;
+                TeamSystem.SetClassFlowing(this.cClass.ID, false);
                 this.isFlowing = false;
             }
         }
+        #endregion
     }
 }

@@ -61,7 +61,7 @@ namespace Cadenza
             // Give input to new character body.
             if (this.Character != null)
             {
-                this.Character.SetPlayer(this);
+                this.Character.Initialize(this);
                 this.RegisterCharacterCallbacks(this.Input.actions, this.Character);
             }
         }
@@ -97,7 +97,7 @@ namespace Cadenza
 
         #endregion
         #region Input
-        private void RegisterCharacterCallbacks(InputActionAsset actionMaps, CadenzaActions.IPlayerActions character)
+        private void RegisterCharacterCallbacks(InputActionAsset actionMaps, Character character)
         {
             // Player map.
             var map = actionMaps.FindActionMap("Player", throwIfNotFound: true);
@@ -105,7 +105,6 @@ namespace Cadenza
             var moveAction = map.FindAction("Move", throwIfNotFound: true);
             var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
-            var attackSpecialAction = map.FindAction("Attack/Special", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
             var pauseAction = map.FindAction("Pause", throwIfNotFound: true);
             this.interactAction = attackLightAction;
@@ -116,7 +115,6 @@ namespace Cadenza
             attackLightAction.performed += this.OnHit;
             attackHeavyAction.performed += character.OnAttackHeavy;
             attackHeavyAction.performed += this.OnHit;
-            attackSpecialAction.performed += character.OnAttackSpecial;
             attackTeamAction.performed += character.OnAttackTeam;
             pauseAction.performed += this.OnPause;
 
@@ -147,7 +145,7 @@ namespace Cadenza
             }
         }
 
-        private void UnregisterCharacterCallbacks(InputActionAsset actionMaps, CadenzaActions.IPlayerActions character)
+        private void UnregisterCharacterCallbacks(InputActionAsset actionMaps, Character character)
         {
             // Player map.
             var map = actionMaps.FindActionMap("Player", throwIfNotFound: true);
@@ -155,14 +153,12 @@ namespace Cadenza
             var moveAction = map.FindAction("Move", throwIfNotFound: true);
             var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
-            var attackSpecialAction = map.FindAction("Attack/Special", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
 
             moveAction.performed -= character.OnMove;
             moveAction.canceled -= character.OnMove;
             attackLightAction.performed -= character.OnAttackLight;
             attackHeavyAction.performed -= character.OnAttackHeavy;
-            attackSpecialAction.performed -= character.OnAttackSpecial;
             attackTeamAction.performed -= character.OnAttackTeam;
 
             // UI map.

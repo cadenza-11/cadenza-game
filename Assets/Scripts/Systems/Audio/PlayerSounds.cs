@@ -11,6 +11,9 @@ namespace Cadenza
 
         public void OnGameStart()
         {
+            // Set the "Stage" FMOD parameter.
+            AudioSystem.SetStage(ApplicationController.CurrentLevel);
+
             // Disable all instument tracks.
             foreach (var characterClass in PlayerSystem.CharacterClasses)
                 AudioSystem.SetInstrumentActive(characterClass, false);
@@ -18,6 +21,9 @@ namespace Cadenza
 
         public void OnGameStop()
         {
+            // Set the "Stage" FMOD parameter.
+            AudioSystem.SetStage(null);
+
             // Disable all instument tracks.
             foreach (var characterClass in PlayerSystem.CharacterClasses)
                 AudioSystem.SetInstrumentActive(characterClass, false);

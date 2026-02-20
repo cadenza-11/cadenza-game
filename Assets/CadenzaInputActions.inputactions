@@ -34,15 +34,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack/Special",
-                    "type": "Button",
-                    "id": "811969d1-c5c4-4b82-873b-316db499dd49",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Attack/Team",
                     "type": "Button",
                     "id": "3b9afcc6-581f-45bf-acce-81822e0fc17e",
@@ -240,28 +231,6 @@
                 },
                 {
                     "name": "",
-                    "id": "1e92ca5d-28ac-42a3-bc85-ac9dab703775",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Attack/Special",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "645c21fc-58eb-4d27-b512-c3dcc7a1861b",
-                    "path": "<Keyboard>/k",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Attack/Special",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "f132bad6-427f-412f-9482-1603e5ca905d",
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
@@ -369,15 +338,6 @@
                     "type": "PassThrough",
                     "id": "0489e84a-4833-4c40-bfae-cea84b696689",
                     "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Toggle/Debug",
-                    "type": "Button",
-                    "id": "feab28e9-369f-45b5-b939-6e73cec0c992",
-                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -776,17 +736,6 @@
                 },
                 {
                     "name": "",
-                    "id": "279e7fc2-0771-4337-aca7-f204caa26a38",
-                    "path": "<Keyboard>/backquote",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Toggle/Debug",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "7a1a5ac8-6009-4157-a458-286d74fd260e",
                     "path": "<Pointer>/position",
                     "interactions": "",
@@ -859,6 +808,34 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Unpause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Debug",
+            "id": "e8ec19d8-1343-46d2-96ce-c0e2bf1c61d0",
+            "actions": [
+                {
+                    "name": "ToggleVisibility",
+                    "type": "Button",
+                    "id": "d0b5c7d9-8ceb-43a9-9e1f-da48a3e16141",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d989bb47-c96e-4dbb-a655-ffe830678225",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ToggleVisibility",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -35,6 +35,7 @@ namespace Cadenza
             // Configure "continue last run" button.
             this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
             SaveSystem.TeamFileDeleted += () => this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
+            SaveSystem.TeamFileCreated += () => this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
 
             this.Show();
         }
@@ -44,16 +45,17 @@ namespace Cadenza
             this.containerJoin.style.display = DisplayStyle.Flex;
             this.containerOptions.style.display = DisplayStyle.None;
 
-            // Give single-player input to the first player.
+            // No player is connected, wait for a join.
             if (InputSystem.JoinedPlayersByID.Count < 1)
             {
                 AudioSystem.SetState(AudioSystem.State.Paused);
                 InputSystem.PlayerJoined += this.OnPlayerJoined;
                 InputSystem.EnableJoining();
             }
+            // Give single-player input to the first player.
             else
             {
-                this.OnPlayerJoined(InputSystem.JoinedPlayersByID[0]);
+                this.ShowMenu(InputSystem.JoinedPlayersByID[0]);
             }
         }
 
@@ -72,6 +74,12 @@ namespace Cadenza
 
         private void OnPlayerJoined(Player player)
         {
+            AudioSystem.PlayOneShot(Sound.UI.InitialJoin);
+            this.ShowMenu(player);
+        }
+
+        private void ShowMenu(Player player)
+        {
             // Only get input from the first player to join the game.
             InputSystem.PlayerJoined -= this.OnPlayerJoined;
 
@@ -80,7 +88,7 @@ namespace Cadenza
             this.containerOptions.style.display = DisplayStyle.Flex;
             AudioSystem.SetState(AudioSystem.State.Menu);
 
-            // Set multiplayer.
+            // Set single player input.
             InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, player);
 
             this.buttonStartGame.Focus();

@@ -121,17 +121,4 @@ MonoBehaviour:
       Data3: -487267928
       Data4: -393337567
     Path: event:/SFX_PlayerInput
-  metronomeEvent:
-    Guid:
-      Data1: 280530005
-      Data2: 1330950469
-      Data3: 863566502
-      Data4: 1867832210
-    Path: event:/CLICK
-  metronomeSnapshot:
-    Guid:
-      Data1: 353562282
-      Data2: 1174778707
-      Data3: -802903113
-      Data4: 2073863995
-    Path: snapshot:/SoloClickTrack
+  soundCollection: {fileID: 11400000, guid: 862955d230a6354419b79092d0cc43a4, type: 2}

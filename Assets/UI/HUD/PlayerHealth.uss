@@ -17,7 +17,7 @@
     background-image: url("project://database/Assets/Plugins/FMOD/images/AddIcon.png?fileID=2800000&guid=3300e81f02e64924eb7cb7782713b126&type=3#AddIcon");
 }
 
-.accuracy > .meter_icon {
+.flowstate > .meter_icon {
     background-image: url("project://database/Assets/Plugins/FMOD/images/TransportStopButtonOn.png?fileID=2800000&guid=eab53cb0959d1244aadeacf8b76c755c&type=3#TransportStopButtonOn");
 }
 
@@ -32,33 +32,27 @@
     -unity-text-outline-color: rgb(0, 0, 0);
 }
 
-.accuracy_markers > * {
-    display: none;
-}
-
 .accuracy_splash {
     top: 20px;
     transition-property: top;
-    transition-duration: 0.25s;
+    transition-duration: 0.5s;
     transition-timing-function: ease-out-bounce;
 }
 
-.Bad > #Bad {
-    display: flex;
-    top: 0;
+.Bad {
+    color: rgb(255, 0, 0);
 }
 
-.OK > #OK {
-    display: flex;
-    top: 0;
+.OK {
+    color: rgb(255, 165, 0);
 }
 
-.Great > #Great {
-    display: flex;
-    top: 0;
+.Great {
+    color: rgb(255, 235, 4);
 }
 
-.Perfect > #Perfect {
-    display: flex;
-    top: 0;
+.Perfect {
+    color: rgb(0, 255, 0);
 }
+
+
