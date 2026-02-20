@@ -85,8 +85,16 @@ namespace Cadenza
             this.SetHealth(this.maxHealth);
             this.SetFlow(0);
 
-            // Defualt state.
+            // Set default state.
             this.ChangeState(this.walking);
+        }
+
+        void OnDestroy()
+        {
+            // Unsubscribe from events.
+            this.Player.PlayerHit -= this.OnPlayerHit;
+            BeatSystem.BeatPlayed -= this.UpdateFlowBuffs;
+            this.Player.InteractChanged -= this.interactionIndicator.OnPlayerInteractChanged;
         }
 
         void Update()

@@ -133,14 +133,11 @@ namespace Cadenza
                 _ => 0
             };
 
-            Debug.Log($"Filling meter by {fillAmount} seconds.");
-
             this.FillMeter(fillAmount);
         }
 
         private void OnTeamAttackInitiated()
         {
-            Debug.Log("Team attack initiated. Zeroing team meter.");
             this.teamMeter.value = 0;
         }
 

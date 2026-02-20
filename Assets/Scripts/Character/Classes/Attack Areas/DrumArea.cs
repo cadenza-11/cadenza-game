@@ -51,11 +51,8 @@ namespace Cadenza
 
         private void OnTriggerEnter(Collider collider)
         {
-            if (collider.CompareTag("Enemy"))
-            {
-                Enemy hitEntity = collider.gameObject.GetComponent<Enemy>();
-                hitEntity.DoDamage(this.damage);
-            }
+            if (collider.gameObject.TryGetComponent(out Enemy enemy))
+                enemy.DoDamage(this.damage);
 
             // Stop current horizontal movement.
             // Vector3 v = collider.attachedRigidbody.linearVelocity;
