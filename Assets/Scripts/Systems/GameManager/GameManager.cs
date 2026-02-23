@@ -12,6 +12,13 @@ namespace Cadenza
     {
         private static GameManager singleton;
 
+        public enum GameResult
+        {
+            Victory,
+            Loss,
+            Forfeit,
+        }
+
         #region Public Variables
 
         [SerializeField] private Level startingLevel;
@@ -24,7 +31,7 @@ namespace Cadenza
         private bool isCombatActive;
         public static bool IsCombatActive => singleton.isCombatActive;
         public static event Action CombatStarted;
-        public static event Action CombatStopped;
+        public static event Action<GameResult> CombatStopped;
 
         #endregion
 
@@ -49,7 +56,7 @@ namespace Cadenza
 
             // Stop combat.
             if (this.isCombatActive)
-                this.StopCombat();
+                this.StopCombat(GameResult.Forfeit);
 
             // Unpause game.
             if (this.isPaused)
@@ -93,24 +100,19 @@ namespace Cadenza
 
             if (this.CheckLoss())
             {
-                Debug.Log("Loss");
-                this.StopCombat();
+                this.StopCombat(GameResult.Loss);
             }
             else if (this.CheckVictory())
             {
-                Debug.Log("Victory");
-                this.StopCombat();
+                this.StopCombat(GameResult.Victory);
             }
         }
 
         #endregion
         #region Public Static Methods
 
-        public static void StartGame()
+        public static void RedirectToBackstage()
         {
-            if (ApplicationController.State != ApplicationState.Pregame)
-                return;
-
             ApplicationController.SetLevelAsync(singleton.startingLevel);
         }
 
@@ -153,16 +155,23 @@ namespace Cadenza
 
         private void StartCombat()
         {
+            if (this.isCombatActive)
+                return;
+
             this.isCombatActive = true;
+
             Debug.Log("Started combat.");
             CombatStarted?.Invoke();
         }
 
-        private void StopCombat()
+        private void StopCombat(GameResult result)
         {
+            if (!this.isCombatActive)
+                return;
+
             this.isCombatActive = false;
             Debug.Log("Stopped combat.");
-            CombatStopped?.Invoke();
+            CombatStopped?.Invoke(result);
         }
 
         private bool CheckLoss()

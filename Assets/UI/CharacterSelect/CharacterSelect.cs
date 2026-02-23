@@ -475,7 +475,7 @@ namespace Cadenza
 
             // Otherwise, start game.
             else
-                GameManager.StartGame();
+                GameManager.RedirectToBackstage();
 
             this.Hide();
             return true;

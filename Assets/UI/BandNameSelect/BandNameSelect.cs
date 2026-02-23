@@ -54,7 +54,7 @@ namespace Cadenza
         {
             TeamSystem.CreateTeam(this.bandNameField.value);
             this.Hide();
-            GameManager.StartGame();
+            GameManager.RedirectToBackstage();
         }
 
         #endregion
