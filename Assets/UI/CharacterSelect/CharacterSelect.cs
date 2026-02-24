@@ -1,11 +1,11 @@
 using System.Collections.Generic;
+using Cadenza.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.XInput;
 using UnityEngine.UIElements;
-using static Cadenza.InputHint;
 
 namespace Cadenza
 {
@@ -33,6 +33,7 @@ namespace Cadenza
 
         private enum SelectPhase
         {
+            None,
             Joining,
             CalibratingInProgress,
             CalibratingDone,
@@ -307,7 +308,7 @@ namespace Cadenza
                 NavNextHint = element.Q<VisualElement>("c_NavNext"),
             };
 
-            this.ShowPhase(container, SelectPhase.Joining);
+            this.ShowPhase(container, SelectPhase.None);
             return container;
         }
 
@@ -339,11 +340,11 @@ namespace Cadenza
                 ? DisplayStyle.Flex : DisplayStyle.None;
 
             playerContainer.NavBackHint.style.opacity =
-                (phase == SelectPhase.Joining)
+                (phase == SelectPhase.None || phase == SelectPhase.Joining)
                 ? 0 : 1;
 
             playerContainer.NavNextHint.style.opacity =
-                (phase == SelectPhase.Joining || phase == SelectPhase.Ready || phase == SelectPhase.CalibratingInProgress)
+                (phase == SelectPhase.None || phase == SelectPhase.Joining || phase == SelectPhase.Ready || phase == SelectPhase.CalibratingInProgress)
                 ? 0 : 1;
 
             if (phase == SelectPhase.Joining)
@@ -454,7 +455,7 @@ namespace Cadenza
 
                 // Don't start if a joined player is in the
                 // middle of calibrating or selecting a character.
-                else if (tracker.Phase != SelectPhase.Joining
+                else if (tracker.Phase != SelectPhase.None
                     && tracker.Phase != SelectPhase.Joining)
                     return false;
             }
@@ -548,7 +549,8 @@ namespace Cadenza
 
             // Enable the new player's UI input.
             InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
-            Debug.Log($"Player {player.ID} joined with controller: {player.Input.devices[0]}");
+
+            // Configure input hints for the player's device.
             var device = player.Input.devices[0];
             var controller = device switch
             {
@@ -557,9 +559,11 @@ namespace Cadenza
                 DualShockGamepad => ControllerType.PlayStation,
                 _ => ControllerType.All,
             };
-            this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(controller);
-            this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(controller);
-            this.playerContainers[player.ID].CalibrationContainer.Q<InputHint>().ShowForControllerType(controller);
+
+            var playerContainerElement = this.playerContainers[player.ID].Container;
+            playerContainerElement.UpdateInputHintsInHierarchy(controller);
+
+            Debug.Log($"Player {player.ID} joined with controller: {player.Input.devices[0]}");
         }
 
         private void OnPlayerLeft(Player player)
@@ -568,7 +572,7 @@ namespace Cadenza
             this.playerTrackers.Remove(player);
 
             // Show disconnected phase.
-            this.ShowPhase(this.playerContainers[player.ID], SelectPhase.Joining);
+            this.ShowPhase(this.playerContainers[player.ID], SelectPhase.None);
         }
 
         #endregion

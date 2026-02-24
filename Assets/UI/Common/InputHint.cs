@@ -3,17 +3,17 @@ using UnityEngine.UIElements;
 
 namespace Cadenza
 {
+    public enum ControllerType
+    {
+        Keyboard,
+        Xbox,
+        PlayStation,
+        All
+    }
+
     [UxmlElement]
     partial class InputHint : VisualElement
     {
-        public enum ControllerType
-        {
-            Keyboard,
-            Xbox,
-            PlayStation,
-            All
-        }
-
         private VisualElement keyboardHintElement;
         private Label keyboardSlashElement;
         private VisualElement xboxHintElement;
@@ -91,7 +91,7 @@ namespace Cadenza
                 this.psHintElement.style.height = this.hintSize;
             }
         }
-        
+
         public InputHint()
         {
             this.style.flexDirection = FlexDirection.Row;
@@ -110,7 +110,7 @@ namespace Cadenza
             this.xboxHintElement.style.height = this.hintSize;
 
             this.xboxSlashElement = new Label("/");
-            
+
             this.psHintElement = new VisualElement();
             this.psHintElement.style.backgroundImage = this.psHint;
             this.psHintElement.style.width = this.hintSize;
