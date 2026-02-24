@@ -19,6 +19,8 @@ namespace Cadenza
         private ApplicationSystem[] systems;
         private ApplicationState state;
         public static ApplicationState State => singleton.state;
+        private bool isRedirecting;
+        public static bool IsRedirecting => singleton.isRedirecting;
 
         [SerializeField] private List<Level> levels;
         private Level currentLevel;
@@ -119,6 +121,8 @@ namespace Cadenza
 
         private async Task SetLevelAsyncImpl(Level level)
         {
+            this.isRedirecting = true;
+
             int sceneIndex = 0;
 
             if (level == null)
@@ -151,6 +155,8 @@ namespace Cadenza
             if (sceneIndex != 0)
                 singleton.ChangeState(ApplicationState.GameSession);
             await Fader.HideAsync();
+
+            this.isRedirecting = false;
         }
 
         private void ChangeState(ApplicationState newState)

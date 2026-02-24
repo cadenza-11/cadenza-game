@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -66,6 +67,26 @@ namespace Cadenza
                 this.Hide();
             else
                 this.Show();
+        }
+
+        public void TransitionTo(UIPanel panel, bool hideSelf = true)
+        {
+            _ = this.TransitionToImplAsync(panel, hideSelf);
+        }
+
+        private async Task TransitionToImplAsync(UIPanel panel, bool hideSelf = true)
+        {
+            await Fader.ShowAsync(setAudio: false);
+            if (hideSelf)
+            {
+                this.Hide();
+            }
+            if (panel != null)
+            {
+                panel.previousPanel = this;
+                panel.Show();
+                Fader.HideImmediate();
+            }
         }
 
         public virtual void OnShow()

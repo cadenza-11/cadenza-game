@@ -52,8 +52,12 @@ namespace Cadenza
 
         private void OnSetName()
         {
+            if (ApplicationController.IsRedirecting)
+                return;
+
+            // Redirect will trigger fade in; don't hide panel until faded in.
+            this.Schedule(0.5f, () => this.Hide());
             TeamSystem.CreateTeam(this.bandNameField.value);
-            this.Hide();
             GameManager.RedirectToBackstage();
         }
 

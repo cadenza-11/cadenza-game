@@ -7,19 +7,15 @@
     height: 100%;
     background-color: rgb(0, 0, 0);
     transition-property: translate;
-    transition-duration: 0.5s;
-    transition-timing-function: ease;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-in-out;
     translate: 100% 0;
 }
 
 .fader.slide-in {
-    transition-property: translate;
-    transition-duration: 0.5s;
     translate: 0% 0;
 }
 
 .fader.slide-in.slide-out {
-    transition-property: translate;
-    transition-duration: 0.5s;
     translate: -100% 0;
 }

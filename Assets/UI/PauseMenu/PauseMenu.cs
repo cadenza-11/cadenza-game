@@ -54,8 +54,7 @@ namespace Cadenza
 
         private void OnSettings()
         {
-            this.settingsMenu.previousPanel = this;
-            this.settingsMenu.Show();
+            this.TransitionTo(this.settingsMenu);
         }
 
         private void OnMainMenu()

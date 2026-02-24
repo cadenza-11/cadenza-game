@@ -99,9 +99,8 @@ namespace Cadenza
 
         private void OnNewRun()
         {
-            this.characterSelect.Show();
-            this.Hide();
             SaveSystem.DeleteTeamFile();
+            this.TransitionTo(this.characterSelect);
         }
 
         private void OnLastRun()
@@ -119,8 +118,7 @@ namespace Cadenza
 
         private void OnSettings()
         {
-            this.settingsMenu.previousPanel = this;
-            this.settingsMenu.Show();
+            this.TransitionTo(UISystem.FindPanel<SettingsMenu>());
         }
 
         private void OnExit()

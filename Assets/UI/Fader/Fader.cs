@@ -24,9 +24,36 @@ namespace Cadenza
         }
 
         /// <summary>
+        /// Show the fader without awaiting or affecting FMOD.
+        /// </summary>
+        public static void ShowImmediate()
+        {
+            // Do nothing if panel is already visible.
+            if (singleton.fader.ClassListContains(SlideInClassName))
+                return;
+
+            singleton.fader.style.display = DisplayStyle.Flex;
+            singleton.fader.AddToClassList(SlideInClassName);
+        }
+
+        /// <summary>
+        /// Hide the fader without awaiting or affecting FMOD.
+        /// </summary>
+        public static void HideImmediate()
+        {
+            // Panel must already be visible.
+            if (!singleton.fader.ClassListContains(SlideInClassName))
+                return;
+
+            // Transition.
+            singleton.fader.RegisterCallbackOnce<TransitionEndEvent>(_ => singleton.Reset());
+            singleton.fader.AddToClassList(SlideOutClassName);
+        }
+
+        /// <summary>
         /// Transitions the fader to a visible state.
         /// </summary>
-        public static async Task ShowAsync()
+        public static async Task ShowAsync(bool setAudio = true)
         {
             // Do nothing if panel is already visible.
             if (singleton.fader.ClassListContains(SlideInClassName))
@@ -39,7 +66,8 @@ namespace Cadenza
             singleton.fader.RegisterCallbackOnce<TransitionEndEvent>(_ => transitionCompletion.TrySetResult(true));
             singleton.fader.AddToClassList(SlideInClassName);
 
-            AudioSystem.SetParameter("isFading", true);
+            if (setAudio)
+                AudioSystem.SetParameter("isFading", true);
 
             // Wait until transition completes.
             await transitionCompletion.Task;
@@ -48,15 +76,18 @@ namespace Cadenza
         /// <summary>
         /// Transitions the fader to an invisible state.
         /// </summary>
-        public static async Task HideAsync()
+        public static async Task HideAsync(bool setAudio = true)
         {
             // Panel must already be visible.
             if (!singleton.fader.ClassListContains(SlideInClassName))
                 return;
 
             // Wait for audio to transition out.
-            AudioSystem.SetParameter("isFading", false);
-            await WaitForNonFadingMarkerAsync();
+            if (setAudio)
+            {
+                AudioSystem.SetParameter("isFading", false);
+                await WaitForNonFadingMarkerAsync();
+            }
 
             // Transition.
             var transitionCompletion = new TaskCompletionSource<bool>();

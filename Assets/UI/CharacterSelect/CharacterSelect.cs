@@ -444,7 +444,7 @@ namespace Cadenza
             this.classManager.UnselectCharacter(player);
         }
 
-        private bool CanStartGame()
+        private bool AllPlayersReady()
         {
             bool hasReady = false;
 
@@ -466,18 +466,22 @@ namespace Cadenza
 
         private bool TryStartGame()
         {
-            if (!this.CanStartGame())
+            if (!this.AllPlayersReady() || ApplicationController.IsRedirecting)
                 return false;
 
             // Open team creation UI if this is a new run.
             if (TeamSystem.Team == null)
-                this.bandNameSelect.Show();
+            {
+                this.TransitionTo(this.bandNameSelect);
+            }
 
             // Otherwise, start game.
             else
+            {
+                // Redirect will trigger fade in; don't hide panel until faded in.
+                this.Schedule(0.5f, () => this.Hide());
                 GameManager.RedirectToBackstage();
-
-            this.Hide();
+            }
             return true;
         }
 
@@ -491,8 +495,7 @@ namespace Cadenza
             }
 
             // Quit.
-            this.startMenu.Show();
-            this.Hide();
+            this.TransitionTo(this.startMenu);
             return true;
         }
 

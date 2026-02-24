@@ -34,8 +34,8 @@ namespace Cadenza
 
             // Configure back button.
             this.backButton = this.root.Q<Button>("b_Back");
-            this.backButton.clicked += this.Hide;
-            this.root.RegisterCallback<NavigationCancelEvent>(_ => this.Hide());
+            this.backButton.clicked += () => this.TransitionTo(this.previousPanel);
+            this.root.RegisterCallback<NavigationCancelEvent>(_ => this.TransitionTo(this.previousPanel));
 
             // Configure general.
             this.root.Q<Button>("b_DeleteSaveData").clicked += () =>
