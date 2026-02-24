@@ -1,26 +1,26 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles" />
-    <Style src="project://database/Assets/UI/HUD/BeatIndicator.uss?fileID=7433441132597879392&amp;guid=9dd899e7d96a4304b4699b09edb0f4e4&amp;type=3#BeatIndicator" />
+    <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles"/>
+    <Style src="project://database/Assets/UI/HUD/BeatIndicator.uss?fileID=7433441132597879392&amp;guid=9dd899e7d96a4304b4699b09edb0f4e4&amp;type=3#BeatIndicator"/>
     <ui:VisualElement name="phase_Calibrating" style="flex-grow: 1; display: flex; justify-content: center;">
-        <Cadenza.BeatIndicator beats-to-completion="2" />
+        <Cadenza.BeatIndicator beats-to-completion="2"/>
         <ui:VisualElement name="c_Text" style="height: 30%;">
             <ui:VisualElement name="c_Counter" style="flex-grow: 1; flex-direction: row; justify-content: center;">
-                <ui:Label text="0&#10;" name="update_Counter" />
-                <ui:Label text="/" name="txt_Slash" />
-                <ui:Label text="X" name="update_MaxAttempts" />
+                <ui:Label text="0&#10;" name="update_Counter"/>
+                <ui:Label text="/" name="txt_Slash"/>
+                <ui:Label text="X" name="update_MaxAttempts"/>
             </ui:VisualElement>
             <ui:VisualElement name="c_Instructions" style="flex-direction: row; justify-content: center; flex-wrap: wrap;">
-                <ui:Label text="Press" name="txt_Press1" />
-                <ui:Label text="&lt;submit button&gt;" name="txt_TEMP_input" />
-                <ui:Label text="to the beat!" name="txt_Press2" />
+                <ui:Label text="Press" name="txt_Press1"/>
+                <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_numpad_enter.png?fileID=2800000&amp;guid=b962838d239726b4b93ab19cfbb97155&amp;type=3#keyboard_numpad_enter" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_button_color_b.png?fileID=2800000&amp;guid=65e57680d29b27a4bae7727cf8d30dcd&amp;type=3#xbox_button_color_b" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_button_color_circle.png?fileID=2800000&amp;guid=610e05c1b240a474893dfe7913f8b633&amp;type=3#playstation_button_color_circle" hint-size="70"/>
+                <ui:Label text="to the beat!" name="txt_Press2"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="phase_Results" style="flex-grow: 1; display: none; align-self: center; justify-content: center;">
-        <ui:Label text="Average latency:" name="txt_Results" />
+        <ui:Label text="Average latency:" name="txt_Results"/>
         <ui:VisualElement name="c_Latency" style="flex-direction: row; justify-content: center;">
-            <ui:Label text="0.0" name="update_Latency" />
-            <ui:Label text="ms" name="txt_Ms" />
+            <ui:Label text="0.0" name="update_Latency"/>
+            <ui:Label text="ms" name="txt_Ms"/>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

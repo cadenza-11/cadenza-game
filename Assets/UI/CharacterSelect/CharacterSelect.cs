@@ -33,7 +33,6 @@ namespace Cadenza
 
         private enum SelectPhase
         {
-            None,
             Joining,
             CalibratingInProgress,
             CalibratingDone,
@@ -308,7 +307,7 @@ namespace Cadenza
                 NavNextHint = element.Q<VisualElement>("c_NavNext"),
             };
 
-            this.ShowPhase(container, SelectPhase.None);
+            this.ShowPhase(container, SelectPhase.Joining);
             return container;
         }
 
@@ -340,11 +339,11 @@ namespace Cadenza
                 ? DisplayStyle.Flex : DisplayStyle.None;
 
             playerContainer.NavBackHint.style.opacity =
-                (phase == SelectPhase.None || phase == SelectPhase.Joining)
+                (phase == SelectPhase.Joining)
                 ? 0 : 1;
 
             playerContainer.NavNextHint.style.opacity =
-                (phase == SelectPhase.None || phase == SelectPhase.Joining || phase == SelectPhase.Ready || phase == SelectPhase.CalibratingInProgress)
+                (phase == SelectPhase.Joining || phase == SelectPhase.Ready || phase == SelectPhase.CalibratingInProgress)
                 ? 0 : 1;
 
             if (phase == SelectPhase.Joining)
@@ -455,7 +454,7 @@ namespace Cadenza
 
                 // Don't start if a joined player is in the
                 // middle of calibrating or selecting a character.
-                else if (tracker.Phase != SelectPhase.None
+                else if (tracker.Phase != SelectPhase.Joining
                     && tracker.Phase != SelectPhase.Joining)
                     return false;
             }
@@ -551,26 +550,16 @@ namespace Cadenza
             InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
             Debug.Log($"Player {player.ID} joined with controller: {player.Input.devices[0]}");
             var device = player.Input.devices[0];
-            if (device is Keyboard || device is Mouse)
+            var controller = device switch
             {
-                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.Keyboard);
-                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.Keyboard);
-            }
-            else if (device is XInputController)
-            {
-                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.Xbox);
-                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.Xbox);
-            }
-            else if (device is DualShockGamepad)
-            {
-                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.PlayStation);
-                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.PlayStation);
-            }
-            else
-            {
-                this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(ControllerType.All);
-                this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(ControllerType.All);
-            }
+                Keyboard or Mouse => ControllerType.Keyboard,
+                XInputController => ControllerType.Xbox,
+                DualShockGamepad => ControllerType.PlayStation,
+                _ => ControllerType.All,
+            };
+            this.playerContainers[player.ID].NavBackHint.Q<InputHint>().ShowForControllerType(controller);
+            this.playerContainers[player.ID].NavNextHint.Q<InputHint>().ShowForControllerType(controller);
+            this.playerContainers[player.ID].CalibrationContainer.Q<InputHint>().ShowForControllerType(controller);
         }
 
         private void OnPlayerLeft(Player player)
@@ -579,7 +568,7 @@ namespace Cadenza
             this.playerTrackers.Remove(player);
 
             // Show disconnected phase.
-            this.ShowPhase(this.playerContainers[player.ID], SelectPhase.None);
+            this.ShowPhase(this.playerContainers[player.ID], SelectPhase.Joining);
         }
 
         #endregion
