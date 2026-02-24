@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.XInput;
@@ -222,7 +222,7 @@ namespace Cadenza
             this.ShowPhase(playerContainer, tracker.Phase);
         }
 
-        private void OnNavigate(Vector2 moveDirection, Player player)
+        private void OnNavigate(MoveDirection moveDirection, Player player)
         {
             // Ignore input from unjoined players.
             if (player == null || !this.playerTrackers.TryGetValue(player, out PlayerTracker tracker))
@@ -237,7 +237,7 @@ namespace Cadenza
             VisualElement cosmeticsPicker = container.Q<VisualElement>("c_CosmeticsPicker");
 
             // Move left or right.
-            if (Math.Abs(moveDirection.x) >= Math.Abs(moveDirection.y) && Math.Abs(moveDirection.x) > 0.2f)
+            if (moveDirection == MoveDirection.Left || moveDirection == MoveDirection.Right)
             {
                 // Select cosmetics.
                 if (cosmeticsPicker.ClassListContains("is_focus"))
@@ -249,7 +249,7 @@ namespace Cadenza
 
                 // Select character.
                 string currentChar = container.Q<Label>("update_CharacterName").text;
-                var shownCharacter = (moveDirection.x > 0)
+                var shownCharacter = moveDirection == MoveDirection.Right
                     ? this.classManager.GetNextCharacter(currentChar)
                     : this.classManager.GetPreviousCharacter(currentChar);
 
@@ -257,7 +257,7 @@ namespace Cadenza
             }
 
             // Move up or down.
-            else if (Math.Abs(moveDirection.y) > 0.2f)
+            else if (moveDirection == MoveDirection.Up || moveDirection == MoveDirection.Down)
             {
                 // Switch between selecting character or selecting cosmetics.
                 characterPicker.ToggleInClassList("is_focus");

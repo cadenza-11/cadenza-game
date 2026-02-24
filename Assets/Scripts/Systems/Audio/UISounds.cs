@@ -1,4 +1,4 @@
-using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Cadenza
 {
@@ -11,10 +11,12 @@ namespace Cadenza
             InputSystem.UIPlayerNavigate += this.OnUINavigate;
         }
 
-        private void OnUINavigate(Vector2 vector, Player player)
+        private void OnUINavigate(MoveDirection moveDirection, Player player)
         {
-            if (vector != Vector2.zero)
-                AudioSystem.PlayOneShot(Sound.UI.NavMove, immediate: true);
+            if (moveDirection == MoveDirection.None)
+                return;
+
+            AudioSystem.PlayOneShot(Sound.UI.NavMove, immediate: true);
         }
 
         private void OnUISubmit(Player player)

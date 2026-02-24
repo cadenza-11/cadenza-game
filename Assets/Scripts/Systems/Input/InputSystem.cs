@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Cadenza.Utils;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Haptics;
 using UnityEngine.InputSystem.UI;
@@ -34,6 +36,8 @@ namespace Cadenza
             { InputMap.UI, "UI" },
         };
 
+        private readonly Dictionary<Player, MoveDirection> previousNavigationDirections = new();
+
         private static InputSystem singleton;
 
         private PlayerInputManager playerInputManager;
@@ -45,7 +49,7 @@ namespace Cadenza
         private InputSystemUIInputModule uiInputModule;
         public static event Action<Player> UIPlayerSubmit;
         public static event Action<Player> UIPlayerCancel;
-        public static event Action<Vector2, Player> UIPlayerNavigate;
+        public static event Action<MoveDirection, Player> UIPlayerNavigate;
 
         public override void OnInitialize()
         {
@@ -103,10 +107,25 @@ namespace Cadenza
             var submitAction = player.Input.actions.FindAction("Submit", throwIfNotFound: true);
             var cancelAction = player.Input.actions.FindAction("Cancel", throwIfNotFound: true);
             var navigateAction = player.Input.actions.FindAction("Navigate", throwIfNotFound: true);
+            this.previousNavigationDirections[player] = MoveDirection.None;
 
             submitAction.performed += ctx => { if (ctx.performed) UIPlayerSubmit?.Invoke(player); };
             cancelAction.performed += ctx => { if (ctx.performed) UIPlayerCancel?.Invoke(player); };
-            navigateAction.performed += ctx => { if (ctx.performed) UIPlayerNavigate?.Invoke(ctx.ReadValue<Vector2>(), player); };
+            navigateAction.performed += ctx =>
+            {
+                if (!ctx.performed)
+                    return;
+
+                // Determine move direction.
+                // Avoid sending navigation events for the same direction consecutively.
+                var previousDirection = this.previousNavigationDirections[player];
+                var nextDirection = UI.GetMoveDirection(ctx.ReadValue<Vector2>());
+                this.previousNavigationDirections[player] = nextDirection;
+
+                if (nextDirection != MoveDirection.None &&
+                    nextDirection != previousDirection)
+                    UIPlayerNavigate?.Invoke(nextDirection, player);
+            };
         }
 
         private void RegisterPlayerDebugEvents(Player player)
