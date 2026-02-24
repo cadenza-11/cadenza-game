@@ -117,23 +117,12 @@ namespace Cadenza
             attackHeavyAction.performed += this.OnHit;
             attackTeamAction.performed += character.OnAttackTeam;
             pauseAction.performed += this.OnPause;
-
-            // UI map.
-            map = actionMaps.FindActionMap("UI", throwIfNotFound: true);
-            var unpauseAction = map.FindAction("Unpause", throwIfNotFound: true);
-            unpauseAction.performed += this.OnUnPause;
         }
 
         private void OnPause(InputAction.CallbackContext context)
         {
             if (context.performed)
                 GameManager.PauseGame(this);
-        }
-
-        private void OnUnPause(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                GameManager.UnpauseGame();
         }
 
         private void OnHit(InputAction.CallbackContext context)
@@ -160,8 +149,6 @@ namespace Cadenza
             attackLightAction.performed -= character.OnAttackLight;
             attackHeavyAction.performed -= character.OnAttackHeavy;
             attackTeamAction.performed -= character.OnAttackTeam;
-
-            // UI map.
         }
 
         #endregion

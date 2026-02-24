@@ -14,6 +14,8 @@ namespace Cadenza
         public override void OnInitialize()
         {
             // Grab elements.
+            this.root.RegisterCallback<NavigationCancelEvent>(evt => GameManager.UnpauseGame(), TrickleDown.TrickleDown);
+
             this.unpause = this.root.Q<Button>("b_Unpause");
             this.unpause.clicked += GameManager.UnpauseGame;
             Button settings = this.root.Q<Button>("b_Settings");
