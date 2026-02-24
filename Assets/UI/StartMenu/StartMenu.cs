@@ -5,8 +5,8 @@ namespace Cadenza
 {
     public class StartMenu : UIPanel
     {
-        [SerializeField] private UIPanel characterSelect;
-        [SerializeField] private UIPanel settingsMenu;
+        private UIPanel characterSelect;
+        private UIPanel settingsMenu;
 
         private VisualElement containerJoin;
         private VisualElement containerOptions;
@@ -19,6 +19,9 @@ namespace Cadenza
         #region System Events
         public override void OnInitialize()
         {
+            this.characterSelect = UISystem.FindPanel<CharacterSelect>();
+            this.settingsMenu = UISystem.FindPanel<SettingsMenu>();
+
             this.containerJoin = this.root.Q<VisualElement>("phase_Join");
             this.containerOptions = this.root.Q<VisualElement>("phase_Select");
 
@@ -27,7 +30,7 @@ namespace Cadenza
             this.buttonSettings = this.root.Q<Button>("b_Settings");
             this.buttonExit = this.root.Q<Button>("b_Exit");
 
-            this.buttonStartGame.clicked += this.OnCharacterSelect;
+            this.buttonStartGame.clicked += this.OnNewRun;
             this.buttonLastRun.clicked += this.OnLastRun;
             this.buttonSettings.clicked += this.OnSettings;
             this.buttonExit.clicked += this.OnExit;
@@ -94,10 +97,11 @@ namespace Cadenza
             this.buttonStartGame.Focus();
         }
 
-        private void OnCharacterSelect()
+        private void OnNewRun()
         {
             this.characterSelect.Show();
             this.Hide();
+            SaveSystem.DeleteTeamFile();
         }
 
         private void OnLastRun()
@@ -110,7 +114,7 @@ namespace Cadenza
             }
 
             TeamSystem.SetTeam(team);
-            this.OnCharacterSelect();
+            this.TransitionTo(this.characterSelect);
         }
 
         private void OnSettings()

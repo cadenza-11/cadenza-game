@@ -16,10 +16,10 @@ namespace Cadenza
         protected virtual InputMode UIInputMode { get; set; } = InputMode.None;
         protected virtual bool IsWorldSpace { get; set; } = false;
         protected virtual VisualElement InitialFocus { get; } = null;
+        protected UIPanel previousPanel;
         protected TemplateContainer root;
         private bool isInitialized;
 
-        public UIPanel previousPanel;
 
         private bool isVisible => this.root.style.display == DisplayStyle.Flex;
         public bool IsVisible => this.isVisible;
@@ -58,12 +58,6 @@ namespace Cadenza
 
             this.OnHide();
             this.root.style.display = DisplayStyle.None;
-
-            if (this.previousPanel != null)
-            {
-                this.previousPanel.Show();
-                this.previousPanel = null;
-            }
         }
 
         public void Toggle()
