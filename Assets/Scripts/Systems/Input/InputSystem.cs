@@ -58,10 +58,17 @@ namespace Cadenza
 
             this.uiInputModule = this.GetComponent<InputSystemUIInputModule>();
 
+            // The Input System UI Input Module will enable any map used in any of its
+            // bindings ("UI" map). This conflicts with the PlayerInput component, which
+            // disables all maps except the one configured to be the default map.
+
+            // Unless the PlayerInput default map is set to UI, disable the UI map here
+            // to prevent UI actions from triggering before initialization.
+            this.uiInputModule.actionsAsset.Disable();
+
             // Configure player input manager.
             this.joinedPlayersByID = new();
             this.playerInputManager = this.GetComponent<PlayerInputManager>();
-            this.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
             this.playerInputManager.onPlayerJoined += this.OnPlayerJoined;
             this.playerInputManager.onPlayerLeft += this.OnPlayerLeft;
         }
@@ -175,7 +182,7 @@ namespace Cadenza
         /// </summary>
         public static void EnableJoining()
         {
-            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenJoinActionIsTriggered;
+            singleton.playerInputManager.EnableJoining();
         }
 
 
@@ -184,7 +191,7 @@ namespace Cadenza
         /// </summary>
         public static void DisableJoining()
         {
-            singleton.playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+            singleton.playerInputManager.DisableJoining();
         }
 
         /// <summary>
