@@ -69,7 +69,7 @@ namespace Cadenza
 
                 // Initialize player container.
                 container.style.display = DisplayStyle.Flex;
-                container.Q<Label>("update_CharacterName").text = player.CharacterClass.Name;
+                container.Q<Label>("update_CharacterName").text = $"{player.Name} ({player.CharacterClass.Name})";
                 container.Q<VisualElement>("portrait_Character").style.backgroundImage = player.CharacterClass.Portrait;
 
                 // Initialize health.

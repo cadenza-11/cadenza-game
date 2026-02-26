@@ -167,10 +167,6 @@ namespace Cadenza
         {
             switch (args[0])
             {
-                case "save":
-                    SaveSystem.SaveRunToFile(this.GetFakeRun());
-                    break;
-
                 case "load":
                     bool success = SaveSystem.GetPreviousRuns(out Results[] results);
                     Debug.Log($"Successfully retrieved {results.Length} runs. (success={success})");
@@ -201,18 +197,6 @@ namespace Cadenza
                     SaveSystem.DeleteTeamFile();
                     break;
             }
-        }
-
-        private Results GetFakeRun()
-        {
-            Results results = new();
-            results.AddTeamScore(ScoreClass.Bad);
-            results.AddPlayerScore(1, ScoreClass.Bad);
-            results.AddPlayerScore(2, ScoreClass.OK);
-            results.AddPlayerScore(3, ScoreClass.Great);
-            results.AddPlayerScore(4, ScoreClass.Perfect);
-            results.AddPlayerScore(4, ScoreClass.Perfect);
-            return results;
         }
     }
 }

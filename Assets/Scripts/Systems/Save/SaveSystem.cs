@@ -321,7 +321,7 @@ public static class SaveSystem
         foreach (var scoreToken in root["PlayerScores"])
         {
             // Get score fields.
-            int playerID = scoreToken["ID"].Value<int>();
+            string playerName = scoreToken["Name"].Value<string>();
             JObject counts = (JObject)scoreToken["Counts"];
 
             // Get score counts.
@@ -334,7 +334,7 @@ public static class SaveSystem
                     continue;
 
                 for (int j = 0; j < count.Value<int>(); j++)
-                    results.AddPlayerScore(playerID, scoreClass);
+                    results.AddPlayerScore(playerName, scoreClass);
             }
         }
 

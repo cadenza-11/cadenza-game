@@ -9,21 +9,21 @@ namespace Cadenza
     /// </summary>
     public class Results
     {
-        private readonly Dictionary<int, ResultsDef> playerResults = new();
+        private readonly Dictionary<string, ResultsDef> playerResults = new();
         public readonly ResultsDef teamResults = new();
         public string TeamName = string.Empty;
         public DateTime Timestamp;
         public int HighestStreak;
 
-        public IReadOnlyDictionary<int, ResultsDef> PlayerResults => this.playerResults;
+        public IReadOnlyDictionary<string, ResultsDef> PlayerResults => this.playerResults;
         public ResultsDef TeamResults => this.teamResults;
 
-        public void AddPlayerScore(int playerID, ScoreClass scoreClass)
+        public void AddPlayerScore(string playerName, ScoreClass scoreClass)
         {
-            if (!this.playerResults.ContainsKey(playerID))
-                this.playerResults[playerID] = new ResultsDef();
+            if (!this.playerResults.ContainsKey(playerName))
+                this.playerResults[playerName] = new ResultsDef();
 
-            this.playerResults[playerID].AddScore(scoreClass);
+            this.playerResults[playerName].AddScore(scoreClass);
         }
 
         public void AddTeamScore(ScoreClass scoreClass)

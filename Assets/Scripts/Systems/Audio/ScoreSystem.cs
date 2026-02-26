@@ -193,7 +193,7 @@ namespace Cadenza
         {
             // Register individual hit.
             {
-                this.results.AddPlayerScore(def.PlayerID, def.Class);
+                this.results.AddPlayerScore(def.Player.Name, def.Class);
                 this.streakManager.UpdatePlayerStreak(def);
             }
 

@@ -43,8 +43,8 @@ public class Leaderboard : UIPanel, IInteractable
             StringBuilder sb = new();
             sb.AppendLine($"#{++i}. {teamName} ... {result.TeamResults.ScoreTotal}");
 
-            foreach ((int id, var playerResult) in result.PlayerResults)
-                sb.AppendLine($"\t Player {id + 1}: {playerResult.ScoreTotal} ({playerResult.Hits} hits)");
+            foreach ((string playerName, var playerResult) in result.PlayerResults)
+                sb.AppendLine($"\t {playerName}: {playerResult.ScoreTotal} ({playerResult.Hits} hits)");
 
             resultLine.Q<Label>().text = sb.ToString();
             resultsElement.Add(resultLine);

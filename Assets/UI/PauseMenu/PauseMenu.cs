@@ -7,7 +7,7 @@ namespace Cadenza
         protected override VisualElement InitialFocus => this.unpause;
         private SettingsMenu settingsMenu;
         private Button unpause;
-        private Label playerNumber;
+        private Label playerName;
 
         #region System Events
         public override void OnInitialize()
@@ -29,7 +29,7 @@ namespace Cadenza
             Button exit = this.root.Q<Button>("b_Close");
             exit.clicked += this.OnExit;
 
-            this.playerNumber = this.root.Q<Label>("update_PlayerNumber");
+            this.playerName = this.root.Q<Label>("txt_PlayerName");
 
             this.Hide();
 
@@ -43,7 +43,7 @@ namespace Cadenza
 
         private void OnGamePaused(Player player)
         {
-            this.playerNumber.text = (player.ID + 1).ToString();
+            this.playerName.text = player.Name;
             this.Show();
         }
 
