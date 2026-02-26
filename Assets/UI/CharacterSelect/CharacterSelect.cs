@@ -330,8 +330,8 @@ namespace Cadenza
                 NavNextHint = element.Q<VisualElement>("c_NavNext"),
             };
 
-            naming.Q<Button>("b_SubmitName").clicked += () => this.OnSubmitName(container);
-            naming.Q<Button>("b_CancelName").clicked += () => this.OnCancelName(container);
+            container.Keyboard.SubmitButton.clicked += () => this.OnSubmitName(container);
+            container.Keyboard.CancelButton.clicked += () => this.OnCancelName(container);
 
             this.ShowPhase(container, SelectPhase.None);
             return container;
@@ -347,9 +347,14 @@ namespace Cadenza
                     var tracker = this.playerTrackers[player];
                     if (tracker.Phase == SelectPhase.PlayerNaming)
                     {
-                        // Set name.
-                        player.Name = playerContainer.Keyboard.value;
-                        playerContainer.Container.Q<Label>("txt_PlayerName").text = playerContainer.Keyboard.value;
+                        // Don't allow empty names.
+                        var name = playerContainer.Keyboard.value;
+                        if (name != string.Empty)
+                        {
+                            // Set name.
+                            player.Name = name;
+                            playerContainer.Container.Q<Label>("txt_PlayerName").text = name;
+                        }
 
                         // Set phase.
                         this.playerTrackers[player].Phase = SelectPhase.CharacterSelection;

@@ -1,11 +1,7 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/BandNameSelect/BandNameSelect.uss?fileID=7433441132597879392&amp;guid=b4705eaa9d6e8b347b066564fe5fb2e9&amp;type=3#BandNameSelect" />
+    <Style src="project://database/Assets/UI/BandNameSelect/BandNameSelect.uss?fileID=7433441132597879392&amp;guid=b4705eaa9d6e8b347b066564fe5fb2e9&amp;type=3#BandNameSelect"/>
     <ui:VisualElement name="c_Background" style="flex-grow: 1; align-items: center; justify-content: center; background-image: url(&quot;project://database/Assets/Art/TEMPORARY_ASSETS/TEMP_BG_fm_green.jpg?fileID=2800000&amp;guid=55b1fc205837bad44abdfcb237a07ce5&amp;type=3#TEMP_BG_fm_green&quot;);">
-        <ui:Label text="Name your band!" name="txt_BandName" style="font-size: 100px; -unity-font-style: bold; -unity-text-outline-width: 10px; -unity-text-outline-color: rgb(26, 26, 26); color: rgb(255, 255, 255); letter-spacing: -5px;" />
-        <ui:VisualElement name="c_NameGeneration" style="flex-direction: row; align-self: center; align-items: center; width: 90%; justify-content: center;">
-            <ui:Button text="Randomize" name="b_RandomName" />
-            <ui:TextField placeholder-text="The Band" name="field_BandName" style="width: 60%;" />
-        </ui:VisualElement>
-        <ui:Button text="Confirm name" name="b_SetName" />
+        <ui:Label text="Name your band!" name="txt_BandName" style="font-size: 100px; -unity-font-style: bold; -unity-text-outline-width: 10px; -unity-text-outline-color: rgb(26, 26, 26); color: rgb(255, 255, 255); letter-spacing: -5px;"/>
+        <Cadenza.OnScreenKeyboard max-character-limit="32" keys-per-row="7" style="width: 882px; overflow: hidden;"/>
     </ui:VisualElement>
 </ui:UXML>

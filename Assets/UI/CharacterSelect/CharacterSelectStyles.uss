@@ -196,11 +196,22 @@
     width: 50px;
 }
 
+.on-screen-keyboard__key--delete {
+    background-color: rgba(0, 0, 0, 0.35);
+    background-image: url("project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_backspace_icon_alternative.png?fileID=2800000&guid=547c733283a826f40abf584cb15d917a&type=3#keyboard_backspace_icon_alternative");
+}
+
+.on-screen-keyboard__key--space {
+    background-color: rgba(0, 0, 0, 0.35);
+    background-image: url("project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_space_icon.png?fileID=2800000&guid=fe31055e0e0081b4687dee1f1531d7e8&type=3#keyboard_space_icon");
+}
+
 .on-screen-keyboard__keys {
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: center;
     align-self: center;
+    width: 340px;
 }
 
 .on-screen-keyboard__input {

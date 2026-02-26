@@ -20,6 +20,7 @@ namespace Cadenza
         private readonly List<Button> letterButtons = new();
         private readonly List<Button> keyButtons = new();
         private readonly Button deleteButton;
+        private readonly Button spaceButton;
         private readonly Button cancelButton;
         private readonly Button submitButton;
 
@@ -83,12 +84,6 @@ namespace Cadenza
         public Button CancelButton => this.cancelButton;
         public Button SubmitButton => this.submitButton;
         public int FocusedKeyIndex => this.focusedKeyIndex;
-        public Button FocusedKey => this.focusedKeyIndex >= 0 && this.focusedKeyIndex < this.keyButtons.Count
-            ? this.keyButtons[this.focusedKeyIndex]
-            : null;
-        public char? FocusedLetter => this.focusedKeyIndex >= 0 && this.focusedKeyIndex < Alphabet.Length
-            ? Alphabet[this.focusedKeyIndex]
-            : null;
 
         public OnScreenKeyboard()
         {
@@ -128,11 +123,22 @@ namespace Cadenza
                 keyButton.clicked += () => this.SetFocusedKeyIndex(buttonIndex);
             }
 
+            int spaceButtonIndex = this.keyButtons.Count;
+            this.spaceButton = new Button(() => this.AppendCharacter(' '))
+            {
+                name = "key_space",
+                focusable = false,
+            };
+            this.spaceButton.AddToClassList("on-screen-keyboard__key");
+            this.spaceButton.AddToClassList("on-screen-keyboard__key--space");
+            this.keyButtons.Add(this.spaceButton);
+            this.keysContainer.Add(this.spaceButton);
+            this.spaceButton.clicked += () => this.SetFocusedKeyIndex(spaceButtonIndex);
+
             int deleteButtonIndex = this.keyButtons.Count;
             this.deleteButton = new Button(this.DeleteLastCharacter)
             {
                 name = "key_delete",
-                text = "DELETE",
                 focusable = false,
             };
             this.deleteButton.AddToClassList("on-screen-keyboard__key");
@@ -207,6 +213,8 @@ namespace Cadenza
 
             if (focusedButton == this.deleteButton)
                 this.DeleteLastCharacter();
+            else if (focusedButton == this.spaceButton)
+                this.AppendCharacter(' ');
             else if (focusedButton == this.cancelButton || focusedButton == this.submitButton)
                 InvokeButtonSubmit(focusedButton);
             else
@@ -238,9 +246,6 @@ namespace Cadenza
             for (int i = 0; i < source.Length; i++)
             {
                 char upperChar = char.ToUpperInvariant(source[i]);
-                if (upperChar < 'A' || upperChar > 'Z')
-                    continue;
-
                 filteredBuilder.Append(upperChar);
                 if (filteredBuilder.Length >= this.maxCharacterLimit)
                     break;
@@ -310,8 +315,9 @@ namespace Cadenza
 
         private int GetActionRowStartIndex()
         {
-            // Letters + delete form the keyboard grid; cancel and submit are in the action row.
-            return this.letterButtons.Count + 1;
+            // Letters + delete + space form the keyboard grid;
+            // cancel and submit are in the action row.
+            return this.letterButtons.Count + 2;
         }
 
         private static void InvokeButtonSubmit(Button button)
