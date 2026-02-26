@@ -222,15 +222,16 @@ public static class SaveSystem
         var metadata = new JObject()
         {
             ["Timestamp"] = DateTime.UtcNow,
+            ["Level"] = results.LevelName,
         };
 
         // Save team member information.
         var members = new JArray();
-        foreach (var id in playerResults.Keys)
+        foreach (Results.PlayerDef player in playerResults.Keys)
         {
             members.Add(new JObject
             {
-                ["ID"] = id
+                ["Name"] = player.Name,
             });
         }
         var team = new JObject
@@ -254,7 +255,7 @@ public static class SaveSystem
         // Save player scores.
         var playerScores = new JArray();
         {
-            foreach ((var id, var result) in playerResults)
+            foreach ((var player, var result) in playerResults)
             {
                 // Save counts for each score class.
                 var counts = new JObject();
@@ -269,7 +270,8 @@ public static class SaveSystem
                 // Create score object.
                 var scoreObj = new JObject
                 {
-                    ["ID"] = id,
+                    ["Name"] = player.Name,
+                    ["ClassID"] = player.ClassID,
                     ["Counts"] = counts,
                     ["Score"] = result.ScoreTotal,
                 };
@@ -297,6 +299,7 @@ public static class SaveSystem
             // Set metadata.
             Timestamp = root["Metadata"]["Timestamp"]?.Value<DateTime>() ?? DateTime.MinValue,
             TeamName = root["Team"]["Name"]?.Value<string>() ?? string.Empty,
+            LevelName = root["Metadata"]["Level"]?.Value<string>() ?? string.Empty,
             HighestStreak = root["HighestStreak"]?.Value<int>() ?? 0
         };
 
@@ -321,7 +324,8 @@ public static class SaveSystem
         foreach (var scoreToken in root["PlayerScores"])
         {
             // Get score fields.
-            string playerName = scoreToken["Name"].Value<string>();
+            string playerName = scoreToken["Name"]?.Value<string>() ?? "Unnamed Player";
+            int classID = scoreToken["ClassID"]?.Value<int>() ?? -1;
             JObject counts = (JObject)scoreToken["Counts"];
 
             // Get score counts.
@@ -334,7 +338,7 @@ public static class SaveSystem
                     continue;
 
                 for (int j = 0; j < count.Value<int>(); j++)
-                    results.AddPlayerScore(playerName, scoreClass);
+                    results.AddPlayerScore((playerName, classID), scoreClass);
             }
         }
 

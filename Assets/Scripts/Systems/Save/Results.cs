@@ -9,21 +9,50 @@ namespace Cadenza
     /// </summary>
     public class Results
     {
-        private readonly Dictionary<string, ResultsDef> playerResults = new();
+        public struct PlayerDef
+        {
+            public int ID;
+            public string Name;
+            public int ClassID;
+
+            public override readonly bool Equals(object obj)
+            {
+                return obj is PlayerDef other && this.ID == other.ID;
+            }
+
+            public override readonly int GetHashCode()
+            {
+                return this.ID.GetHashCode();
+            }
+        }
+
+        private readonly Dictionary<PlayerDef, ResultsDef> playerResults = new();
         public readonly ResultsDef teamResults = new();
         public string TeamName = string.Empty;
+        public string LevelName = string.Empty;
         public DateTime Timestamp;
         public int HighestStreak;
 
-        public IReadOnlyDictionary<string, ResultsDef> PlayerResults => this.playerResults;
+        public IReadOnlyDictionary<PlayerDef, ResultsDef> PlayerResults => this.playerResults;
         public ResultsDef TeamResults => this.teamResults;
 
-        public void AddPlayerScore(string playerName, ScoreClass scoreClass)
+        public void AddPlayerScore(Player player, ScoreClass scoreClass)
         {
-            if (!this.playerResults.ContainsKey(playerName))
-                this.playerResults[playerName] = new ResultsDef();
+            this.AddPlayerScore((player.Name, player.CharacterClass.ID), scoreClass);
+        }
 
-            this.playerResults[playerName].AddScore(scoreClass);
+        public void AddPlayerScore((string name, int classID) player, ScoreClass scoreClass)
+        {
+            var playerDef = new PlayerDef()
+            {
+                Name = player.name,
+                ClassID = player.classID
+            };
+
+            if (!this.playerResults.ContainsKey(playerDef))
+                this.playerResults[playerDef] = new ResultsDef();
+
+            this.playerResults[playerDef].AddScore(scoreClass);
         }
 
         public void AddTeamScore(ScoreClass scoreClass)

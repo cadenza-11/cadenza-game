@@ -19,5 +19,20 @@ namespace Cadenza
                 return maxID;
             }
         }
+
+        public bool TryGetCharacterByID(int classID, out CharacterClass characterClass)
+        {
+            foreach (var charClass in this.Values)
+            {
+                if (charClass.ID == classID)
+                {
+                    characterClass = charClass;
+                    return true;
+                }
+            }
+
+            characterClass = null;
+            return false;
+        }
     }
 }

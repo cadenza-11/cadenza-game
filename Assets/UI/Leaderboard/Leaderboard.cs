@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Text;
 using Cadenza;
+using Cadenza.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -37,14 +38,23 @@ public class Leaderboard : UIPanel, IInteractable
         int i = 0;
         foreach (var result in this.results)
         {
+            string time = UI.GetHumanizedTime(result.Timestamp);
             string teamName = string.IsNullOrEmpty(result.TeamName) ? "Unnamed Team" : result.TeamName;
+            string levelName = string.IsNullOrEmpty(result.LevelName) ? "Unnamed Level" : result.LevelName;
             var resultLine = this.resultLineAsset.CloneTree();
 
             StringBuilder sb = new();
-            sb.AppendLine($"#{++i}. {teamName} ... {result.TeamResults.ScoreTotal}");
+            sb.AppendLine($"#{++i}. {teamName} in {levelName} ... {result.TeamResults.ScoreTotal}pts ({time})");
 
-            foreach ((string playerName, var playerResult) in result.PlayerResults)
-                sb.AppendLine($"\t {playerName}: {playerResult.ScoreTotal} ({playerResult.Hits} hits)");
+            foreach ((var playerDef, var playerResult) in result.PlayerResults)
+            {
+                string playerClassText = TeamSystem.AvailableClasses
+                    .TryGetCharacterByID(playerDef.ClassID, out var characterClass)
+                        ? $" ({characterClass.Name})"
+                        : string.Empty;
+
+                sb.AppendLine($"\t {playerDef.Name}{playerClassText}: {playerResult.ScoreTotal} ({playerResult.Hits} hits)");
+            }
 
             resultLine.Q<Label>().text = sb.ToString();
             resultsElement.Add(resultLine);

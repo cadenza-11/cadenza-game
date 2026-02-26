@@ -145,8 +145,11 @@ namespace Cadenza
         public override void OnGameStart()
         {
             this.playerHitsThisBeat.Clear();
-            this.results = new();
-            this.results.TeamName = TeamSystem.TeamName;
+            this.results = new()
+            {
+                TeamName = TeamSystem.TeamName,
+                LevelName = ApplicationController.CurrentLevel.Name
+            };
 
             // Prepare team hits.
             this.playerIdScratch = new int[PlayerSystem.PlayerCount];
@@ -193,7 +196,7 @@ namespace Cadenza
         {
             // Register individual hit.
             {
-                this.results.AddPlayerScore(def.Player.Name, def.Class);
+                this.results.AddPlayerScore(def.Player, def.Class);
                 this.streakManager.UpdatePlayerStreak(def);
             }
 
