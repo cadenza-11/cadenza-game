@@ -27,9 +27,7 @@ namespace Cadenza
             public VisualElement CalibrationContainer;
             public VisualElement CharacterSelectionContainer;
             public VisualElement NamingContainer;
-            public Label InputtedName;
-            public Button SubmitNameButton;
-            public Button CancelNameButton;
+            public OnScreenKeyboard Keyboard;
             public VisualElement ReadyContainer;
             public VisualElement NavBackHint;
             public VisualElement NavNextHint;
@@ -169,6 +167,7 @@ namespace Cadenza
 
                 // (This phase has its own phase handling.)
                 case SelectPhase.PlayerNaming:
+                    playerContainer.Keyboard.OnSubmit();
                     break;
 
                 // Select character and ready up.
@@ -218,6 +217,7 @@ namespace Cadenza
 
                 // (This phase has its own phase handling.)
                 case SelectPhase.PlayerNaming:
+                    playerContainer.Keyboard.OnCancel();
                     break;
 
                 // Back to calibrating.
@@ -242,40 +242,44 @@ namespace Cadenza
             if (player == null || !this.playerTrackers.TryGetValue(player, out PlayerTracker tracker))
                 return;
 
-            // Currently, only character select phase handles movement navigation.
-            if (tracker.Phase != SelectPhase.CharacterSelection)
-                return;
-
-            VisualElement container = this.playerContainers[player.ID].CharacterSelectionContainer;
-            VisualElement characterPicker = container.Q<VisualElement>("c_CharacterPicker");
-            VisualElement cosmeticsPicker = container.Q<VisualElement>("c_CosmeticsPicker");
-
-            // Move left or right.
-            if (moveDirection == MoveDirection.Left || moveDirection == MoveDirection.Right)
+            if (tracker.Phase == SelectPhase.CharacterSelection)
             {
-                // Select cosmetics.
-                if (cosmeticsPicker.ClassListContains("is_focus"))
+                VisualElement container = this.playerContainers[player.ID].CharacterSelectionContainer;
+                VisualElement characterPicker = container.Q<VisualElement>("c_CharacterPicker");
+                VisualElement cosmeticsPicker = container.Q<VisualElement>("c_CosmeticsPicker");
+
+                // Move left or right.
+                if (moveDirection == MoveDirection.Left || moveDirection == MoveDirection.Right)
                 {
-                    // TODO: Implement //
-                    Debug.LogWarning("There are no cosmetics.");
-                    return;
+                    // Select cosmetics.
+                    if (cosmeticsPicker.ClassListContains("is_focus"))
+                    {
+                        // TODO: Implement //
+                        Debug.LogWarning("There are no cosmetics.");
+                        return;
+                    }
+
+                    // Select character.
+                    string currentChar = container.Q<Label>("update_CharacterName").text;
+                    var shownCharacter = moveDirection == MoveDirection.Right
+                        ? this.classManager.GetNextCharacter(currentChar)
+                        : this.classManager.GetPreviousCharacter(currentChar);
+
+                    this.ChangeShownCharacter(container, shownCharacter);
                 }
 
-                // Select character.
-                string currentChar = container.Q<Label>("update_CharacterName").text;
-                var shownCharacter = moveDirection == MoveDirection.Right
-                    ? this.classManager.GetNextCharacter(currentChar)
-                    : this.classManager.GetPreviousCharacter(currentChar);
-
-                this.ChangeShownCharacter(container, shownCharacter);
+                // Move up or down.
+                else if (moveDirection == MoveDirection.Up || moveDirection == MoveDirection.Down)
+                {
+                    // Switch between selecting character or selecting cosmetics.
+                    characterPicker.ToggleInClassList("is_focus");
+                    cosmeticsPicker.ToggleInClassList("is_focus");
+                }
             }
-
-            // Move up or down.
-            else if (moveDirection == MoveDirection.Up || moveDirection == MoveDirection.Down)
+            else if (tracker.Phase == SelectPhase.PlayerNaming)
             {
-                // Switch between selecting character or selecting cosmetics.
-                characterPicker.ToggleInClassList("is_focus");
-                cosmeticsPicker.ToggleInClassList("is_focus");
+                var keyboard = this.playerContainers[player.ID].Keyboard;
+                keyboard.OnNavigate(moveDirection);
             }
         }
 
@@ -320,16 +324,14 @@ namespace Cadenza
                 CalibrationContainer = calibration,
                 CharacterSelectionContainer = selection,
                 NamingContainer = naming,
-                InputtedName = naming.Q<Label>("input"),
-                SubmitNameButton = naming.Q<Button>("b_SubmitName"),
-                CancelNameButton = naming.Q<Button>("b_CancelName"),
+                Keyboard = naming.Q<OnScreenKeyboard>(),
                 ReadyContainer = ready,
                 NavBackHint = element.Q<VisualElement>("c_NavBack"),
                 NavNextHint = element.Q<VisualElement>("c_NavNext"),
             };
 
-            container.SubmitNameButton.clicked += () => this.OnSubmitName(container);
-            container.CancelNameButton.clicked += () => this.OnCancelName(container);
+            naming.Q<Button>("b_SubmitName").clicked += () => this.OnSubmitName(container);
+            naming.Q<Button>("b_CancelName").clicked += () => this.OnCancelName(container);
 
             this.ShowPhase(container, SelectPhase.None);
             return container;
@@ -346,8 +348,8 @@ namespace Cadenza
                     if (tracker.Phase == SelectPhase.PlayerNaming)
                     {
                         // Set name.
-                        player.Name = playerContainer.InputtedName.text;
-                        playerContainer.Container.Q<Label>("txt_PlayerName").text = playerContainer.InputtedName.text;
+                        player.Name = playerContainer.Keyboard.value;
+                        playerContainer.Container.Q<Label>("txt_PlayerName").text = playerContainer.Keyboard.value;
 
                         // Set phase.
                         this.playerTrackers[player].Phase = SelectPhase.CharacterSelection;
