@@ -75,7 +75,11 @@ namespace Cadenza
                 // Initialize health.
                 ProgressBar health = container.Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
                 health.highValue = player.Character.MaxHealth;
-                player.Character.HealthChanged += (healthValue) => this.OnHealthChanged(healthValue, health);
+                player.Character.HealthChanged += (healthValue, isFainted) => {
+                    this.OnHealthChanged(healthValue, health);
+                    if (isFainted) container.AddToClassList("fainted");
+                    else container.RemoveFromClassList("fainted");
+                };
 
                 // Initialize flow.
                 ProgressBar flow = container.Q<VisualElement>("c_FlowBar").Q<ProgressBar>("bar");

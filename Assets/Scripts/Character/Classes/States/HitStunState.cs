@@ -14,6 +14,7 @@ namespace Cadenza
 
         public void Enter(Character character)
         {
+            character.Animator.SetTrigger("IsHit");
             character.Schedule(this.duration, () =>
             {
                 if (!character.isFainted)

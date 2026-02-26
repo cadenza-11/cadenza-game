@@ -1,6 +1,29 @@
 :root {
 }
 
+.player_container {
+    flex-direction: row;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    background-color: rgba(0, 0, 0, 0.31);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    border-left-color: rgba(255, 255, 255, 0.5);
+    border-right-color: rgba(255, 255, 255, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+    align-items: center;
+}
+
+.fainted .player_container {
+    -unity-background-image-tint-color: rgb(139, 0, 0);
+    background-color: rgba(139, 0, 0, 0.68);
+}
+
 .player_meter {
     flex-grow: 0;
     flex-direction: row;
@@ -55,4 +78,30 @@
     color: rgb(0, 255, 0);
 }
 
+.faint_text {
+    position: absolute;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    font-size: 100px;
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -unity-text-outline-width: 7px;
+    letter-spacing: -3px;
+    background-color: rgba(26, 26, 26, 0.45);
+}
 
+.player_container .faint_text {
+    opacity: 0;
+}
+
+.player_container.fainted .faint_text {
+    opacity: 1;
+}

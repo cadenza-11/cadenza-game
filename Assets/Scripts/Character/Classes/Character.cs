@@ -32,7 +32,7 @@ namespace Cadenza
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
-        public event Action<float> HealthChanged;
+        public event Action<float, bool> HealthChanged;
         public event Action<float> FlowChanged;
 
         private float flow;
@@ -182,21 +182,20 @@ namespace Cadenza
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 4, immediate: false);
         }
 
-        public void DoDamage(int damage)
+        public void TakeDamage(int damage)
         {
             this.SetHealth(this.currentHealth - damage);
-            this.Animator.SetTrigger("IsHit");
         }
 
         public void SetHealth(float health)
         {
-            this.currentHealth = Mathf.Clamp(this.currentHealth + health, 0.0f, this.maxHealth);
-            HealthChanged?.Invoke(this.currentHealth);
-
-            if (this.currentHealth <= 0f)
+            if (health <= 0f)
                 this.ChangeState(this.fainted);
-            else
+            else if (health < this.currentHealth)
                 this.ChangeState(this.hitStun.WithDuration(this.attackDuration));
+
+            this.currentHealth = Mathf.Clamp(health, 0.0f, this.maxHealth);
+            this.HealthChanged?.Invoke(this.currentHealth, this.isFainted);
         }
 
         private void OnPlayerHit(ScoreDef def)

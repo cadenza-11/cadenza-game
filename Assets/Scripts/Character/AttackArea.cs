@@ -26,7 +26,7 @@ public class AttackArea : MonoBehaviour
         if (collider.CompareTag("Player"))
         {
             Character hitEntity = collider.gameObject.GetComponent<Character>();
-            hitEntity.DoDamage(this.damage);
+            hitEntity.TakeDamage(this.damage);
         }
         if (collider.CompareTag("Enemy"))
         {
