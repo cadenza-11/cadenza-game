@@ -23,6 +23,8 @@ namespace Cadenza
             singleton = this;
 
             this.isCharacterFlowing = new(singleton.availableClasses.Values.Length);
+
+            SaveSystem.TeamFileDeleted += DeleteTeam;
         }
 
         #region Team Creation
@@ -53,14 +55,7 @@ namespace Cadenza
 
         public static void DeleteTeam()
         {
-            if (ApplicationController.State != ApplicationState.Pregame)
-            {
-                Debug.LogWarning("Cannot delete the current team in the current state. Delete the team in a pregame menu.");
-                return;
-            }
-
             team = null;
-            SaveSystem.DeleteTeamFile();
         }
 
         #endregion
