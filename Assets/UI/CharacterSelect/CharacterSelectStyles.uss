@@ -191,3 +191,17 @@
     -unity-text-align: middle-center;
     white-space: normal;
 }
+
+.on-screen-keyboard__key {
+    width: 50px;
+}
+
+.on-screen-keyboard__keys {
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.on-screen-keyboard__input {
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.35);
+}

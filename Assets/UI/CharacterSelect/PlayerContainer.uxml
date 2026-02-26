@@ -1,0 +1,15 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles"/>
+    <ui:Label name="txt_PlayerName" class="player-number" style="height: 80px;"/>
+    <ui:VisualElement name="c_Phase" class="player"/>
+    <ui:VisualElement name="c_NavHints" class="navigation_hints">
+        <ui:VisualElement name="c_NavBack" class="navigation_back">
+            <ui:VisualElement name="icon_Back" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=5923138177525885446&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left&quot;);"/>
+            <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_escape.png?fileID=2800000&amp;guid=c773e945f7894b74d84422743928f7fa&amp;type=3#keyboard_escape" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_button_b.png?fileID=2800000&amp;guid=88f2619711b705f4098becae865eb3a2&amp;type=3#xbox_button_b" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_button_circle.png?fileID=2800000&amp;guid=9abe050724e624e439d6c64240bb0fec&amp;type=3#playstation_button_circle" shown-controls="All" hint-size="50" name="InputHint"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="c_NavNext" class="navigation_next">
+            <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_space.png?fileID=2800000&amp;guid=a4ab0592a93d0e9408679ffdb87121cc&amp;type=3#keyboard_space" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_button_a.png?fileID=2800000&amp;guid=51eee82db9e9ea748a250ae4360e6e68&amp;type=3#xbox_button_a" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_button_cross.png?fileID=2800000&amp;guid=d80eacf870625d54799be19ee800a269&amp;type=3#playstation_button_cross" shown-controls="All" hint-size="50" name="InputHint"/>
+            <ui:VisualElement name="icon_Next" class="navigation_icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-4521532143779581420&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-right&quot;);"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

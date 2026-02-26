@@ -26,6 +26,10 @@ namespace Cadenza
             public VisualElement JoiningContainer;
             public VisualElement CalibrationContainer;
             public VisualElement CharacterSelectionContainer;
+            public VisualElement NamingContainer;
+            public Label InputtedName;
+            public Button SubmitNameButton;
+            public Button CancelNameButton;
             public VisualElement ReadyContainer;
             public VisualElement NavBackHint;
             public VisualElement NavNextHint;
@@ -37,6 +41,7 @@ namespace Cadenza
             Joining,
             CalibratingInProgress,
             CalibratingDone,
+            PlayerNaming,
             CharacterSelection,
             Ready
         }
@@ -59,6 +64,7 @@ namespace Cadenza
         [SerializeField] private VisualTreeAsset joiningTemplate;
         [SerializeField] private VisualTreeAsset calibrationTemplate;
         [SerializeField] private VisualTreeAsset characterSelectionTemplate;
+        [SerializeField] private VisualTreeAsset namingTemplate;
         [SerializeField] private VisualTreeAsset readyTemplate;
         [SerializeField] private int requiredCalibrationAttempts;
 
@@ -156,9 +162,13 @@ namespace Cadenza
                         tracker.Phase = SelectPhase.CalibratingDone;
                     break;
 
-                // Proceed to character select.
+                // Proceed to player naming.
                 case SelectPhase.CalibratingDone:
-                    tracker.Phase = SelectPhase.CharacterSelection;
+                    tracker.Phase = SelectPhase.PlayerNaming;
+                    break;
+
+                // (This phase has its own phase handling.)
+                case SelectPhase.PlayerNaming:
                     break;
 
                 // Select character and ready up.
@@ -206,10 +216,14 @@ namespace Cadenza
                     tracker.Phase = SelectPhase.CalibratingInProgress;
                     break;
 
+                // (This phase has its own phase handling.)
+                case SelectPhase.PlayerNaming:
+                    break;
+
                 // Back to calibrating.
                 case SelectPhase.CharacterSelection:
                     this.ResetCalibration(player);
-                    tracker.Phase = SelectPhase.CalibratingInProgress;
+                    tracker.Phase = SelectPhase.PlayerNaming;
                     break;
 
                 // Deselect character and unready.
@@ -290,10 +304,12 @@ namespace Cadenza
             var calibration = this.calibrationTemplate.Instantiate();
             var selection = this.characterSelectionTemplate.Instantiate();
             var ready = this.readyTemplate.Instantiate();
+            var naming = this.namingTemplate.Instantiate();
 
             phaseContainer.Clear();
             phaseContainer.Add(joining);
             phaseContainer.Add(calibration);
+            phaseContainer.Add(naming);
             phaseContainer.Add(selection);
             phaseContainer.Add(ready);
 
@@ -303,13 +319,60 @@ namespace Cadenza
                 JoiningContainer = joining,
                 CalibrationContainer = calibration,
                 CharacterSelectionContainer = selection,
+                NamingContainer = naming,
+                InputtedName = naming.Q<Label>("input"),
+                SubmitNameButton = naming.Q<Button>("b_SubmitName"),
+                CancelNameButton = naming.Q<Button>("b_CancelName"),
                 ReadyContainer = ready,
                 NavBackHint = element.Q<VisualElement>("c_NavBack"),
                 NavNextHint = element.Q<VisualElement>("c_NavNext"),
             };
 
+            container.SubmitNameButton.clicked += () => this.OnSubmitName(container);
+            container.CancelNameButton.clicked += () => this.OnCancelName(container);
+
             this.ShowPhase(container, SelectPhase.None);
             return container;
+        }
+
+        private void OnSubmitName(PlayerContainer playerContainer)
+        {
+            for (int i = 0; i < this.playerContainers.Length; i++)
+            {
+                if (this.playerContainers[i] == playerContainer &&
+                    PlayerSystem.TryGetPlayerByID(i, out Player player))
+                {
+                    var tracker = this.playerTrackers[player];
+                    if (tracker.Phase == SelectPhase.PlayerNaming)
+                    {
+                        // Set name.
+                        player.Name = playerContainer.InputtedName.text;
+                        playerContainer.Container.Q<Label>("txt_PlayerName").text = playerContainer.InputtedName.text;
+
+                        // Set phase.
+                        this.playerTrackers[player].Phase = SelectPhase.CharacterSelection;
+                        this.ShowPhase(playerContainer, tracker.Phase);
+                    }
+                }
+            }
+        }
+
+        private void OnCancelName(PlayerContainer playerContainer)
+        {
+            for (int i = 0; i < this.playerContainers.Length; i++)
+            {
+                if (this.playerContainers[i] == playerContainer &&
+                    PlayerSystem.TryGetPlayerByID(i, out Player player))
+                {
+                    var tracker = this.playerTrackers[player];
+                    if (tracker.Phase == SelectPhase.PlayerNaming)
+                    {
+                        // Set phase.
+                        this.playerTrackers[player].Phase = SelectPhase.CalibratingInProgress;
+                        this.ShowPhase(playerContainer, tracker.Phase);
+                    }
+                }
+            }
         }
 
         private void ShowPhase(PlayerContainer playerContainer, SelectPhase phase)
@@ -337,6 +400,10 @@ namespace Cadenza
 
             playerContainer.ReadyContainer.style.display =
                 phase == SelectPhase.Ready
+                ? DisplayStyle.Flex : DisplayStyle.None;
+
+            playerContainer.NamingContainer.style.display =
+                phase == SelectPhase.PlayerNaming
                 ? DisplayStyle.Flex : DisplayStyle.None;
 
             playerContainer.NavBackHint.style.opacity =
@@ -514,6 +581,9 @@ namespace Cadenza
             container.CharacterSelectionContainer.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
             container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
 
+            // Set player name.
+            container.Container.Q<Label>("txt_PlayerName").text = player.Name;
+
             // Advance phase.
             this.ShowPhase(container, SelectPhase.CalibratingInProgress);
         }
@@ -562,6 +632,9 @@ namespace Cadenza
 
             var playerContainerElement = this.playerContainers[player.ID].Container;
             playerContainerElement.UpdateInputHintsInHierarchy(controller);
+
+            // Set player name.
+            playerContainerElement.Q<Label>("txt_PlayerName").text = player.Name;
 
             Debug.Log($"Player {player.ID} joined with controller: {player.Input.devices[0]}");
         }

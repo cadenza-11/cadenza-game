@@ -141,8 +141,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.StartMenu
   uiDocument: {fileID: 9159775407750005689}
-  characterSelect: {fileID: 6621624212274879057}
-  settingsMenu: {fileID: 7560857650547749923}
 --- !u!1 &2692221720898030820
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +263,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.PauseMenu
   uiDocument: {fileID: 7893745333986377073}
-  settingsMenu: {fileID: 7560857650547749923}
 --- !u!1 &3937496575230460264
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,6 +487,7 @@ GameObject:
   - component: {fileID: 5971180210531556566}
   - component: {fileID: 6410242120360780059}
   - component: {fileID: 6621624212274879057}
+  - component: {fileID: 1979370985704355208}
   m_Layer: 0
   m_Name: CharacterSelect
   m_TagString: Untagged
@@ -553,8 +551,31 @@ MonoBehaviour:
   joiningTemplate: {fileID: 9197481963319205126, guid: 6ee44ba837057d747af63936c731ab68, type: 3}
   calibrationTemplate: {fileID: 9197481963319205126, guid: ae3a027b0a7e9db4084daba4f8738a42, type: 3}
   characterSelectionTemplate: {fileID: 9197481963319205126, guid: e4afe7d3158a4f64cbb51db220e56c30, type: 3}
+  namingTemplate: {fileID: 9197481963319205126, guid: 357a4e3578bad184ebca6354e0c455ee, type: 3}
   readyTemplate: {fileID: 9197481963319205126, guid: 1b13ae536d2e7e44b8064fc2396375e3, type: 3}
   requiredCalibrationAttempts: 4
+--- !u!114 &1979370985704355208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5506390662181233078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19106, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.PanelInputConfiguration
+  m_Settings:
+    m_ProcessWorldSpaceInput: 0
+    m_InteractionLayers:
+      serializedVersion: 2
+      m_Bits: 251
+    m_MaxInteractionDistance: Infinity
+    m_DefaultEventCameraIsMainCamera: 1
+    m_EventCameras: []
+    m_PanelInputRedirection: 0
+    m_AutoCreatePanelComponents: 1
 --- !u!1 &6869839045911253032
 GameObject:
   m_ObjectHideFlags: 0

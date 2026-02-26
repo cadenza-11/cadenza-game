@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles"/>
+    <Cadenza.OnScreenKeyboard max-character-limit="8" style="align-self: center;"/>
+    <ui:VisualElement style="flex-direction: row; justify-content: space-around; margin-top: 20px;">
+        <ui:Button text="Cancel" name="b_CancelName" style="flex-grow: 1;"/>
+        <ui:Button text="Submit" name="b_SubmitName" style="flex-grow: 1;"/>
+    </ui:VisualElement>
+</ui:UXML>

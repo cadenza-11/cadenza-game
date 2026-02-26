@@ -12,7 +12,7 @@ namespace Cadenza
         public CharacterClass CharacterClass { get; private set; }
         public Character Character { get; private set; }
         public PlayerInput Input { get; private set; }
-        public string Name => this.name;
+        public string Name;
         public double Latency => ScoreSystem.GetInputLatencyForPlayer(this);
 
         public event Action<ScoreDef> PlayerHit;
@@ -36,6 +36,7 @@ namespace Cadenza
         {
             this.ID = id;
             this.Input = input;
+            this.Name = $"Player {id + 1}";
         }
 
         internal void SetCharacterClass(CharacterClass characterClass)
