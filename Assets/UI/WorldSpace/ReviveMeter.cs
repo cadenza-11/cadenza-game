@@ -8,7 +8,7 @@ public class ReviveMeter : MonoBehaviour
     private ProgressBar reviveMeter;
     private InputHint inputHint;
 
-    void Start()
+    void Awake()
     {
         this.reviveMeter = this.uiDocument.rootVisualElement.Q<ProgressBar>();
         this.inputHint = this.uiDocument.rootVisualElement.Q<InputHint>();

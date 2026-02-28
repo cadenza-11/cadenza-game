@@ -25,7 +25,7 @@ namespace Cadenza
         private bool isVisible => this.root.style.display == DisplayStyle.Flex;
         public bool IsVisible => this.isVisible;
 
-        void Start()
+        void Awake()
         {
             if (this.IsWorldSpace && !this.isInitialized)
                 this.Initialize();
