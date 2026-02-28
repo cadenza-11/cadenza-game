@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cadenza.Combo;
+using UnityEngine.InputSystem.DualShock;
+using UnityEngine.InputSystem.XInput;
 
 namespace Cadenza
 {
@@ -19,6 +21,7 @@ namespace Cadenza
         [SerializeField] public SpriteRenderer Sprite;
         [SerializeField] public Animator Animator;
         [SerializeField] private AccuracyBar accuracyBar;
+        [SerializeField] public ReviveMeter RevivalMeter;
         [SerializeField] private InteractionIndicator interactionIndicator;
         [SerializeField] public ComboManager comboM;
         [SerializeField] public int baseLightDamage;
@@ -37,6 +40,9 @@ namespace Cadenza
 
         private float flow;
         private float flowThreshold = 5f;
+
+        private float revive;
+        private float reviveThreshold = 10f;
 
         public class Input
         {
@@ -87,6 +93,18 @@ namespace Cadenza
 
             // Set default state.
             this.ChangeState(this.walking);
+
+            // Set input hints.
+            var controller = this.Player.Input.devices[0] switch
+            {
+                Keyboard or Mouse => ControllerType.Keyboard,
+                XInputController => ControllerType.Xbox,
+                DualShockGamepad => ControllerType.PlayStation,
+                _ => ControllerType.All,
+            };
+            this.RevivalMeter.SetInputHint(controller);
+            this.RevivalMeter.SetThreshold(this.reviveThreshold);
+            this.RevivalMeter.Hide();
         }
 
         void OnDestroy()
@@ -111,6 +129,8 @@ namespace Cadenza
 
             // Update flow.
             this.SetFlow(this.flow - 0.03f);
+
+            this.SetRevive(this.revive - 0.03f);
 
             if (this.HasFlowBuff(3))
                 this.SetHealth(this.currentHealth + 0.01f);
@@ -211,7 +231,8 @@ namespace Cadenza
                 ScoreClass.Bad => -1.0f,
                 _ => 0.0f
             };
-            this.SetFlow(this.flow + value);
+            if (this.isFainted) this.SetRevive(this.revive + value);
+            else this.SetFlow(this.flow + value);
         }
 
         #endregion
@@ -224,19 +245,19 @@ namespace Cadenza
 
         public void OnAttackLight(InputAction.CallbackContext context)
         {
-            if (context.performed)
+            if (context.performed && !this.isFainted)
                 this.input.wantLight = true;
         }
 
         public void OnAttackHeavy(InputAction.CallbackContext context)
         {
-            if (context.performed)
+            if (context.performed && !this.isFainted)
                 this.input.wantHeavy = true;
         }
 
         public void OnAttackTeam(InputAction.CallbackContext context)
         {
-            if (context.performed)
+            if (context.performed && !this.isFainted)
                 this.input.wantTeam = true;
         }
 
@@ -263,6 +284,19 @@ namespace Cadenza
                 this.isFlowing = false;
             }
         }
+
+        #endregion
+
+        #region Revive
+
+        private void SetRevive(float revive)
+        {
+            this.revive = Mathf.Clamp(revive, 0.0f, 20.0f);
+            this.RevivalMeter.SetRevive(this.revive);
+            if (this.revive >= this.reviveThreshold)
+                this.ChangeState(this.walking);
+        }
+        
         #endregion
     }
 }

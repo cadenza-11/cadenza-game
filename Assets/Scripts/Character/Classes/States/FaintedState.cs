@@ -6,17 +6,16 @@ namespace Cadenza
         {
             character.isFainted = true;
             character.Animator.SetBool("IsFainted", true);
-
-            // TEMP: Revive self after fainting.
-            character.Schedule(2.0f, () => character.ChangeState(character.walking));
+            character.RevivalMeter.Show();
         }
 
         public void Exit(Character character)
         {
             character.isFainted = false;
             character.Animator.SetBool("IsFainted", false);
+            character.RevivalMeter.Hide();
 
-            character.SetHealth(character.maxHealth);
+            character.SetHealth(character.maxHealth/2);
         }
 
         public void FixedUpdate(Character character)
