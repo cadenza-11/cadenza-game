@@ -1,3 +1,7 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:Label text="Label" name="line" style="font-size: 30px; color: rgb(255, 255, 255);" />
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="result-entry" class="result-entry">
+        <ui:Foldout name="result-foldout" text="Result" value="false" class="result-foldout">
+            <ui:VisualElement name="player-stats" class="player-stats" />
+        </ui:Foldout>
+    </ui:VisualElement>
 </ui:UXML>

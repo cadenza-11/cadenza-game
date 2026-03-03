@@ -1,0 +1,169 @@
+:root {
+    --leaderboard-bg: rgba(0, 0, 0, 0.78);
+    --leaderboard-border: rgba(255, 255, 255, 0.2);
+    --leaderboard-card-bg: rgba(255, 255, 255, 0.06);
+    --leaderboard-card-focus-bg: rgba(255, 143, 26, 0.16);
+    --leaderboard-text: rgb(244, 244, 244);
+    --leaderboard-muted: rgba(230, 230, 230, 0.84);
+    --leaderboard-accent: rgb(255, 143, 26);
+}
+
+.leaderboard-root {
+    flex-grow: 1;
+    background-color: var(--leaderboard-bg);
+    border-top-width: 10px;
+    border-right-width: 10px;
+    border-bottom-width: 10px;
+    border-left-width: 10px;
+    border-top-color: var(--leaderboard-border);
+    border-right-color: var(--leaderboard-border);
+    border-bottom-color: var(--leaderboard-border);
+    border-left-color: var(--leaderboard-border);
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&guid=e3265ab4bf004d28a9537516768c1c75&type=3#LiberationSans");
+}
+
+.leaderboard-ribbon {
+    flex-grow: 0;
+    flex-direction: row;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    align-items: center;
+    min-height: 86px;
+}
+
+.leaderboard-exit {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    margin-right: 24px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-image: url("project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=5866165431930342980&guid=f95dbedc287fb481ca8a830e99c754e3&type=3#Remove@2x");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.leaderboard-exit:hover,
+.leaderboard-exit:focus {
+    background-color: rgba(255, 143, 26, 0.2);
+}
+
+.leaderboard-title {
+    color: var(--leaderboard-text);
+    font-size: 70px;
+    -unity-font-style: bold;
+}
+
+.leaderboard-results {
+    flex-grow: 1;
+}
+
+.leaderboard-results > .unity-scroll-view__content-container {
+    padding-right: 8px;
+    padding-bottom: 8px;
+}
+
+.result-entry {
+    margin-bottom: 10px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 3px;
+    border-top-color: var(--leaderboard-border);
+    border-right-color: var(--leaderboard-border);
+    border-bottom-color: var(--leaderboard-border);
+    border-left-color: var(--leaderboard-accent);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    background-color: var(--leaderboard-card-bg);
+}
+
+.result-foldout {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 8px;
+    padding-right: 10px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+}
+
+.result-foldout:focus {
+    background-color: var(--leaderboard-card-focus-bg);
+}
+
+.result-foldout .unity-foldout__text {
+    color: var(--leaderboard-text);
+    font-size: 28px;
+    -unity-font-style: bold;
+    white-space: normal;
+}
+
+.player-stats {
+    margin-top: 10px;
+    padding-left: 16px;
+}
+
+.player-result {
+    margin-bottom: 8px;
+    padding-top: 8px;
+    padding-right: 10px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    border-left-width: 2px;
+    border-left-color: var(--leaderboard-border);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.24);
+}
+
+.player-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-name {
+    flex-grow: 1;
+    color: var(--leaderboard-text);
+    font-size: 21px;
+    -unity-font-style: bold;
+}
+
+.player-score {
+    color: var(--leaderboard-accent);
+    font-size: 19px;
+    -unity-font-style: bold;
+}
+
+.player-metrics {
+    flex-direction: row;
+    margin-top: 4px;
+}
+
+.player-metric {
+    margin-right: 16px;
+    color: var(--leaderboard-muted);
+    font-size: 18px;
+}
+
+.player-empty {
+    color: var(--leaderboard-muted);
+    font-size: 18px;
+}
