@@ -30,19 +30,13 @@ namespace Cadenza
     }
 
     [Serializable]
-    public struct ScoreValues
+    public struct ScoreWeights
     {
-        [Tooltip("The discrete score value gained when achieving a perfect hit.")]
-        public int perfectScoreValue;
 
-        [Tooltip("The discrete score value gained when achieving a Great hit.")]
-        public int greatScoreValue;
-
-        [Tooltip("The discrete score value gained when achieving an OK hit.")]
-        public int okScoreValue;
-
-        [Tooltip("The discrete score value gained when achieving a Bad hit.")]
-        public int badScoreValue;
+        public float perfectScoreWeight;
+        public float greatScoreWeight;
+        public float okScoreWeight;
+        public float badScoreWeight;
     }
 
     /// <summary>
@@ -56,7 +50,6 @@ namespace Cadenza
         public readonly ScoreClass Class;
         public readonly Player Player;
         public readonly int PlayerID;
-        public readonly int Value;
 
         public ScoreDef(double timestamp, double latency, Player player)
         {
@@ -66,7 +59,6 @@ namespace Cadenza
             this.Player = player;
             this.PlayerID = player.ID;
             this.Class = ScoreSystem.GetScoreClass(ScoreSystem.IndividualThresholds, this.Latency);
-            this.Value = ScoreSystem.GetScoreValue(this.Class);
         }
 
         public override readonly string ToString()
@@ -102,7 +94,8 @@ namespace Cadenza
         [Header("Score Class Thresholds")]
         [SerializeField] private Thresholds individualThresholds;
         [SerializeField] private Thresholds teamThresholds;
-        [SerializeField] private ScoreValues scoreValues;
+        [SerializeField] private ScoreWeights scoreWeights;
+        [SerializeField, Min(1)] private float maxScore;
 
         [Header("Calibration Properties")]
         [SerializeField] private bool enableCalibration;
@@ -112,6 +105,7 @@ namespace Cadenza
         #region Public Accessors
 
         public static Thresholds IndividualThresholds => singleton.individualThresholds;
+        public static Results Results => singleton.results;
         public static event Action<ScoreDef> AnyPlayerHit;
         public static event Action<TeamScoreDef> TeamHit;
 
@@ -124,6 +118,8 @@ namespace Cadenza
         private Dictionary<Player, double> latencyByPlayer;
         private Dictionary<Player, ScoreDef> playerHitsThisBeat;
         private Results results;
+
+        #region Events and Callbacks
 
         public override void OnInitialize()
         {
@@ -138,11 +134,46 @@ namespace Cadenza
             this.playerHitsThisBeat = new();
             SaveSystem.GetPreviousRuns(out Results[] results);
 
-            // Register for player hit.
-            PlayerSystem.PlayerAdded += player => player.PlayerHit += this.OnPlayerHit;
+            GameManager.CombatStarted += this.OnCombatStarted;
+            GameManager.CombatStopped += this.OnCombatStopped;
         }
 
-        public override void OnGameStart()
+        private void OnCombatStarted()
+        {
+            this.StartTracking();
+        }
+
+        private void OnCombatStopped(GameManager.GameResult gameResult)
+        {
+            this.StopTracking();
+
+            // Save results to file.
+            if (gameResult == GameManager.GameResult.Victory)
+            {
+                this.results.Timestamp = DateTime.UtcNow;
+
+                // Calculate overall score (average of all player scores).
+                {
+                    int count = this.results.PlayerResults.Count;
+                    float sum = 0;
+                    foreach (var result in this.results.PlayerResults.Values)
+                        sum += result.ScoreTotal;
+                    this.results.OverallScore = sum / count;
+                }
+
+                // Generate random judge scores that average to the overall score.
+                {
+                    var generated = GenerateJudgeScores(this.results.OverallScore);
+                    this.results.JudgeScores = new float[generated.Count];
+                    for (int i = 0; i < generated.Count; i++)
+                        this.results.JudgeScores[i] = generated[i];
+                }
+
+                SaveSystem.SaveRunToFile(this.results);
+            }
+        }
+
+        private void StartTracking()
         {
             this.playerHitsThisBeat.Clear();
             this.results = new()
@@ -160,15 +191,18 @@ namespace Cadenza
 
             // Listen for events.
             BeatSystem.BeatPlayed += this.OnBeat;
+
+            foreach (var player in PlayerSystem.Players)
+                player.PlayerHit += this.OnPlayerHit;
         }
 
-        public override void OnGameStop()
+        private void StopTracking()
         {
-            if (this.results != null)
-            {
-                this.results.Timestamp = DateTime.UtcNow;
-                SaveSystem.SaveRunToFile(this.results);
-            }
+            // Stop listening for events.
+            foreach (var player in PlayerSystem.Players)
+                player.PlayerHit -= this.OnPlayerHit;
+
+            BeatSystem.BeatPlayed -= this.OnBeat;
         }
 
         private void OnBeat()
@@ -248,8 +282,8 @@ namespace Cadenza
             }
         }
 
-
-        #region Public Static Methods
+        #endregion
+        #region Scoring
 
         /// <summary>
         /// Returns a value and descriptor of a player's accuracy, given their latency from the beat.
@@ -282,19 +316,22 @@ namespace Cadenza
         }
 
         /// <summary>
-        /// Returns the discrete value of a score.
+        /// Returns the score weighting of a given score class.
         /// </summary>
-        public static int GetScoreValue(ScoreClass scoreClass)
+        public static float GetScoreWeight(ScoreClass scoreClass)
         {
             return scoreClass switch
             {
-                ScoreClass.Perfect => singleton.scoreValues.perfectScoreValue,
-                ScoreClass.Great => singleton.scoreValues.greatScoreValue,
-                ScoreClass.OK => singleton.scoreValues.okScoreValue,
-                ScoreClass.Bad => singleton.scoreValues.badScoreValue,
+                ScoreClass.Perfect => singleton.scoreWeights.perfectScoreWeight,
+                ScoreClass.Great => singleton.scoreWeights.greatScoreWeight,
+                ScoreClass.OK => singleton.scoreWeights.okScoreWeight,
+                ScoreClass.Bad => singleton.scoreWeights.badScoreWeight,
                 _ => 0
             };
         }
+
+        #endregion
+        #region Calibration
 
         /// <summary>
         /// Returns the average input latency for the player.
@@ -329,6 +366,9 @@ namespace Cadenza
             singleton.latencyByPlayer.Remove(player);
         }
 
+        #endregion
+        #region Streaks
+
         /// <summary>
         /// Subscribe to when a team streak starts, ends, or updates.
         /// </summary>
@@ -359,6 +399,106 @@ namespace Cadenza
             );
         }
 
+        #endregion
+        #region Grading
+
+        public static float CalculateGrade(ResultsDef results)
+        {
+            float accuracy = CalculateAccuracy01(
+                results.GetCount(ScoreClass.Perfect),
+                results.GetCount(ScoreClass.Great),
+                results.GetCount(ScoreClass.OK),
+                results.GetCount(ScoreClass.Bad)
+            );
+
+            float final = accuracy * singleton.maxScore;
+            return Mathf.Clamp(final, 0f, singleton.maxScore);
+        }
+
+        private static float CalculateAccuracy01(int perfect, int great, int ok, int bad)
+        {
+            int total = perfect + great + ok + bad;
+            if (total == 0) return 0f;
+
+            float perfectW = GetScoreWeight(ScoreClass.Perfect);
+            float greatW = GetScoreWeight(ScoreClass.Great);
+            float okW = GetScoreWeight(ScoreClass.OK);
+            float badW = GetScoreWeight(ScoreClass.Bad);
+
+            float weighted = perfect * perfectW + great * greatW + ok * okW + bad * badW;
+            return Mathf.Clamp(weighted / total, 0f, 1f);
+        }
+
+        /// <summary>
+        /// Generates N discrete positive scores that
+        /// average exactly to a desired target value.
+        /// </summary>
+        /// <param name="targetAverage">Desired average in [0, maxScore]</param>
+        /// <param name="judgeCount">N judges</param>
+        /// <param name="step">The discrete minimum value that scores can vary</param>
+        /// <param name="spread">The maximum range that scores can vary</param>
+        public static List<float> GenerateJudgeScores(
+            float targetAverage,
+            int judgeCount = 3,
+            float step = 1f,
+            float spread = 20f)
+        {
+            if (judgeCount <= 0) throw new ArgumentException("judgeCount must be > 0");
+            if (step <= 0f) throw new ArgumentException("step must be > 0");
+
+            targetAverage = Mathf.Clamp(targetAverage, 0f, singleton.maxScore);
+
+            int ticksPerPoint = Mathf.RoundToInt(1f / step);
+            if (Mathf.Abs(ticksPerPoint * step - 1f) > 0.0001f)
+                throw new ArgumentException("step must evenly divide 1.0 (e.g. 0.1, 0.25, 0.5, 1.0)");
+
+            int maxTicks = Mathf.RoundToInt(singleton.maxScore * ticksPerPoint);
+
+            // Snap target average to discrete grid
+            int targetAvgTicks = Mathf.RoundToInt(targetAverage * ticksPerPoint);
+            int targetTotalTicks = targetAvgTicks * judgeCount;
+
+            int baseTick = targetAvgTicks;
+            int spreadTicks = Mathf.Clamp(Mathf.RoundToInt(spread * ticksPerPoint), 0, maxTicks);
+
+            var scores = new int[judgeCount];
+
+            // Initial random offsets (triangular distribution for realism)
+            for (int i = 0; i < judgeCount; i++)
+            {
+                float tri = UnityEngine.Random.value - UnityEngine.Random.value; // [-1,1], peaked at 0
+                int offset = Mathf.RoundToInt(tri * spreadTicks);
+
+                scores[i] = Mathf.Clamp(baseTick + offset, 0, maxTicks);
+            }
+
+            // Force exact total
+            int currentTotal = 0;
+            for (int i = 0; i < judgeCount; i++)
+                currentTotal += scores[i];
+
+            int delta = targetTotalTicks - currentTotal;
+            int direction = delta > 0 ? 1 : -1;
+            int remaining = Mathf.Abs(delta);
+
+            while (remaining > 0)
+            {
+                int idx = UnityEngine.Random.Range(0, judgeCount);
+                int candidate = scores[idx] + direction;
+
+                if (candidate >= 0 && candidate <= maxTicks)
+                {
+                    scores[idx] = candidate;
+                    remaining--;
+                }
+            }
+
+            var result = new List<float>(judgeCount);
+            for (int i = 0; i < judgeCount; i++)
+                result.Add(scores[i] / (float)ticksPerPoint);
+
+            return result;
+        }
         #endregion
     }
 }

@@ -44,7 +44,8 @@ public class Leaderboard : UIPanel, IInteractable
             var resultLine = this.resultLineAsset.CloneTree();
 
             StringBuilder sb = new();
-            sb.AppendLine($"#{++i}. {teamName} in {levelName} ... {result.TeamResults.ScoreTotal}pts ({time})");
+            sb.AppendLine($"#{++i}. {teamName} in {levelName} ... Overall Rating: {result.OverallScore} ({time})");
+            sb.AppendLine($"\t Judge Scores: {string.Join(',', result.JudgeScores)}");
 
             foreach ((var playerDef, var playerResult) in result.PlayerResults)
             {

@@ -27,11 +27,14 @@ namespace Cadenza
         }
 
         private readonly Dictionary<PlayerDef, ResultsDef> playerResults = new();
-        public readonly ResultsDef teamResults = new();
+        private readonly ResultsDef teamResults = new();
+
         public string TeamName = string.Empty;
         public string LevelName = string.Empty;
         public DateTime Timestamp;
         public int HighestStreak;
+        public float[] JudgeScores = Array.Empty<float>();
+        public float OverallScore;
 
         public IReadOnlyDictionary<PlayerDef, ResultsDef> PlayerResults => this.playerResults;
         public ResultsDef TeamResults => this.teamResults;
@@ -73,13 +76,12 @@ namespace Cadenza
     public class ResultsDef
     {
         public int Hits { get; private set; }
-        public int ScoreTotal { get; private set; }
+        public float ScoreTotal { get; private set; }
         private readonly Dictionary<ScoreClass, int> countsByClass;
 
         public ResultsDef()
         {
             this.Hits = 0;
-            this.ScoreTotal = 0;
             this.countsByClass = new();
         }
 
@@ -94,7 +96,7 @@ namespace Cadenza
                 this.countsByClass[scoreClass] = 0;
 
             this.countsByClass[scoreClass]++;
-            this.ScoreTotal += ScoreSystem.GetScoreValue(scoreClass);
+            this.ScoreTotal = ScoreSystem.CalculateGrade(this);
             this.Hits++;
         }
     }

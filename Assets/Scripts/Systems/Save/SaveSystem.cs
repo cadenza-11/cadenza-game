@@ -284,6 +284,8 @@ public static class SaveSystem
             ["Metadata"] = metadata,
             ["Team"] = team,
             ["HighestStreak"] = results.HighestStreak,
+            ["OverallScore"] = results.OverallScore,
+            ["JudgeScores"] = new JArray(results.JudgeScores),
             ["TeamScores"] = teamScores,
             ["PlayerScores"] = playerScores,
         };
@@ -300,7 +302,9 @@ public static class SaveSystem
             Timestamp = root["Metadata"]["Timestamp"]?.Value<DateTime>() ?? DateTime.MinValue,
             TeamName = root["Team"]["Name"]?.Value<string>() ?? string.Empty,
             LevelName = root["Metadata"]["Level"]?.Value<string>() ?? string.Empty,
-            HighestStreak = root["HighestStreak"]?.Value<int>() ?? 0
+            HighestStreak = root["HighestStreak"]?.Value<int>() ?? 0,
+            OverallScore = root["OverallScore"]?.Value<float>() ?? 0,
+            JudgeScores = root["JudgeScores"]?.ToObject<float[]>() ?? Array.Empty<float>(),
         };
 
         // Add team scores.

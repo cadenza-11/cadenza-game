@@ -160,7 +160,7 @@ namespace Cadenza
 
             this.isCombatActive = true;
 
-            Debug.Log("Started combat.");
+            Debug.Log("Starting combat.");
             CombatStarted?.Invoke();
         }
 
@@ -170,7 +170,7 @@ namespace Cadenza
                 return;
 
             this.isCombatActive = false;
-            Debug.Log("Stopped combat.");
+            Debug.Log($"Stopping combat with result {result}.");
             CombatStopped?.Invoke(result);
         }
 

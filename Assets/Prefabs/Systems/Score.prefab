@@ -52,10 +52,11 @@ MonoBehaviour:
     perfectScoreMs: 50
     greatScoreMs: 75
     okScoreMs: 100
-  scoreValues:
-    perfectScoreValue: 100
-    greatScoreValue: 50
-    okScoreValue: 25
-    badScoreValue: 10
+  scoreWeights:
+    perfectScoreWeight: 1
+    greatScoreWeight: 0.75
+    okScoreWeight: 0.4
+    badScoreWeight: 0
+  maxScore: 100
   enableCalibration: 1
   latencyAlpha: 0.5
