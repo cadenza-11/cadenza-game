@@ -550,6 +550,8 @@ MonoBehaviour:
   startMenu: {fileID: 404073981900992975}
   bandNameSelect: {fileID: 2221361485290833675}
   joiningTemplate: {fileID: 9197481963319205126, guid: 6ee44ba837057d747af63936c731ab68, type: 3}
+  settingsTemplate: {fileID: 9197481963319205126, guid: c70d9a0d17884d5ca3af2d6d95e1896d, type: 3}
+  hapticsTemplate: {fileID: 9197481963319205126, guid: a287643eaa784f57877f532fcd7f930a, type: 3}
   calibrationTemplate: {fileID: 9197481963319205126, guid: ae3a027b0a7e9db4084daba4f8738a42, type: 3}
   characterSelectionTemplate: {fileID: 9197481963319205126, guid: e4afe7d3158a4f64cbb51db220e56c30, type: 3}
   namingTemplate: {fileID: 9197481963319205126, guid: 357a4e3578bad184ebca6354e0c455ee, type: 3}

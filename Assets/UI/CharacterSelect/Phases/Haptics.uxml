@@ -1,0 +1,21 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles"/>
+    <ui:VisualElement name="phase_Haptics" class="settings_phase">
+        <ui:Label text="Haptics" name="txt_HapticsTitle" class="settings_title"/>
+        <ui:VisualElement name="c_HapticsStrength" class="settings_item settings_haptics">
+            <ui:VisualElement name="c_HapticsStrengthHeader" class="settings_haptics_header">
+                <ui:Label text="Strength" name="txt_HapticsStrengthLabel" class="settings_haptics_label"/>
+                <ui:Label text="100%" name="txt_HapticsStrengthValue" class="settings_haptics_value"/>
+            </ui:VisualElement>
+            <ui:Slider name="slider_HapticsStrength" low-value="0" high-value="1" page-size="0.1" value="1" focusable="false" class="settings_slider"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="c_HapticsDuration" class="settings_item settings_haptics">
+            <ui:VisualElement name="c_HapticsDurationHeader" class="settings_haptics_header">
+                <ui:Label text="Duration" name="txt_HapticsDurationLabel" class="settings_haptics_label"/>
+                <ui:Label text="100ms" name="txt_HapticsDurationValue" class="settings_haptics_value"/>
+            </ui:VisualElement>
+            <ui:Slider name="slider_HapticsDuration" low-value="0" high-value="1" page-size="0.05" value="0.1" focusable="false" class="settings_slider"/>
+        </ui:VisualElement>
+        <ui:Button name="b_HapticsBack" text="SAVE" focusable="false" class="settings_item" style="margin-top: 21px;"/>
+    </ui:VisualElement>
+</ui:UXML>

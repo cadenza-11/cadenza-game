@@ -30,10 +30,10 @@ namespace Cadenza
 
         public void UnselectCharacter(Player p)
         {
-            if (this.takenCharacters.TryGetValue(p, out int prevClass))
-                CharacterTakenStatusChanged?.Invoke();
+            if (!this.takenCharacters.Remove(p))
+                return;
 
-            this.takenCharacters.Remove(p);
+            CharacterTakenStatusChanged?.Invoke();
         }
 
         public CharacterSelectInfo GetNextCharacter(string currentClass)

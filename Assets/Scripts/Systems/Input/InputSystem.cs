@@ -37,6 +37,8 @@ namespace Cadenza
         };
 
         private readonly Dictionary<Player, MoveDirection> previousNavigationDirections = new();
+        private readonly Dictionary<Player, float> controllerHapticsStrength = new();
+        private readonly Dictionary<Player, float> controllerHapticsDuration = new();
 
         private static InputSystem singleton;
 
@@ -153,13 +155,19 @@ namespace Cadenza
                 if (device is not IDualMotorRumble haptics)
                     continue;
 
+                if (!this.controllerHapticsStrength.ContainsKey(player))
+                    this.controllerHapticsStrength[player] = this.beatHapticsMagnitude;
+
+                if (!this.controllerHapticsDuration.ContainsKey(player))
+                    this.controllerHapticsDuration[player] = this.beatHapticsDuration;
+
                 BeatSystem.BeatPlayed += () =>
                 {
                     PulseHaptics(
                         haptics,
-                        this.beatHapticsMagnitude,
-                        this.beatHapticsMagnitude,
-                        this.beatHapticsDuration);
+                        this.controllerHapticsStrength[player],
+                        this.controllerHapticsStrength[player],
+                        this.controllerHapticsDuration[player]);
                 };
             }
         }
@@ -247,6 +255,24 @@ namespace Cadenza
         public static void SetHapticsEnabled(bool enabled)
         {
             singleton.hapticsEnabled = enabled;
+        }
+
+        /// <summary>
+        /// Sets the strength of the haptics on each of a
+        /// player's connected devices that use haptics.
+        /// </summary>
+        public static void SetHapticsStrengthForPlayer(Player player, float value)
+        {
+            singleton.controllerHapticsStrength[player] = Mathf.Clamp(value, 0, 1);
+        }
+
+        /// <summary>
+        /// Sets the duration of the haptics on each of a
+        /// player's connected devices that use haptics.
+        /// </summary>
+        public static void SetHapticsDurationForPlayer(Player player, float value)
+        {
+            singleton.controllerHapticsDuration[player] = Mathf.Clamp(value, 0, (float)BeatSystem.SecondsPerBeat);
         }
 
         /// <summary>

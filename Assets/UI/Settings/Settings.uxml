@@ -13,7 +13,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="tab-views" style="flex-grow: 1; margin-top: 100px; margin-right: 100px; margin-bottom: 100px; margin-left: 100px; justify-content: center;">
             <ui:VisualElement name="c_GeneralTab" style="flex-grow: 1; display: none;">
-                <ui:Toggle label="Enable global controller rumble" name="toggle_Haptics" value="true" style="color: rgb(255, 255, 255);" />
+                <ui:Toggle label="Enable global controller haptics" name="toggle_Haptics" value="true" style="color: rgb(255, 255, 255);" />
                 <ui:VisualElement name="spacer" class="spacer" style="flex-grow: 1;" />
                 <ui:Button text="Delete save data" name="b_DeleteSaveData" />
             </ui:VisualElement>

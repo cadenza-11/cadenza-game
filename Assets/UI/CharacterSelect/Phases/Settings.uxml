@@ -1,0 +1,12 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles"/>
+    <ui:VisualElement name="phase_Settings" class="settings_phase">
+        <ui:Label text="Settings" name="txt_SettingsTitle" class="settings_title"/>
+        <ui:Button name="b_Recalibrate" text="Recalibrate" focusable="false" class="settings_item"/>
+        <ui:Button name="b_RenamePlayer" text="Rename Player" focusable="false" class="settings_item"/>
+        <ui:Button name="b_Haptics" text="Haptics" focusable="false" class="settings_item"/>
+        <ui:Button name="b_Next" text="Ready!" focusable="false" class="settings_item" style="margin-top: 49px; flex-direction: row-reverse;">
+            <ui:VisualElement name="Next_Icon" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-4521532143779581420&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-right&quot;); width: 50px; height: 50px;"/>
+        </ui:Button>
+    </ui:VisualElement>
+</ui:UXML>

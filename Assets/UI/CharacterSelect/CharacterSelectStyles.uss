@@ -222,3 +222,72 @@
 .is-focused {
     background-color: rgb(255, 125, 0);
 }
+
+.settings_phase {
+    flex-grow: 1;
+    justify-content: center;
+    gap: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.settings_title {
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    font-size: 42px;
+    margin-bottom: 4px;
+}
+
+.settings_item {
+    min-height: 72px;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-top-color: rgba(255, 255, 255, 0.35);
+    border-right-color: rgba(255, 255, 255, 0.35);
+    border-bottom-color: rgba(255, 255, 255, 0.35);
+    border-left-color: rgba(255, 255, 255, 0.35);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.25);
+    color: rgb(255, 255, 255);
+}
+
+.settings_item.is_focus {
+    border-top-color: rgb(255, 125, 0);
+    border-right-color: rgb(255, 125, 0);
+    border-bottom-color: rgb(255, 125, 0);
+    border-left-color: rgb(255, 125, 0);
+    background-color: rgba(255, 125, 0, 0.2);
+}
+
+.settings_haptics {
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 8px;
+    padding-right: 12px;
+    padding-bottom: 8px;
+    padding-left: 12px;
+}
+
+.settings_haptics_header {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.settings_haptics_label,
+.settings_haptics_value {
+    font-size: 34px;
+}
+
+.settings_slider {
+    margin-top: 4px;
+}
+
+.settings_continue {
+    font-size: 24px;
+    opacity: 0.7;
+}
