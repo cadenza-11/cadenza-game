@@ -26,6 +26,8 @@ namespace Cadenza
         [SerializeField] public ComboManager comboM;
         [SerializeField] public int baseLightDamage;
         [SerializeField] public int baseHeavyDamage;
+        [SerializeField] private float flowThreshold;
+        [SerializeField] private float reviveThreshold;
 
         [NonSerialized] public float currentHealth;
         public float MaxHealth => this.maxHealth;
@@ -37,12 +39,10 @@ namespace Cadenza
         public static event Action TeamAttackInitiated;
         public event Action<float, bool> HealthChanged;
         public event Action<float> FlowChanged;
+        public event Action Revived;
 
         private float flow;
-        private float flowThreshold = 5f;
-
         private float revive;
-        private float reviveThreshold = 10f;
 
         public class Input
         {
@@ -129,7 +129,6 @@ namespace Cadenza
 
             // Update flow.
             this.SetFlow(this.flow - 0.03f);
-
             this.SetRevive(this.revive - 0.03f);
 
             if (this.HasFlowBuff(3))
@@ -210,9 +209,14 @@ namespace Cadenza
         public void SetHealth(float health)
         {
             if (health <= 0f)
+            {
                 this.ChangeState(this.fainted);
+                this.SetRevive(0);
+            }
             else if (health < this.currentHealth)
+            {
                 this.ChangeState(this.hitStun.WithDuration(this.attackDuration));
+            }
 
             this.currentHealth = Mathf.Clamp(health, 0.0f, this.maxHealth);
             this.HealthChanged?.Invoke(this.currentHealth, this.isFainted);
@@ -223,7 +227,7 @@ namespace Cadenza
             // Update accuracy.
             this.accuracyBar.OnPlayerHit(def);
 
-            // Update flow.
+            // Update flow or revive.
             float value = def.Class switch
             {
                 ScoreClass.Perfect => +3.0f,
@@ -231,8 +235,11 @@ namespace Cadenza
                 ScoreClass.Bad => -1.0f,
                 _ => 0.0f
             };
-            if (this.isFainted) this.SetRevive(this.revive + value);
-            else this.SetFlow(this.flow + value);
+
+            if (this.isFainted)
+                this.SetRevive(this.revive + value);
+            else
+                this.SetFlow(this.flow + value);
         }
 
         #endregion
@@ -291,12 +298,16 @@ namespace Cadenza
 
         private void SetRevive(float revive)
         {
-            this.revive = Mathf.Clamp(revive, 0.0f, 20.0f);
+            this.revive = Mathf.Clamp(revive, 0.0f, this.reviveThreshold);
             this.RevivalMeter.SetRevive(this.revive);
-            if (this.revive >= this.reviveThreshold)
+
+            if (this.revive >= this.reviveThreshold - 1f)
+            {
+                this.Revived?.Invoke();
                 this.ChangeState(this.walking);
+            }
         }
-        
+
         #endregion
     }
 }

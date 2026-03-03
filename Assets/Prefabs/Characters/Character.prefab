@@ -297,6 +297,8 @@ MonoBehaviour:
   comboM: {fileID: 0}
   baseLightDamage: 0
   baseHeavyDamage: 0
+  flowThreshold: 5
+  reviveThreshold: 20
 --- !u!1001 &1003460141613909193
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -384,11 +386,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 208000504686407722, guid: b3710169843627e45b0662b9a05dd4f6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.553
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 208000504686407722, guid: b3710169843627e45b0662b9a05dd4f6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.476
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 208000504686407722, guid: b3710169843627e45b0662b9a05dd4f6, type: 3}
       propertyPath: m_LocalPosition.z

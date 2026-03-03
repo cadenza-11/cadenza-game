@@ -6,11 +6,13 @@ public class ReviveMeter : MonoBehaviour
 {
     [SerializeField] private UIDocument uiDocument;
     private ProgressBar reviveMeter;
+    private VisualElement reviveFill;
     private InputHint inputHint;
 
     void Awake()
     {
         this.reviveMeter = this.uiDocument.rootVisualElement.Q<ProgressBar>();
+        this.reviveFill = this.reviveMeter.Q<VisualElement>(className: "unity-progress-bar__progress");
         this.inputHint = this.uiDocument.rootVisualElement.Q<InputHint>();
     }
 
@@ -27,6 +29,12 @@ public class ReviveMeter : MonoBehaviour
     public void SetRevive(float revive)
     {
         this.reviveMeter.value = Mathf.Min(revive, this.reviveMeter.highValue);
+
+        float t = this.reviveMeter.highValue > 0f
+            ? this.reviveMeter.value / this.reviveMeter.highValue
+            : 0f;
+
+        this.reviveFill.style.backgroundColor = Color.Lerp(Color.red, Color.green, t);
     }
 
     public void Show()
