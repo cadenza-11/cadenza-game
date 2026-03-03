@@ -27,6 +27,7 @@ namespace Cadenza
             float damageModifier = character.baseLightDamage / 2 * flowDamage * reward.Multiplier;
 
             this.damage = (int)(character.baseLightDamage + (character.baseLightDamage * damageModifier)); // TEMP: should be flaot.
+            this.knockbackScale = reward.Knockback;
             this.comboMove = reward.AttackEffect;
             this.gameObject.SetActive(true);
         }

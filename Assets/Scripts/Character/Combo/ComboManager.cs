@@ -25,6 +25,7 @@ namespace Cadenza.Combo
             reward = new ComboReward
             {
                 AttackEffect = AttkEffect.None,
+                Knockback = 1,
                 Multiplier = 1
             };
             if (this.m_CurrentComboNode.Children.TryGetValue(move, out var next))

@@ -8,6 +8,7 @@ namespace Cadenza.Combo
     public struct ComboReward
     {
         public int Multiplier;
+        public float Knockback; 
         public AttkEffect AttackEffect;
     }
 

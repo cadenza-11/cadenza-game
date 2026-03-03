@@ -15,4 +15,5 @@ MonoBehaviour:
   Moves: 01000000010000000100000001000000
   Reward:
     Multiplier: 1
-    AttackEffect: 1
+    Knockback: 5
+    AttackEffect: 0
