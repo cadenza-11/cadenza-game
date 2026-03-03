@@ -20,6 +20,7 @@ public static class SaveSystem
     private static readonly System.Array scoreClasses = System.Enum.GetValues(typeof(ScoreClass));
     private static readonly System.Array scoreClassNames = System.Enum.GetNames(typeof(ScoreClass));
     private static readonly string ResultsFilePath = Path.Combine(Application.persistentDataPath, ResultsJSONFileName);
+    public static bool ResultsFileExists => File.Exists(ResultsFilePath);
     public static event Action ResultsFileDeleted;
     public static event Action ResultsFileCreated;
 

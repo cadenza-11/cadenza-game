@@ -25,7 +25,6 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-    max-height: 40%;
     align-self: flex-end;
     width: 60%;
     padding-top: 3%;
@@ -34,6 +33,7 @@
     padding-left: 10%;
     color: rgb(255, 255, 255);
     font-size: 60px;
+    max-height: 45%;
 }
 
 .start_menu_button {
@@ -55,7 +55,7 @@
 }
 
 .focus_icon {
-    background-image: url('project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-1087164816274819069&guid=6c7fd4304507d004983595a79123c013&type=3#arrow-right@2x');
+    background-image: url("project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-1087164816274819069&guid=6c7fd4304507d004983595a79123c013&type=3#arrow-right@2x");
     -unity-background-scale-mode: scale-to-fit;
     height: auto;
     width: 100px;

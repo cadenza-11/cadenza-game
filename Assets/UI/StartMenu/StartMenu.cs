@@ -7,12 +7,14 @@ namespace Cadenza
     {
         private UIPanel characterSelect;
         private UIPanel settingsMenu;
+        private UIPanel leaderboardMenu;
 
         private VisualElement containerJoin;
         private VisualElement containerOptions;
 
         private Button buttonStartGame;
         private Button buttonLastRun;
+        private Button buttonLeaderboard;
         private Button buttonSettings;
         private Button buttonExit;
 
@@ -21,17 +23,20 @@ namespace Cadenza
         {
             this.characterSelect = UISystem.FindPanel<CharacterSelect>();
             this.settingsMenu = UISystem.FindPanel<SettingsMenu>();
+            this.leaderboardMenu = UISystem.FindPanel<Leaderboard>();
 
             this.containerJoin = this.root.Q<VisualElement>("phase_Join");
             this.containerOptions = this.root.Q<VisualElement>("phase_Select");
 
             this.buttonStartGame = this.root.Q<Button>("b_StartGame");
             this.buttonLastRun = this.root.Q<Button>("b_LastRun");
+            this.buttonLeaderboard = this.root.Q<Button>("b_Leaderboard");
             this.buttonSettings = this.root.Q<Button>("b_Settings");
             this.buttonExit = this.root.Q<Button>("b_Exit");
 
             this.buttonStartGame.clicked += this.OnNewRun;
             this.buttonLastRun.clicked += this.OnLastRun;
+            this.buttonLeaderboard.clicked += this.OnLeaderboard;
             this.buttonSettings.clicked += this.OnSettings;
             this.buttonExit.clicked += this.OnExit;
 
@@ -39,6 +44,11 @@ namespace Cadenza
             this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
             SaveSystem.TeamFileDeleted += () => this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
             SaveSystem.TeamFileCreated += () => this.buttonLastRun.SetEnabled(SaveSystem.SaveFileExists);
+
+            // Configure "view leaderboard" button.
+            this.buttonLeaderboard.SetEnabled(SaveSystem.ResultsFileExists);
+            SaveSystem.ResultsFileDeleted += () => this.buttonLeaderboard.SetEnabled(SaveSystem.ResultsFileExists);
+            SaveSystem.ResultsFileCreated += () => this.buttonLeaderboard.SetEnabled(SaveSystem.ResultsFileExists);
 
             this.Show();
         }
@@ -118,7 +128,18 @@ namespace Cadenza
 
         private void OnSettings()
         {
-            this.TransitionTo(UISystem.FindPanel<SettingsMenu>());
+            this.TransitionTo(this.settingsMenu);
+        }
+
+        private void OnLeaderboard()
+        {
+            if (this.leaderboardMenu == null)
+            {
+                Debug.LogWarning("Leaderboard panel not found under UISystem.");
+                return;
+            }
+
+            this.TransitionTo(this.leaderboardMenu);
         }
 
         private void OnExit()

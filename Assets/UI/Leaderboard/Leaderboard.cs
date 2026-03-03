@@ -7,63 +7,38 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class Leaderboard : UIPanel, IInteractable
 {
-    [SerializeField] VisualTreeAsset resultLineAsset;
+    [SerializeField] private VisualTreeAsset resultLineAsset;
 
     protected override bool IsWorldSpace => true;
     protected override InputMode UIInputMode => InputMode.Single;
     protected override VisualElement InitialFocus => this.exitButton;
+
     private Button exitButton;
     private Player openingPlayer;
-    private Results[] results;
+    private ScrollView resultsElement;
+    private Results[] results = System.Array.Empty<Results>();
 
     public override void OnInitialize()
     {
-        this.root.RegisterCallback<NavigationCancelEvent>(_ => this.Hide(), TrickleDown.TrickleDown);
-        InputSystem.UIPlayerCancel += _ => this.Hide();
+        this.root.RegisterCallback<NavigationCancelEvent>(_ => this.Close(), TrickleDown.TrickleDown);
 
         // Configure exit button.
         this.exitButton = this.root.Q<Button>("b_Exit");
-        this.exitButton.clicked += () => this.Hide();
-        this.exitButton.RegisterCallback<NavigationSubmitEvent>(_ => this.Hide());
+        this.exitButton.clicked += this.Close;
 
-        // Populate leaderboard UI.
-        SaveSystem.GetPreviousRuns(out this.results);
-        this.results = this.results
-            .OrderByDescending(r => r.OverallScore)
-            .ToArray();
+        this.resultsElement = this.root.Q<ScrollView>("results");
+        this.resultsElement.focusable = false;
 
-        var resultsElement = this.root.Q<ScrollView>("results");
-        resultsElement.focusable = false;
-        resultsElement.Clear();
+        InputSystem.UIPlayerCancel += this.OnPlayerCancel;
+        SaveSystem.ResultsFileCreated += this.RefreshResults;
+        SaveSystem.ResultsFileDeleted += this.RefreshResults;
+    }
 
-        int rank = 1;
-        foreach (var result in this.results)
-        {
-            string time = UI.GetHumanizedTime(result.Timestamp);
-            string teamName = string.IsNullOrEmpty(result.TeamName) ? "Unnamed Team" : result.TeamName;
-            string levelName = string.IsNullOrEmpty(result.LevelName) ? "Unnamed Level" : result.LevelName;
-            var resultLine = this.resultLineAsset.CloneTree();
-            var foldout = resultLine.Q<Foldout>("result-foldout");
-            var playerStats = resultLine.Q<VisualElement>("player-stats");
-
-            if (foldout == null || playerStats == null)
-                continue;
-
-            foldout.text = $"#{rank}. {teamName} in {levelName}: {result.OverallScore:F2} ({time})";
-            rank++;
-
-            foreach ((var playerDef, var playerResult) in result.PlayerResults.OrderBy(entry => entry.Key.ID))
-                playerStats.Add(this.CreatePlayerStatsLine(playerDef, playerResult));
-
-            if (playerStats.childCount == 0)
-            {
-                var empty = new Label("No player stats recorded.");
-                empty.AddToClassList("player-empty");
-                playerStats.Add(empty);
-            }
-
-            resultsElement.Add(resultLine);
-        }
+    public override void OnApplicationStop()
+    {
+        InputSystem.UIPlayerCancel -= this.OnPlayerCancel;
+        SaveSystem.ResultsFileCreated -= this.RefreshResults;
+        SaveSystem.ResultsFileDeleted -= this.RefreshResults;
     }
 
     private VisualElement CreatePlayerStatsLine(Results.PlayerDef playerDef, ResultsDef playerResult)
@@ -108,16 +83,79 @@ public class Leaderboard : UIPanel, IInteractable
     public void OnInteract(Player player)
     {
         this.openingPlayer = player;
+        this.previousPanel = null;
         this.Show();
     }
 
     public override void OnShow()
     {
-        InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, this.openingPlayer);
+        if (this.openingPlayer != null)
+            InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, this.openingPlayer);
+
+        this.RefreshResults();
     }
 
     public override void OnHide()
     {
-        InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+        if (ApplicationController.State == ApplicationState.GameSession)
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+
+        this.openingPlayer = null;
+    }
+
+    private void OnPlayerCancel(Player _)
+    {
+        this.Close();
+    }
+
+    private void RefreshResults()
+    {
+        if (this.resultsElement == null)
+            return;
+
+        SaveSystem.GetPreviousRuns(out var loadedResults);
+        this.results = loadedResults ?? System.Array.Empty<Results>();
+        this.results = this.results
+            .OrderByDescending(r => r.OverallScore)
+            .ToArray();
+
+        this.resultsElement.Clear();
+
+        int rank = 1;
+        foreach (var result in this.results)
+        {
+            string time = UI.GetHumanizedTime(result.Timestamp);
+            string teamName = string.IsNullOrEmpty(result.TeamName) ? "Unnamed Team" : result.TeamName;
+            string levelName = string.IsNullOrEmpty(result.LevelName) ? "Unnamed Level" : result.LevelName;
+            var resultLine = this.resultLineAsset.CloneTree();
+            var foldout = resultLine.Q<Foldout>("result-foldout");
+            var playerStats = resultLine.Q<VisualElement>("player-stats");
+
+            if (foldout == null || playerStats == null)
+                continue;
+
+            foldout.text = $"#{rank}. {teamName} in {levelName} ({time})";
+            rank++;
+
+            foreach ((var playerDef, var playerResult) in result.PlayerResults.OrderBy(entry => entry.Key.ID))
+                playerStats.Add(this.CreatePlayerStatsLine(playerDef, playerResult));
+
+            if (playerStats.childCount == 0)
+            {
+                var empty = new Label("No player stats recorded.");
+                empty.AddToClassList("player-empty");
+                playerStats.Add(empty);
+            }
+
+            this.resultsElement.Add(resultLine);
+        }
+    }
+
+    private void Close()
+    {
+        if (this.previousPanel != null && ApplicationController.State != ApplicationState.GameSession)
+            this.TransitionTo(this.previousPanel);
+        else
+            this.Hide();
     }
 }
