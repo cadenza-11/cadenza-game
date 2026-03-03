@@ -41,21 +41,56 @@ namespace Cadenza
 
         public void AddPlayerScore(Player player, ScoreClass scoreClass)
         {
-            this.AddPlayerScore((player.Name, player.CharacterClass.ID), scoreClass);
+            var playerDef = new PlayerDef()
+            {
+                ID = player.ID,
+                Name = player.Name,
+                ClassID = player.CharacterClass.ID
+            };
+
+            this.GetOrCreatePlayerResults(playerDef).AddScore(scoreClass);
         }
 
         public void AddPlayerScore((string name, int classID) player, ScoreClass scoreClass)
         {
+            if (!this.TryGetPlayerDef(player, out var playerDef))
+            {
+                playerDef = new PlayerDef()
+                {
+                    ID = this.playerResults.Count,
+                    Name = player.name,
+                    ClassID = player.classID
+                };
+            }
+
+            this.GetOrCreatePlayerResults(playerDef).AddScore(scoreClass);
+        }
+
+        public void AddPlayerDeath(Player player)
+        {
             var playerDef = new PlayerDef()
             {
-                Name = player.name,
-                ClassID = player.classID
+                ID = player.ID,
+                Name = player.Name,
+                ClassID = player.CharacterClass.ID
             };
 
-            if (!this.playerResults.ContainsKey(playerDef))
-                this.playerResults[playerDef] = new ResultsDef();
+            this.GetOrCreatePlayerResults(playerDef).AddDeath();
+        }
 
-            this.playerResults[playerDef].AddScore(scoreClass);
+        public void AddPlayerDeath((string name, int classID) player)
+        {
+            if (!this.TryGetPlayerDef(player, out var playerDef))
+            {
+                playerDef = new PlayerDef()
+                {
+                    ID = this.playerResults.Count,
+                    Name = player.name,
+                    ClassID = player.classID
+                };
+            }
+
+            this.GetOrCreatePlayerResults(playerDef).AddDeath();
         }
 
         public void AddTeamScore(ScoreClass scoreClass)
@@ -67,6 +102,29 @@ namespace Cadenza
         {
             this.HighestStreak = Mathf.Max(this.HighestStreak, streak);
         }
+
+        private bool TryGetPlayerDef((string name, int classID) player, out PlayerDef playerDef)
+        {
+            foreach (var key in this.playerResults.Keys)
+            {
+                if (key.Name == player.name && key.ClassID == player.classID)
+                {
+                    playerDef = key;
+                    return true;
+                }
+            }
+
+            playerDef = default;
+            return false;
+        }
+
+        private ResultsDef GetOrCreatePlayerResults(PlayerDef playerDef)
+        {
+            if (!this.playerResults.ContainsKey(playerDef))
+                this.playerResults[playerDef] = new ResultsDef();
+
+            return this.playerResults[playerDef];
+        }
     }
 
 
@@ -77,11 +135,13 @@ namespace Cadenza
     {
         public int Hits { get; private set; }
         public float ScoreTotal { get; private set; }
+        public int Deaths { get; private set; }
         private readonly Dictionary<ScoreClass, int> countsByClass;
 
         public ResultsDef()
         {
             this.Hits = 0;
+            this.Deaths = 0;
             this.countsByClass = new();
         }
 
@@ -96,8 +156,19 @@ namespace Cadenza
                 this.countsByClass[scoreClass] = 0;
 
             this.countsByClass[scoreClass]++;
-            this.ScoreTotal = ScoreSystem.CalculateGrade(this);
             this.Hits++;
+            this.RecalculateScore();
+        }
+
+        public void AddDeath()
+        {
+            this.Deaths++;
+            this.RecalculateScore();
+        }
+
+        public void RecalculateScore()
+        {
+            this.ScoreTotal = ScoreSystem.CalculateGrade(this);
         }
     }
 }

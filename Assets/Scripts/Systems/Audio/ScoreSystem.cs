@@ -101,6 +101,9 @@ namespace Cadenza
         [SerializeField] private bool enableCalibration;
         [SerializeField] private double latencyAlpha = 0.50;
 
+        [Header("Grade Penalties")]
+        [SerializeField, Min(0f)] private float deathPenalty01 = 0.02f;
+
         #endregion
         #region Public Accessors
 
@@ -193,7 +196,10 @@ namespace Cadenza
             BeatSystem.BeatPlayed += this.OnBeat;
 
             foreach (var player in PlayerSystem.Players)
+            {
                 player.PlayerHit += this.OnPlayerHit;
+                player.Character.Died += _ => this.results.AddPlayerDeath(player);
+            }
         }
 
         private void StopTracking()
@@ -411,7 +417,8 @@ namespace Cadenza
                 results.GetCount(ScoreClass.Bad)
             );
 
-            float final = accuracy * singleton.maxScore;
+            float deathPenalty = singleton.maxScore * singleton.deathPenalty01 * results.Deaths;
+            float final = (accuracy * singleton.maxScore) - deathPenalty;
             return Mathf.Clamp(final, 0f, singleton.maxScore);
         }
 

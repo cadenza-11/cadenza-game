@@ -54,7 +54,9 @@ public class Leaderboard : UIPanel, IInteractable
                         ? $" ({characterClass.Name})"
                         : string.Empty;
 
-                sb.AppendLine($"\t {playerDef.Name}{playerClassText}: {playerResult.ScoreTotal} ({playerResult.Hits} hits)");
+                sb.AppendLine($"\t {playerDef.Name}{playerClassText}: {playerResult.ScoreTotal}");
+                sb.AppendLine($"\t\t {playerResult.Hits} hits");
+                sb.AppendLine($"\t\t {playerResult.Deaths} deaths");
             }
 
             resultLine.Q<Label>().text = sb.ToString();

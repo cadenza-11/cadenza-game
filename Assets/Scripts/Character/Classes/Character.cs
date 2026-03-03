@@ -33,6 +33,7 @@ namespace Cadenza
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
         public event Action<float, bool> HealthChanged;
+        public event Action<Character> Died;
         public event Action<float> FlowChanged;
 
         private float flow;
@@ -189,9 +190,12 @@ namespace Cadenza
 
         public void SetHealth(float health)
         {
-            if (health <= 0f)
+            if (health <= 0f && !this.isFainted)
+            {
                 this.ChangeState(this.fainted);
-            else if (health < this.currentHealth)
+                this.Died?.Invoke(this);
+            }
+            else if (health < this.currentHealth && !this.isFainted)
                 this.ChangeState(this.hitStun.WithDuration(this.attackDuration));
 
             this.currentHealth = Mathf.Clamp(health, 0.0f, this.maxHealth);

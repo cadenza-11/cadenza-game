@@ -273,6 +273,7 @@ public static class SaveSystem
                     ["Name"] = player.Name,
                     ["ClassID"] = player.ClassID,
                     ["Counts"] = counts,
+                    ["Deaths"] = result.Deaths,
                     ["Score"] = result.ScoreTotal,
                 };
                 playerScores.Add(scoreObj);
@@ -331,6 +332,7 @@ public static class SaveSystem
             string playerName = scoreToken["Name"]?.Value<string>() ?? "Unnamed Player";
             int classID = scoreToken["ClassID"]?.Value<int>() ?? -1;
             JObject counts = (JObject)scoreToken["Counts"];
+            int deaths = scoreToken["Deaths"]?.Value<int>() ?? 0;
 
             // Get score counts.
             for (int i = 0; i < scoreClasses.Length; i++)
@@ -344,6 +346,10 @@ public static class SaveSystem
                 for (int j = 0; j < count.Value<int>(); j++)
                     results.AddPlayerScore((playerName, classID), scoreClass);
             }
+
+            // Get player deaths.
+            for (int i = 0; i < deaths; i++)
+                results.AddPlayerDeath((playerName, classID));
         }
 
         return results;
