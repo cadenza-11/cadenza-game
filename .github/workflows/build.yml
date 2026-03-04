@@ -55,15 +55,21 @@ jobs:
       # Prepare SSH known_hosts for container
       - name: Prepare SSH known_hosts
         run: |
-          mkdir -p .ssh_docker
-          ssh-keyscan github.com >> .ssh_docker/known_hosts
-          chmod 600 .ssh_docker/known_hosts
+          mkdir -p "${{ github.workspace }}/.ssh_docker"
+          chmod 700 "${{ github.workspace }}/.ssh_docker"
+
+          # Create known_hosts for github.com so SSH won't try to prompt in container
+          ssh-keyscan -H github.com >> "${{ github.workspace }}/.ssh_docker/known_hosts"
+          chmod 600 "${{ github.workspace }}/.ssh_docker/known_hosts"
 
       # Test SSH access
       - name: Test SSH access to assets repo
         run: |
           ssh -o StrictHostKeyChecking=accept-new -T git@github.com || true
           git ls-remote ssh://git@github.com/cadenza-11/private-assets.git
+
+          ls -la "${{ github.workspace }}/.ssh_docker"
+          cat "${{ github.workspace }}/.ssh_docker/known_hosts" | head -n 3
 
       # Git LFS
       - name: Create LFS file list
