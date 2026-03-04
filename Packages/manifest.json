@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.cadenza.private-assets": "git+ssh://git@github.com/cadenza-11/private-assets.git#v1.0.3",
+    "com.cadenza.private-assets": "git+ssh://git@github.com/cadenza-11/private-assets.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.9",
     "com.unity.charactercontroller": "1.4.1",
