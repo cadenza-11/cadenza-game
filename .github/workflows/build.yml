@@ -52,6 +52,13 @@ jobs:
         with:
           ssh-private-key: ${{ env.SSH_PRIVATE_KEY }}
 
+      # Prepare SSH known_hosts for container
+      - name: Prepare SSH known_hosts
+        run: |
+          mkdir -p .ssh_docker
+          ssh-keyscan github.com >> .ssh_docker/known_hosts
+          chmod 600 .ssh_docker/known_hosts
+
       # Test SSH access
       - name: Test SSH access to assets repo
         run: |
@@ -97,6 +104,7 @@ jobs:
           UNITY_PASSWORD: ${{ env.UNITY_PASSWORD }}
         with:
           sshAgent: ${{ env.SSH_AUTH_SOCK }}
+          sshPublicKeysDirectoryPath: ${{ github.workspace }}/.ssh_docker
           targetPlatform: ${{ matrix.targetPlatform }}
           buildName: ${{ matrix.targetPlatform }}
           buildsPath: build
