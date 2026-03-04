@@ -52,24 +52,17 @@ jobs:
         with:
           ssh-private-key: ${{ env.SSH_PRIVATE_KEY }}
 
-      # Prepare SSH known_hosts for container
-      - name: Prepare SSH known_hosts
+      - name: Add GitHub to the SSH known hosts file
         run: |
-          mkdir -p "${{ github.workspace }}/.ssh_docker"
-          chmod 700 "${{ github.workspace }}/.ssh_docker"
-
-          # Create known_hosts for github.com so SSH won't try to prompt in container
-          ssh-keyscan -H github.com >> "${{ github.workspace }}/.ssh_docker/known_hosts"
-          chmod 600 "${{ github.workspace }}/.ssh_docker/known_hosts"
+          mkdir -p -m 0700 /home/runner/.ssh
+          curl --silent https://api.github.com/meta | jq --raw-output '"github.com "+.ssh_keys[]' >> /home/runner/.ssh/known_hosts
+          chmod 600 /home/runner/.ssh/known_hosts
 
       # Test SSH access
       - name: Test SSH access to assets repo
         run: |
           ssh -o StrictHostKeyChecking=accept-new -T git@github.com || true
           git ls-remote ssh://git@github.com/cadenza-11/private-assets.git
-
-          ls -la "${{ github.workspace }}/.ssh_docker"
-          cat "${{ github.workspace }}/.ssh_docker/known_hosts" | head -n 3
 
       # Git LFS
       - name: Create LFS file list
@@ -110,7 +103,6 @@ jobs:
           UNITY_PASSWORD: ${{ env.UNITY_PASSWORD }}
         with:
           sshAgent: ${{ env.SSH_AUTH_SOCK }}
-          sshPublicKeysDirectoryPath: ${{ github.workspace }}/.ssh_docker
           targetPlatform: ${{ matrix.targetPlatform }}
           buildName: ${{ matrix.targetPlatform }}
           buildsPath: build
