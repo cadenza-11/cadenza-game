@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using NUnit.Framework;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -68,3 +69,4 @@ namespace Cadenza.Tests
         }
     }
 }
+#endif
