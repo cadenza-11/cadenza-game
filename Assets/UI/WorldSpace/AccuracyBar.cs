@@ -8,7 +8,7 @@ public class AccuracyBar : MonoBehaviour
     private Slider accuracyBar;
     private Label accuracyText;
 
-    void Start()
+    void Awake()
     {
         this.accuracyBar = this.uiDocument.rootVisualElement.Q<Slider>();
         this.accuracyText = this.uiDocument.rootVisualElement.Q<Label>();

@@ -47,7 +47,7 @@ namespace Cadenza
 
         public override void OnGameStart()
         {
-            _ = this.OnGameStartAsync();
+            this.RunGameStartAsync();
         }
 
         public override void OnGameStop()
@@ -91,6 +91,22 @@ namespace Cadenza
             // Start combat.
             if (ApplicationController.CurrentLevel.IsBattleLevel)
                 this.StartCombat();
+        }
+
+        private async void RunGameStartAsync()
+        {
+            try
+            {
+                await this.OnGameStartAsync();
+            }
+            catch (Exception ex)
+            {
+                // Wait a moment before exiting to the main
+                // menu so that other systems' GameStart handlers
+                // can finish executing.
+                Debug.LogException(ex);
+                Timer.ScheduleAsync(0.1f, ExitToPregame);
+            }
         }
 
         public override void OnUpdate()
