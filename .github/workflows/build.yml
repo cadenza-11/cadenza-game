@@ -20,6 +20,7 @@ on:
 run-name: ${{ github.event.inputs.run_name }}
 
 env:
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
   UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -44,6 +45,24 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
+
+      # Load SSH key
+      - name: Load SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ env.SSH_PRIVATE_KEY }}
+
+      - name: Add GitHub to the SSH known hosts file
+        run: |
+          mkdir -p -m 0700 /home/runner/.ssh
+          curl --silent https://api.github.com/meta | jq --raw-output '"github.com "+.ssh_keys[]' >> /home/runner/.ssh/known_hosts
+          chmod 600 /home/runner/.ssh/known_hosts
+
+      # Test SSH access
+      - name: Test SSH access to assets repo
+        run: |
+          ssh -o StrictHostKeyChecking=accept-new -T git@github.com || true
+          git ls-remote ssh://git@github.com/cadenza-11/private-assets.git
 
       # Git LFS
       - name: Create LFS file list
@@ -83,6 +102,7 @@ jobs:
           UNITY_EMAIL: ${{ env.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ env.UNITY_PASSWORD }}
         with:
+          sshAgent: ${{ env.SSH_AUTH_SOCK }}
           targetPlatform: ${{ matrix.targetPlatform }}
           buildName: ${{ matrix.targetPlatform }}
           buildsPath: build
@@ -97,6 +117,7 @@ jobs:
     name: Deploy to Steam
     needs: buildForAllSupportedPlatforms
     runs-on: ubuntu-latest
+    if: github.event.inputs.create_release == 'true'
     steps:
       # Checkout
       - name: Checkout Repository
