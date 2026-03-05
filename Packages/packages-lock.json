@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.cadenza.private-assets": {
+      "version": "git+ssh://git@github.com/cadenza-11/private-assets.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "22f18e68b2f887042f97bc590d7e933e5652e7d1"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
@@ -211,7 +218,7 @@
     },
     "com.unity.searcher": {
       "version": "4.9.4",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -235,7 +242,7 @@
     },
     "com.unity.shadergraph": {
       "version": "17.3.0",
-      "depth": 1,
+      "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.render-pipelines.core": "17.3.0",
