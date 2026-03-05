@@ -107,7 +107,7 @@ namespace FMODUnity
             {
                 RuntimeUtils.DebugLogWarning(string.Format(("[FMOD] {0} : {1}"), (string)func, (string)message));
             }
-            else if (flags == FMOD.DEBUG_FLAGS.LOG || flags == FMOD.DEBUG_FLAGS.TYPE_VIRTUAL)
+            else if (flags == FMOD.DEBUG_FLAGS.LOG)
             {
                 RuntimeUtils.DebugLog(string.Format(("[FMOD] {0} : {1}"), (string)func, (string)message));
             }
@@ -184,7 +184,7 @@ namespace FMODUnity
                         RuntimeUtils.EnforceLibraryOrder();
 
                         #if UNITY_OPENHARMONY && !UNITY_EDITOR
-                        OpenHarmonyJSObject openHarmonyJSObject = new OpenHarmonyJSObject("ClassFMOD" + FMOD.VERSION.suffix);
+                        OpenHarmonyJSObject openHarmonyJSObject = new OpenHarmonyJSObject("ClassFMOD" + FMOD.VERSION.dllSuffix);
                         openHarmonyJSObject.Call("init");
                         #endif
 

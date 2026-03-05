@@ -7,7 +7,6 @@ namespace FMODUnity
 {
     public class FindAndReplace : EditorWindow
     {
-#if !FMOD_SERIALIZE_GUID_ONLY
         private bool levelScope = true;
         private bool prefabScope;
         private string findText;
@@ -189,6 +188,5 @@ namespace FMODUnity
             ReplaceText(emitters[lastMatch]);
             FindNext();
         }
-#endif
     }
 }
