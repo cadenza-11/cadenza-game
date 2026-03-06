@@ -76,7 +76,7 @@ namespace Cadenza
 
         private async Task TransitionToImplAsync(UIPanel panel, bool hideSelf = true)
         {
-            await Fader.ShowAsync(setAudio: false);
+            await Fader.ShowAsync();
             if (hideSelf)
             {
                 this.Hide();
@@ -85,7 +85,7 @@ namespace Cadenza
             {
                 panel.previousPanel = this;
                 panel.Show();
-                Fader.HideImmediate();
+                Fader.Hide();
             }
         }
 

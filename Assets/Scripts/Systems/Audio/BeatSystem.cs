@@ -263,16 +263,29 @@ namespace Cadenza
             return Mathf.RoundToInt((float)(timestamp / beatPeriod));
         }
 
+        public static Task WaitForNextMarkerAsync()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            void Handler(string _)
+            {
+                MarkerPassed -= Handler;
+                tcs.TrySetResult(true);
+            }
+
+            MarkerPassed += Handler;
+            return tcs.Task;
+        }
+
         public static Task WaitForMarkerAsync(string markerName)
         {
             var tcs = new TaskCompletionSource<bool>();
             void Handler(string markerPassed)
             {
-                if (markerPassed != markerName)
-                    return;
-
-                MarkerPassed -= Handler;
-                tcs.TrySetResult(true);
+                if (string.Equals(markerPassed, markerName))
+                {
+                    MarkerPassed -= Handler;
+                    tcs.TrySetResult(true);
+                }
             }
 
             MarkerPassed += Handler;

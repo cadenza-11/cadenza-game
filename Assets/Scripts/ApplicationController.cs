@@ -121,6 +121,12 @@ namespace Cadenza
 
         private async Task SetLevelAsyncImpl(Level level)
         {
+            if (this.isRedirecting)
+            {
+                Debug.LogWarning("Attempting to redirect while already redirecting.");
+                return;
+            }
+
             this.isRedirecting = true;
 
             int sceneIndex = 0;
@@ -154,9 +160,13 @@ namespace Cadenza
             }
             if (sceneIndex != 0)
                 singleton.ChangeState(ApplicationState.GameSession);
-            await Fader.HideAsync();
 
+            // The AudioSystem should always respond to a scene change
+            // and trigger the next section of the track. This track
+            // should always have a starting marker that client can detect.
+            await BeatSystem.WaitForNextMarkerAsync();
             this.isRedirecting = false;
+            Fader.Hide();
         }
 
         private void ChangeState(ApplicationState newState)

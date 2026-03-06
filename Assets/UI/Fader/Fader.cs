@@ -11,8 +11,7 @@ namespace Cadenza
         private VisualElement fader;
         private const string SlideInClassName = "slide-in";
         private const string SlideOutClassName = "slide-out";
-        private const float DefaultLingerDuration = 0.5f; // seconds
-        private const string FMODFadingMarkerName = "Fading";
+        private const int DefaultLingerDuration = 500; // milliseconds
 
         public override void OnInitialize()
         {
@@ -20,13 +19,13 @@ namespace Cadenza
             singleton = this;
 
             this.fader = this.uiDocument.rootVisualElement.Q<VisualElement>("fader");
-            this.Show();
+            this.root.style.display = DisplayStyle.Flex;
         }
 
         /// <summary>
-        /// Show the fader without awaiting or affecting FMOD.
+        /// Transitions the fader to a visible state.
         /// </summary>
-        public static void ShowImmediate()
+        public static new void Show()
         {
             // Do nothing if panel is already visible.
             if (singleton.fader.ClassListContains(SlideInClassName))
@@ -37,9 +36,9 @@ namespace Cadenza
         }
 
         /// <summary>
-        /// Hide the fader without awaiting or affecting FMOD.
+        /// Transitions the fader to an invisible state.
         /// </summary>
-        public static void HideImmediate()
+        public static new void Hide()
         {
             // Panel must already be visible.
             if (!singleton.fader.ClassListContains(SlideInClassName))
@@ -53,7 +52,7 @@ namespace Cadenza
         /// <summary>
         /// Transitions the fader to a visible state.
         /// </summary>
-        public static async Task ShowAsync(bool setAudio = true)
+        public static async Task ShowAsync(int durationMs = DefaultLingerDuration)
         {
             // Do nothing if panel is already visible.
             if (singleton.fader.ClassListContains(SlideInClassName))
@@ -66,34 +65,26 @@ namespace Cadenza
             singleton.fader.RegisterCallbackOnce<TransitionEndEvent>(_ => transitionCompletion.TrySetResult(true));
             singleton.fader.AddToClassList(SlideInClassName);
 
-            if (setAudio)
-                AudioSystem.SetParameter("isFading", true);
-
             // Wait until transition completes.
+            await Task.Delay(durationMs);
             await transitionCompletion.Task;
         }
 
         /// <summary>
         /// Transitions the fader to an invisible state.
         /// </summary>
-        public static async Task HideAsync(bool setAudio = true)
+        public static async Task HideAsync(int durationMs = DefaultLingerDuration)
         {
             // Panel must already be visible.
             if (!singleton.fader.ClassListContains(SlideInClassName))
                 return;
-
-            // Wait for audio to transition out.
-            if (setAudio)
-            {
-                AudioSystem.SetParameter("isFading", false);
-                await WaitForNonFadingMarkerAsync();
-            }
 
             // Transition.
             var transitionCompletion = new TaskCompletionSource<bool>();
             singleton.fader.RegisterCallbackOnce<TransitionEndEvent>(_ => transitionCompletion.TrySetResult(true));
             singleton.fader.AddToClassList(SlideOutClassName);
 
+            await Task.Delay(durationMs);
             await transitionCompletion.Task;
 
             singleton.Reset();
@@ -109,21 +100,6 @@ namespace Cadenza
         {
             while (singleton.fader.style.display == DisplayStyle.None)
                 await Task.Delay(100);
-        }
-
-        private static Task WaitForNonFadingMarkerAsync()
-        {
-            var tcs = new TaskCompletionSource<bool>();
-            void Handler(string markerName)
-            {
-                if (string.Equals(markerName, FMODFadingMarkerName))
-                    return;
-                BeatSystem.MarkerPassed -= Handler;
-                tcs.TrySetResult(true);
-            }
-
-            BeatSystem.MarkerPassed += Handler;
-            return tcs.Task;
         }
 
         private void Reset()

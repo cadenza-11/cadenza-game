@@ -24,7 +24,10 @@ namespace Cadenza
             Paused,
             Menu,
             CharacterSelect,
-            Game,
+            Backstage,
+            Stage,
+            Combat,
+            Results,
         }
 
         private const string ParamNameState = "GameState";
@@ -176,11 +179,6 @@ namespace Cadenza
             if (characterClass != null)
                 RuntimeManager.StudioSystem.setParameterByName(characterClass.Name, enabled ? 1 : 0);
 
-        }
-
-        public static void SetStage(Level level)
-        {
-            RuntimeManager.StudioSystem.setParameterByName(ParamNameStage, level == null ? 0 : level.ID);
         }
 
         public static void SetState(State state)

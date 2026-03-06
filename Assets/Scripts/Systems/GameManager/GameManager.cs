@@ -30,6 +30,7 @@ namespace Cadenza
 
         private bool isCombatActive;
         public static bool IsCombatActive => singleton.isCombatActive;
+        public static event Action CombatRequested;
         public static event Action CombatStarted;
         public static event Action<GameResult> CombatStopped;
 
@@ -76,7 +77,10 @@ namespace Cadenza
         private async Task OnGameStartAsync()
         {
             // Set audio.
-            AudioSystem.SetState(AudioSystem.State.Game);
+            if (ApplicationController.CurrentLevel.IsBattleLevel)
+                AudioSystem.SetState(AudioSystem.State.Stage);
+            else
+                AudioSystem.SetState(AudioSystem.State.Backstage);
 
             // Spawn players.
             foreach (var player in PlayerSystem.Players)
@@ -90,7 +94,7 @@ namespace Cadenza
 
             // Start combat.
             if (ApplicationController.CurrentLevel.IsBattleLevel)
-                this.StartCombat();
+                await this.StartCombatAsync();
         }
 
         private async void RunGameStartAsync()
@@ -169,13 +173,23 @@ namespace Cadenza
         #endregion
         #region Combat Methods
 
-        private void StartCombat()
+        private async Task StartCombatAsync()
         {
             if (this.isCombatActive)
                 return;
 
             this.isCombatActive = true;
 
+            AudioSystem.SetState(AudioSystem.State.Combat);
+            Debug.Log("Combat start requested.");
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
+
+            await BeatSystem.WaitForMarkerAsync("RequestCombat");
+            CombatRequested?.Invoke();
+            Debug.Log("Combat start acknowledged.");
+
+            await BeatSystem.WaitForMarkerAsync("Combat");
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
             Debug.Log("Starting combat.");
             CombatStarted?.Invoke();
         }
