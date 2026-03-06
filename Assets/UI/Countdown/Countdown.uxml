@@ -1,9 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ui:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ui="UnityEngine.UIElements"
-    xmlns:uie="UnityEditor.UIElements"
-    xsi:noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd"
->
-    
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="c_CountdownRoot" style="flex-grow: 1; align-items: center; justify-content: center;">
+        <ui:Label name="txt_Countdown" text="3" style="-unity-font-style: bold; color: rgb(255, 255, 255); -unity-text-align: middle-center; -unity-text-outline-width: 30px; -unity-text-outline-color: rgb(0, 0, 0); font-size: 720px;"/>
+    </ui:VisualElement>
 </ui:UXML>
