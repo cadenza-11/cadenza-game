@@ -1,45 +1,48 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="c_Panel" style="flex-grow: 1; padding-top: 40px; padding-right: 40px; padding-bottom: 40px; padding-left: 40px;">
-        <ui:VisualElement name="c_Title" style="align-items: center; font-size: 65px; flex-direction: row; justify-content: center;">
-            <ui:Label text="BAND NAME" name="update_PlayerBand" />
-            <ui:Label text="vs." name="txt_vs" />
-            <ui:Label text="OPPONENT NAME" name="update_LevelName" />
-            <ui:Label text=":" name="txt_colon" />
-            <ui:Label text="YOU WIN!" name="update_WinLoss" />
+    <ui:Template name="IndividualResults" src="project://database/Assets/UI/ResultsMenu/IndividualResults.uxml?fileID=9197481963319205126&amp;guid=ad36b2b648f03f84f978739140031799&amp;type=3#IndividualResults"/>
+    <Style src="project://database/Assets/UI/ResultsMenu/ResultsMenu.uss?fileID=7433441132597879392&amp;guid=2d58f611297d5d249bf908e30b6c0457&amp;type=3#ResultsMenu"/>
+    <ui:VisualElement name="c_Panel" style="flex-grow: 1; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; background-color: rgb(255, 165, 0);">
+        <ui:VisualElement name="c_Title" style="align-items: center; font-size: 65px; flex-direction: row; justify-content: center; margin-bottom: 15px; margin-top: 15px;">
+            <ui:Label text="BAND NAME" name="update_PlayerBand"/>
+            <ui:Label text="vs." name="txt_vs"/>
+            <ui:Label text="OPPONENT NAME" name="update_LevelName"/>
+            <ui:Label text=":" name="txt_colon"/>
+            <ui:Label text="YOU WIN!" name="update_WinLoss"/>
         </ui:VisualElement>
-        <ui:VisualElement name="c_Team" style="flex-direction: row; font-size: 40px; align-items: center; justify-content: space-around;">
-            <ui:VisualElement name="c_LetterGrade" style="align-items: center; align-self: flex-start;">
-                <ui:Label text="Team Grade" name="txt_TeamGrade" style="font-size: 50px; -unity-font-style: bold;" />
-                <ui:Label text="A" name="update_TeamLetterGrade" style="-unity-text-align: middle-center; font-size: 90px;" />
-                <ui:VisualElement name="c_TeamPts" style="flex-direction: row; justify-content: center; font-size: 30px;">
-                    <ui:Label text="100000" name="update_TeamScoreNum" />
-                    <ui:Label text="pts" name="txt_Points" />
+        <ui:VisualElement name="c_Scores" style="flex-grow: 1; flex-direction: row;">
+            <ui:VisualElement name="c_IndividualStats" style="flex-grow: 1; width: 66%;">
+                <ui:VisualElement name="c_TopHalf" style="flex-grow: 1; flex-direction: row;">
+                    <ui:Instance template="IndividualResults" name="c_Player" style="width: 50%;"/>
+                    <ui:Instance template="IndividualResults" name="c_Player" style="width: 50%;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="c_BottomHalf" style="flex-grow: 1; flex-direction: row;">
+                    <ui:Instance template="IndividualResults" name="c_Player" style="width: 50%;"/>
+                    <ui:Instance template="IndividualResults" name="c_Player" style="width: 50%;"/>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="c_TeamCombos" style="align-items: center;">
-                <ui:Label text="Combos Activated" name="txt_TeamCombos" style="-unity-font-style: bold;" />
-                <ui:Label text="5" name="update_CombosActivated" />
-            </ui:VisualElement>
-            <ui:VisualElement name="c_TeamAccuracy" style="align-items: center;">
-                <ui:Label text="Overall Accuracy" name="txt_TeamAccuracy" style="-unity-font-style: bold;" />
-                <ui:Label text="85%" name="update_TeamAccuracy" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="c_Individual" style="flex-grow: 1; flex-direction: row; font-size: 60px; -unity-text-align: middle-center;">
-            <ui:VisualElement name="c_Player" style="flex-grow: 1;">
-                <ui:Label text="PLAYER" name="txt_PlayerHeader" />
-                <ui:Label text="Player 1" name="txt_PlayerNum" />
-                <ui:Label text="Player 2" name="txt_PlayerNum" />
-            </ui:VisualElement>
-            <ui:VisualElement name="c_Accuracy" style="flex-grow: 1;">
-                <ui:Label text="ACCURACY" name="txt_AccuracyHeader" />
-                <ui:Label text="90%" name="update_PlayerPercent" />
-                <ui:Label text="80%" name="update_PlayerPercent" />
-            </ui:VisualElement>
-            <ui:VisualElement name="c_Perfects" style="flex-grow: 1;">
-                <ui:Label text="PERFECTS" name="txt_PerfectsHeader" />
-                <ui:Label text="180" name="update_PlayerPerfect" />
-                <ui:Label text="150" name="update_PlayerPerfect" />
+            <ui:VisualElement name="c_TeamStats" class="score_container" style="flex-grow: 1; width: 33%; align-items: center;">
+                <ui:Label text="Band Name" name="update_PlayerBandBanner" class="team_name"/>
+                <ui:VisualElement name="spacer" class="score_spacer" style="flex-grow: 1; width: 100%;"/>
+                <ui:VisualElement name="c_Scores" class="team_stats">
+                    <ui:VisualElement name="c_LetterGrade">
+                        <ui:Label text="S" name="update_LetterGrade" class="team_stat"/>
+                        <ui:Label text="Score" name="txt_LetterGrade"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="c_OverallAccuracy">
+                        <ui:Label text="100%" name="update_OverallAccuracy" class="team_stat"/>
+                        <ui:Label text="Team Accuracy" name="txt_OverallAccuracy"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="c_MVP" style="flex-grow: 1; height: 30%; width: 50%;">
+                    <ui:VisualElement name="portrait_MVP" class="team_MVP_icon">
+                        <ui:Label text="MVP" name="txt_MVP" class="team_MVP_text"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="c_JudgeScores" class="team_scorecards">
+                    <ui:Label text="10" class="judge_card"/>
+                    <ui:Label text="10" class="judge_card"/>
+                    <ui:Label text="10" class="judge_card"/>
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

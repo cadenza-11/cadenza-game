@@ -1,0 +1,197 @@
+.score_container {
+    flex-grow: 1;
+    padding-top: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    border-left-color: rgb(26, 26, 26);
+    border-right-color: rgb(26, 26, 26);
+    border-top-color: rgb(26, 26, 26);
+    border-bottom-color: rgb(26, 26, 26);
+    background-color: rgba(0, 0, 0, 0.33);
+    color: rgb(255, 255, 255);
+    -unity-text-outline-color: rgb(26, 26, 26);
+    -unity-text-outline-width: 1px;
+    letter-spacing: -4px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.judge_card {
+    flex-grow: 1;
+    aspect-ratio: 1;
+    background-color: rgb(245, 243, 237);
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    color: rgb(0, 0, 0);
+    max-width: 30%;
+    -unity-text-align: middle-center;
+    font-size: 86px;
+}
+
+.team_scorecards {
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-around;
+    max-width: 100%;
+    width: 100%;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.indiv_stats {
+    flex-grow: 1;
+    height: 50%;
+    flex-direction: row;
+    font-size: 25px;
+    align-items: center;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.score_spacer {
+    flex-grow: 1;
+    align-self: center;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    background-color: rgb(255, 255, 255);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgb(26, 26, 26);
+    border-right-color: rgb(26, 26, 26);
+    border-top-color: rgb(26, 26, 26);
+    border-bottom-color: rgb(26, 26, 26);
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    min-height: 5px;
+    max-height: 5px;
+}
+
+.indiv_stat_line {
+    flex-direction: row;
+}
+
+.indiv_info_container {
+    flex-grow: 1;
+    flex-direction: row;
+    height: 30%;
+    margin-left: 10px;
+}
+
+.indiv_portrait {
+    flex-grow: 1;
+    background-image: url("project://database/Assets/Art/TEMPORARY_ASSETS/Instruments/guitar.png?fileID=2800000&guid=30cd5425cd126994397456683ad79720&type=3#guitar");
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    background-color: rgb(26, 26, 26);
+    margin-top: 0;
+    margin-right: 10px;
+    margin-bottom: 0;
+    margin-left: 0;
+    -unity-background-scale-mode: scale-and-crop;
+    width: 33%;
+}
+
+.indiv_info {
+    flex-grow: 1;
+    width: 66%;
+    margin-left: 20px;
+}
+
+.indiv_name {
+    font-size: 48px;
+}
+
+.indiv_instrument {
+    -unity-font-style: italic;
+    font-size: 20px;
+}
+
+.team_stat {
+    font-size: 96px;
+    align-self: center;
+}
+
+.team_MVP_icon {
+    flex-grow: 1;
+    aspect-ratio: 1;
+    background-color: rgb(0, 0, 0);
+    background-image: url("project://database/Assets/Art/TEMPORARY_ASSETS/Instruments/guitar.png?fileID=2800000&guid=30cd5425cd126994397456683ad79720&type=3#guitar");
+    border-top-width: 10px;
+    border-right-width: 10px;
+    border-bottom-width: 10px;
+    border-left-width: 10px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    align-self: center;
+}
+
+.team_MVP_text {
+    font-size: 50px;
+    -unity-font-style: bold;
+    color: rgb(0, 0, 0);
+    -unity-text-outline-color: rgb(255, 255, 255);
+    -unity-text-outline-width: 5px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 10px;
+}
+
+.team_stats {
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    padding-top: 30px;
+    padding-right: 30px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+}
+
+.team_name {
+    font-size: 96px;
+    white-space: normal;
+}

@@ -1,0 +1,47 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/ResultsMenu/ResultsMenu.uss?fileID=7433441132597879392&amp;guid=2d58f611297d5d249bf908e30b6c0457&amp;type=3#ResultsMenu"/>
+    <ui:VisualElement name="c_IndividualResults" class="score_container">
+        <ui:VisualElement name="c_PlayerInfo" class="indiv_info_container">
+            <ui:VisualElement name="portrait_Player" class="indiv_portrait"/>
+            <ui:VisualElement name="c_PlayerInfoRight" class="indiv_info">
+                <ui:Label text="player name" name="update_PlayerName" class="indiv_name"/>
+                <ui:Label text="Instrument" name="update_Instrument" class="indiv_instrument"/>
+                <ui:Label text="1000000" name="update_TotalScore" style="position: absolute; bottom: 10px;"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="c_Stats" class="indiv_stats">
+            <ui:VisualElement name="c_ScoringSys" style="flex-grow: 1; width: 100%;">
+                <ui:VisualElement name="stat_Streak" class="indiv_stat_line">
+                    <ui:Label text="Max Streak" name="txt_HighestStreak"/>
+                    <ui:VisualElement name="spacer" class="score_spacer"/>
+                    <ui:Label text="0" name="update_HighestStreak"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="stat_Perfect" class="indiv_stat_line">
+                    <ui:Label text="Perfects" name="txt_Perfect"/>
+                    <ui:VisualElement name="spacer" class="score_spacer"/>
+                    <ui:Label text="0" name="update_Perfect"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="stat_Good" class="indiv_stat_line">
+                    <ui:Label text="Goods" name="txt_Good"/>
+                    <ui:VisualElement name="spacer" class="score_spacer"/>
+                    <ui:Label text="0" name="update_Good"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="stat_OK" class="indiv_stat_line">
+                    <ui:Label text="OKs" name="txt_OK"/>
+                    <ui:VisualElement name="spacer" class="score_spacer"/>
+                    <ui:Label text="0" name="update_OK"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="stat_Bad" class="indiv_stat_line">
+                    <ui:Label text="Bads" name="txt_Bad"/>
+                    <ui:VisualElement name="spacer" class="score_spacer"/>
+                    <ui:Label text="0" name="update_Bad"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="stat_Deaths" class="indiv_stat_line">
+                    <ui:Label text="Deaths" name="txt_Deaths"/>
+                    <ui:VisualElement name="spacer" class="score_spacer"/>
+                    <ui:Label text="0" name="update_EnemiesKilled"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
