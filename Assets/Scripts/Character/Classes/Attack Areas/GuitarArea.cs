@@ -9,6 +9,7 @@ namespace Cadenza
         public float knockbackScale;
         public AttkEffect comboMove = AttkEffect.None;
         private GameObject go = null;
+        private ScoreDef? attackScore;
 
         public void SetActive(bool enabled)
         {
@@ -20,6 +21,7 @@ namespace Cadenza
 
         public void StartLightAttack(Character character)
         {
+            this.attackScore = character.input.lightAttack;
             character.comboM.ProcessCombo(AttkTypes.Light, out var reward);
             character.ManageAttackDirection();
 
@@ -33,6 +35,7 @@ namespace Cadenza
 
         public void StartHeavyAttack(Character character)
         {
+            this.attackScore = character.input.heavyAttack;
             character.comboM.ProcessCombo(AttkTypes.Heavy, out var reward);
             character.ManageAttackDirection();
 
@@ -47,27 +50,29 @@ namespace Cadenza
 
         public void EndAttack()
         {
+            this.attackScore = null;
             this.gameObject.SetActive(false);
         }
 
         private void OnTriggerEnter(Collider collider)
         {
+            // Hit enemy.
             if (collider.gameObject.TryGetComponent(out Enemy enemy))
+            {
                 enemy.DoDamage(this.damage);
 
-            // Stop current horizontal movement.
-            // Vector3 v = collider.attachedRigidbody.linearVelocity;
-            // v.x = 0;
-            // v.z = 0;
-            // collider.attachedRigidbody.linearVelocity = v;
+                // Add knockback.
+                Vector3 direction = collider.transform.position - this.transform.position;
+                Vector3 force = direction.normalized * this.knockbackScale;
+                force.y = 2f;
+                collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
+            }
 
-            // Add knockback.
-            Vector3 direction = collider.transform.position - this.transform.position;
-            Vector3 force = direction.normalized * this.knockbackScale;
-            force.y = 2f;
-            collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
-
-            this.comboMove = AttkEffect.None;
+            // Hit ally.
+            else if (collider.gameObject.TryGetComponent(out Character character) && this.attackScore.HasValue)
+            {
+                character.OnAllyHit(this.attackScore.Value);
+            }
         }
     }
 }

@@ -48,14 +48,14 @@ namespace Cadenza
         public class Input
         {
             public Vector2 move;
-            public bool wantLight;
-            public bool wantHeavy;
+            public ScoreDef? lightAttack;
+            public ScoreDef? heavyAttack;
             public bool wantTeam;
 
             public void Consume()
             {
-                this.wantHeavy = false;
-                this.wantLight = false;
+                this.lightAttack = null;
+                this.heavyAttack = null;
                 this.wantTeam = false;
             }
         }
@@ -82,7 +82,6 @@ namespace Cadenza
         {
             // Set player.
             this.Player = player;
-            player.PlayerHit += this.OnPlayerHit;
             BeatSystem.BeatPlayed += this.UpdateFlowBuffs;
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
             this.attackArea = this.AttackAreaObject.GetComponent<IAttackArea>();
@@ -111,7 +110,6 @@ namespace Cadenza
         void OnDestroy()
         {
             // Unsubscribe from events.
-            this.Player.PlayerHit -= this.OnPlayerHit;
             BeatSystem.BeatPlayed -= this.UpdateFlowBuffs;
             this.Player.InteractChanged -= this.interactionIndicator.OnPlayerInteractChanged;
         }
@@ -221,50 +219,70 @@ namespace Cadenza
             this.HealthChanged?.Invoke(this.currentHealth, this.isFainted);
         }
 
-        private void OnPlayerHit(ScoreDef def)
+        public void UpdateAccuracy(ScoreDef def)
         {
             // Update accuracy.
             this.accuracyBar.OnPlayerHit(def);
+        }
 
-            // Update flow or revive.
-            float value = def.Class switch
+        public void UpdateFlow(ScoreDef def, float multiplier = 1f)
+        {
+            // Update flow.
+            float value = multiplier * def.Class switch
             {
                 ScoreClass.Perfect => +3.0f,
                 ScoreClass.Great => +1.0f,
                 ScoreClass.Bad => -1.0f,
                 _ => 0.0f
             };
+            this.SetFlow(this.flow + value);
+        }
 
+        public void UpdateRevive(ScoreDef def, float multiplier = 1f)
+        {
+            if (!this.isFainted)
+                return;
+
+            // Update revive.
+            float value = multiplier * def.Class switch
+            {
+                ScoreClass.Perfect => +3.0f,
+                ScoreClass.Great => +1.0f,
+                ScoreClass.Bad => -1.0f,
+                _ => 0.0f
+            };
+            this.SetRevive(this.revive + value);
+        }
+
+        public void OnAllyHit(ScoreDef def)
+        {
+            // Use ally hit to revive this character.
+            // Ally revives are worth more than self revives.
             if (this.isFainted)
-                this.SetRevive(this.revive + value);
-            else
-                this.SetFlow(this.flow + value);
+                this.UpdateRevive(def, multiplier: 2);
         }
 
         #endregion
 
         #region Input
-        public void OnMove(InputAction.CallbackContext context)
+        public void OnMove(Vector2 move)
         {
-            this.input.move = context.ReadValue<Vector2>();
+            this.input.move = move;
         }
 
-        public void OnAttackLight(InputAction.CallbackContext context)
+        public void OnAttackLight(ScoreDef score)
         {
-            if (context.performed && !this.isFainted)
-                this.input.wantLight = true;
+            this.input.lightAttack = score;
         }
 
-        public void OnAttackHeavy(InputAction.CallbackContext context)
+        public void OnAttackHeavy(ScoreDef score)
         {
-            if (context.performed && !this.isFainted)
-                this.input.wantHeavy = true;
+            this.input.heavyAttack = score;
         }
 
-        public void OnAttackTeam(InputAction.CallbackContext context)
+        public void OnAttackTeam()
         {
-            if (context.performed && !this.isFainted)
-                this.input.wantTeam = true;
+            this.input.wantTeam = true;
         }
 
         #endregion

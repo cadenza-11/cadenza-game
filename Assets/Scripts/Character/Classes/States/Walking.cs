@@ -20,15 +20,16 @@ namespace Cadenza
             if (character.input.wantTeam)
                 character.StartTeamAttack();
 
-            else if (character.input.wantLight)
+            else if (character.input.lightAttack.HasValue)
                 character.ChangeState(character.lightAttack);
 
-            else if (character.input.wantHeavy)
+            else if (character.input.heavyAttack.HasValue)
                 character.ChangeState(character.heavyAttack);
         }
 
         public void FixedUpdate(Character character)
         {
+            // Walk.
             int flowSpeed = character.HasFlowBuff(0) ? 1 : 0;
             float speedModifier = character.speed + (character.speed * 0.25f * flowSpeed);
 

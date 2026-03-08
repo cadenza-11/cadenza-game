@@ -27,7 +27,7 @@ namespace Cadenza
         private void OnDestroy()
         {
             if (this.Character != null)
-                this.UnregisterCharacterCallbacks(this.Input.actions, this.Character);
+                this.UnregisterCharacterCallbacks(this.Input.actions);
         }
 
         #region Public Methods
@@ -53,7 +53,7 @@ namespace Cadenza
             // Remove the character body.
             if (character == null && this.Character != null)
             {
-                this.UnregisterCharacterCallbacks(this.Input.actions, this.Character);
+                this.UnregisterCharacterCallbacks(this.Input.actions);
                 Destroy(this.Character);
             }
 
@@ -63,7 +63,7 @@ namespace Cadenza
             if (this.Character != null)
             {
                 this.Character.Initialize(this);
-                this.RegisterCharacterCallbacks(this.Input.actions, this.Character);
+                this.RegisterCharacterCallbacks(this.Input.actions);
             }
         }
 
@@ -98,7 +98,7 @@ namespace Cadenza
 
         #endregion
         #region Input
-        private void RegisterCharacterCallbacks(InputActionAsset actionMaps, Character character)
+        private void RegisterCharacterCallbacks(InputActionAsset actionMaps)
         {
             // Player map.
             var map = actionMaps.FindActionMap("Player", throwIfNotFound: true);
@@ -110,14 +110,48 @@ namespace Cadenza
             var pauseAction = map.FindAction("Pause", throwIfNotFound: true);
             this.interactAction = attackLightAction;
 
-            moveAction.performed += character.OnMove;
-            moveAction.canceled += character.OnMove;
-            attackLightAction.performed += character.OnAttackLight;
-            attackLightAction.performed += this.OnHit;
-            attackHeavyAction.performed += character.OnAttackHeavy;
-            attackHeavyAction.performed += this.OnHit;
-            attackTeamAction.performed += character.OnAttackTeam;
+            moveAction.performed += this.OnMove;
+            moveAction.canceled += this.OnMove;
+            attackLightAction.performed += this.OnAttackLight;
+            attackHeavyAction.performed += this.OnAttackHeavy;
+            attackTeamAction.performed += this.OnAttackTeam;
             pauseAction.performed += this.OnPause;
+        }
+
+        private void OnMove(InputAction.CallbackContext context)
+        {
+            if (this.Character != null)
+                this.Character.OnMove(context.ReadValue<Vector2>());
+        }
+
+        private void OnAttackLight(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+
+            var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
+            this.PlayerHit?.Invoke(score);
+
+            if (this.Character != null)
+                this.Character.OnAttackLight(score);
+        }
+
+        private void OnAttackHeavy(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+
+            var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
+            this.PlayerHit?.Invoke(score);
+
+            if (this.Character != null)
+                this.Character.OnAttackHeavy(score);
+        }
+
+        private void OnAttackTeam(InputAction.CallbackContext context)
+        {
+            if (context.performed && this.Character != null)
+                this.Character.OnAttackTeam();
         }
 
         private void OnPause(InputAction.CallbackContext context)
@@ -126,16 +160,7 @@ namespace Cadenza
                 GameManager.PauseGame(this);
         }
 
-        private void OnHit(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-            {
-                var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
-                this.PlayerHit?.Invoke(score);
-            }
-        }
-
-        private void UnregisterCharacterCallbacks(InputActionAsset actionMaps, Character character)
+        private void UnregisterCharacterCallbacks(InputActionAsset actionMaps)
         {
             // Player map.
             var map = actionMaps.FindActionMap("Player", throwIfNotFound: true);
@@ -145,11 +170,11 @@ namespace Cadenza
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
 
-            moveAction.performed -= character.OnMove;
-            moveAction.canceled -= character.OnMove;
-            attackLightAction.performed -= character.OnAttackLight;
-            attackHeavyAction.performed -= character.OnAttackHeavy;
-            attackTeamAction.performed -= character.OnAttackTeam;
+            moveAction.performed -= this.OnMove;
+            moveAction.canceled -= this.OnMove;
+            attackLightAction.performed -= this.OnAttackLight;
+            attackHeavyAction.performed -= this.OnAttackHeavy;
+            attackTeamAction.performed -= this.OnAttackTeam;
         }
 
         #endregion
