@@ -220,7 +220,7 @@ PrefabInstance:
       addedObject: {fileID: -5347380999704208309}
     - targetCorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2158799917530867228}
+      addedObject: {fileID: 2103812911972697842}
   m_SourcePrefab: {fileID: 100100000, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
 --- !u!4 &2315105873137221663 stripped
 Transform:
@@ -250,7 +250,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   m_PrefabInstance: {fileID: 4924217895309797681}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2158799917530867228
+--- !u!114 &2103812911972697842
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -259,9 +259,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7326924408933465040}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03e683f5330877e499fdabd03233f1d4, type: 3}
+  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.DrumArea
+  m_EditorClassIdentifier: Assembly-CSharp::AttackArea
   damage: 0
-  knockbackScale: 5
+  knockbackScale: 0
   comboMove: 0

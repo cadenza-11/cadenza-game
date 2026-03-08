@@ -228,14 +228,14 @@ PrefabInstance:
       addedObject: {fileID: 4023698549463242690}
     - targetCorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 353174843764960363}
+      addedObject: {fileID: 1490731011589808830}
   m_SourcePrefab: {fileID: 100100000, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
 --- !u!1 &1819034417208150137 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   m_PrefabInstance: {fileID: 4091136334406032024}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &353174843764960363
+--- !u!114 &1490731011589808830
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -244,11 +244,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1819034417208150137}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7fc7c2da5c23864eb7cc9997a0ca955, type: 3}
+  m_Script: {fileID: 11500000, guid: 60949ed1ba6021c43ae6d7baf1e76959, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.GuitarArea
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.AttackArea
   damage: 0
-  knockbackScale: 5
+  knockbackScale: 0
   comboMove: 0
 --- !u!1 &5759731777474461351 stripped
 GameObject:

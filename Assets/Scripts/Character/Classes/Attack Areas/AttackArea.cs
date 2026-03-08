@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Cadenza
 {
-    public class PianoArea : MonoBehaviour, IAttackArea
+    public class AttackArea : MonoBehaviour
     {
         public int damage = 0;
         public float knockbackScale;
@@ -25,10 +25,8 @@ namespace Cadenza
             character.comboM.ProcessCombo(AttkTypes.Light, out var reward);
             character.ManageAttackDirection();
 
-            int flowDamage = character.HasFlowBuff(2) ? 1 : 0;
-            float damageModifier = character.baseLightDamage / 2 * flowDamage * reward.Multiplier;
 
-            this.damage = (int)(character.baseLightDamage + (character.baseLightDamage * damageModifier)); // TEMP: should be flaot.
+            this.damage = this.CalcDamageMod(character, reward, character.baseLightDamage); //should be float (maybe)
             this.knockbackScale = reward.Knockback;
             this.comboMove = reward.AttackEffect;
             this.gameObject.SetActive(true);
@@ -40,10 +38,8 @@ namespace Cadenza
             character.comboM.ProcessCombo(AttkTypes.Heavy, out var reward);
             character.ManageAttackDirection();
 
-            int flowDamage = character.HasFlowBuff(2) ? 1 : 0;
-            float damageModifier = character.baseHeavyDamage / 2 * flowDamage * reward.Multiplier;
-
-            this.damage = (int)(character.baseHeavyDamage + (character.baseHeavyDamage * damageModifier)); // TEMP: should be flaot.
+            this.damage = this.CalcDamageMod(character, reward, character.baseHeavyDamage); //should be float (maybe)
+            this.knockbackScale = reward.Knockback;
             this.comboMove = reward.AttackEffect;
             this.gameObject.SetActive(true);
         }
@@ -52,6 +48,31 @@ namespace Cadenza
         {
             this.attackScore = null;
             this.gameObject.SetActive(false);
+        }
+
+        private int CalcDamageMod(Character character, Combo.ComboReward reward, float damage)
+        {
+            float scoreClassMod = 0;
+            ScoreDef sDef = this.attackScore.Value;
+            switch (sDef.Class)
+            {
+                case ScoreClass.Bad:
+                    scoreClassMod = 0.5f;
+                    break;
+                case ScoreClass.OK:
+                    scoreClassMod = 1;
+                    break;
+                case ScoreClass.Great:
+                    scoreClassMod = 1.2f;
+                    break;
+                case ScoreClass.Perfect:
+                    scoreClassMod = 1.5f;
+                    break;
+            }
+            float flowDamage = (character.HasFlowBuff(2) ? 1 : 0) * 0.25f;
+            float endDamage = damage * reward.Multiplier * (1 + flowDamage) * scoreClassMod;
+            //Debug.Log("Base Damage: " + damage + ", Combo Multiplier: " + reward.Multiplier + ", Flow Multiplier: " + (1 + flowDamage) + ", Score Class Multiplier: " + scoreClassMod + ", Final Damage: " + endDamage);
+            return (int)endDamage;
         }
 
         private void OnTriggerEnter(Collider collider)

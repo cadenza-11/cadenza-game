@@ -33,7 +33,7 @@ namespace Cadenza
         public float MaxHealth => this.maxHealth;
         public float FlowThreshold => this.flowThreshold;
         public bool IsFainted => this.isFainted;
-        public IAttackArea AttackArea => this.attackArea;
+        public AttackArea AttackArea => this.attackArea;
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
@@ -70,7 +70,7 @@ namespace Cadenza
         public readonly HitStunState hitStun = new();
         public readonly FaintedState fainted = new();
 
-        private IAttackArea attackArea;
+        private AttackArea attackArea;
 
         private CharacterClass cClass;
 
@@ -84,7 +84,7 @@ namespace Cadenza
             this.Player = player;
             BeatSystem.BeatPlayed += this.UpdateFlowBuffs;
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
-            this.attackArea = this.AttackAreaObject.GetComponent<IAttackArea>();
+            this.attackArea = this.AttackAreaObject.GetComponent<AttackArea>();
             this.cClass = player.CharacterClass;
 
             this.input = new();
