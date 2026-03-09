@@ -12,7 +12,7 @@
         <ui:VisualElement name="c_Scores" style="flex-grow: 1; flex-direction: row;">
             <ui:VisualElement name="c_IndividualStats" style="flex-grow: 1; width: 66%;">
                 <ui:VisualElement name="c_TopHalf" style="flex-grow: 1; flex-direction: row;">
-                    <ui:Instance template="IndividualResults" name="c_Player" class="ready" style="width: 50%;"/>
+                    <ui:Instance template="IndividualResults" name="c_Player" style="width: 50%;"/>
                     <ui:Instance template="IndividualResults" name="c_Player" style="width: 50%;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="c_BottomHalf" style="flex-grow: 1; flex-direction: row;">

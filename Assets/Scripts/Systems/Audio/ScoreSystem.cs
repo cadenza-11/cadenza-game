@@ -151,7 +151,7 @@ namespace Cadenza
             this.StopTracking();
 
             // Save results to file.
-            if (gameResult == GameManager.GameResult.Victory)
+            if (gameResult != GameManager.GameResult.Forfeit)
             {
                 this.results.Timestamp = DateTime.UtcNow;
 

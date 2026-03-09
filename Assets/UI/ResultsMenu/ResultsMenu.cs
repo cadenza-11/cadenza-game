@@ -6,24 +6,23 @@ namespace Cadenza
 {
     public class ResultsMenu : UIPanel
     {
-        private WinLossBanner winLossBanner;
-        private TeamStats playerTeamStats;
-        
+        private WinLossBanner winLossBanner = new();
+        private TeamStats playerTeamStats = new();
+
         private List<PlayerStats> availableContainers = new();
         private Dictionary<Player, PlayerStats> assignedContainers = new();
 
-        private int numPlayers;
         private int numPlayersReady;
         private Results currentResults;
 
-        private struct WinLossBanner
+        private class WinLossBanner
         {
             public Label TeamName;
             public Label EnemyTeamName;
             public Label ResultText;
         }
 
-        private struct TeamStats
+        private class TeamStats
         {
             public Label TeamName;
             public Label Grade;
@@ -32,7 +31,7 @@ namespace Cadenza
             public Label[] ScoreCards;
         }
 
-        private struct PlayerStats
+        private class PlayerStats
         {
             public VisualElement Container;
             public Label PlayerName;
@@ -53,7 +52,7 @@ namespace Cadenza
 
             this.playerTeamStats.TeamName = this.root.Q<Label>("update_PlayerBandBanner");
             this.playerTeamStats.Grade = this.root.Q<Label>("update_LetterGrade");
-            this.playerTeamStats.TeamScore = this.root.Q<Label>("update_OverallTeamScore");
+            this.playerTeamStats.TeamScore = this.root.Q<Label>("update_OverallAccuracy");
             this.playerTeamStats.MvpPortrait = this.root.Q<VisualElement>("portrait_MVP");
             this.playerTeamStats.ScoreCards = this.root.Query<Label>("update_ScoreCard").ToList().ToArray();
 
@@ -66,6 +65,7 @@ namespace Cadenza
                     PlayerName = container.Q<Label>("update_PlayerName"),
                     Instrument = container.Q<Label>("update_Instrument"),
                     OverallScore = container.Q<Label>("update_TotalScore"),
+                    CharacterPortrait = container.Q<VisualElement>("portrait_Player"),
                     Stats = new Label[]
                     {
                         container.Q<Label>("update_HighestStreak"),
@@ -87,6 +87,9 @@ namespace Cadenza
 
         public void OnCombatStopped(GameManager.GameResult result)
         {
+            if (result == GameManager.GameResult.Forfeit)
+                return;
+
             this.currentResults = ScoreSystem.Results;
 
             // Banner
@@ -98,9 +101,9 @@ namespace Cadenza
             this.playerTeamStats.TeamName.text = TeamSystem.Team.Name;
             Debug.LogWarning("Grades not calculated yet");
             this.playerTeamStats.Grade.text = "N/A";
-            this.playerTeamStats.TeamScore.text = this.currentResults.OverallScore.ToString();
-            for (int i = 0; i < 3; i++)
-                this.playerTeamStats.ScoreCards[i].text = this.currentResults.JudgeScores[i].ToString();            
+            this.playerTeamStats.TeamScore.text = this.currentResults.OverallScore.ToString("F2");
+            for (int i = 0; i < this.playerTeamStats.ScoreCards.Length; i++)
+                this.playerTeamStats.ScoreCards[i].text = this.currentResults.JudgeScores[i].ToString("F0");
 
             // Player Stats
             Texture2D mvp = this.PopulatePlayerStats();
@@ -130,6 +133,7 @@ namespace Cadenza
             }
 
             this.assignedContainers.Clear();
+            this.numPlayersReady = 0;
 
             InputSystem.UIPlayerSubmit -= this.OnSubmit;
             InputSystem.UIPlayerCancel -= this.OnCancel;
@@ -151,9 +155,9 @@ namespace Cadenza
             if (!this.assignedContainers.TryGetValue(player, out PlayerStats stats))
                 return;
 
-            if (stats.CharacterPortrait.ClassListContains("player_ready"))
+            if (stats.Container.ClassListContains("ready"))
             {
-                if (this.numPlayers == this.numPlayersReady)
+                if (this.numPlayersReady == this.assignedContainers.Count)
                 {
                     // FINAL IMPLEMENTATION:
                     // Loss: Restart Level or Pregame
@@ -164,8 +168,11 @@ namespace Cadenza
                     GameManager.ExitToPregame();
                 }
             }
-            stats.CharacterPortrait.AddToClassList("player_ready");
-            this.numPlayersReady++;
+            else
+            {
+                stats.Container.AddToClassList("ready");
+                this.numPlayersReady++;
+            }
         }
         private void OnCancel(Player player)
         {
@@ -175,10 +182,10 @@ namespace Cadenza
             if (!this.assignedContainers.TryGetValue(player, out PlayerStats stats))
                 return;
 
-            if(!stats.CharacterPortrait.ClassListContains("player_ready"))
+            if (!stats.Container.ClassListContains("ready"))
                 return;
-            
-            stats.CharacterPortrait.RemoveFromClassList("player_ready");
+
+            stats.Container.RemoveFromClassList("ready");
             this.numPlayersReady = Mathf.Max(0, this.numPlayersReady - 1);
         }
 
@@ -204,16 +211,16 @@ namespace Cadenza
                 stats.Instrument.text = player.CharacterClass.Name;
                 stats.CharacterPortrait.style.backgroundImage = player.CharacterClass.Portrait;
 
-                Results.PlayerDef playerDef = new Results.PlayerDef 
-                    { 
-                        ID = player.ID,
-                        Name = player.Name,
-                        ClassID = player.CharacterClass.ID,
-                    };
+                Results.PlayerDef playerDef = new Results.PlayerDef
+                {
+                    ID = player.ID,
+                    Name = player.Name,
+                    ClassID = player.CharacterClass.ID,
+                };
 
                 if (!this.currentResults.PlayerResults.TryGetValue(playerDef, out ResultsDef playerResults)) continue;
 
-                stats.OverallScore.text = playerResults.ScoreTotal.ToString();
+                stats.OverallScore.text = playerResults.ScoreTotal.ToString("F2");
                 if (highestScore < playerResults.ScoreTotal)
                 {
                     highestScore = playerResults.ScoreTotal;
@@ -222,7 +229,7 @@ namespace Cadenza
 
                 // Streak -> Perfect -> Good -> OK -> Bad -> Deaths
                 Debug.LogWarning("Streak is temporarily total hits");
-                stats.Stats[0].text = playerResults.Hits.ToString(); // Not streak temp 
+                stats.Stats[0].text = playerResults.Hits.ToString(); // Not streak temp
                 stats.Stats[1].text = playerResults.GetCount(ScoreClass.Perfect).ToString();
                 stats.Stats[2].text = playerResults.GetCount(ScoreClass.Great).ToString();
                 stats.Stats[3].text = playerResults.GetCount(ScoreClass.OK).ToString();
