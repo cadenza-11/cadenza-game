@@ -25,7 +25,7 @@ public class Projectile : MonoBehaviour
 
         if (this.speedSet == false)
         {
-            
+
             Vector3 moveDir = new Vector3(this.speed * this.direction.x, 0, this.speed * this.direction.y);
             this.rb.linearVelocity = moveDir;
             this.speedSet = true;
@@ -42,7 +42,7 @@ public class Projectile : MonoBehaviour
         if (collider.CompareTag("Enemy"))
         {
             Enemy hitEntity = collider.gameObject.GetComponent<Enemy>();
-            hitEntity.DoDamage(2);
+            hitEntity.TakeDamage(2);
         }
 
         Vector3 direction = collider.transform.position - this.transform.position;

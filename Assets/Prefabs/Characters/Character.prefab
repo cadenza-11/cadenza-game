@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7239182979401787694}
   - component: {fileID: 9210747304187225630}
-  - component: {fileID: 911082884614298861}
+  - component: {fileID: 2742966869210566379}
   m_Layer: 0
   m_Name: AttackArea
   m_TagString: Player
@@ -56,7 +56,7 @@ CapsuleCollider:
   m_Height: 0.994413
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &911082884614298861
+--- !u!114 &2742966869210566379
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,10 +65,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2447742647739208417}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
+  m_Script: {fileID: 11500000, guid: 60949ed1ba6021c43ae6d7baf1e76959, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
-  damage: 0
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.AttackArea
+  damage: 1
   knockbackScale: 5
   comboMove: 0
 --- !u!1 &8363881908035172195
@@ -287,7 +287,7 @@ MonoBehaviour:
   speed: 3
   attackDuration: 0.25
   maxHealth: 20
-  AttackAreaObject: {fileID: 0}
+  AttackArea: {fileID: 2742966869210566379}
   Rigidbody: {fileID: 1458182412301763174}
   Sprite: {fileID: 6779959987335499425}
   Animator: {fileID: 71435134034143840}

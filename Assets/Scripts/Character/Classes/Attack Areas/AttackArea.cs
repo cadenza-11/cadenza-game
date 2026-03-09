@@ -80,7 +80,7 @@ namespace Cadenza
             // Hit enemy.
             if (collider.gameObject.TryGetComponent(out Enemy enemy))
             {
-                enemy.DoDamage(this.damage);
+                enemy.TakeDamage(this.damage);
 
                 // Add knockback.
                 Vector3 direction = collider.transform.position - this.transform.position;

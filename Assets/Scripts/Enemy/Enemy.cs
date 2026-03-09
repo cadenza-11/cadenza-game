@@ -23,7 +23,7 @@ namespace Cadenza
         [SerializeField] protected float rangedDuration;
         [SerializeField] protected int maxHealth;
         [SerializeField] public int currentHealth;
-        [SerializeField] protected AttackArea attackArea;
+        [SerializeField] protected EnemyAttackArea attackArea;
         [SerializeField] protected Rigidbody rb;
         [SerializeField] protected SpriteRenderer sr;
         [SerializeField] protected Animator anim;
@@ -90,8 +90,6 @@ namespace Cadenza
         {
             this.isAttacking = true;
             this.attackArea.SetActive(true);
-            this.attackMod = 1;
-            this.attackArea.damage = 1;
 
             this.Schedule(this.meleeDuration * this.attackMod, () =>
             {
@@ -113,7 +111,7 @@ namespace Cadenza
             this.anim.SetTrigger("LightAttack");
         }
 
-        public void DoDamage(int damage)
+        public void TakeDamage(int damage)
         {
             this.currentHealth -= damage;
             this.anim.SetTrigger("IsHit");
