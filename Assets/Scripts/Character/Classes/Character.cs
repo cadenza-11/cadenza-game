@@ -85,6 +85,7 @@ namespace Cadenza
 
             this.input = new();
             this.SetHealth(this.maxHealth);
+            this.Sprite.material.SetInt("_Flowstate", 1);
             this.SetFlow(0);
 
             // Set default state.
@@ -288,6 +289,7 @@ namespace Cadenza
         private void SetFlow(float flow)
         {
             this.flow = Mathf.Clamp(flow, 0.0f, 20.0f);
+            this.Sprite.material.SetFloat("_LineThickness", this.flow == 0 ? 0 : this.flow/1000);
             FlowChanged?.Invoke(this.flow);
         }
 
