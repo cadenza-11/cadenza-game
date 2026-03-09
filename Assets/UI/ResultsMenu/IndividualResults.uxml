@@ -39,9 +39,10 @@
                 <ui:VisualElement name="stat_Deaths" class="indiv_stat_line">
                     <ui:Label text="Deaths" name="txt_Deaths"/>
                     <ui:VisualElement name="spacer" class="score_spacer"/>
-                    <ui:Label text="0" name="update_EnemiesKilled"/>
+                    <ui:Label text="0" name="update_Deaths"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
+        <ui:Label text="Ready" name="txt_Ready" class="ready_splash"/>
     </ui:VisualElement>
 </ui:UXML>

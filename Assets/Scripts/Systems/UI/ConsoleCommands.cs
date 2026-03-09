@@ -43,7 +43,25 @@ namespace Cadenza
                 case "player":
                     this.OnCommandPlayer(args);
                     break;
+                case "kill":
+                    this.OnCommandKill(args);
+                    break;
                 default:
+                    break;
+            }
+        }
+
+        private void OnCommandKill(string[] args)
+        {
+            switch (args[0])
+            {
+                case "players":
+                    foreach (var character in GameObject.FindObjectsByType<Character>(FindObjectsSortMode.None))
+                        character.TakeDamage((int)character.MaxHealth);
+                    break;
+                case "enemies":
+                    foreach (var enemy in GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None))
+                        enemy.TakeDamage(enemy.GetMaxHealth());
                     break;
             }
         }
