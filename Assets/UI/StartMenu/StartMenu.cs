@@ -74,7 +74,8 @@ namespace Cadenza
 
         public override void OnGameStop()
         {
-            this.Show();
+            if (ApplicationController.CurrentLevel == null)
+                this.Show();
         }
 
         public override void OnGameStart()

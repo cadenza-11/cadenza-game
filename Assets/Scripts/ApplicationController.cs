@@ -138,11 +138,12 @@ namespace Cadenza
             else
                 sceneIndex = level.BuildIndex;
 
+            this.currentLevel = level;
+
             await Fader.ShowAsync();
             singleton.ChangeState(ApplicationState.Pregame);
             {
                 // Set the scene.
-                this.currentLevel = level;
                 Scene currentScene = SceneManager.GetActiveScene();
                 if (currentScene.buildIndex != sceneIndex)
                 {

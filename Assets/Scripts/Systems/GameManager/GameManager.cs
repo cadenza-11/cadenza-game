@@ -53,8 +53,6 @@ namespace Cadenza
 
         public override void OnGameStop()
         {
-            AudioSystem.SetState(AudioSystem.State.Menu);
-
             // Stop combat.
             if (this.isCombatActive)
                 this.StopCombat(GameResult.Forfeit);
@@ -200,6 +198,10 @@ namespace Cadenza
                 return;
 
             this.isCombatActive = false;
+
+            // Set audio.
+            AudioSystem.SetState(AudioSystem.State.Stage);
+
             Debug.Log($"Stopping combat with result {result}.");
             CombatStopped?.Invoke(result);
         }
