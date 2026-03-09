@@ -193,8 +193,15 @@
 }
 
 .team_name {
-    font-size: 96px;
     white-space: normal;
+    height: 15%;
+    align-content: center;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+    -unity-text-align: middle-center;
+    -unity-text-auto-size: best-fit 30px 96px;
+    font-size: 96px;
 }
 
 .no_player * {
@@ -221,4 +228,11 @@
 
 .ready .ready_splash {
     opacity: 1;
+}
+
+.band_name {
+    white-space: normal;
+    width: 33%;
+    -unity-text-align: upper-center;
+    -unity-text-auto-size: best-fit 30px 60px;
 }
