@@ -2,17 +2,17 @@
     <ui:Template name="IndividualResults" src="project://database/Assets/UI/ResultsMenu/IndividualResults.uxml?fileID=9197481963319205126&amp;guid=ad36b2b648f03f84f978739140031799&amp;type=3#IndividualResults"/>
     <Style src="project://database/Assets/UI/ResultsMenu/ResultsMenu.uss?fileID=7433441132597879392&amp;guid=2d58f611297d5d249bf908e30b6c0457&amp;type=3#ResultsMenu"/>
     <ui:VisualElement name="c_Panel" style="flex-grow: 1; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; background-color: rgb(255, 165, 0); background-image: url(&quot;project://database/Assets/Art/TEMPORARY_ASSETS/TEMP_BG_fm_orange.jpg?fileID=2800000&amp;guid=572cce9d4fe981c4894d4a783eda8c57&amp;type=3#TEMP_BG_fm_orange&quot;); -unity-background-image-tint-color: rgba(250, 107, 101, 0.26);">
-        <ui:VisualElement name="c_Title" style="align-items: center; font-size: 65px; flex-direction: row; justify-content: center; margin-bottom: 15px; margin-top: 15px; -unity-font-style: bold; color: rgb(255, 255, 255); -unity-text-outline-width: 5px; -unity-text-outline-color: rgb(0, 0, 0);">
-            <ui:Label text="BAND NAME" name="update_PlayerBand"/>
-            <ui:Label text="vs." name="txt_vs"/>
-            <ui:Label text="OPPONENT NAME" name="update_LevelName"/>
+        <ui:VisualElement name="c_Title" style="align-items: center; font-size: 65px; flex-direction: row; justify-content: center; margin-bottom: 15px; margin-top: 15px; -unity-font-style: bold; color: rgb(255, 255, 255); -unity-text-outline-width: 5px; -unity-text-outline-color: rgb(0, 0, 0); width: 100%;">
+            <ui:Label text="BAND NAME" name="update_PlayerBand" class="band_name"/>
+            <ui:Label text="vs." name="txt_vs" style="margin-right: 5px; margin-left: 5px;"/>
+            <ui:Label text="OPPONENT NAME" name="update_LevelName" class="band_name"/>
             <ui:Label text=":" name="txt_colon"/>
-            <ui:Label text="YOU WIN!" name="update_WinLoss"/>
+            <ui:Label text="YOU WIN!" name="update_WinLoss" style="width: 20%; -unity-text-align: upper-center;"/>
         </ui:VisualElement>
         <ui:VisualElement name="c_Scores" style="flex-grow: 1; flex-direction: row;">
             <ui:VisualElement name="c_IndividualStats" style="flex-grow: 1; width: 66%;">
                 <ui:VisualElement name="c_TopHalf" style="flex-grow: 1; flex-direction: row;">
-                    <ui:Instance template="IndividualResults" name="c_Player" class="ready" style="width: 50%;"/>
+                    <ui:Instance template="IndividualResults" name="c_Player" style="width: 50%;"/>
                     <ui:Instance template="IndividualResults" name="c_Player" style="width: 50%;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="c_BottomHalf" style="flex-grow: 1; flex-direction: row;">
