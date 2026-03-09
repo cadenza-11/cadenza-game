@@ -463,7 +463,7 @@ namespace Cadenza
 
             // Snap target average to discrete grid
             int targetAvgTicks = Mathf.RoundToInt(targetAverage * ticksPerPoint);
-            int targetTotalTicks = targetAvgTicks * judgeCount;
+            long targetTotalTicks = (long)targetAvgTicks * judgeCount;
 
             int baseTick = targetAvgTicks;
             int spreadTicks = Mathf.Clamp(Mathf.RoundToInt(spread * ticksPerPoint), 0, maxTicks);
@@ -480,13 +480,13 @@ namespace Cadenza
             }
 
             // Force exact total
-            int currentTotal = 0;
+            long currentTotal = 0;
             for (int i = 0; i < judgeCount; i++)
                 currentTotal += scores[i];
 
-            int delta = targetTotalTicks - currentTotal;
+            long delta = targetTotalTicks - currentTotal;
             int direction = delta > 0 ? 1 : -1;
-            int remaining = Mathf.Abs(delta);
+            long remaining = Math.Abs(delta);
 
             while (remaining > 0)
             {
