@@ -40,6 +40,10 @@ namespace Cadenza
             this.countdownLabel.text = string.Empty;
             this.Show();
 
+            // Countdown audio may have already started
+            // after combat is requested, so start countdown immediately.
+            this.OnBeatPlayed();
+
             BeatSystem.BeatPlayed -= this.OnBeatPlayed;
             BeatSystem.BeatPlayed += this.OnBeatPlayed;
         }
