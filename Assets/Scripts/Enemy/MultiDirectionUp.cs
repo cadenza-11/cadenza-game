@@ -25,8 +25,19 @@ namespace Cadenza
         {
             if (this.rangedAttackInterval <= 0)
             {
-                base.RangedAttack();
-                this.rangedAttackInterval = 1.5f;
+                Vector2 direction = Vector2.zero;
+                int pos = this.posDirection ? 1 : -1;
+                if(!this.horizontal)
+                {
+                    direction.x = pos;
+                }
+                else
+                {
+                    direction.y = pos;
+                }
+
+                base.RangedAttack(direction);
+                this.rangedAttackInterval = 2.5f;
             }
             else
             {
@@ -60,11 +71,15 @@ namespace Cadenza
             Vector2 playerPos = this.FindNearestPlayerDist();
             if (this.horizontal)
             {
+                if(playerPos.x > -5 && playerPos.x < 7)
                 this.TargetLocation.x = playerPos.x;
             }
             else
             {
-                this.TargetLocation.y = playerPos.y;
+                if(playerPos.y > 0 && playerPos.y < 14)
+                {
+                    this.TargetLocation.y = playerPos.y;
+                }
             }
             //Above code follows the nearest player in either the x or y-axis.
 
