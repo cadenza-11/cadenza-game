@@ -25,8 +25,19 @@ namespace Cadenza
         {
             if (this.rangedAttackInterval <= 0)
             {
-                base.RangedAttack();
-                this.rangedAttackInterval = 1.5f;
+                Vector2 direction = Vector2.zero;
+                int pos = this.posDirection ? 1 : -1;
+                if(!this.horizontal)
+                {
+                    direction.x = pos;
+                }
+                else
+                {
+                    direction.y = pos;
+                }
+                
+                base.RangedAttack(direction);
+                this.rangedAttackInterval = 2.5f;
             }
             else
             {

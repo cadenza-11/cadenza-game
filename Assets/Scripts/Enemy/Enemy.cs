@@ -111,6 +111,14 @@ namespace Cadenza
             this.anim.SetTrigger("LightAttack");
         }
 
+        protected virtual void RangedAttack(Vector2 direction)
+        {
+            GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
+            projectileInstance.GetComponent<Projectile>().direction = direction;
+            projectileInstance.GetComponent<Projectile>().speedSet = false;
+            this.anim.SetTrigger("LightAttack");
+        }
+
         public void TakeDamage(int damage)
         {
             this.currentHealth -= damage;
