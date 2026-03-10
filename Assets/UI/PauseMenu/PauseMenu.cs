@@ -20,6 +20,9 @@ namespace Cadenza
             this.unpause = this.root.Q<Button>("b_Unpause");
             this.unpause.clicked += GameManager.UnpauseGame;
 
+            Button restart = this.root.Q<Button>("b_Restart");
+            restart.clicked += GameManager.RestartLevel;
+
             Button settings = this.root.Q<Button>("b_Settings");
             settings.clicked += this.OnSettings;
 
