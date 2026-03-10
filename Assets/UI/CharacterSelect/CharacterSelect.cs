@@ -118,6 +118,7 @@ namespace Cadenza
             AudioSystem.SetState(AudioSystem.State.CharacterSelect);
             InputSystem.EnableJoining();
             this.classManager.ClearCharacterAssignments();
+            this.ResetShownPlayers();
 
             // Register player roster updates.
             PlayerSystem.PlayerAdded += this.OnPlayerAdded;
@@ -300,6 +301,18 @@ namespace Cadenza
 
             this.ShowPhase(container, SelectPhase.None);
             return container;
+        }
+
+        private void ResetShownPlayers()
+        {
+            // Clear any stale phase UI from the previous visit.
+            for (int i = 0; i < this.playerContainers.Length; i++)
+                this.ShowPhase(this.playerContainers[i], SelectPhase.None);
+
+            // Existing connected players do not fire a new join event when reopening
+            // the panel, so force their trackers and visuals back to Joining.
+            foreach (var player in InputSystem.JoinedPlayersByID.Values)
+                this.OnPlayerJoined(player);
         }
 
         private bool TryGetPlayerByContainer(PlayerContainer playerContainer, out Player player, out PlayerTracker tracker)
