@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Cadenza.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.UIElements.Experimental;
 
 namespace Cadenza
 {
@@ -117,7 +117,7 @@ namespace Cadenza
         private void OnBeatPlayed()
         {
             if (this.centerMarker != null)
-                this.Pulse(this.centerMarker, Color.white, new Color(1f, 0.5f, 0f, 1f), 1.0f, 1.2f, 100);
+                this.centerMarker.PulseScale(0.2f);
 
             float duration = (float)BeatSystem.SecondsPerBeat * this.BeatsToCompletion;
             this.SpawnArrowPair(durationOverride: duration, initialElapsed: 0f);
@@ -182,67 +182,6 @@ namespace Cadenza
             for (int i = this.arrows.Count - 1; i >= 0; i--)
                 this.arrows[i].element.RemoveFromHierarchy();
             this.arrows.Clear();
-        }
-
-        private void Pulse(
-            VisualElement element,
-            Color fromColor,
-            Color toColor,
-            float fromScale,
-            float toScale,
-            int durationMs)
-        {
-            element.experimental.animation
-                .Start(
-                    fromColor,
-                    toColor,
-                    durationMs,
-                    (e, value) =>
-                    {
-                        e.style.unityBackgroundImageTintColor = value;
-                    }
-                )
-                .Ease(Easing.InOutSine)
-                .OnCompleted(() =>
-                {
-                    element.experimental.animation
-                        .Start(
-                            toColor,
-                            fromColor,
-                            durationMs,
-                            (e, value) =>
-                            {
-                                e.style.unityBackgroundImageTintColor = value;
-                            }
-                        )
-                        .Ease(Easing.InOutSine);
-                });
-
-            element.experimental.animation
-                .Start(
-                    fromScale,
-                    toScale,
-                    durationMs,
-                    (e, value) =>
-                    {
-                        e.style.scale = new Scale(new Vector3(value, value, 1f));
-                    }
-                )
-                .Ease(Easing.InOutSine)
-                .OnCompleted(() =>
-                {
-                    element.experimental.animation
-                        .Start(
-                            toScale,
-                            fromScale,
-                            durationMs,
-                            (e, value) =>
-                            {
-                                e.style.scale = new Scale(new Vector3(value, value, 1f));
-                            }
-                        )
-                        .Ease(Easing.InOutSine);
-                });
         }
     }
 }

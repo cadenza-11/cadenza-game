@@ -1,3 +1,4 @@
+using Cadenza.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -25,6 +26,23 @@ namespace Cadenza
         private Texture2D xboxHint;
         private Texture2D psHint;
         private int hintSize = 40;
+        private bool pulseToBeat;
+        private bool isAttachedToPanel;
+        private bool isSubscribedToBeat;
+
+        [UxmlAttribute]
+        public bool PulseToBeat
+        {
+            get => this.pulseToBeat;
+            set
+            {
+                if (this.pulseToBeat == value)
+                    return;
+
+                this.pulseToBeat = value;
+                this.UpdateBeatSubscription();
+            }
+        }
 
         [UxmlAttribute]
         public ControllerType ShownControls
@@ -97,6 +115,9 @@ namespace Cadenza
             this.style.flexDirection = FlexDirection.Row;
             this.style.alignItems = Align.Center;
 
+            this.RegisterCallback<AttachToPanelEvent>(this.OnAttachToPanel);
+            this.RegisterCallback<DetachFromPanelEvent>(this.OnDetachFromPanel);
+
             this.keyboardHintElement = new VisualElement();
             this.keyboardHintElement.style.backgroundImage = this.keyboardHint;
             this.keyboardHintElement.style.width = this.hintSize;
@@ -123,6 +144,37 @@ namespace Cadenza
             this.Add(this.psHintElement);
 
             this.UpdateDisplay(this.shownControls);
+        }
+
+        private void OnBeatPlayed()
+        {
+            this.PulseScale(0.2f);
+        }
+
+        private void OnAttachToPanel(AttachToPanelEvent evt)
+        {
+            this.isAttachedToPanel = true;
+            this.UpdateBeatSubscription();
+        }
+
+        private void OnDetachFromPanel(DetachFromPanelEvent evt)
+        {
+            this.isAttachedToPanel = false;
+            this.UpdateBeatSubscription();
+        }
+
+        private void UpdateBeatSubscription()
+        {
+            bool shouldSubscribe = Application.isPlaying && this.isAttachedToPanel && this.pulseToBeat;
+            if (shouldSubscribe == this.isSubscribedToBeat)
+                return;
+
+            if (shouldSubscribe)
+                BeatSystem.BeatPlayed += this.OnBeatPlayed;
+            else
+                BeatSystem.BeatPlayed -= this.OnBeatPlayed;
+
+            this.isSubscribedToBeat = shouldSubscribe;
         }
 
         private void UpdateDisplay(ControllerType shownControls)

@@ -61,6 +61,21 @@ namespace Cadenza.Utils
             return (int)value == 1 ? "" : "s";
         }
 
+        public static void PulseScale(this VisualElement element, float duration)
+        {
+            Vector3 baseScale = Vector3.one;
+            DOTween
+                .Punch(
+                    getter: () => baseScale,
+                    setter: v => { element.style.scale = new Scale(v); },
+                    direction: new Vector3(0.3f, 0.3f, 0),
+                    duration: duration,
+                    vibrato: 10,
+                    elasticity: 1)
+
+                .OnComplete(() => element.style.scale = new Scale(Vector3.one));
+        }
+
         public static void PunchAndShake(this VisualElement element, float duration)
         {
             Vector3 baseScale = Vector3.one;
