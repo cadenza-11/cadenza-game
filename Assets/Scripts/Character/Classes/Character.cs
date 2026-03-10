@@ -196,7 +196,12 @@ namespace Cadenza
 
         public void TakeDamage(int damage)
         {
-            this.SetHealth(this.currentHealth - damage);
+            float fDamage = damage;
+            if (this.HasFlowBuff(1))
+            {
+                fDamage *= 0.8f;
+            }
+            this.SetHealth(this.currentHealth - fDamage);
         }
 
         public void SetHealth(float health)

@@ -119,12 +119,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -7228706056705483593}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: maxHealth
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: baseHeavyDamage
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: baseLightDamage
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: AttackAreaObject

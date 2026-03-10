@@ -111,6 +111,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -2046023753822415213}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: speed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: cClass
       value: 
       objectReference: {fileID: 11400000, guid: cda20754fcd514e8f8d90723ac11b9e5, type: 2}
@@ -119,12 +123,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -2046023753822415213}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: maxHealth
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: baseHeavyDamage
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: baseLightDamage
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: AttackAreaObject

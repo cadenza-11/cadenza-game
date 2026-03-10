@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Combo.ComboDatabase
   ComboTimeout: 1
   ComboDefinitions:
-  - {fileID: 11400000, guid: 99d5e36eb1835204dbcd00afda7e3b73, type: 2}
-  - {fileID: 11400000, guid: e550bbc2011c42f4b998d6d4bff3d3f7, type: 2}
+  - {fileID: 11400000, guid: 30e92d68aa17b8145a185767c01264ba, type: 2}
+  - {fileID: 11400000, guid: ea04c64053ea92944b26d138a143b13a, type: 2}
+  - {fileID: 11400000, guid: 20069d02781df4d46ad7029967e5148a, type: 2}
+  - {fileID: 11400000, guid: 10aa1ddbec8c4274cb7bff071fe8d24d, type: 2}

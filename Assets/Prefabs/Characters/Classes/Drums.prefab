@@ -111,6 +111,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -5347380999704208309}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: speed
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: cClass
       value: 
       objectReference: {fileID: 11400000, guid: a8016ff13eb5642c990da52e9c2eb5e0, type: 2}
@@ -118,6 +122,10 @@ PrefabInstance:
       propertyPath: comboM
       value: 
       objectReference: {fileID: -5347380999704208309}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: maxHealth
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: baseHeavyDamage
       value: 5
