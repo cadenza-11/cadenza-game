@@ -43,6 +43,7 @@ namespace Cadenza
         private static InputSystem singleton;
 
         private PlayerInputManager playerInputManager;
+        private InputActionAsset defaultUIActionsAsset;
         private Dictionary<int, Player> joinedPlayersByID;
         public static IReadOnlyDictionary<int, Player> JoinedPlayersByID => singleton.joinedPlayersByID;
         public static event Action<Player> PlayerJoined;
@@ -59,6 +60,7 @@ namespace Cadenza
             singleton = this;
 
             this.uiInputModule = this.GetComponent<InputSystemUIInputModule>();
+            this.defaultUIActionsAsset = this.uiInputModule.actionsAsset;
 
             // The Input System UI Input Module will enable any map used in any of its
             // bindings ("UI" map). This conflicts with the PlayerInput component, which
@@ -66,7 +68,7 @@ namespace Cadenza
 
             // Unless the PlayerInput default map is set to UI, disable the UI map here
             // to prevent UI actions from triggering before initialization.
-            this.uiInputModule.actionsAsset.Disable();
+            this.defaultUIActionsAsset?.Disable();
 
             // Configure player input manager.
             this.joinedPlayersByID = new();
@@ -210,12 +212,13 @@ namespace Cadenza
         /// <param name="hostPlayer">The player to give sole input</param>
         public static void SwitchInputMapSinglePlayer(InputMap inputMap, Player hostPlayer)
         {
-            if (!mapNames.TryGetValue(inputMap, out string mapName))
+            if (!mapNames.TryGetValue(inputMap, out string mapName) || hostPlayer == null)
                 return;
 
             foreach (var player in JoinedPlayersByID.Values)
                 player.Input.DeactivateInput();
 
+            singleton.uiInputModule.actionsAsset = hostPlayer.Input.actions;
             hostPlayer.Input.SwitchCurrentActionMap(mapName);
             hostPlayer.Input.ActivateInput();
         }
@@ -229,6 +232,9 @@ namespace Cadenza
         {
             if (!mapNames.TryGetValue(inputMap, out string mapName))
                 return;
+
+            singleton.uiInputModule.actionsAsset = singleton.defaultUIActionsAsset;
+            singleton.defaultUIActionsAsset?.Disable();
 
             foreach (var player in JoinedPlayersByID.Values)
             {
