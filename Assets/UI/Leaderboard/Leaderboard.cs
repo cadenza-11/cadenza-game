@@ -29,14 +29,12 @@ public class Leaderboard : UIPanel, IInteractable
         this.resultsElement = this.root.Q<ScrollView>("results");
         this.resultsElement.focusable = false;
 
-        InputSystem.UIPlayerCancel += this.OnPlayerCancel;
         SaveSystem.ResultsFileCreated += this.RefreshResults;
         SaveSystem.ResultsFileDeleted += this.RefreshResults;
     }
 
     public override void OnApplicationStop()
     {
-        InputSystem.UIPlayerCancel -= this.OnPlayerCancel;
         SaveSystem.ResultsFileCreated -= this.RefreshResults;
         SaveSystem.ResultsFileDeleted -= this.RefreshResults;
     }
@@ -101,11 +99,6 @@ public class Leaderboard : UIPanel, IInteractable
             InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
 
         this.openingPlayer = null;
-    }
-
-    private void OnPlayerCancel(Player _)
-    {
-        this.Close();
     }
 
     private void RefreshResults()
