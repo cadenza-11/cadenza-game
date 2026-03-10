@@ -174,13 +174,6 @@ namespace Cadenza
             bus.setVolume(Mathf.Clamp01(value));
         }
 
-        public static void SetInstrumentActive(CharacterClass characterClass, bool enabled)
-        {
-            if (characterClass != null)
-                RuntimeManager.StudioSystem.setParameterByName(characterClass.Name, enabled ? 1 : 0);
-
-        }
-
         public static void SetState(State state)
         {
             RuntimeManager.StudioSystem.setParameterByName(ParamNameState, (int)state);
@@ -189,6 +182,11 @@ namespace Cadenza
         public static void SetParameter(string parameterName, bool enabled)
         {
             RuntimeManager.StudioSystem.setParameterByName(parameterName, enabled ? 1 : 0);
+        }
+
+        public static void SetParameter(string parameterName, float value)
+        {
+            RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
         }
 
         #endregion

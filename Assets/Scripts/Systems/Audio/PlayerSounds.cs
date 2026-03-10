@@ -11,23 +11,14 @@ namespace Cadenza
 
         public void OnGameStart()
         {
-            // Disable all instument tracks.
-            foreach (var characterClass in PlayerSystem.CharacterClasses)
-                AudioSystem.SetInstrumentActive(characterClass, false);
         }
 
         public void OnGameStop()
         {
-            // Disable all instument tracks.
-            foreach (var characterClass in PlayerSystem.CharacterClasses)
-                AudioSystem.SetInstrumentActive(characterClass, false);
         }
 
         private void OnPlayerHit(ScoreDef def)
         {
-            var characterClass = def.Player.CharacterClass;
-            if (characterClass != null)
-                AudioSystem.SetInstrumentActive(characterClass, true);
         }
 
         private void OnTeamHit(TeamScoreDef def)

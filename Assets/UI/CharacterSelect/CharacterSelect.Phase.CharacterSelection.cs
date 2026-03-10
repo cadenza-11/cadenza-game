@@ -100,14 +100,14 @@ namespace Cadenza
             );
 
             player.SetCharacterClass(selectedCharacter);
-            AudioSystem.SetInstrumentActive(player.CharacterClass, true);
+            AudioSystem.SetParameter(player.CharacterClass.Name, 1.0f);
 
             return selectedCharacter != null;
         }
 
         private void DeselectCharacter(Player player)
         {
-            AudioSystem.SetInstrumentActive(player.CharacterClass, false);
+            AudioSystem.SetParameter(player.CharacterClass.Name, 0.0f);
             player.SetCharacterClass(null);
             this.classManager.UnselectCharacter(player);
         }

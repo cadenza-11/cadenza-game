@@ -79,13 +79,11 @@ namespace Cadenza
         {
             // Set player.
             this.Player = player;
-            BeatSystem.BeatPlayed += this.UpdateFlowBuffs;
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
             this.cClass = player.CharacterClass;
 
             this.input = new();
             this.SetHealth(this.maxHealth);
-            this.Sprite.material.SetInt("_Flowstate", 1);
             this.SetFlow(0);
 
             // Set default state.
@@ -107,7 +105,6 @@ namespace Cadenza
         void OnDestroy()
         {
             // Unsubscribe from events.
-            BeatSystem.BeatPlayed -= this.UpdateFlowBuffs;
             this.Player.InteractChanged -= this.interactionIndicator.OnPlayerInteractChanged;
         }
 
@@ -289,12 +286,8 @@ namespace Cadenza
         private void SetFlow(float flow)
         {
             this.flow = Mathf.Clamp(flow, 0.0f, 20.0f);
-            this.Sprite.material.SetFloat("_LineThickness", this.flow == 0 ? 0 : this.flow/1000);
-            FlowChanged?.Invoke(this.flow);
-        }
 
-        public void UpdateFlowBuffs()
-        {
+            // Set flow buffs.
             if (this.flow >= this.flowThreshold)
             {
                 TeamSystem.SetClassFlowing(this.cClass.ID, true);
@@ -305,6 +298,16 @@ namespace Cadenza
                 TeamSystem.SetClassFlowing(this.cClass.ID, false);
                 this.isFlowing = false;
             }
+
+            // Set shader.
+            this.Sprite.material.SetInt("_Flowstate", this.isFlowing ? 1 : 0);
+            if (this.isFlowing)
+                this.Sprite.material.SetFloat("_LineThickness", (this.flow - this.flowThreshold) / 1000);
+
+            // Set audio.
+            AudioSystem.SetParameter(this.cClass.Name, this.flow / this.flowThreshold);
+
+            FlowChanged?.Invoke(this.flow);
         }
 
         #endregion
