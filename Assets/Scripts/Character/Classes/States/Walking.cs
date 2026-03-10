@@ -31,7 +31,7 @@ namespace Cadenza
         {
             // Walk.
             int flowSpeed = character.HasFlowBuff(0) ? 1 : 0;
-            float speedModifier = character.speed + (character.speed * 0.25f * flowSpeed);
+            float speedModifier = character.speed * (1 + (0.25f * flowSpeed));
 
             Vector3 velocity = new(
                 character.input.move.x * speedModifier,
