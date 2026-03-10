@@ -16,3 +16,5 @@ MonoBehaviour:
   ComboDefinitions:
   - {fileID: 11400000, guid: ff3b18fcf183bb548ae4718c8556ccc4, type: 2}
   - {fileID: 11400000, guid: 25a89fa9bf77cd54e8de6df287f71069, type: 2}
+  - {fileID: 11400000, guid: 3688bac595425ec42b2809e60b4fd9b2, type: 2}
+  - {fileID: 11400000, guid: 0e14d9ee7caf1bf4eb96f97300e18ec5, type: 2}
