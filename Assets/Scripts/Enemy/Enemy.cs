@@ -321,8 +321,8 @@ namespace Cadenza
             Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
             this.rb.linearVelocity = moveDir;
 
-            if (Math.Abs(this.transform.position.x - this.TargetLocation.x) <= 0.1 &&
-                Math.Abs(this.transform.position.z - this.TargetLocation.y) <= 0.1)
+            if (Math.Abs(this.transform.position.x - this.TargetLocation.x) <= 0.2 &&
+                Math.Abs(this.transform.position.z - this.TargetLocation.y) <= 0.2)
             {
                 this.meleeState = false;
                 this.curState = EnemyState.Ranged;
