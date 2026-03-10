@@ -84,6 +84,7 @@ namespace Cadenza
         [SerializeField] private VisualTreeAsset namingTemplate;
         [SerializeField] private VisualTreeAsset readyTemplate;
         [SerializeField] private int requiredCalibrationAttempts;
+        [SerializeField] private Colorway[] colorways;
 
         #endregion
 
@@ -225,6 +226,9 @@ namespace Cadenza
             var selection = this.characterSelectionTemplate.Instantiate();
             var ready = this.readyTemplate.Instantiate();
             var naming = this.namingTemplate.Instantiate();
+
+            VisualElement cosmeticsPicker = selection.Q<VisualElement>("c_CosmeticsPicker");
+            this.ChangeShownColor(cosmeticsPicker, this.colorways[0]);
 
             phaseContainer.Clear();
             phaseContainer.Add(joining);

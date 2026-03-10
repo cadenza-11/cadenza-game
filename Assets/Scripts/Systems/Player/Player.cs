@@ -12,6 +12,7 @@ namespace Cadenza
         public CharacterClass CharacterClass { get; private set; }
         public Character Character { get; private set; }
         public PlayerInput Input { get; private set; }
+        public Colorway Colorway { get; private set; }
         public string Name;
         public double Latency => ScoreSystem.GetInputLatencyForPlayer(this);
 
@@ -37,6 +38,7 @@ namespace Cadenza
             this.ID = id;
             this.Input = input;
             this.Name = $"Player {id + 1}";
+            this.Colorway = null;
         }
 
         internal void SetCharacterClass(CharacterClass characterClass)
@@ -94,6 +96,11 @@ namespace Cadenza
             this.interactCallback = null;
 
             this.InteractChanged?.Invoke(null);
+        }
+
+        public void SetColorway(Colorway colorway)
+        {
+            this.Colorway = colorway;
         }
 
         #endregion

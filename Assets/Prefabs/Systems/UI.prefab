@@ -558,6 +558,10 @@ MonoBehaviour:
   namingTemplate: {fileID: 9197481963319205126, guid: 357a4e3578bad184ebca6354e0c455ee, type: 3}
   readyTemplate: {fileID: 9197481963319205126, guid: 1b13ae536d2e7e44b8064fc2396375e3, type: 3}
   requiredCalibrationAttempts: 4
+  colorways:
+  - {fileID: 11400000, guid: b99a8e403d061b04dace2864f9ba7653, type: 2}
+  - {fileID: 11400000, guid: 3942851233ce9c748afa3ed1efc89298, type: 2}
+  - {fileID: 11400000, guid: 37cca17df898a144d8b20ecc2e2de239, type: 2}
 --- !u!114 &1979370985704355208
 MonoBehaviour:
   m_ObjectHideFlags: 0

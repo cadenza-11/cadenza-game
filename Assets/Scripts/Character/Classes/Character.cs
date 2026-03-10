@@ -86,6 +86,16 @@ namespace Cadenza
             this.SetHealth(this.maxHealth);
             this.SetFlow(0);
 
+            // Set sprite colors (shader).
+            if (this.cClass.Name == "Guitar") // TEMP
+                this.Sprite.material.SetInt("_CharacterColor", 1);
+            if (this.Player.Colorway != null)
+            {
+                this.Sprite.material.SetColor("_PrimaryColor", this.Player.Colorway.PrimaryColor);
+                this.Sprite.material.SetColor("_SecondaryColor", this.Player.Colorway.SecondaryColor);
+                this.Sprite.material.SetColor("_TertiaryColor", this.Player.Colorway.TertiaryColor);
+            }
+
             // Set default state.
             this.ChangeState(this.walking);
 
