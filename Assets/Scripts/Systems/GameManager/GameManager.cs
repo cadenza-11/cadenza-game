@@ -134,6 +134,11 @@ namespace Cadenza
             ApplicationController.SetLevelAsync(singleton.startingLevel);
         }
 
+        public static void RestartLevel()
+        {
+            ApplicationController.SetLevelAsync(ApplicationController.CurrentLevel);
+        }
+
         public static void ExitToPregame()
         {
             if (ApplicationController.State != ApplicationState.GameSession)

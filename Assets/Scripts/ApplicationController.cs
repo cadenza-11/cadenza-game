@@ -145,19 +145,17 @@ namespace Cadenza
             {
                 // Set the scene.
                 Scene currentScene = SceneManager.GetActiveScene();
-                if (currentScene.buildIndex != sceneIndex)
-                {
-                    // Unload the current scene if it isn't the root scene.
-                    if (currentScene.buildIndex != 0)
-                        await SceneManager.UnloadSceneAsync(currentScene);
 
-                    // Load the given scene.
-                    if (sceneIndex != 0)
-                        await SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
+                // Unload the current scene if it isn't the root scene.
+                if (currentScene.buildIndex != 0)
+                    await SceneManager.UnloadSceneAsync(currentScene);
 
-                    Scene nextScene = SceneManager.GetSceneByBuildIndex(sceneIndex);
-                    SceneManager.SetActiveScene(nextScene);
-                }
+                // Load the given scene.
+                if (sceneIndex != 0)
+                    await SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
+
+                Scene nextScene = SceneManager.GetSceneByBuildIndex(sceneIndex);
+                SceneManager.SetActiveScene(nextScene);
             }
             if (sceneIndex != 0)
                 singleton.ChangeState(ApplicationState.GameSession);

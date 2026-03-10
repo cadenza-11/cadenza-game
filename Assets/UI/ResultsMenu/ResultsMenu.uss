@@ -236,3 +236,34 @@
     -unity-text-align: upper-center;
     -unity-text-auto-size: best-fit 30px 60px;
 }
+
+.action_button {
+    font-size: 50px;
+    width: 1000px;
+    align-self: center;
+    border-top-left-radius: 17px;
+    border-top-right-radius: 17px;
+    border-bottom-right-radius: 17px;
+    border-bottom-left-radius: 17px;
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    margin-bottom: 20px;
+}
+
+.action_button:focus {
+    font-size: 50px;
+    width: 1000px;
+    align-self: center;
+    border-top-left-radius: 17px;
+    border-top-right-radius: 17px;
+    border-bottom-right-radius: 17px;
+    border-bottom-left-radius: 17px;
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+    margin-bottom: 20px;
+    background-color: rgb(255, 113, 0);
+}

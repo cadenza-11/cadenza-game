@@ -8,12 +8,15 @@ namespace Cadenza
     {
         private WinLossBanner winLossBanner = new();
         private TeamStats playerTeamStats = new();
+        private ActionButtons actionButtons = new();
 
         private List<PlayerStats> availableContainers = new();
         private Dictionary<Player, PlayerStats> assignedContainers = new();
 
         private int numPlayersReady;
         private Results currentResults;
+        private VisualElement resultsPanel;
+        private GameManager.GameResult gameResult;
 
         private class WinLossBanner
         {
@@ -41,11 +44,29 @@ namespace Cadenza
             public Label[] Stats;
         }
 
+        private class ActionButtons
+        {
+            public VisualElement Container;
+            public Button NextButton;
+            public Button RetryButton;
+            public Button MainMenuButton;
+        }
+
         #region Application Callbacks
 
         public override void OnInitialize()
         {
             // Grab references to UI elements.
+            this.resultsPanel = this.root.Q<VisualElement>("c_Panel");
+            this.actionButtons.Container = this.root.Q<VisualElement>("c_ActionButtons");
+            this.actionButtons.NextButton = this.root.Q<Button>("b_Next");
+            this.actionButtons.RetryButton = this.root.Q<Button>("b_Retry");
+            this.actionButtons.MainMenuButton = this.root.Q<Button>("b_MainMenu");
+
+            this.actionButtons.NextButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.RedirectToBackstage());
+            this.actionButtons.RetryButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.RestartLevel());
+            this.actionButtons.MainMenuButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.ExitToPregame());
+
             this.winLossBanner.TeamName = this.root.Q<Label>("update_PlayerBand");
             this.winLossBanner.EnemyTeamName = this.root.Q<Label>("update_LevelName");
             this.winLossBanner.ResultText = this.root.Q<Label>("update_WinLoss");
@@ -90,7 +111,13 @@ namespace Cadenza
             if (result == GameManager.GameResult.Forfeit)
                 return;
 
+            AudioSystem.SetState(AudioSystem.State.Results);
+
+            this.gameResult = result;
             this.currentResults = ScoreSystem.Results;
+
+            this.resultsPanel.style.display = DisplayStyle.Flex;
+            this.actionButtons.Container.style.display = DisplayStyle.None;
 
             // Banner
             this.winLossBanner.ResultText.text = $"{result}!";
@@ -99,8 +126,16 @@ namespace Cadenza
 
             // Team Stats
             this.playerTeamStats.TeamName.text = TeamSystem.Team.Name;
-            Debug.LogWarning("Grades not calculated yet");
-            this.playerTeamStats.Grade.text = "N/A";
+            this.playerTeamStats.Grade.text = this.currentResults.OverallScore switch
+            {
+                < 60 => "F",
+                < 70 => "D",
+                < 80 => "C",
+                < 90 => "B",
+                < 95 => "A",
+                < 101 => "S",
+                _ => "N/A"
+            };
             this.playerTeamStats.TeamScore.text = this.currentResults.OverallScore.ToString("F2");
             for (int i = 0; i < this.playerTeamStats.ScoreCards.Length; i++)
                 this.playerTeamStats.ScoreCards[i].text = this.currentResults.JudgeScores[i].ToString("F0");
@@ -128,6 +163,7 @@ namespace Cadenza
             foreach (var statsContainer in this.availableContainers)
             {
                 statsContainer.Container.AddToClassList("no_player");
+                statsContainer.Container.RemoveFromClassList("ready");
                 foreach (var stat in statsContainer.Stats)
                     stat.text = "0";
             }
@@ -144,6 +180,11 @@ namespace Cadenza
             GameManager.CombatStopped -= this.OnCombatStopped;
         }
 
+        public override void OnGameStop()
+        {
+            this.Hide();
+        }
+
         #endregion
         #region Navigation Events
 
@@ -158,15 +199,7 @@ namespace Cadenza
             if (stats.Container.ClassListContains("ready"))
             {
                 if (this.numPlayersReady == this.assignedContainers.Count)
-                {
-                    // FINAL IMPLEMENTATION:
-                    // Loss: Restart Level or Pregame
-                    // Win: Next Level or Pregame
-
-                    // Temp
-                    this.Hide();
-                    GameManager.ExitToPregame();
-                }
+                    this.OnAllPlayersReady();
             }
             else
             {
@@ -187,6 +220,26 @@ namespace Cadenza
 
             stats.Container.RemoveFromClassList("ready");
             this.numPlayersReady = Mathf.Max(0, this.numPlayersReady - 1);
+        }
+
+        private void OnAllPlayersReady()
+        {
+            // Show next actions.
+            this.actionButtons.Container.style.display = DisplayStyle.Flex;
+            this.resultsPanel.style.display = DisplayStyle.None;
+
+            if (this.gameResult == GameManager.GameResult.Victory)
+            {
+                this.actionButtons.NextButton.style.display = DisplayStyle.Flex;
+                this.actionButtons.RetryButton.style.display = DisplayStyle.None;
+                this.actionButtons.MainMenuButton.style.display = DisplayStyle.Flex;
+            }
+            else if (this.gameResult == GameManager.GameResult.Loss)
+            {
+                this.actionButtons.NextButton.style.display = DisplayStyle.None;
+                this.actionButtons.RetryButton.style.display = DisplayStyle.Flex;
+                this.actionButtons.MainMenuButton.style.display = DisplayStyle.Flex;
+            }
         }
 
         #endregion
