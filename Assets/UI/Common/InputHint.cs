@@ -148,7 +148,12 @@ namespace Cadenza
 
         private void OnBeatPlayed()
         {
-            this.PulseScale(0.2f);
+            if (this.keyboardHintElement.style.display == DisplayStyle.Flex)
+                this.keyboardHintElement.PulseScale(0.2f);
+            if (this.xboxHintElement.style.display == DisplayStyle.Flex)
+                this.xboxHintElement.PulseScale(0.2f);
+            if (this.psHintElement.style.display == DisplayStyle.Flex)
+                this.psHintElement.PulseScale(0.2f);
         }
 
         private void OnAttachToPanel(AttachToPanelEvent evt)

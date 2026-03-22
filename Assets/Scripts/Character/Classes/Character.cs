@@ -107,6 +107,7 @@ namespace Cadenza
                 DualShockGamepad => ControllerType.PlayStation,
                 _ => ControllerType.All,
             };
+            this.interactionIndicator.SetInputHint(controller);
             this.RevivalMeter.SetInputHint(controller);
             this.RevivalMeter.SetThreshold(this.reviveThreshold);
             this.RevivalMeter.Hide();
