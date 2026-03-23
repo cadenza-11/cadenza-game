@@ -45,7 +45,11 @@ public class Projectile : MonoBehaviour
         if (collider.CompareTag("Player"))
         {
             Character hitEntity = collider.gameObject.GetComponent<Character>();
-            hitEntity.TakeDamage(this.damage);
+            if (hitEntity != null && !hitEntity.TakeDamage(this.damage))
+            {
+                Destroy(this.gameObject);
+                return;
+            }
         }
         if (collider.CompareTag("Enemy"))
         {
@@ -53,8 +57,11 @@ public class Projectile : MonoBehaviour
             hitEntity.TakeDamage(2);
         }
 
-        Vector3 direction = collider.transform.position - this.transform.position;
-        collider.attachedRigidbody.AddForce(direction.normalized * this.knockbackScale, ForceMode.Impulse);
+        if (collider.attachedRigidbody != null)
+        {
+            Vector3 direction = collider.transform.position - this.transform.position;
+            collider.attachedRigidbody.AddForce(direction.normalized * this.knockbackScale, ForceMode.Impulse);
+        }
         Destroy(this.gameObject);
     }
 }

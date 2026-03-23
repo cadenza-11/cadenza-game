@@ -40,21 +40,25 @@ namespace Cadenza
         public event Action<Character> Died;
         public event Action<float> FlowChanged;
         public event Action Revived;
+        public event Action Parried;
 
         private float flow;
         private float revive;
+        private float parryActiveUntil = float.NegativeInfinity;
 
         public class Input
         {
             public Vector2 move;
             public ScoreDef? lightAttack;
             public ScoreDef? heavyAttack;
+            public ScoreDef? parry;
             public bool wantTeam;
 
             public void Consume()
             {
                 this.lightAttack = null;
                 this.heavyAttack = null;
+                this.parry = null;
                 this.wantTeam = false;
             }
         }
@@ -63,9 +67,11 @@ namespace Cadenza
         private bool facingRight = true;
 
         private IState state;
+        public IState CurrentState => this.state;
         public readonly WalkingState walking = new();
         public readonly LightAttackState lightAttack = new();
         public readonly HeavyAttackState heavyAttack = new();
+        public readonly ParryState parry = new();
         public readonly HitStunState hitStun = new();
         public readonly FaintedState fainted = new();
 
@@ -116,7 +122,8 @@ namespace Cadenza
         void OnDestroy()
         {
             // Unsubscribe from events.
-            this.Player.InteractChanged -= this.interactionIndicator.OnPlayerInteractChanged;
+            if (this.Player != null)
+                this.Player.InteractChanged -= this.interactionIndicator.OnPlayerInteractChanged;
         }
 
         void Update()
@@ -196,7 +203,6 @@ namespace Cadenza
         }
 
         #endregion
-
         #region Combat
 
         public void StartTeamAttack()
@@ -205,14 +211,24 @@ namespace Cadenza
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 4, immediate: false);
         }
 
-        public void TakeDamage(int damage)
+        public bool TakeDamage(int damage)
         {
+            // Parry.
+            if (this.IsParrying())
+            {
+                this.Parried?.Invoke();
+                this.ClearParryWindow();
+                return false;
+            }
+
+            // Lessen damage.
             float fDamage = damage;
             if (this.HasFlowBuff(1))
-            {
                 fDamage *= 0.8f;
-            }
+
+            // Take damage.
             this.SetHealth(this.currentHealth - fDamage);
+            return true;
         }
 
         public void SetHealth(float health)
@@ -273,7 +289,6 @@ namespace Cadenza
         }
 
         #endregion
-
         #region Input
         public void OnMove(Vector2 move)
         {
@@ -295,8 +310,12 @@ namespace Cadenza
             this.input.wantTeam = true;
         }
 
-        #endregion
+        public void OnParry(ScoreDef score)
+        {
+            this.input.parry = score;
+        }
 
+        #endregion
         #region Flow
 
         private void SetFlow(float flow)
@@ -327,7 +346,6 @@ namespace Cadenza
         }
 
         #endregion
-
         #region Revive
 
         private void SetRevive(float revive)
@@ -340,6 +358,24 @@ namespace Cadenza
                 this.Revived?.Invoke();
                 this.ChangeState(this.walking);
             }
+        }
+
+        #endregion
+        #region Parry
+
+        internal void ActivateParryWindow(float seconds)
+        {
+            this.parryActiveUntil = Time.time + Mathf.Max(0.0f, seconds);
+        }
+
+        internal void ClearParryWindow()
+        {
+            this.parryActiveUntil = float.NegativeInfinity;
+        }
+
+        internal bool IsParrying()
+        {
+            return Time.time <= this.parryActiveUntil;
         }
 
         #endregion

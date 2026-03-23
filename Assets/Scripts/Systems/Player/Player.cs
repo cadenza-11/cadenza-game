@@ -114,6 +114,7 @@ namespace Cadenza
             var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
+            var parryAction = map.FindAction("Parry", throwIfNotFound: true);
             var pauseAction = map.FindAction("Pause", throwIfNotFound: true);
             this.interactAction = attackLightAction;
 
@@ -122,6 +123,7 @@ namespace Cadenza
             attackLightAction.performed += this.OnAttackLight;
             attackHeavyAction.performed += this.OnAttackHeavy;
             attackTeamAction.performed += this.OnAttackTeam;
+            parryAction.performed += this.OnParry;
             pauseAction.performed += this.OnPause;
         }
 
@@ -161,6 +163,18 @@ namespace Cadenza
                 this.Character.OnAttackTeam();
         }
 
+        private void OnParry(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+
+            var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
+            this.PlayerHit?.Invoke(score);
+
+            if (this.Character != null)
+                this.Character.OnParry(score);
+        }
+
         private void OnPause(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -176,12 +190,16 @@ namespace Cadenza
             var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
+            var parryAction = map.FindAction("Parry", throwIfNotFound: true);
+            var pauseAction = map.FindAction("Pause", throwIfNotFound: true);
 
             moveAction.performed -= this.OnMove;
             moveAction.canceled -= this.OnMove;
             attackLightAction.performed -= this.OnAttackLight;
             attackHeavyAction.performed -= this.OnAttackHeavy;
             attackTeamAction.performed -= this.OnAttackTeam;
+            parryAction.performed -= this.OnParry;
+            pauseAction.performed -= this.OnPause;
         }
 
         #endregion
