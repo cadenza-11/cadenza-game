@@ -74,8 +74,6 @@ namespace Cadenza
 
         #region Serialized Fields
 
-        [SerializeField] private StartMenu startMenu;
-        [SerializeField] private BandNameSelect bandNameSelect;
         [SerializeField] private VisualTreeAsset joiningTemplate;
         [SerializeField] private VisualTreeAsset settingsTemplate;
         [SerializeField] private VisualTreeAsset hapticsTemplate;
@@ -94,6 +92,10 @@ namespace Cadenza
         private PlayerContainer[] playerContainers;
         private Dictionary<Player, PlayerTracker> playerTrackers = new();
 
+        private StartMenu startMenu;
+        private BandNameSelect bandNameSelect;
+        private LevelSelectMenu levelSelectMenu;
+
         #endregion
 
         #region System Events
@@ -107,6 +109,11 @@ namespace Cadenza
             // Bind a new PlayerContainer to the container element.
             for (int i = 0; i < containers.Count; i++)
                 this.playerContainers[i] = this.GetNewContainer(containers[i]);
+
+            // Find other UI panels.
+            this.startMenu = UISystem.FindPanel<StartMenu>();
+            this.bandNameSelect = UISystem.FindPanel<BandNameSelect>();
+            this.levelSelectMenu = UISystem.FindPanel<LevelSelectMenu>();
 
             this.InitializePhaseHandlers();
 

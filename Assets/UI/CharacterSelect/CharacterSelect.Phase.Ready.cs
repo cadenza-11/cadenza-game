@@ -48,18 +48,12 @@ namespace Cadenza
                 return false;
 
             // Open team creation UI if this is a new run.
+            // Otherwise, proceed to level select.
             if (TeamSystem.Team == null)
-            {
                 this.TransitionTo(this.bandNameSelect);
-            }
-
-            // Otherwise, start game.
             else
-            {
-                // Redirect will trigger fade in; don't hide panel until faded in.
-                this.Schedule(0.5f, () => this.Hide());
-                GameManager.RedirectToBackstage();
-            }
+                this.TransitionTo(this.levelSelectMenu);
+
             return true;
         }
     }

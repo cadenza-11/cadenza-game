@@ -1,0 +1,5 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="c_LevelVote" class="vote-pill">
+        <ui:Label text="Player" name="txt_PlayerName" class="vote-pill__label"/>
+    </ui:VisualElement>
+</ui:UXML>

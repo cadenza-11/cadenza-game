@@ -72,6 +72,77 @@ MonoBehaviour:
   articlesFile: {fileID: 4900000, guid: c956a6f114edd4a4e8c1abc10757e34b, type: 3}
   adjectivesFile: {fileID: 4900000, guid: b5d7ccde1ca3006439992a28baab5d5b, type: 3}
   nounsFile: {fileID: 4900000, guid: f0bc5dde8ea0cf7448c617e9b2c4391a, type: 3}
+--- !u!1 &8123456789012345678
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8123456789012345679}
+  - component: {fileID: 8123456789012345680}
+  - component: {fileID: 8123456789012345681}
+  m_Layer: 0
+  m_Name: LevelSelectMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8123456789012345679
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8123456789012345678}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1820362299702937105}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8123456789012345680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8123456789012345678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name:
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: a9efd3a193903934489f7229d03c2959, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: dd22a480feb1482b8b4a14fbd82a17c2, type: 3}
+  m_SortingOrder: 1
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &8123456789012345681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8123456789012345678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ac2ca0a0d4461eb5894ef85973cd03, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.LevelSelectMenu
+  uiDocument: {fileID: 8123456789012345680}
+  levelCardTemplate: {fileID: 9197481963319205126, guid: 0281f323d17b41f899a5600c6d935e2b, type: 3}
+  levelVoteTemplate: {fileID: 9197481963319205126, guid: 88ed20e96ca44951a1005a4c328ceadb, type: 3}
 --- !u!1 &2018074778152609133
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,6 +247,7 @@ Transform:
   - {fileID: 282507516178628650}
   - {fileID: 5971180210531556566}
   - {fileID: 4592023291387736838}
+  - {fileID: 8123456789012345679}
   - {fileID: 191295917078525619}
   - {fileID: 6726416416659335136}
   - {fileID: 2470285422591770758}

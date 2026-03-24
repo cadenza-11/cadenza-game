@@ -22,6 +22,9 @@ namespace Cadenza
         [Tooltip("The FMOD event that should play when this level is loaded.")]
         public EventReference MusicTrack;
 
+        [Tooltip("The image that will display for this level in level select UI.")]
+        public Texture2D PreviewImage;
+
         public bool IsValid =>
             !string.IsNullOrEmpty(this.Name)
             && this.BuildIndex >= 0
