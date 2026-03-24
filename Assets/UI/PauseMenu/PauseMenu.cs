@@ -40,6 +40,11 @@ namespace Cadenza
             GameManager.GameUnpaused += this.OnGameUnpaused;
         }
 
+        public override void OnGameStop()
+        {
+            this.Hide();
+        }
+
         #endregion
 
         #region Private Functions
