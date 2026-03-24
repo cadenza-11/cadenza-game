@@ -6,6 +6,7 @@ namespace Cadenza
     public class StartMenu : UIPanel
     {
         private UIPanel characterSelect;
+        private UIPanel bandNameSelect;
         private UIPanel settingsMenu;
         private UIPanel leaderboardMenu;
 
@@ -22,6 +23,7 @@ namespace Cadenza
         public override void OnInitialize()
         {
             this.characterSelect = UISystem.FindPanel<CharacterSelect>();
+            this.bandNameSelect = UISystem.FindPanel<BandNameSelect>();
             this.settingsMenu = UISystem.FindPanel<SettingsMenu>();
             this.leaderboardMenu = UISystem.FindPanel<Leaderboard>();
 
@@ -111,7 +113,7 @@ namespace Cadenza
         private void OnNewRun()
         {
             SaveSystem.DeleteTeamFile();
-            this.TransitionTo(this.characterSelect);
+            this.TransitionTo(this.bandNameSelect);
         }
 
         private void OnLastRun()

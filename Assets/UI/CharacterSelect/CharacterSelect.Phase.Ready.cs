@@ -12,7 +12,7 @@ namespace Cadenza
             public override void OnSubmit(Player player, PlayerTracker tracker, PlayerContainer playerContainer)
             {
                 // Try to start once at least one player is ready.
-                this.Owner.TryStartGame();
+                this.Owner.TryGoToNextPanel();
             }
 
             public override void OnCancel(Player player, PlayerTracker tracker, PlayerContainer playerContainer)
@@ -42,18 +42,12 @@ namespace Cadenza
             return hasReady;
         }
 
-        private bool TryStartGame()
+        private bool TryGoToNextPanel()
         {
-            if (!this.AllPlayersReady() || ApplicationController.IsRedirecting)
+            if (!this.AllPlayersReady())
                 return false;
 
-            // Open team creation UI if this is a new run.
-            // Otherwise, proceed to level select.
-            if (TeamSystem.Team == null)
-                this.TransitionTo(this.bandNameSelect);
-            else
-                this.TransitionTo(this.levelSelectMenu);
-
+            this.TransitionTo(this.levelSelectMenu);
             return true;
         }
     }

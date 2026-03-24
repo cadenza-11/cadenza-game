@@ -16,14 +16,16 @@ namespace Cadenza
         private string[] articles;
         private string[] adjectives;
         private string[] nouns;
-        private LevelSelectMenu levelSelectMenu;
+        private UIPanel characterSelectMenu;
+        private StartMenu startMenu;
 
         #region System Events
         public override void OnInitialize()
         {
             // Grab elements.
             this.keyboard = this.root.Q<OnScreenKeyboard>();
-            this.levelSelectMenu = UISystem.FindPanel<LevelSelectMenu>();
+            this.characterSelectMenu = UISystem.FindPanel<CharacterSelect>();
+            this.startMenu = UISystem.FindPanel<StartMenu>();
             this.Hide();
 
             // Override the 'cancel' button to be 'randomize'.
@@ -59,7 +61,7 @@ namespace Cadenza
         private void OnCancel(Player player)
         {
             if (this.keyboard.value == string.Empty)
-                this.TransitionTo(UISystem.FindPanel<CharacterSelect>());
+                this.TransitionTo(this.startMenu);
             this.keyboard.OnCancel();
         }
         private void OnUIPlayerNavigate(MoveDirection direction, Player player)
@@ -93,7 +95,7 @@ namespace Cadenza
                 this.OnRandomizeName();
 
             TeamSystem.CreateTeam(this.keyboard.value);
-            this.TransitionTo(this.levelSelectMenu);
+            this.TransitionTo(this.characterSelectMenu);
         }
 
         #endregion
