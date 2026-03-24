@@ -22,8 +22,6 @@ namespace Cadenza
 
         #region Inspector Variables
 
-        [SerializeField] private EventReference globalTrackReference;
-
         [Header("Options")]
 
         /// <summary>
@@ -76,6 +74,11 @@ namespace Cadenza
         /// The number of seconds that have elapsed in the current track.
         /// </summary>
         public static double CurrentTrackTime => singleton.elapsedTimeDSP - singleton.trackStartTimeDSP + singleton.offsetTime;
+
+        /// <summary>
+        /// The playback state (e.g. Playing, Stopped) of the currently-playing track.
+        /// </summary>
+        public static PLAYBACK_STATE CurrentTrackState => singleton.currentPlayState;
 
         #endregion
         #region Private Variables
@@ -152,13 +155,14 @@ namespace Cadenza
         private bool wasOffsetChangedThisFrame = false;
         private int markerTime;
 
-        private EventInstance globalTrack;
 
         #endregion
         #region FMOD Variables
 
-        private PLAYBACK_STATE globalPlayState;
-        private PLAYBACK_STATE lastGlobalPlayState;
+        private EventReference currentEventReference;
+        private EventInstance currentTrack;
+        private PLAYBACK_STATE currentPlayState;
+        private PLAYBACK_STATE previousPlayState;
         private TimelineInfo timelineInfo = null;
         private GCHandle timelineHandle;
         private EVENT_CALLBACK beatCallback;
@@ -171,14 +175,11 @@ namespace Cadenza
         {
             Debug.Assert(singleton == null);
             singleton = this;
-
-            this.SetGlobalTrack(this.globalTrackReference);
-            this.PlayGlobalTrack();
         }
 
         public override void OnApplicationStop()
         {
-            this.globalTrack.setCallback(null);
+            this.currentTrack.setCallback(null);
             this.timelineHandle.Free();
         }
 
@@ -186,13 +187,13 @@ namespace Cadenza
         {
             // Check if the track has just started playing from a stopped state.
             // Also update the current play state.
-            this.CheckForTrackStarted();
+            this.CheckForTrackStarted(out this.currentPlayState);
 
-            if (this.globalPlayState != PLAYBACK_STATE.PLAYING)
+            if (this.currentPlayState != PLAYBACK_STATE.PLAYING)
                 return;
 
             // Update timing values.
-            this.globalTrack.getTimelinePosition(out this.timelineInfo.currentPosition);
+            this.currentTrack.getTimelinePosition(out this.timelineInfo.currentPosition);
             this.UpdateDSPClock();
 
             if (this.wasOffsetChangedThisFrame)
@@ -213,6 +214,22 @@ namespace Cadenza
 
         #endregion
         #region Public Static Methods
+
+        public static void PlayTrack(EventReference eventRef)
+        {
+            if (singleton.currentEventReference.Equals(eventRef))
+            {
+                Debug.Log($"Requested to play track ({eventRef}), but track is already playing.");
+                return;
+            }
+            singleton.SetCurrentTrack(eventRef);
+            singleton.PlayCurrentTrack();
+        }
+
+        public static void StopTrack()
+        {
+            singleton.StopCurrentTrack();
+        }
 
         /// <summary>
         /// Shifts the beat system's estimated time forwards or backwards a certain interval.
@@ -318,6 +335,12 @@ namespace Cadenza
             return tcs.Task;
         }
 
+        public static async Task WaitForTrackStop()
+        {
+            while (singleton.currentPlayState != PLAYBACK_STATE.STOPPED)
+                await Task.Delay(100);
+        }
+
         #endregion
         #region Callback Methods
 
@@ -394,32 +417,26 @@ namespace Cadenza
         #region Private Methods
 
         /// <summary>
-        /// "Warms up" the global track by loading its sample data.
+        /// "Warms up" the track by loading its sample data.
         /// Stops any currently-playing track and unloads its sample data.
         /// </summary>
-        private void SetGlobalTrack(EventReference track)
+        private void SetCurrentTrack(EventReference track)
         {
-            EventDescription description;
-
-            // Stop any existing track.
-            if (this.globalPlayState == PLAYBACK_STATE.PLAYING)
-            {
-                this.globalTrack.getDescription(out description);
-                description.unloadSampleData();
-                this.globalTrack.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            }
+            // Stop the current track, if one is playing.
+            this.StopCurrentTrack();
 
             // Load the track.
-            this.globalTrack = RuntimeManager.CreateInstance(track);
-            this.globalTrack.getDescription(out description);
+            this.currentEventReference = track;
+            this.currentTrack = RuntimeManager.CreateInstance(track);
+            this.currentTrack.getDescription(out EventDescription description);
             description.loadSampleData();
 
             // Setup beat callbacks.
             this.timelineInfo = new TimelineInfo();
             this.beatCallback = new EVENT_CALLBACK(BeatEventCallback);
             this.timelineHandle = GCHandle.Alloc(this.timelineInfo, GCHandleType.Pinned);
-            this.globalTrack.setUserData(GCHandle.ToIntPtr(this.timelineHandle));
-            this.globalTrack.setCallback(this.beatCallback, EVENT_CALLBACK_TYPE.TIMELINE_BEAT | EVENT_CALLBACK_TYPE.TIMELINE_MARKER);
+            this.currentTrack.setUserData(GCHandle.ToIntPtr(this.timelineHandle));
+            this.currentTrack.setCallback(this.beatCallback, EVENT_CALLBACK_TYPE.TIMELINE_BEAT | EVENT_CALLBACK_TYPE.TIMELINE_MARKER);
 
             // Store song length.
             description.getLength(out this.timelineInfo.trackLength);
@@ -427,27 +444,37 @@ namespace Cadenza
             // Store sample rate.
             RuntimeManager.CoreSystem.getSoftwareFormat(out this.sampleRate, out _, out _);
 
-            Debug.Log($"Initialized global track (GUID={track}).");
+            Debug.Log($"Initialized track (GUID={track}).");
         }
 
         /// <summary>
-        /// Plays the global track. Must be preceded by a call to <see cref="SetGlobalTrack"/>
+        /// Plays the current track. Must be preceded by a call to <see cref="SetCurrentTrack"/>
         /// </summary>
-        private void PlayGlobalTrack()
+        private void PlayCurrentTrack()
         {
-            if (!this.globalTrack.isValid())
+            if (!this.currentTrack.isValid())
             {
-                Debug.LogWarning("Attempted to play an unloaded global track. Try calling SetGlobalTrack() first.");
+                Debug.LogWarning("Attempted to play an unloaded track. Try calling SetCurrentTrack() first.");
                 return;
             }
-            this.globalTrack.start();
-            Debug.Log($"Starting global track (GUID={this.globalTrackReference}).");
+            this.currentTrack.start();
+            Debug.Log($"Starting track (GUID={this.currentEventReference}).");
+        }
+
+        private void StopCurrentTrack()
+        {
+            if (this.currentPlayState == PLAYBACK_STATE.PLAYING)
+            {
+                this.currentTrack.getDescription(out EventDescription description);
+                description.unloadSampleData();
+                this.currentTrack.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            }
         }
 
         private void UpdateDSPClock()
         {
             // Get the current number of samples.
-            this.globalTrack.getChannelGroup(out this.channelGroup);
+            this.currentTrack.getChannelGroup(out this.channelGroup);
             this.channelGroup.getDSPClock(out this.elapsedSamplesDSP, out _);
 
             // Calculate the current DSP time in seconds.
@@ -520,7 +547,7 @@ namespace Cadenza
             if (this.previousBeatTimeDSP < this.elapsedTimeDSP - (this.beatPeriod / 2f))
                 this.OnFixedBeat();
 
-            this.globalTrack.getTimelinePosition(out int currentTimelinePos);
+            this.currentTrack.getTimelinePosition(out int currentTimelinePos);
             float offset = (currentTimelinePos - this.markerTime) / 1000f;
             this.SetTrackStart(offset);
 
@@ -532,24 +559,24 @@ namespace Cadenza
         /// Detects if the track has changed from a "not-playing" to a "playing" state this frame.
         /// Also updates the play state.
         /// </summary>
-        private bool CheckForTrackStarted()
+        private bool CheckForTrackStarted(out PLAYBACK_STATE playbackState)
         {
-            this.globalTrack.getPlaybackState(out this.globalPlayState);
+            this.currentTrack.getPlaybackState(out playbackState);
 
             bool trackStartedThisFrame =
-                this.globalPlayState == PLAYBACK_STATE.PLAYING &&
-                this.lastGlobalPlayState != PLAYBACK_STATE.PLAYING;
+                this.currentPlayState == PLAYBACK_STATE.PLAYING &&
+                this.previousPlayState != PLAYBACK_STATE.PLAYING;
 
             if (trackStartedThisFrame)
                 this.OnTrackStarted();
 
-            this.lastGlobalPlayState = this.globalPlayState;
+            this.previousPlayState = this.currentPlayState;
             return trackStartedThisFrame;
         }
 
         private void SetTrackTempo()
         {
-            this.globalTrack.getTimelinePosition(out int currentTimelinePos);
+            this.currentTrack.getTimelinePosition(out int currentTimelinePos);
 
             float offset = (currentTimelinePos - this.timelineInfo.beatPosition) / 1000f;
             this.SetTrackStart(offset);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
@@ -73,7 +74,7 @@ namespace Cadenza
             }
         }
 
-        [SerializeField] private EventReference globalBeatEvent;
+        [SerializeField] private EventReference pregameMusicEvent;
         [SerializeField] private EventReference beatCallbackDebugEvent;
         [SerializeField] private EventReference playerOneShotsEvent;
         [SerializeField] private SoundCollection soundCollection;
@@ -101,18 +102,49 @@ namespace Cadenza
 
             // Listen for beat.
             BeatSystem.BeatPlayed += this.OnBeat;
+
+            // Play pregame music track.
+            BeatSystem.PlayTrack(this.pregameMusicEvent);
         }
 
         public override void OnGameStart()
         {
+            _ = this.OnGameStartAsync();
+
             this.playerSounds?.OnGameStart();
             this.uiSounds?.OnGameStart();
         }
 
         public override void OnGameStop()
         {
+            _ = this.OnGameStopAsync();
             this.playerSounds?.OnGameStop();
             this.uiSounds?.OnGameStop();
+        }
+
+        private async Task OnGameStartAsync()
+        {
+            var level = ApplicationController.CurrentLevel;
+
+            // Stop current music.
+            BeatSystem.StopTrack();
+            await BeatSystem.WaitForTrackStop();
+
+            // Play next music.
+            if (!level.MusicTrack.IsNull)
+                BeatSystem.PlayTrack(level.MusicTrack);
+        }
+
+        private async Task OnGameStopAsync()
+        {
+            // Stop current music.
+            BeatSystem.StopTrack();
+            await BeatSystem.WaitForTrackStop();
+
+            // If there is no level queued up,
+            // start the pregame music track.
+            if (ApplicationController.RequestedLevel == null)
+                BeatSystem.PlayTrack(this.pregameMusicEvent);
         }
 
         private void OnBeat()

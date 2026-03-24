@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,6 +18,9 @@ namespace Cadenza
 
         [Tooltip("Whether or not this level ")]
         public bool IsBattleLevel;
+
+        [Tooltip("The FMOD event that should play when this level is loaded.")]
+        public EventReference MusicTrack;
 
         public bool IsValid =>
             !string.IsNullOrEmpty(this.Name)
