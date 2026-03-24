@@ -197,6 +197,11 @@ namespace Cadenza
 
             this.isRedirecting = true;
 
+            Level selectedLevel = this.ResolveWinningLevel();
+            GameManager.SetSelectedLevel(selectedLevel);
+
+            // Don't hide this panel until the fader is visible.
+            // Wait enough time for the fader to be visible after redirect.
             this.Schedule(0.5f, () => this.Hide());
             GameManager.RedirectToBackstage();
         }

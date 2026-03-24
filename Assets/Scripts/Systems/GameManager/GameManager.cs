@@ -27,6 +27,7 @@ namespace Cadenza
         public static event Action<Player> GamePaused;
         public static event Action GameUnpaused;
         public static bool IsPaused => singleton.isPaused;
+        public static Level SelectedLevel => singleton.selectedLevel;
 
         private bool isCombatActive;
         public static bool IsCombatActive => singleton.isCombatActive;
@@ -36,6 +37,7 @@ namespace Cadenza
 
         #endregion
 
+        private Level selectedLevel;
         private bool isPaused;
 
         #region Application Callbacks
@@ -128,6 +130,17 @@ namespace Cadenza
 
         #endregion
         #region Public Static Methods
+
+        public static void SetSelectedLevel(Level level)
+        {
+            singleton.selectedLevel = level;
+        }
+
+        public static void RedirectToSelectedLevel()
+        {
+            if (singleton.selectedLevel != null)
+                ApplicationController.SetLevelAsync(singleton.selectedLevel);
+        }
 
         public static void RedirectToBackstage()
         {
