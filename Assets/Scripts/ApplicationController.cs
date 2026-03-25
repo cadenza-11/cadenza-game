@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -24,7 +23,7 @@ namespace Cadenza
         private ApplicationState state;
         private bool isRedirecting;
         private Level currentLevel;
-        private Level requestedLevel;
+        private Level previousLevel;
 
         /// <summary>
         /// The current state of the application.
@@ -48,9 +47,9 @@ namespace Cadenza
         public static Level CurrentLevel => singleton.currentLevel;
 
         /// <summary>
-        /// The next level to be loaded. May be null. Is only valid when the application is redirecting.
+        /// The previous level that was loaded. May be null.
         /// </summary>
-        public static Level RequestedLevel => singleton.requestedLevel;
+        public static Level PreviousLevel => singleton.previousLevel;
 
         #region Unity Callbacks
 
@@ -162,7 +161,8 @@ namespace Cadenza
             else
                 sceneIndex = level.BuildIndex;
 
-            this.requestedLevel = sceneIndex == 0 ? null : level;
+            this.previousLevel = this.currentLevel;
+            this.currentLevel = sceneIndex == 0 ? null : level;
 
             await Fader.ShowAsync();
             singleton.ChangeState(ApplicationState.Pregame);
@@ -180,9 +180,6 @@ namespace Cadenza
 
                 Scene nextScene = SceneManager.GetSceneByBuildIndex(sceneIndex);
                 SceneManager.SetActiveScene(nextScene);
-
-                this.currentLevel = this.requestedLevel;
-                this.requestedLevel = null;
             }
             if (sceneIndex != 0)
                 singleton.ChangeState(ApplicationState.GameSession);

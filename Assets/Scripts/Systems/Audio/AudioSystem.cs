@@ -124,27 +124,29 @@ namespace Cadenza
 
         private async Task OnGameStartAsync()
         {
-            var level = ApplicationController.CurrentLevel;
+            // Stop level music if redirecting from pregame menus.
+            if (ApplicationController.PreviousLevel == null)
+            {
+                BeatSystem.StopTrack();
+                await BeatSystem.WaitForTrackStop();
+            }
 
-            // Stop current music.
-            BeatSystem.StopTrack();
-            await BeatSystem.WaitForTrackStop();
-
-            // Play next music.
-            if (!level.MusicTrack.IsNull)
+            // Play the music for the selected level, if not null.
+            if (GameManager.SelectedLevel is Level level && !level.MusicTrack.IsNull)
                 BeatSystem.PlayTrack(level.MusicTrack);
         }
 
         private async Task OnGameStopAsync()
         {
-            // Stop current music.
-            BeatSystem.StopTrack();
-            await BeatSystem.WaitForTrackStop();
+            // If there is no level queued up, stop current
+            // music and start the pregame music track.
+            if (ApplicationController.CurrentLevel == null)
+            {
+                BeatSystem.StopTrack();
+                await BeatSystem.WaitForTrackStop();
 
-            // If there is no level queued up,
-            // start the pregame music track.
-            if (ApplicationController.RequestedLevel == null)
                 BeatSystem.PlayTrack(this.pregameMusicEvent);
+            }
         }
 
         private void OnBeat()
@@ -208,6 +210,7 @@ namespace Cadenza
 
         public static void SetState(State state)
         {
+            Debug.Log($"Audio state set to {state}");
             RuntimeManager.StudioSystem.setParameterByName(ParamNameState, (int)state);
         }
 

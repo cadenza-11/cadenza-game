@@ -76,7 +76,8 @@ namespace Cadenza
 
         public override void OnGameStop()
         {
-            if (ApplicationController.RequestedLevel == null)
+            // Show by default if redirecting to pregame.
+            if (ApplicationController.CurrentLevel == null)
                 this.Show();
         }
 
