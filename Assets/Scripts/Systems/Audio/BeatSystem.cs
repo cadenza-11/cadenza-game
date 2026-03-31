@@ -80,6 +80,8 @@ namespace Cadenza
         /// </summary>
         public static PLAYBACK_STATE CurrentTrackState => singleton.currentPlayState;
 
+        public static EventInstance CurrentTrack => singleton.currentTrack;
+
         #endregion
         #region Private Variables
 

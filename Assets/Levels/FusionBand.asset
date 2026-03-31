@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Level
   ID: 3
   Name: Jazz-Funk Fusion
-  BuildIndex: 2
+  BuildIndex: 3
   IsBattleLevel: 1
   MusicTrack:
     Guid:
