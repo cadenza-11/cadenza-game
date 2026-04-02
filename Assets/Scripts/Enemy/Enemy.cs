@@ -436,5 +436,15 @@ namespace Cadenza
             return this.maxHealth;
         }
         #endregion
+
+        public Vector2 GetTargetLocation()
+        {
+            return this.TargetLocation;
+        }
+
+        public void SetTargetLocation(Vector2 loc)
+        {
+            this.TargetLocation = loc;
+        }
     }
 }

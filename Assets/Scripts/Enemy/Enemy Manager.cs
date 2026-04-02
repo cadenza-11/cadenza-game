@@ -8,6 +8,7 @@ namespace Cadenza
         private static EnemyManager singleton;
 
         [SerializeField] private GameObject enemyPrefab;
+        [SerializeField] private GameObject gruntPrefab;
 
         private readonly HashSet<Enemy> enemies = new();
 
@@ -48,6 +49,27 @@ namespace Cadenza
                 return true;
             }
             return false;
+        }
+
+        private void GroupAttack()
+        {
+            Vector2 location = Vector2.zero;
+            foreach(var enemy in this.enemies)
+            {
+                if(enemy is EnemyGrunt)
+                {
+                    float chance = UnityEngine.Random.Range(0f, 1f);
+                    if(chance < 0.5)
+                    {
+                        if(location == Vector2.zero)
+                        {
+                            location = enemy.GetTargetLocation();
+                        }
+                        EnemyGrunt curEnemy = (EnemyGrunt)enemy;
+                        curEnemy.GroupAttack(location);
+                    }
+                }
+            }
         }
     }
 }
