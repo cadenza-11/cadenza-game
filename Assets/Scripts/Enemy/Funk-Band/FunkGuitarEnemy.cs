@@ -8,7 +8,7 @@ namespace Cadenza
     public class FunkGuitarEnemy : Enemy
     {
         #region Variables
-        new protected const int chaseDistance = 10;
+        new protected const int chaseDistance = 8;
         new protected const int meleeDistance = 1;
         new protected const int rangedDistance = 30;
         #endregion
@@ -163,7 +163,7 @@ namespace Cadenza
         /// </summary>
         protected void ChaseState()
         {
-            this.FindNearestPlayerDist();
+            this.TargetLocation = this.FindNearestPlayerDist();
             this.curAngle = (float)Math.Atan2(this.TargetLocation.y - this.transform.position.z, this.TargetLocation.x - this.transform.position.x);
 
             Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
@@ -329,7 +329,7 @@ namespace Cadenza
             if (this.rangedAttackInterval <= 0)
             {
                 this.RangedAttack();
-                this.rangedAttackInterval = 1.5f;
+                this.rangedAttackInterval = 3f;
             }
             else
             {
