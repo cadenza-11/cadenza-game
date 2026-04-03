@@ -23,7 +23,7 @@ public class FunkGuitarLightning : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        else if (this.timer >= 3.5f)
+        else if (this.timer >= 3.1f)
         {
             this.hurtBox.SetActive(false);
         }

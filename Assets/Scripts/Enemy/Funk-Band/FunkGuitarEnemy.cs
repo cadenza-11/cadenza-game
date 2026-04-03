@@ -8,35 +8,9 @@ namespace Cadenza
     public class FunkGuitarEnemy : Enemy
     {
         #region Variables
-        [SerializeField] public float speed;
-        [SerializeField] protected float meleeDuration;
-        [SerializeField] protected float rangedDuration;
-        [SerializeField] protected int maxHealth;
-        [SerializeField] public int currentHealth;
-        [SerializeField] protected EnemyAttackArea attackArea;
-        [SerializeField] protected Rigidbody rb;
-        [SerializeField] protected SpriteRenderer sr;
-        [SerializeField] protected Animator anim;
-        [SerializeField] protected GameObject projectile;
-        [SerializeField] protected EnemyState curState = EnemyState.Idle;
-
-        public float CurrentHealth => this.currentHealth;
-
-        protected float rangedAttackInterval = 0f;
-        protected const int chaseDistance = 20;
-        protected const int meleeDistance = 1;
-        protected const int rangedDistance = 50;
-        protected bool meleeState;
-        protected bool hasRun;
-        protected bool isAttacking;
-        protected int attackMod;
-        protected int runHealth;
-        protected float nearestPlayerDist;
-        protected float curAngle;
-        protected Player follow;
-        protected Vector2 TargetLocation;
-        protected bool isActionable;
-
+        new protected const int chaseDistance = 10;
+        new protected const int meleeDistance = 1;
+        new protected const int rangedDistance = 30;
         #endregion
 
         // Do this in Start so that EnemyManager is initialized.
@@ -93,20 +67,20 @@ namespace Cadenza
 
         override protected void RangedAttack()
         {
-            GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
-            int direction =
-                (this.curAngle * (180 / Math.PI) > -90 && this.curAngle * (180 / Math.PI) < 90) ? 1 : -1;
-            projectileInstance.GetComponent<Projectile>().direction.x = direction;
-            projectileInstance.GetComponent<Projectile>().speedSet = false;
             this.anim.SetTrigger("LightAttack");
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.1f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
+            }
         }
 
-        protected virtual void RangedAttack(Vector2 direction)
+        protected override void RangedAttack(Vector2 direction)
         {
-            GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
-            projectileInstance.GetComponent<Projectile>().direction = direction;
-            projectileInstance.GetComponent<Projectile>().speedSet = false;
             this.anim.SetTrigger("LightAttack");
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.1f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
+            }
         }
 
         public void TakeDamage(int damage)
