@@ -80,7 +80,15 @@ namespace Cadenza
         /// </summary>
         public static PLAYBACK_STATE CurrentTrackState => singleton.currentPlayState;
 
+        /// <summary>
+        /// The FMOD event instance of the currently-playing track. Null if no track is playing.
+        /// </summary>
         public static EventInstance CurrentTrack => singleton.currentTrack;
+
+        /// <summary>
+        /// The average RMS value of the track's output channels, denoting overall track volume.
+        /// </summary>
+        public static float CurrentRMS => singleton.rms;
 
         #endregion
         #region Private Variables
@@ -153,6 +161,11 @@ namespace Cadenza
         /// </summary>
         private double offsetTime => (this.systemOffsetTime + FMODOffsetTime) / 1000;
 
+        /// <summary>
+        /// The average RMS value of the track's output channels, denoting overall track volume.
+        /// </summary>
+        private float rms = 0f;
+
         private bool wasMarkerPassedThisFrame = false;
         private bool wasOffsetChangedThisFrame = false;
         private int markerTime;
@@ -169,6 +182,8 @@ namespace Cadenza
         private GCHandle timelineHandle;
         private EVENT_CALLBACK beatCallback;
         private FMOD.ChannelGroup channelGroup;
+        private FMOD.DSP headDSP;
+        private FMOD.DSP_METERING_INFO outputInfo;
 
         #endregion
         #region Application Callbacks
@@ -197,6 +212,14 @@ namespace Cadenza
             // Update timing values.
             this.currentTrack.getTimelinePosition(out this.timelineInfo.currentPosition);
             this.UpdateDSPClock();
+
+            // Update average RMS.
+            this.headDSP.getMeteringInfo(IntPtr.Zero, out this.outputInfo);
+            this.rms = 0f;
+            for (int i = 0; i < this.outputInfo.numchannels; i++)
+                this.rms += this.outputInfo.rmslevel[i];
+
+            this.rms /= Mathf.Max(1, this.outputInfo.numchannels);
 
             if (this.wasOffsetChangedThisFrame)
             {
@@ -478,6 +501,10 @@ namespace Cadenza
             // Get the current number of samples.
             this.currentTrack.getChannelGroup(out this.channelGroup);
             this.channelGroup.getDSPClock(out this.elapsedSamplesDSP, out _);
+
+            // Get DSP.
+            this.channelGroup.getDSP(FMOD.CHANNELCONTROL_DSP_INDEX.HEAD, out this.headDSP);
+            this.headDSP.setMeteringEnabled(inputEnabled: false, outputEnabled: true);
 
             // Calculate the current DSP time in seconds.
             this.previousTimeDSP = this.elapsedTimeDSP;
