@@ -197,7 +197,7 @@ namespace Cadenza
         /// <summary>
         /// Enemy's Chase State. Moves the enemy towards the selected closest Player.
         /// </summary>
-        protected void ChaseState()
+        protected virtual void ChaseState()
         {
             this.FindNearestPlayerDist();
             this.curAngle = (float)Math.Atan2(this.TargetLocation.y - this.transform.position.z, this.TargetLocation.x - this.transform.position.x);
@@ -237,7 +237,7 @@ namespace Cadenza
             }
         }
 
-        protected void MeleeState()
+        protected virtual void MeleeState()
         {
             this.rb.linearVelocity = Vector3.zero;
             if (this.isAttacking)
@@ -281,10 +281,10 @@ namespace Cadenza
             }
         }
 
-        protected void SpecialState()
+        protected virtual void SpecialState()
         {
             this.rb.linearVelocity = Vector3.zero;
-            //Do Special Move
+            //Do Special Attack
             if (this.meleeState)
             {
                 this.meleeState = true;
