@@ -8,27 +8,38 @@ namespace Cadenza
     public class RockStationaryEnemy : Enemy
     {
         #region Variables
-        new protected const int chaseDistance = 8;
-        new protected const int meleeDistance = 1;
-        new protected const int rangedDistance = 30;
+        [SerializeField] private GameObject meleePrefab;
+        [SerializeField] protected Animator anim2;
+
+        private float meleeTimer = 0.0f;
+        private GameObject currentProjectile;
+        private bool combatStarted = false;
         #endregion
 
         // Do this in Start so that EnemyManager is initialized.
         void Start()
         {
             EnemyManager.AddEnemy(this);
+            GameManager.CombatStarted += this.CombatStart;
         }
 
-        public virtual void Initialize()
+        override public void Initialize()
         {
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
             this.speed = 1.5f;
             this.isAttacking = false;
             this.isActionable = true;
+            this.meleeTimer = 0.0f;
+            this.currentProjectile = null;
         }
 
-        protected virtual void FixedUpdate()
+        private void CombatStart()
+        {
+            this.combatStarted = true;
+        }
+
+        override protected void FixedUpdate()
         {
             if (!this.IsGrounded())
             {
@@ -44,49 +55,65 @@ namespace Cadenza
                 // Turn character to the left.
                 this.transform.rotation = Quaternion.Euler(0, 180, 0);
             }
+        }
 
-            //Checks if the Enemy's state needs to change
-            this.CheckState();
+        private void Update()
+        {
+            if (this.combatStarted)
+            {
+                if (this.currentProjectile == null)
+                {
+                    this.RangedAttack();
+                }
+                this.FindNearestPlayerDist();
+                if (this.nearestPlayerDist < 3.0f)
+                {
+                    this.meleeTimer += Time.deltaTime;
+                }
+                else
+                {
+                    this.meleeTimer = 0.0f;
+                }
+                if (this.meleeTimer >= 5.0f)
+                {
+                    this.meleeTimer = 0.0f;
+                    this.MeleeAttack();
+                }
+                if (this.currentHealth <= 0)
+                {
+                    this.DeadState();
+                }
+            }
         }
 
         #region IEnemy Interface
-        protected void MeleeAttack()
+        override protected void MeleeAttack()
         {
-            this.isAttacking = true;
-            this.attackArea.SetActive(true);
-
-            this.Schedule(this.meleeDuration * this.attackMod, () =>
-            {
-                this.isAttacking = false;
-                this.attackArea.SetActive(false);
-            });
+            GameObject meleeProjectile = Instantiate(this.meleePrefab, new Vector3(this.gameObject.transform.position.x, -0.1f, this.gameObject.transform.position.z), Quaternion.identity);
 
             // Play animation
             this.anim.SetTrigger("LightAttack");
+            this.anim2.SetTrigger("LightAttack");
         }
 
         override protected void RangedAttack()
         {
+            float[] wavePos = new float[4] {1.875f, 0.625f, -0.625f, -1.875f};
             this.anim.SetTrigger("LightAttack");
-            for (int i = 0; i < 3; i++)
-            {
-                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.1f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
-            }
+            this.anim2.SetTrigger("LightAttack");
+            this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.1f, wavePos[UnityEngine.Random.Range(0, 4)]), Quaternion.identity);
         }
 
         protected override void RangedAttack(Vector2 direction)
         {
-            this.anim.SetTrigger("LightAttack");
-            for (int i = 0; i < 3; i++)
-            {
-                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.1f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
-            }
+            
         }
 
-        public void TakeDamage(int damage)
+        override public void TakeDamage(int damage)
         {
             this.currentHealth -= damage;
             this.anim.SetTrigger("IsHit");
+            this.anim2.SetTrigger("IsHit");
 
             // Hit stun.
             this.isActionable = false;
@@ -103,7 +130,7 @@ namespace Cadenza
         /// <summary>
         /// Checks the enemy's current state and then goes into the proper State function for actions/state changes
         /// </summary>
-        protected virtual void CheckState()
+        protected void CheckState()
         {
             if (!this.isActionable)
                 return;
@@ -338,9 +365,10 @@ namespace Cadenza
 
         }
 
-        protected void DeadState()
+        override protected void DeadState()
         {
             this.anim.SetBool("IsFainted", true);
+            this.anim2.SetBool("IsFainted", true);
             this.rb.linearVelocity = Vector3.zero;
             EnemyManager.RemoveEnemy(this);
         }

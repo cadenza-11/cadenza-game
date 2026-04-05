@@ -25,7 +25,7 @@ namespace Cadenza
         {
             if (this.gameObject.activeSelf)
             {
-                this.transform.position = new Vector3(Mathf.Lerp(25.0f, -25.0f, this.t), 0.25f, 0);
+                this.transform.position = new Vector3(Mathf.Lerp(25.0f, -25.0f, this.t), 0.25f, this.gameObject.transform.parent.position.z);
 
                 this.t += 0.25f * Time.deltaTime;
 
