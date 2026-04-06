@@ -19,6 +19,7 @@ namespace Cadenza
         [SerializeField] public AttackArea AttackArea;
         [SerializeField] public Rigidbody Rigidbody;
         [SerializeField] public SpriteRenderer Sprite;
+        [SerializeField] public Transform SpriteTransform;
         [SerializeField] public Animator Animator;
         [SerializeField] private AccuracyBar accuracyBar;
         [SerializeField] public ReviveMeter RevivalMeter;
@@ -286,6 +287,11 @@ namespace Cadenza
             // Ally revives are worth more than self revives.
             if (this.isFainted)
                 this.UpdateRevive(def, multiplier: 2);
+        }
+
+        public void OnCrowdSurf(bool isSurfing)
+        {
+            this.SpriteTransform.rotation = Quaternion.Euler(0, 0, isSurfing ? 60f : 0f);
         }
 
         #endregion
