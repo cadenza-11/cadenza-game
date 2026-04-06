@@ -89,7 +89,7 @@ namespace Cadenza
         private Bus sfxBus;
 
         private FMODAudioVisualizer audioVisualizer;
-        public float[] FFTSpectrum => this.audioVisualizer?.mFFTSpectrum;
+        public static float[] FFTSpectrum => singleton.audioVisualizer?.mFFTSpectrum;
         public const int FFTWindowSize = FMODAudioVisualizer.WindowSize;
 
         #region Application Callbacks
