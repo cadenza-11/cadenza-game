@@ -88,6 +88,10 @@ namespace Cadenza
         private Bus musicBus;
         private Bus sfxBus;
 
+        private FMODAudioVisualizer audioVisualizer;
+        public float[] FFTSpectrum => this.audioVisualizer?.mFFTSpectrum;
+        public const int FFTWindowSize = FMODAudioVisualizer.WindowSize;
+
         #region Application Callbacks
 
         public override void OnInitialize()
@@ -105,6 +109,16 @@ namespace Cadenza
 
             // Play pregame music track.
             BeatSystem.PlayTrack(this.pregameMusicEvent);
+        }
+
+        public override void OnApplicationStop()
+        {
+            this.audioVisualizer?.OnApplicationStop();
+        }
+
+        public override void OnUpdate()
+        {
+            this.audioVisualizer?.OnUpdate();
         }
 
         public override void OnGameStart()
@@ -224,6 +238,11 @@ namespace Cadenza
             RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
         }
 
+        public static float Lin2dB(float linear)
+        {
+            return Mathf.Clamp(Mathf.Log10(linear) * 20.0f, -80.0f, 0.0f);
+        }
+
         #endregion
         #region Private Methods
 
@@ -234,10 +253,10 @@ namespace Cadenza
             {
                 yield return null;
             }
-            this.BanksLoaded();
+            this.OnBanksLoaded();
         }
 
-        private void BanksLoaded()
+        private void OnBanksLoaded()
         {
             // Set up audio busses.
             this.masterBus = RuntimeManager.GetBus("bus:/Master");
@@ -249,6 +268,9 @@ namespace Cadenza
 
             this.uiSounds = new();
             this.uiSounds.Initialize();
+
+            this.audioVisualizer = new();
+            this.audioVisualizer.OnInitialize(this.musicBus);
 
             Debug.Log("Loaded all banks from FMOD.");
         }

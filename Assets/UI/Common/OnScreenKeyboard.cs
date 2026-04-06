@@ -93,6 +93,15 @@ namespace Cadenza
             {
                 name = "input",
             };
+            this.inputElement.style.unityTextGenerator = new StyleEnum<TextGeneratorType>(TextGeneratorType.Advanced);
+            this.inputElement.style.unityTextAutoSize = new StyleTextAutoSize(new TextAutoSize
+            (
+                TextAutoSizeMode.BestFit, 
+                minSize: 20, 
+                maxSize: 50)
+            );
+            this.inputElement.style.unityTextAlign = TextAnchor.MiddleLeft;
+
             this.inputElement.AddToClassList("on-screen-keyboard__input");
             this.hierarchy.Add(this.inputElement);
 

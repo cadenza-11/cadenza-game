@@ -290,6 +290,7 @@ MonoBehaviour:
   AttackArea: {fileID: 2742966869210566379}
   Rigidbody: {fileID: 1458182412301763174}
   Sprite: {fileID: 6779959987335499425}
+  SpriteTransform: {fileID: 7459484215511399675}
   Animator: {fileID: 71435134034143840}
   accuracyBar: {fileID: 2866967900350389172}
   RevivalMeter: {fileID: 5342877388000212823}
