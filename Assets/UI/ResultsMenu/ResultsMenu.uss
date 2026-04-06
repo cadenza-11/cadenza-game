@@ -96,6 +96,10 @@
 
 .indiv_stat_line {
     flex-direction: row;
+    margin-top: -3px;
+    margin-right: -3px;
+    margin-bottom: -3px;
+    margin-left: -3px;
 }
 
 .indiv_info_container {
@@ -201,7 +205,7 @@
     align-items: center;
     -unity-text-align: middle-center;
     -unity-text-auto-size: best-fit 30px 96px;
-    font-size: 96px;
+    -unity-text-generator: advanced;
 }
 
 .no_player * {
@@ -235,6 +239,7 @@
     width: 33%;
     -unity-text-align: upper-center;
     -unity-text-auto-size: best-fit 30px 60px;
+    -unity-text-generator: advanced;
 }
 
 .action_button {
