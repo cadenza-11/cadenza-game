@@ -127,15 +127,46 @@ namespace Cadenza
                 this.rb.linearVelocity = Vector3.zero;
             }
 
-            if (this.currentHealth < this.runHealth && this.currentHealth > 0)
-            {
-                this.curState = EnemyState.Run;
-                this.rb.linearVelocity = Vector3.zero;
-            }
-            else if (this.currentHealth <= 0)
+            if (this.currentHealth <= 0)
             {
                 this.curState = EnemyState.Dead;
                 this.rb.linearVelocity = Vector3.zero;
+            }
+        }
+
+        override protected void MeleeState()
+        {
+            this.rb.linearVelocity = Vector3.zero;
+            if (this.isAttacking)
+                return;
+
+            this.FindNearestPlayerDist();
+            if (this.nearestPlayerDist > rangedDistance)
+            {
+                this.curState = EnemyState.Idle;
+            }
+            else if (this.nearestPlayerDist < rangedDistance && this.nearestPlayerDist > chaseDistance)
+            {
+                this.meleeState = false;
+                this.curState = EnemyState.Ranged;
+            }
+            else if (this.nearestPlayerDist < chaseDistance && this.nearestPlayerDist > meleeDistance)
+            {
+                this.curState = EnemyState.Chase;
+            }
+
+            if (this.currentHealth <= 0)
+            {
+                this.curState = EnemyState.Dead;
+            }
+
+            if (this.curState == EnemyState.Melee)
+            {
+                this.MeleeAttack();
+            }
+            else
+            {
+                this.isAttacking = false;
             }
         }
 
@@ -158,11 +189,7 @@ namespace Cadenza
                 this.curState = EnemyState.Melee;
             }
 
-            if (!this.hasRun && this.currentHealth <= this.runHealth && this.currentHealth > 0)
-            {
-                this.curState = EnemyState.Run;
-            }
-            else if (this.currentHealth <= 0)
+            if (this.currentHealth <= 0)
             {
                 this.curState = EnemyState.Dead;
             }

@@ -24,7 +24,7 @@ namespace Cadenza
         {
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
-            this.speed = 1.5f;
+            this.speed = 2.0f;
             this.isAttacking = false;
             this.isActionable = true;
             this.phase = 4 - EnemyManager.EnemyCount;
@@ -108,12 +108,7 @@ namespace Cadenza
                 this.rb.linearVelocity = Vector3.zero;
             }
 
-            if (this.currentHealth < this.runHealth && this.currentHealth > 0)
-            {
-                this.curState = EnemyState.Run;
-                this.rb.linearVelocity = Vector3.zero;
-            }
-            else if (this.currentHealth <= 0)
+            if (this.currentHealth <= 0)
             {
                 this.curState = EnemyState.Dead;
                 this.rb.linearVelocity = Vector3.zero;
@@ -136,11 +131,7 @@ namespace Cadenza
                 this.curState = EnemyState.Chase;
             }
 
-            if (this.currentHealth <= this.runHealth & this.currentHealth > 0)
-            {
-                this.curState = EnemyState.Run;
-            }
-            else if (this.currentHealth <= 0)
+            if (this.currentHealth <= 0)
             {
                 this.curState = EnemyState.Dead;
             }

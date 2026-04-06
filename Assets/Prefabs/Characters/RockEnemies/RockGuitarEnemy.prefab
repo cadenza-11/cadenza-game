@@ -99,8 +99,8 @@ MonoBehaviour:
   speed: 1.5
   meleeDuration: 0.25
   rangedDuration: 0.25
-  maxHealth: 10
-  currentHealth: 10
+  maxHealth: 50
+  currentHealth: 50
   attackArea: {fileID: 4501090668073902876}
   rb: {fileID: 259284012352757776}
   sr: {fileID: 4940573528697529019}
@@ -190,7 +190,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 349226214, guid: c466dd5a90ae32d44890db601577b358, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6240656, g: 1, b: 0.5330188, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -289,6 +289,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  damage: 1
-  knockbackScale: 5
+  damage: 4
+  knockbackScale: 3
   comboMove: 0
