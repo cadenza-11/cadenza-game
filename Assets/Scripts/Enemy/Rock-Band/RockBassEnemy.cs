@@ -11,6 +11,7 @@ namespace Cadenza
         new protected const int chaseDistance = 8;
         new protected const int meleeDistance = 1;
         new protected const int rangedDistance = 30;
+        private int phase;
         #endregion
 
         // Do this in Start so that EnemyManager is initialized.
@@ -19,16 +20,17 @@ namespace Cadenza
             EnemyManager.AddEnemy(this);
         }
 
-        public virtual void Initialize()
+        override public void Initialize()
         {
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
             this.speed = 1.5f;
             this.isAttacking = false;
             this.isActionable = true;
+            this.phase = 4 - EnemyManager.EnemyCount;
         }
 
-        protected virtual void FixedUpdate()
+        override protected void FixedUpdate()
         {
             if (!this.IsGrounded())
             {
@@ -46,6 +48,7 @@ namespace Cadenza
             }
 
             //Checks if the Enemy's state needs to change
+            this.phase = 4 - EnemyManager.EnemyCount;
             this.CheckState();
         }
 
@@ -225,6 +228,20 @@ namespace Cadenza
         {
             this.rb.linearVelocity = Vector3.zero;
             GameObject projectileInstance = Instantiate(this.projectile, new Vector3(this.gameObject.transform.position.x, 0.0f, this.gameObject.transform.position.z), Quaternion.identity);
+            switch (this.phase)
+            {
+                case (1):
+                    projectileInstance.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    break;
+
+                case (2):
+                    projectileInstance.transform.localScale = new Vector3(1.25f, 1.0f, 1.25f);
+                    break;
+
+                case (3):
+                    projectileInstance.transform.localScale = new Vector3(1.5f, 1.0f, 1.5f);
+                    break;
+            }
             if (this.meleeState)
             {
                 this.meleeState = true;

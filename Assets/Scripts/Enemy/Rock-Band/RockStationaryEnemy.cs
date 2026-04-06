@@ -14,13 +14,13 @@ namespace Cadenza
         private float meleeTimer = 0.0f;
         private GameObject currentProjectile;
         private bool combatStarted = false;
+        private int phase;
         #endregion
 
         // Do this in Start so that EnemyManager is initialized.
         void Start()
         {
             EnemyManager.AddEnemy(this);
-            GameManager.CombatStarted += this.CombatStart;
         }
 
         override public void Initialize()
@@ -32,10 +32,7 @@ namespace Cadenza
             this.isActionable = true;
             this.meleeTimer = 0.0f;
             this.currentProjectile = null;
-        }
-
-        private void CombatStart()
-        {
+            this.phase = 4 - EnemyManager.EnemyCount;
             this.combatStarted = true;
         }
 
@@ -61,6 +58,7 @@ namespace Cadenza
         {
             if (this.combatStarted)
             {
+                this.phase = 4 - EnemyManager.EnemyCount;
                 if (this.currentProjectile == null)
                 {
                     this.RangedAttack();
@@ -98,10 +96,25 @@ namespace Cadenza
 
         override protected void RangedAttack()
         {
-            float[] wavePos = new float[4] {1.875f, 0.625f, -0.625f, -1.875f};
+            float[] wavePos = new float[10] {1.875f, 0.625f, -0.625f, -1.875f, 1.666f, 0.0f, -1.666f, 1.25f, 0.0f, -1.25f};
             this.anim.SetTrigger("LightAttack");
             this.anim2.SetTrigger("LightAttack");
-            this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.1f, wavePos[UnityEngine.Random.Range(0, 4)]), Quaternion.identity);
+            switch (this.phase)
+            {
+                case (1):
+                    this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.1f, wavePos[UnityEngine.Random.Range(0, 4)]), Quaternion.identity);
+                    break;
+
+                case (2):
+                    this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.1f, wavePos[UnityEngine.Random.Range(4, 7)]), Quaternion.identity);
+                    this.currentProjectile.transform.localScale = new Vector3(1.0f, 1.0f, 1.333f);
+                    break;
+
+                case (3):
+                    this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.1f, wavePos[UnityEngine.Random.Range(7, 10)]), Quaternion.identity);
+                    this.currentProjectile.transform.localScale = new Vector3(1.0f, 1.0f, 2f);
+                    break;
+            }
         }
 
         protected override void RangedAttack(Vector2 direction)

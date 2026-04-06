@@ -23,7 +23,9 @@ namespace Cadenza
             // Hit player.
             if (collider.TryGetComponent(out Character character))
             {
-                if (!character.TakeDamage(this.damage))
+                float phaseMult = 2.5f - (0.5f * EnemyManager.EnemyCount);
+                int newDamage = (int)(this.damage * phaseMult);
+                if (!character.TakeDamage(newDamage))
                     return;
 
                 // Add knockback.

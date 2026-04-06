@@ -11,6 +11,9 @@ namespace Cadenza
         new protected const int chaseDistance = 8;
         new protected const int meleeDistance = 1;
         new protected const int rangedDistance = 30;
+        private int phase;
+        private float rangedTimer = 0.0f;
+        private bool combatStarted = false;
         #endregion
 
         // Do this in Start so that EnemyManager is initialized.
@@ -19,16 +22,19 @@ namespace Cadenza
             EnemyManager.AddEnemy(this);
         }
 
-        public virtual void Initialize()
+        override public void Initialize()
         {
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
             this.speed = 1.5f;
             this.isAttacking = false;
             this.isActionable = true;
+            this.rangedTimer = 0.0f;
+            this.phase = 4 - EnemyManager.EnemyCount;
+            this.combatStarted = true;
         }
 
-        protected virtual void FixedUpdate()
+        override protected void FixedUpdate()
         {
             if (!this.IsGrounded())
             {
@@ -46,7 +52,28 @@ namespace Cadenza
             }
 
             //Checks if the Enemy's state needs to change
+            this.phase = 4 - EnemyManager.EnemyCount;
             this.CheckState();
+        }
+
+        private void Update()
+        {
+            if (this.combatStarted)
+            {
+                if (this.curState != EnemyState.Ranged)
+                {
+                    this.rangedTimer += Time.deltaTime;
+                }
+                else
+                {
+                    this.rangedTimer = 0.0f;
+                }
+                if (this.rangedTimer >= 10.0f)
+                {
+                    this.rangedTimer = 0.0f;
+                    this.RangedAttack();
+                }
+            }
         }
 
         #region IEnemy Interface
@@ -68,7 +95,7 @@ namespace Cadenza
         override protected void RangedAttack()
         {
             this.anim.SetTrigger("LightAttack");
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 3 * this.phase; i++)
             {
                 GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.1f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
             }
@@ -77,7 +104,7 @@ namespace Cadenza
         protected override void RangedAttack(Vector2 direction)
         {
             this.anim.SetTrigger("LightAttack");
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 3 * this.phase; i++)
             {
                 GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.1f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
             }
