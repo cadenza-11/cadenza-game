@@ -197,7 +197,7 @@ namespace Cadenza
         /// <summary>
         /// Enemy's Chase State. Moves the enemy towards the selected closest Player.
         /// </summary>
-        protected void ChaseState()
+        protected virtual void ChaseState()
         {
             this.FindNearestPlayerDist();
             this.curAngle = (float)Math.Atan2(this.TargetLocation.y - this.transform.position.z, this.TargetLocation.x - this.transform.position.x);

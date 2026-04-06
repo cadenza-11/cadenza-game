@@ -9,6 +9,7 @@ namespace Cadenza
     public class EnemyGrunt : Enemy
     {
         private float moveTimer;
+        static int rotationNum = 0;
 
         public override void Initialize()
         {
@@ -68,9 +69,30 @@ namespace Cadenza
             base.CheckState();
         }
 
+        protected override void ChaseState()
+        {
+            Vector2 toTarget = new Vector2(this.TargetLocation.x - this.transform.position.x, 
+                                            this.TargetLocation.y - this.transform.position.z);
+            this.curAngle = (float)Math.Atan2(toTarget.y, toTarget.x);
+            Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
+            this.rb.linearVelocity = moveDir;
+
+            if(toTarget.SqrMagnitude() < meleeDistance * meleeDistance)
+            {
+                this.curState = EnemyState.Melee;
+            }
+        }
+
         public void GroupAttack(Vector2 location)
         {
-            this.TargetLocation = location;
+            //Sets the enemies targetLocation as the location plus Cos and Sin values. Does this so that the enemies will gather
+            //In a circle around a player
+            Vector2 target = new Vector2(location.x + 5 * Mathf.Cos(rotationNum * Mathf.PI/6), 
+                                        location.y + 5 * Mathf.Sin(rotationNum * Mathf.PI/6));
+            rotationNum++;
+            rotationNum %= 12;
+            this.TargetLocation = target;
+            this.curState = EnemyState.Chase;
         }
     }
 }

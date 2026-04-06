@@ -53,12 +53,13 @@ namespace Cadenza
 
         private void GroupAttack()
         {
+            int numChosen = 0;
             Vector2 location = Vector2.zero;
             foreach(var enemy in this.enemies)
             {
                 if(enemy is EnemyGrunt)
                 {
-                    float chance = UnityEngine.Random.Range(0f, 1f);
+                    float chance = Random.Range(0f, 1f);
                     if(chance < 0.5)
                     {
                         if(location == Vector2.zero)
@@ -67,7 +68,12 @@ namespace Cadenza
                         }
                         EnemyGrunt curEnemy = (EnemyGrunt)enemy;
                         curEnemy.GroupAttack(location);
+                        numChosen++;
                     }
+                }
+                if(numChosen >= 12)
+                {
+                    return;
                 }
             }
         }
