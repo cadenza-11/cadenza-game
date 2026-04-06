@@ -53,20 +53,6 @@ namespace Cadenza
         }
 
         #region IEnemy Interface
-        protected void MeleeAttack()
-        {
-            this.isAttacking = true;
-            this.attackArea.SetActive(true);
-
-            this.Schedule(this.meleeDuration * this.attackMod, () =>
-            {
-                this.isAttacking = false;
-                this.attackArea.SetActive(false);
-            });
-
-            // Play animation
-            this.anim.SetTrigger("LightAttack");
-        }
 
         override protected void RangedAttack()
         {
@@ -76,57 +62,6 @@ namespace Cadenza
         protected override void RangedAttack(Vector2 direction)
         {
             //no ranged attack
-        }
-
-        public void TakeDamage(int damage)
-        {
-            this.currentHealth -= damage;
-            this.anim.SetTrigger("IsHit");
-
-            // Hit stun.
-            this.isActionable = false;
-            this.Schedule(this.meleeDuration, () => this.isActionable = true);
-
-            AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 3, immediate: true);
-        }
-
-        protected bool IsGrounded()
-        {
-            return Physics.Raycast(this.transform.position, Vector3.down, maxDistance: 0.1f);
-        }
-
-        /// <summary>
-        /// Checks the enemy's current state and then goes into the proper State function for actions/state changes
-        /// </summary>
-        protected virtual void CheckState()
-        {
-            if (!this.isActionable)
-                return;
-
-            switch (this.curState)
-            {
-                case EnemyState.Idle:
-                    this.IdleState();
-                    break;
-                case EnemyState.Chase:
-                    this.ChaseState();
-                    break;
-                case EnemyState.Melee:
-                    this.MeleeState();
-                    break;
-                case EnemyState.Special:
-                    this.SpecialState();
-                    break;
-                case EnemyState.Run:
-                    this.RunState();
-                    break;
-                case EnemyState.Ranged:
-                    this.RangedState();
-                    break;
-                case EnemyState.Dead:
-                    this.DeadState();
-                    break;
-            }
         }
 
         /// <summary>
@@ -262,101 +197,9 @@ namespace Cadenza
             }
         }
 
-        protected virtual void RunState()
-        {
-            /*if (!this.hasRun)
-            {
-                this.hasRun = true;
-                this.TargetLocation = this.FindRunLocation();
-            }
-            This section could be useful for some enemies, but not for all. Will implement it in child enemy classes if need be.
-            */
-
-            Vector3 pos = this.transform.position;
-            this.curAngle = (float)Math.Atan2(this.TargetLocation.y - pos.z, this.TargetLocation.x - pos.x);
-
-            Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
-            this.rb.linearVelocity = moveDir;
-
-            if (Math.Abs(this.transform.position.x - this.TargetLocation.x) <= 0.2 &&
-                Math.Abs(this.transform.position.z - this.TargetLocation.y) <= 0.2)
-            {
-                this.meleeState = false;
-                this.curState = EnemyState.Ranged;
-                this.rb.linearVelocity = Vector3.zero;
-            }
-            if (this.currentHealth <= 0)
-            {
-                this.curState = EnemyState.Dead;
-                this.rb.linearVelocity = Vector3.zero;
-            }
-        }
-
         override protected void RangedState()
         {
             //no ranged attack
-        }
-
-        protected void DeadState()
-        {
-            this.anim.SetBool("IsFainted", true);
-            this.rb.linearVelocity = Vector3.zero;
-            EnemyManager.RemoveEnemy(this);
-        }
-
-        protected Vector2 FindNearestPlayerDist()
-        {
-            float nearest = float.MaxValue;
-            foreach (var player in PlayerSystem.Players)
-            {
-                if (player.Character == null || player.Character.IsFainted)
-                    continue;
-
-                Vector3 playerPos = player.Character.transform.position;
-                float curDistance = (float)Math.Sqrt(Math.Pow(this.transform.position.x - playerPos.x, 2) +
-                                                Math.Pow(this.transform.position.z - playerPos.z, 2));
-                if (curDistance < nearest)
-                {
-                    nearest = curDistance;
-                    this.follow = player;
-                }
-            }
-            //this.TargetLocation = this.follow.Character.transform.position;
-            //The above line cannot be used in Multi-Directional. Will reimplement in future child-classes if needed
-            this.nearestPlayerDist = nearest;
-            return new Vector2(this.follow.Character.transform.position.x, this.follow.Character.transform.position.z);
-        }
-
-        protected Vector2 FindRunLocation()
-        {
-            this.FindNearestPlayerDist();
-            Vector2 displacement = new Vector2(this.TargetLocation.x - this.transform.position.x, this.TargetLocation.y - this.transform.position.z);
-            Vector2 runDirection = new Vector2(-1 * displacement.x / displacement.magnitude, -1 * displacement.y / displacement.magnitude);
-            return new Vector3(this.transform.position.x + runDirection.x * 10, this.transform.position.y, this.transform.position.z + runDirection.y * 10);
-        }
-
-        protected void ChangeLinearVelocity()
-        {
-
-        }
-
-        public bool CheckIsDead()
-        {
-            if (this.currentHealth <= 0)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public int GetCurHealth()
-        {
-            return this.currentHealth;
-        }
-
-        public int GetMaxHealth()
-        {
-            return this.maxHealth;
         }
         #endregion
     }
