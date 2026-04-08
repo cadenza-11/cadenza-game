@@ -102,16 +102,16 @@ namespace Cadenza
             switch (this.phase)
             {
                 case (1):
-                    this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.1f, wavePos[UnityEngine.Random.Range(0, 4)]), Quaternion.identity);
+                    this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.125f, wavePos[UnityEngine.Random.Range(0, 4)]), Quaternion.identity);
                     break;
 
                 case (2):
-                    this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.1f, wavePos[UnityEngine.Random.Range(4, 7)]), Quaternion.identity);
+                    this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.125f, wavePos[UnityEngine.Random.Range(4, 7)]), Quaternion.identity);
                     this.currentProjectile.transform.localScale = new Vector3(1.0f, 1.0f, 1.333f);
                     break;
 
                 case (3):
-                    this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.1f, wavePos[UnityEngine.Random.Range(7, 10)]), Quaternion.identity);
+                    this.currentProjectile = Instantiate(this.projectile, new Vector3(0, -0.125f, wavePos[UnityEngine.Random.Range(7, 10)]), Quaternion.identity);
                     this.currentProjectile.transform.localScale = new Vector3(1.0f, 1.0f, 2f);
                     break;
             }

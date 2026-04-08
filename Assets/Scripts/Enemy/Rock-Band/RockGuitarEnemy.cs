@@ -83,7 +83,7 @@ namespace Cadenza
             this.anim.SetTrigger("LightAttack");
             for (int i = 0; i < 3 * this.phase; i++)
             {
-                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.1f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
+                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.125f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Cadenza
             this.anim.SetTrigger("LightAttack");
             for (int i = 0; i < 3 * this.phase; i++)
             {
-                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.1f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
+                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.125f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
             }
         }
 

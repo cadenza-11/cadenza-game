@@ -12,6 +12,7 @@ namespace Cadenza
         new protected const int meleeDistance = 1;
         new protected const int rangedDistance = 30;
         private int phase;
+        private int specialCooldown;
         #endregion
 
         // Do this in Start so that EnemyManager is initialized.
@@ -27,6 +28,7 @@ namespace Cadenza
             this.speed = 2.0f;
             this.isAttacking = false;
             this.isActionable = true;
+            this.specialCooldown = 0;
             this.phase = 4 - EnemyManager.EnemyCount;
         }
 
@@ -121,6 +123,8 @@ namespace Cadenza
             if (this.isAttacking)
                 return;
 
+            this.specialCooldown++;
+
             this.FindNearestPlayerDist();
             if (this.nearestPlayerDist > rangedDistance)
             {
@@ -136,8 +140,9 @@ namespace Cadenza
                 this.curState = EnemyState.Dead;
             }
 
-            if (UnityEngine.Random.Range(1, 100) <= 20)
+            if (UnityEngine.Random.Range(1, 100) <= 20 && this.specialCooldown >= 3)
             {
+                this.specialCooldown = 0;
                 this.curState = EnemyState.Special;
             }
             if (this.curState == EnemyState.Melee)
@@ -153,7 +158,7 @@ namespace Cadenza
         override protected void SpecialState()
         {
             this.rb.linearVelocity = Vector3.zero;
-            GameObject projectileInstance = Instantiate(this.projectile, new Vector3(this.gameObject.transform.position.x, 0.0f, this.gameObject.transform.position.z), Quaternion.identity);
+            GameObject projectileInstance = Instantiate(this.projectile, new Vector3(this.gameObject.transform.position.x, -0.125f, this.gameObject.transform.position.z), Quaternion.identity);
             switch (this.phase)
             {
                 case (1):
