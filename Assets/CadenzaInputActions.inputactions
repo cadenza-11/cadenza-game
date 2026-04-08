@@ -30,6 +30,17 @@
                 },
                 {
                     "name": "",
+                    "id": "40f3123e-1e8d-42b7-b9ac-3b9c3993bb47",
+                    "path": "<Mouse>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Join",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b60151e2-d81d-469b-b48c-48a1390a0e6d",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
