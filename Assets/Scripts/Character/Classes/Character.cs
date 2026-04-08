@@ -291,7 +291,8 @@ namespace Cadenza
 
         public void OnCrowdSurf(bool isSurfing)
         {
-            this.SpriteTransform.rotation = Quaternion.Euler(0, 0, isSurfing ? 60f : 0f);
+            if (isSurfing) this.ChangeState(this.hitStun);
+            // this.SpriteTransform.rotation = Quaternion.Euler(0, 0, isSurfing ? 60f : 0f);
         }
 
         #endregion
