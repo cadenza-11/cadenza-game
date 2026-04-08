@@ -12700,6 +12700,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RockStationaryEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 1010987114114650534, guid: 3f72125b7c7e7c84f8ae9c95afaa1599, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2003244786977031834, guid: 3f72125b7c7e7c84f8ae9c95afaa1599, type: 3}
       propertyPath: m_LocalPosition.x
       value: 13
@@ -17888,6 +17892,10 @@ PrefabInstance:
     - target: {fileID: 1010987114114650534, guid: e9389171a9d8fd54f9b1c049c26bb9d7, type: 3}
       propertyPath: m_Name
       value: RockGuitarEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 1010987114114650534, guid: e9389171a9d8fd54f9b1c049c26bb9d7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2003244786977031834, guid: e9389171a9d8fd54f9b1c049c26bb9d7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -25488,6 +25496,10 @@ PrefabInstance:
     - target: {fileID: 1010987114114650534, guid: 6ec66c11a1cc8c64ea64cc017020a7be, type: 3}
       propertyPath: m_Name
       value: RockBassEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 1010987114114650534, guid: 6ec66c11a1cc8c64ea64cc017020a7be, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2003244786977031834, guid: 6ec66c11a1cc8c64ea64cc017020a7be, type: 3}
       propertyPath: m_LocalPosition.x
