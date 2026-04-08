@@ -76,7 +76,8 @@ namespace Cadenza
                 ProgressBar health = container.Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
                 health.highValue = player.Character.MaxHealth;
                 this.OnHealthChanged(health.highValue, health);
-                player.Character.HealthChanged += (healthValue, isFainted) => {
+                player.Character.HealthChanged += (healthValue, isFainted) =>
+                {
                     this.OnHealthChanged(healthValue, health);
                     if (isFainted) container.AddToClassList("fainted");
                     else container.RemoveFromClassList("fainted");
@@ -108,6 +109,7 @@ namespace Cadenza
             foreach ((var player, var container) in this.assignedContainers)
             {
                 player.PlayerHit -= this.OnPlayerHit;
+                container.RemoveFromClassList("fainted");
                 container.style.display = DisplayStyle.None;
             }
 
