@@ -625,7 +625,7 @@
     "m_Title": "Color Replacement (for Playable Characters)",
     "m_Position": {
         "x": -2473.0,
-        "y": -823.0000610351563
+        "y": -823.0
     }
 }
 
@@ -1752,7 +1752,7 @@
     "m_ObjectId": "d9a9b2ba98d046f59e9c115fb60946b8",
     "m_Title": "Flowstate",
     "m_Position": {
-        "x": -985.0,
+        "x": -985.0001220703125,
         "y": -866.0
     }
 }
