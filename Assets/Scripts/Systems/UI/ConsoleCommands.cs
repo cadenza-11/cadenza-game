@@ -120,6 +120,16 @@ namespace Cadenza
                         Debug.Log("Turning off audio debug sounds.");
                     }
                     break;
+
+                case "param":
+                    if (args.Length != 3 || !float.TryParse(args[2], out float value))
+                    {
+                        Debug.Log("Usage: audio param <string name> <float value>");
+                        return;
+                    }
+                    AudioSystem.SetParameter(args[1], value);
+                    Debug.Log($"Attempting to set parameter {args[1]} to value {value}.");
+                    break;
             }
         }
 

@@ -24,3 +24,9 @@ MonoBehaviour:
       Data4: 382254968
     Path: event:/MUS_DJ
   PreviewImage: {fileID: 2800000, guid: 04bd7d22403d0db4cad006bcaf066982, type: 3}
+  Phases:
+  - FMODMarkerName: Song_Onslaught-1
+  - FMODMarkerName: Song_Downed
+  - FMODMarkerName: Song_Onslaught-1
+  - FMODMarkerName: Song_Downed-2
+  - FMODMarkerName: Song_Onslaught-3

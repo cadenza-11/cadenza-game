@@ -35,6 +35,19 @@ namespace Cadenza
         public static event Action CombatStarted;
         public static event Action<GameResult> CombatStopped;
 
+        private readonly PhaseHandler phaseHandler = new();
+        public static Phase? CurrentPhase => singleton.phaseHandler.CurrentPhase;
+        public static event Action<Phase> PhaseEntered
+        {
+            add => singleton.phaseHandler.PhaseEntered += value;
+            remove => singleton.phaseHandler.PhaseEntered -= value;
+        }
+        public static event Action<Phase> PhaseExited
+        {
+            add => singleton.phaseHandler.PhaseExited += value;
+            remove => singleton.phaseHandler.PhaseExited -= value;
+        }
+
         #endregion
 
         private Level selectedLevel;
@@ -59,6 +72,9 @@ namespace Cadenza
             if (this.isCombatActive)
                 this.StopCombat(GameResult.Forfeit);
 
+            // Reset phases.
+            this.phaseHandler.OnGameStop();
+
             // Unpause game.
             if (this.isPaused)
             {
@@ -81,6 +97,9 @@ namespace Cadenza
                 AudioSystem.SetState(AudioSystem.State.Stage);
             else
                 AudioSystem.SetState(AudioSystem.State.Backstage);
+
+            // Set phases.
+            this.phaseHandler.OnGameStart();
 
             // Spawn players.
             foreach (var player in PlayerSystem.Players)
@@ -158,6 +177,11 @@ namespace Cadenza
                 return;
 
             ApplicationController.SetLevelAsync(null);
+        }
+
+        public static bool RequestNextPhase()
+        {
+            return singleton.phaseHandler.RequestNextPhase();
         }
 
         public static void PauseGame(Player requestingPlayer)

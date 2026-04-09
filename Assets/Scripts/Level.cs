@@ -1,9 +1,16 @@
+using System;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Cadenza
 {
+    [Serializable]
+    public struct Phase
+    {
+        public string FMODMarkerName;
+    }
+
     [CreateAssetMenu(fileName = "Level", menuName = "Cadenza/Level")]
     public class Level : ScriptableObject
     {
@@ -24,6 +31,9 @@ namespace Cadenza
 
         [Tooltip("The image that will display for this level in level select UI.")]
         public Texture2D PreviewImage;
+
+        [Tooltip("The FMOD-associated phases related to this combat level.")]
+        public Phase[] Phases;
 
         public bool IsValid =>
             !string.IsNullOrEmpty(this.Name)
