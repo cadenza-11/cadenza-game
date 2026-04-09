@@ -1,16 +1,9 @@
-using System;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Cadenza
 {
-    [Serializable]
-    public struct Phase
-    {
-        public string FMODMarkerName;
-    }
-
     [CreateAssetMenu(fileName = "Level", menuName = "Cadenza/Level")]
     public class Level : ScriptableObject
     {

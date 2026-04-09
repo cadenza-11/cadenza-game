@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Cadenza
 {
     public class PhaseHandler
     {
+        private Dictionary<string, Phase> phasesByMarkerName = new();
         private Phase? currentPhase;
         public Phase? CurrentPhase => this.currentPhase;
         public event Action<Phase> PhaseExited;
@@ -28,14 +30,8 @@ namespace Cadenza
 
         private void OnMarkerPassed(string markerName)
         {
-            foreach (var phase in this.currentLevel.Phases)
-            {
-                if (string.Equals(markerName, phase.FMODMarkerName))
-                {
-                    this.EnterPhase(phase);
-                    return;
-                }
-            }
+            if (this.phasesByMarkerName.TryGetValue(markerName, out Phase phase))
+                this.EnterPhase(phase);
         }
 
         #endregion
@@ -43,17 +39,14 @@ namespace Cadenza
 
         public bool RequestNextPhase()
         {
-            int index = Array.IndexOf(this.currentLevel.Phases, this.currentPhase);
-
-            if (index == -1)
-                return false;
-            if (index == this.currentLevel.Phases.Length - 1)
+            int nextPhaseIndex = this.currentPhase == null ? 0 : this.currentPhase.Value.Index + 1;
+            if (nextPhaseIndex >= this.currentLevel.Phases.Length - 1)
                 return false;
 
             if (this.currentPhase != null)
                 this.ExitPhase(this.currentPhase.Value);
 
-            AudioSystem.SetParameter("MusicPhase", index + 1);
+            AudioSystem.SetParameter("MusicPhase", nextPhaseIndex);
             return true;
         }
 
@@ -64,18 +57,28 @@ namespace Cadenza
         {
             this.currentLevel = level;
             this.currentPhase = null;
+            this.phasesByMarkerName.Clear();
+
+            if (this.currentLevel != null)
+            {
+                foreach (var phase in this.currentLevel.Phases)
+                    this.phasesByMarkerName[phase.FMODMarkerName] = phase;
+            }
         }
 
         private void ExitPhase(Phase phase)
         {
-            Debug.Log($"Exited music phase '{phase.FMODMarkerName}' (index={Array.IndexOf(this.currentLevel.Phases, this.currentPhase)})");
+            Debug.Log($"Exited music phase '{phase.FMODMarkerName}'");
             this.PhaseExited?.Invoke(phase);
         }
 
         private void EnterPhase(Phase phase)
         {
+            if (phase == this.currentPhase)
+                return;
+
             this.currentPhase = phase;
-            Debug.Log($"Entered music phase '{phase.FMODMarkerName}' (index={Array.IndexOf(this.currentLevel.Phases, this.currentPhase)})");
+            Debug.Log($"Entered music phase '{phase.FMODMarkerName}'");
             this.PhaseEntered?.Invoke(phase);
         }
 
