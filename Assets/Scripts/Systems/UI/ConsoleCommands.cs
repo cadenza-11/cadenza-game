@@ -127,8 +127,8 @@ namespace Cadenza
                         Debug.Log("Usage: audio param <string name> <float value>");
                         return;
                     }
-                    AudioSystem.SetParameter(args[1], value);
                     Debug.Log($"Attempting to set parameter {args[1]} to value {value}.");
+                    AudioSystem.SetParameter(args[1], value);
                     break;
             }
         }
