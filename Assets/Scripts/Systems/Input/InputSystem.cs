@@ -44,6 +44,8 @@ namespace Cadenza
 
         private PlayerInputManager playerInputManager;
         private InputActionAsset defaultUIActionsAsset;
+        private InputActionMap debugActionMap;
+        private InputAction toggleDebugAction;
         private Dictionary<int, Player> joinedPlayersByID;
         public static IReadOnlyDictionary<int, Player> JoinedPlayersByID => singleton.joinedPlayersByID;
         public static event Action<Player> PlayerJoined;
@@ -69,6 +71,7 @@ namespace Cadenza
             // Unless the PlayerInput default map is set to UI, disable the UI map here
             // to prevent UI actions from triggering before initialization.
             this.defaultUIActionsAsset?.Disable();
+            this.InitializeGlobalDebugInput();
 
             // Configure player input manager.
             this.joinedPlayersByID = new();
@@ -79,6 +82,10 @@ namespace Cadenza
 
         public override void OnApplicationStop()
         {
+            if (this.toggleDebugAction != null)
+                this.toggleDebugAction.performed -= this.OnToggleDebugPerformed;
+
+            this.debugActionMap?.Disable();
             this.UnregisterAllHaptics();
         }
 
@@ -93,7 +100,6 @@ namespace Cadenza
             this.joinedPlayersByID[id] = player;
 
             this.RegisterPlayerNavigationEvents(player);
-            this.RegisterPlayerDebugEvents(player);
             this.RegisterPlayerBeatHaptics(player);
 
             playerInput.onDeviceLost += input => PlayerLeft?.Invoke(player);
@@ -139,14 +145,23 @@ namespace Cadenza
             };
         }
 
-        private void RegisterPlayerDebugEvents(Player player)
+        private void InitializeGlobalDebugInput()
         {
-            // Keep the debug map always active.
-            var map = player.Input.actions.FindActionMap("Debug", throwIfNotFound: true);
-            map.Enable();
+            if (this.defaultUIActionsAsset == null)
+                return;
 
-            var toggleDebugAction = map.FindAction("ToggleVisibility", throwIfNotFound: true);
-            toggleDebugAction.performed += ctx => { if (ctx.performed) UISystem.FindPanel<DebugConsole>().Toggle(); };
+            this.debugActionMap = this.defaultUIActionsAsset.FindActionMap("Debug", throwIfNotFound: true);
+            this.toggleDebugAction = this.debugActionMap.FindAction("ToggleVisibility", throwIfNotFound: true);
+            this.toggleDebugAction.performed += this.OnToggleDebugPerformed;
+            this.debugActionMap.Enable();
+        }
+
+        private void OnToggleDebugPerformed(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+
+            UISystem.FindPanel<DebugConsole>()?.Toggle();
         }
 
         private void RegisterPlayerBeatHaptics(Player player)
@@ -235,6 +250,7 @@ namespace Cadenza
 
             singleton.uiInputModule.actionsAsset = singleton.defaultUIActionsAsset;
             singleton.defaultUIActionsAsset?.Disable();
+            singleton.debugActionMap?.Enable();
 
             foreach (var player in JoinedPlayersByID.Values)
             {
