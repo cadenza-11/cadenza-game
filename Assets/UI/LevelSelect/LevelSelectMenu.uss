@@ -59,6 +59,9 @@
     flex-grow: 1;
     flex-direction: row;
     justify-content: space-evenly;
+    align-items: stretch;
+    align-content: center;
+    align-self: stretch;
 }
 
 .level-select__footer {
@@ -90,7 +93,9 @@
     border-right-width: 4px;
     border-bottom-width: 4px;
     border-left-width: 4px;
-    width: initial;
+    flex-shrink: 0;
+    align-items: stretch;
+    aspect-ratio: 0.5714286;
 }
 
 .level-card.is-leading {
@@ -112,6 +117,7 @@
     border-top-color: rgba(255, 255, 255, 0.78);
     border-bottom-color: rgba(255, 255, 255, 0.78);
     background-image: none;
+    flex-shrink: 0;
 }
 
 .level-card__header {
