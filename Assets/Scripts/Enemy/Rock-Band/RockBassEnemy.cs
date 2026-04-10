@@ -8,11 +8,15 @@ namespace Cadenza
     public class RockBassEnemy : Enemy
     {
         #region Variables
+        [SerializeField] private GameObject chargeParticles;
         new protected const int chaseDistance = 8;
         new protected const int meleeDistance = 1;
         new protected const int rangedDistance = 30;
         private int phase;
         private int specialCooldown;
+        private int beatCount;
+        private bool specialOut;
+        private bool currentlyCharging;
         #endregion
 
         // Do this in Start so that EnemyManager is initialized.
@@ -30,6 +34,15 @@ namespace Cadenza
             this.isActionable = true;
             this.specialCooldown = 0;
             this.phase = 4 - EnemyManager.EnemyCount;
+            this.beatCount = 0;
+            this.specialOut = false;
+            this.currentlyCharging = false;
+            BeatSystem.BeatPlayed += this.onBeat;
+        }
+
+        private void onBeat()
+        {
+            this.beatCount++;
         }
 
         override protected void FixedUpdate()
@@ -140,9 +153,9 @@ namespace Cadenza
                 this.curState = EnemyState.Dead;
             }
 
-            if (UnityEngine.Random.Range(1, 100) <= 20 && this.specialCooldown >= 3)
+            if (UnityEngine.Random.Range(1, 100) <= 20 && this.beatCount >= 4)
             {
-                this.specialCooldown = 0;
+                this.beatCount = 0;
                 this.curState = EnemyState.Special;
             }
             if (this.curState == EnemyState.Melee)
@@ -158,38 +171,59 @@ namespace Cadenza
         override protected void SpecialState()
         {
             this.rb.linearVelocity = Vector3.zero;
-            GameObject projectileInstance = Instantiate(this.projectile, new Vector3(this.gameObject.transform.position.x, -0.125f, this.gameObject.transform.position.z), Quaternion.identity);
-            switch (this.phase)
+            if(this.specialOut == false)
             {
-                case (1):
-                    projectileInstance.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                    break;
+                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(this.gameObject.transform.position.x, -0.125f, this.gameObject.transform.position.z), Quaternion.identity);
+                switch (this.phase)
+                {
+                    case (1):
+                        projectileInstance.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        break;
 
-                case (2):
-                    projectileInstance.transform.localScale = new Vector3(1.25f, 1.0f, 1.25f);
-                    break;
+                    case (2):
+                        projectileInstance.transform.localScale = new Vector3(1.25f, 1.0f, 1.25f);
+                        break;
 
-                case (3):
-                    projectileInstance.transform.localScale = new Vector3(1.5f, 1.0f, 1.5f);
-                    break;
+                    case (3):
+                        projectileInstance.transform.localScale = new Vector3(1.5f, 1.0f, 1.5f);
+                        break;
+                }
+                this.specialOut = true;
             }
-            if (this.meleeState)
+            if(this.beatCount == 1 && this.currentlyCharging == false)
             {
-                this.meleeState = true;
-                this.curState = EnemyState.Melee;
+                this.currentlyCharging = true;
+                this.anim.SetTrigger("LightAttack");
+                this.chargeParticles.SetActive(true);
             }
-            else if (!this.hasRun && this.currentHealth < this.runHealth && this.currentHealth >= 0)
+            else if (this.beatCount == 3)
             {
-                this.curState = EnemyState.Run;
+                this.chargeParticles.SetActive(false);
+                this.currentlyCharging = false;
+                this.anim.SetTrigger("LightAttack");
             }
-            else if (this.currentHealth <= 0)
+            else if (this.beatCount >= 4)
             {
-                this.curState = EnemyState.Dead;
-            }
-            else
-            {
-                this.meleeState = false;
-                this.curState = EnemyState.Chase;
+                this.beatCount = 0;
+                this.specialOut = false;
+                if (this.meleeState)
+                {
+                    this.meleeState = true;
+                    this.curState = EnemyState.Melee;
+                }
+                else if (!this.hasRun && this.currentHealth < this.runHealth && this.currentHealth >= 0)
+                {
+                    this.curState = EnemyState.Run;
+                }
+                else if (this.currentHealth <= 0)
+                {
+                    this.curState = EnemyState.Dead;
+                }
+                else
+                {
+                    this.meleeState = false;
+                    this.curState = EnemyState.Chase;
+                }
             }
         }
 
