@@ -37,7 +37,6 @@ namespace Cadenza
 
             float volume = this.GetRMSVolume(spectrum) * 50f;
             this.visualizerMaterial.SetFloat("_Volume", volume);
-            Debug.Log($"Volume: {volume}, Bass: {this.bass}, Mids: {this.mids}, Treble: {this.treble}");
         }
 
         /// <summary>

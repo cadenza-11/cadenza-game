@@ -228,14 +228,27 @@ namespace Cadenza
             RuntimeManager.StudioSystem.setParameterByName(ParamNameState, (int)state);
         }
 
-        public static void SetParameter(string parameterName, bool enabled)
-        {
-            RuntimeManager.StudioSystem.setParameterByName(parameterName, enabled ? 1 : 0);
-        }
-
         public static void SetParameter(string parameterName, float value)
         {
-            RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
+            FMOD.RESULT result = BeatSystem.CurrentTrack.getDescription(out EventDescription desc);
+            if (result != FMOD.RESULT.OK)
+            {
+                Debug.LogWarning("Attempted to set parameter on current track, but no track is playing.");
+                return;
+            }
+
+            result = desc.getParameterDescriptionByName(parameterName, out PARAMETER_DESCRIPTION paramDesc);
+            if (result != FMOD.RESULT.OK)
+            {
+                Debug.LogWarning($"Attempted to set parameter {parameterName}, but no parameter was found.");
+                return;
+            }
+
+            // Check if the parameter is global and set accordingly.
+            if (paramDesc.flags.HasFlag(PARAMETER_FLAGS.GLOBAL))
+                RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
+            else
+                BeatSystem.CurrentTrack.setParameterByName(parameterName, value);
         }
 
         public static float Lin2dB(float linear)

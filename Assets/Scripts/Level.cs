@@ -25,6 +25,9 @@ namespace Cadenza
         [Tooltip("The image that will display for this level in level select UI.")]
         public Texture2D PreviewImage;
 
+        [Tooltip("The FMOD-associated phases related to this combat level.")]
+        public Phase[] Phases;
+
         public bool IsValid =>
             !string.IsNullOrEmpty(this.Name)
             && this.BuildIndex >= 0

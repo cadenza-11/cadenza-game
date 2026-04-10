@@ -94,8 +94,7 @@ namespace Cadenza
             this.SetFlow(0);
 
             // Set sprite colors (shader).
-            if (this.cClass.Name == "Guitar") // TEMP
-                this.Sprite.material.SetInt("_CharacterColor", 1);
+            this.Sprite.material.SetInt("_CharacterColor", 1);
             if (this.Player.Colorway != null)
             {
                 this.Sprite.material.SetColor("_PrimaryColor", this.Player.Colorway.PrimaryColor);
