@@ -131,5 +131,10 @@
     border-left-width: 2px;
 }
 
-.meter .unity-progress-bar__progress {
+.health .meter .unity-progress-bar__progress {
+    -unity-material: url("project://database/Assets/Art/UI%20Backgrounds/Healthbar/ColoredMeters.shadergraph?fileID=-876546973899608171&guid=a8f74c7a88d76e34baa79a83ac73db9b&type=3#ColoredMeters") prop("_isHealthbar" 1) prop("_Progress" 0.5);
+}
+
+.flowstate .meter .unity-progress-bar__progress {
+    -unity-material: url("project://database/Assets/Art/UI%20Backgrounds/Healthbar/ColoredMeters.shadergraph?fileID=-876546973899608171&guid=a8f74c7a88d76e34baa79a83ac73db9b&type=3#ColoredMeters") prop("_isFlowstate" 1) prop("_Progress" 0.5);
 }

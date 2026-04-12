@@ -4,7 +4,7 @@
     <Style src="project://database/Assets/UI/HUD/BeatIndicator.uss?fileID=7433441132597879392&amp;guid=9dd899e7d96a4304b4699b09edb0f4e4&amp;type=3#BeatIndicator"/>
     <ui:VisualElement name="root" style="flex-grow: 1;">
         <ui:VisualElement name="c_TeamStats" style="flex-grow: 0; flex-direction: row; margin-top: 0; margin-right: 20px; margin-bottom: 0; margin-left: 20px; align-items: center; justify-content: center;">
-            <ui:ProgressBar title="TEAM COMBO" name="meter_TeamMeter" class="team-meter"/>
+            <ui:ProgressBar title="TEAM COMBO" name="meter_TeamMeter" value="50" class="team-meter"/>
             <ui:Label name="update_TeamStreak" text="x0" class="team-streak"/>
         </ui:VisualElement>
         <ui:VisualElement name="c_PlayerContainers" style="flex-direction: row; justify-content: flex-start; padding-top: 0; padding-right: 20px; padding-bottom: 0; padding-left: 20px;">
