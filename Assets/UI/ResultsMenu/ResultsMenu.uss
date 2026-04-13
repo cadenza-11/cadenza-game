@@ -272,3 +272,61 @@
     margin-bottom: 20px;
     background-color: rgb(255, 113, 0);
 }
+
+.judge_result {
+    flex-grow: 1;
+    margin-top: 40px;
+    margin-right: 40px;
+    margin-bottom: 40px;
+    margin-left: 40px;
+    justify-content: center;
+    align-self: center;
+    background-color: rgb(178, 178, 178);
+    border-top-left-radius: 64px;
+    border-top-right-radius: 64px;
+    border-bottom-right-radius: 64px;
+    border-bottom-left-radius: 64px;
+    width: 500px;
+    height: 500px;
+}
+
+.judge_result_text {
+    align-self: center;
+    white-space: normal;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 20px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    font-size: 250px;
+    -unity-text-align: upper-center;
+}
+
+.score_cards_container {
+    width: auto;
+    height: 75%;
+    align-self: center;
+    position: absolute;
+    top: 12.5%;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.text_header {
+    -unity-text-align: upper-center;
+    font-size: 100px;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 4px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    top: 120px;
+}
+
+.text_subheader {
+    font-size: 75px;
+    -unity-text-align: upper-center;
+    -unity-text-outline-width: 4px;
+    -unity-text-outline-color: rgb(5, 0, 0);
+    -unity-font-style: italic;
+    color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    align-self: center;
+    top: 520px;
+}

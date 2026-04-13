@@ -28,6 +28,7 @@ namespace Cadenza
             Backstage,
             Stage,
             Combat,
+            Postcombat,
             Results,
         }
 
