@@ -158,31 +158,21 @@ namespace Cadenza
                 this.judgeResultsIntro.JudgeScoreLabels[i].text = results.JudgeScores[i].ToString("F0");
 
             this.judgeResultsIntro.OverallScoreLabel.text = results.OverallScore.ToString("F0");
-            this.judgeResultsIntro.OverallGradeLabel.text = results.OverallScore switch
-            {
-                < 60 => "F",
-                < 70 => "D",
-                < 80 => "C",
-                < 90 => "B",
-                < 95 => "A",
-                < 101 => "S",
-                _ => string.Empty
-            };
+            this.judgeResultsIntro.OverallGradeLabel.text = ScoreSystem.GetGradeLetter(results.OverallScore);
 
             // Setup marker callbacks for results audio.
             this.instance = RuntimeManager.CreateInstance(this.resultsMusicEvent);
             this.handle = GCHandle.Alloc(this);
             this.instance.setUserData(GCHandle.ToIntPtr(this.handle));
             this.instance.setCallback(MarkerEventCallback, EVENT_CALLBACK_TYPE.TIMELINE_MARKER);
-            this.instance.setParameterByName("ResultsGrade", results.OverallScore switch
+            this.instance.setParameterByName("ResultsGrade", ScoreSystem.GetGradeLetter(results.OverallScore) switch
             {
-                < 60 => 0,
-                < 70 => 1,
-                < 80 => 2,
-                < 90 => 3,
-                < 95 => 4,
-                < 101 => 5,
-                _ => 0
+                "S" => 5,
+                "A" => 4,
+                "B" => 3,
+                "C" => 2,
+                "D" => 1,
+                _ => 0,
             });
 
             // Play results audio.
@@ -315,9 +305,7 @@ namespace Cadenza
 
         private Color GetScoreColor(float score)
         {
-            if (score < 60f)
-                return Color.red;
-            return Color.Lerp(Color.red, Color.green, Mathf.Clamp01((score - 60f) / (100f - 60f)));
+            return Color.Lerp(Color.red, Color.green, Mathf.Clamp01(score / ScoreSystem.MaxScore));
         }
 
         private void SetScale(VisualElement element, float scale)

@@ -131,16 +131,7 @@ namespace Cadenza
 
             // Team Stats
             this.playerTeamStats.TeamName.text = TeamSystem.Team.Name;
-            this.playerTeamStats.Grade.text = this.currentResults.OverallScore switch
-            {
-                < 60 => "F",
-                < 70 => "D",
-                < 80 => "C",
-                < 90 => "B",
-                < 95 => "A",
-                < 101 => "S",
-                _ => "N/A"
-            };
+            this.playerTeamStats.Grade.text = ScoreSystem.GetGradeLetter(this.currentResults.OverallScore);
             this.playerTeamStats.TeamScore.text = this.currentResults.OverallScore.ToString("F2");
             for (int i = 0; i < this.playerTeamStats.ScoreCards.Length; i++)
                 this.playerTeamStats.ScoreCards[i].text = this.currentResults.JudgeScores[i].ToString("F0");
