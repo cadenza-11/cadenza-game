@@ -13,7 +13,7 @@ namespace Cadenza
         [Header("Player Values")]
         [SerializeField] public float speed;
         [SerializeField] public float attackDuration;
-        [SerializeField] public float maxHealth;
+        [SerializeField] public float baseHealth;
 
         [Header("Assign in Inspector")]
         [SerializeField] public AttackArea AttackArea;
@@ -29,6 +29,7 @@ namespace Cadenza
         [SerializeField] public int baseHeavyDamage;
         [SerializeField] private float flowThreshold;
         [SerializeField] private float reviveThreshold;
+        private float maxHealth;
 
         [NonSerialized] public float currentHealth;
         public float MaxHealth => this.maxHealth;
@@ -46,6 +47,7 @@ namespace Cadenza
         private float flow;
         private float revive;
         private float parryActiveUntil = float.NegativeInfinity;
+        private float pcFactor;
 
         public class Input
         {
@@ -88,6 +90,9 @@ namespace Cadenza
             this.Player = player;
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
             this.cClass = player.CharacterClass;
+
+            this.pcFactor = 4 / PlayerSystem.PlayerCount;
+            this.maxHealth = this.baseHealth * this.pcFactor;
 
             this.input = new();
             this.SetHealth(this.maxHealth);

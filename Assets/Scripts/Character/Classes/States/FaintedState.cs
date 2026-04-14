@@ -15,7 +15,7 @@ namespace Cadenza
             character.Animator.SetBool("IsFainted", false);
             character.RevivalMeter.Hide();
 
-            character.SetHealth(character.maxHealth / 2);
+            character.SetHealth(character.MaxHealth / 2);
         }
 
         public void FixedUpdate(Character character)
