@@ -7,7 +7,7 @@ namespace Cadenza
     /// <summary>
     /// Encapsulates all statistics for a complete run of the game.
     /// </summary>
-    public class Results
+    public class Results : IEquatable<Results>
     {
         public struct PlayerDef
         {
@@ -31,7 +31,7 @@ namespace Cadenza
 
         public string TeamName = string.Empty;
         public string LevelName = string.Empty;
-        public DateTime Timestamp;
+        public DateTimeOffset Timestamp;
         public int HighestStreak;
         public float[] JudgeScores = Array.Empty<float>();
         public float OverallScore;
@@ -124,6 +124,30 @@ namespace Cadenza
                 this.playerResults[playerDef] = new ResultsDef();
 
             return this.playerResults[playerDef];
+        }
+
+        public bool Equals(Results other)
+        {
+            if (other is null)
+                return false;
+
+            return this.Timestamp.ToUniversalTime() == other.Timestamp.ToUniversalTime()
+                && string.Equals(this.TeamName, other.TeamName, StringComparison.Ordinal)
+                && string.Equals(this.LevelName, other.LevelName, StringComparison.Ordinal);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Results);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(
+                this.Timestamp.ToUniversalTime(),
+                this.TeamName != null ? StringComparer.Ordinal.GetHashCode(this.TeamName) : 0,
+                this.LevelName != null ? StringComparer.Ordinal.GetHashCode(this.LevelName) : 0
+            );
         }
     }
 

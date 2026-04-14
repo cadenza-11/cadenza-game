@@ -154,7 +154,7 @@ namespace Cadenza
             // Save results to file.
             if (gameResult != GameManager.GameResult.Forfeit)
             {
-                this.results.Timestamp = DateTime.UtcNow;
+                this.results.Timestamp = DateTimeOffset.UtcNow;
 
                 // Calculate overall score (average of all player scores).
                 {
