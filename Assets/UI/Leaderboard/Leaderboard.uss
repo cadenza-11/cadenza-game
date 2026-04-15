@@ -167,3 +167,9 @@
     color: var(--leaderboard-muted);
     font-size: 18px;
 }
+
+.scroll-view--animated {
+    transition: transform 1.5s;
+    transition-property: translate;
+    transition-timing-function: ease-out;
+}

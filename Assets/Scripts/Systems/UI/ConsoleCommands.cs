@@ -203,6 +203,14 @@ namespace Cadenza
                 case "delete":
                     SaveSystem.DeletePreviousRuns();
                     break;
+
+                case "focus":
+                    if (args.Length >= 2 && int.TryParse(args[1], out int index))
+                    {
+                        var leaderboard = UISystem.FindPanel<Leaderboard>();
+                        leaderboard.FocusResult(index);
+                    }
+                    break;
             }
         }
         private void OnCommandTeam(string[] args)

@@ -137,12 +137,6 @@ namespace Cadenza
 
         private void OnLeaderboard()
         {
-            if (this.leaderboardMenu == null)
-            {
-                Debug.LogWarning("Leaderboard panel not found under UISystem.");
-                return;
-            }
-
             this.TransitionTo(this.leaderboardMenu);
         }
 

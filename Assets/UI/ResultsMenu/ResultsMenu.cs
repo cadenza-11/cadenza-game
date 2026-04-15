@@ -53,6 +53,7 @@ namespace Cadenza
             public VisualElement Container;
             public Button NextButton;
             public Button RetryButton;
+            public Button LeaderboardButton;
             public Button MainMenuButton;
         }
 
@@ -65,6 +66,7 @@ namespace Cadenza
             this.actionButtons.Container = this.root.Q<VisualElement>("c_ActionButtons");
             this.actionButtons.NextButton = this.root.Q<Button>("b_Next");
             this.actionButtons.RetryButton = this.root.Q<Button>("b_Retry");
+            this.actionButtons.LeaderboardButton = this.root.Q<Button>("b_Leaderboard");
             this.actionButtons.MainMenuButton = this.root.Q<Button>("b_MainMenu");
             this.resultsSequence.OnInitialize(
                 this.root,
@@ -75,6 +77,7 @@ namespace Cadenza
 
             this.actionButtons.NextButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.RedirectToBackstage());
             this.actionButtons.RetryButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.RestartLevel());
+            this.actionButtons.LeaderboardButton.RegisterCallback<NavigationSubmitEvent>(_ => this.ShowLeaderboard());
             this.actionButtons.MainMenuButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.ExitToPregame());
 
             this.winLossBanner.TeamName = this.root.Q<Label>("update_PlayerBand");
@@ -240,6 +243,7 @@ namespace Cadenza
             // Show next actions.
             this.actionButtons.Container.style.display = DisplayStyle.Flex;
             this.resultsPanel.style.display = DisplayStyle.None;
+            this.actionButtons.LeaderboardButton.style.display = DisplayStyle.Flex;
 
             if (this.gameResult == GameManager.GameResult.Victory)
             {
@@ -303,6 +307,13 @@ namespace Cadenza
             }
 
             return highestScorerPortrait;
+        }
+
+        private void ShowLeaderboard()
+        {
+            var leaderboard = UISystem.FindPanel<Leaderboard>();
+            leaderboard.Show(Leaderboard.ShowMode.FromResults);
+            leaderboard.FocusResult(this.currentResults);
         }
 
         #endregion
