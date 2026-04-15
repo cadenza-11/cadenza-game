@@ -233,6 +233,7 @@ namespace Cadenza
 
         public void SetHealth(float health)
         {
+            this.Sprite.material.SetInt("_Debuff", (health/this.maxHealth <= 0.33f) ? 1 : 0);
             if (health <= 0f && !this.isFainted)
             {
                 this.ChangeState(this.fainted);

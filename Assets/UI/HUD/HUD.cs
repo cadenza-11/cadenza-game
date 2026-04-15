@@ -25,6 +25,7 @@ namespace Cadenza
         private Dictionary<int, string> streakLabels = new();
         private List<VisualElement> availableContainers = new();
         private Dictionary<Player, VisualElement> assignedContainers = new();
+        private List<Tween> healthShakeTweens = new();
 
         public enum MeterState
         {
@@ -76,14 +77,16 @@ namespace Cadenza
                 // Initialize health.
                 ProgressBar health = container.Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
                 health.highValue = player.Character.MaxHealth;
+                this.healthShakeTweens.Add(health.DOShake(duration: 0.5f, strength: 5f, vibrato: 10, randomnessMode: ShakeRandomnessMode.Harmonic).SetLoops(-1).Pause());
                 MaterialDefinition healthProgress = health.Q<VisualElement>(classes: "unity-progress-bar__progress").resolvedStyle.unityMaterial;
-                this.OnHealthChanged(health.highValue, health, healthProgress);
+                this.OnHealthChanged(health.highValue, health, healthProgress, this.healthShakeTweens.Count-1);
                 player.Character.HealthChanged += (healthValue, isFainted) =>
                 {
-                    this.OnHealthChanged(healthValue, health, healthProgress);
+                    this.OnHealthChanged(healthValue, health, healthProgress, this.healthShakeTweens.Count-1);
                     if (isFainted) container.AddToClassList("fainted");
                     else container.RemoveFromClassList("fainted");
                 };
+
 
                 // Initialize flow.
                 ProgressBar flow = container.Q<VisualElement>("c_FlowBar").Q<ProgressBar>("bar");
@@ -185,10 +188,15 @@ namespace Cadenza
         #endregion
         #region Health Bar
 
-        private void OnHealthChanged(float health, ProgressBar bar, MaterialDefinition progress)
+        private void OnHealthChanged(float health, ProgressBar bar, MaterialDefinition progress, int tweenIndex)
         {
             bar.value = health;
             progress.SetFloat("_Progress", health/bar.highValue);
+            if (bar.value / bar.highValue <= 0.33f)
+                this.healthShakeTweens[tweenIndex].Play();
+            else
+                this.healthShakeTweens[tweenIndex].Pause();
+            
         }
 
         #endregion

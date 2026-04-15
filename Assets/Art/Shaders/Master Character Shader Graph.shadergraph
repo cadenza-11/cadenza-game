@@ -460,7 +460,7 @@
     "m_Precision": 0,
     "m_PreviewExpanded": true,
     "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
+    "m_PreviewMode": 1,
     "m_CustomColors": {
         "m_SerializableColors": []
     },
@@ -613,8 +613,8 @@
     "m_ObjectId": "2b2ede595e9047cfbdaaf0d9809fcd8e",
     "m_Title": "Debuff",
     "m_Position": {
-        "x": -1883.0,
-        "y": -835.0
+        "x": -1883.000244140625,
+        "y": -834.9999389648438
     }
 }
 
@@ -625,7 +625,7 @@
     "m_Title": "Color Replacement (for Playable Characters)",
     "m_Position": {
         "x": -2473.0,
-        "y": -823.0
+        "y": -822.9999389648438
     }
 }
 
@@ -1753,7 +1753,7 @@
     "m_Title": "Flowstate",
     "m_Position": {
         "x": -985.0001220703125,
-        "y": -866.0
+        "y": -865.9999389648438
     }
 }
 
@@ -2060,7 +2060,7 @@
     "m_Precision": 0,
     "m_PreviewExpanded": true,
     "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
+    "m_PreviewMode": 1,
     "m_CustomColors": {
         "m_SerializableColors": []
     },
