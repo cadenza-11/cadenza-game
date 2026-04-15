@@ -35,6 +35,7 @@ namespace Cadenza
         public float MaxHealth => this.maxHealth;
         public float FlowThreshold => this.flowThreshold;
         public bool IsFainted => this.isFainted;
+        public bool FacingRight => this.facingRight;
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
