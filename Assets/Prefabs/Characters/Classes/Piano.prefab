@@ -70,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6000506658098138443, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Bool.m_Array.Array.size
@@ -183,7 +183,7 @@ PrefabInstance:
       objectReference: {fileID: 4738841478477733116}
     - target: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: m_Sprite
