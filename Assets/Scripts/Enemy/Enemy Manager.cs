@@ -51,11 +51,13 @@ namespace Cadenza
             return false;
         }
 
-        private void GroupAttack()
+        public static void GroupAttack()
         {
+            Debug.Log("Starting Group Attack");
             int numChosen = 0;
             Vector2 location = Vector2.zero;
-            foreach(var enemy in this.enemies)
+            Player follow = null;
+            foreach(var enemy in singleton.enemies)
             {
                 if(enemy is EnemyGrunt)
                 {
@@ -65,8 +67,11 @@ namespace Cadenza
                         if(location == Vector2.zero)
                         {
                             location = enemy.GetTargetLocation();
+                            follow = enemy.GetFollow();
                         }
                         EnemyGrunt curEnemy = (EnemyGrunt)enemy;
+                        curEnemy.SetFollow(follow);
+                        Debug.Log(location.x + ", " + location.y);
                         curEnemy.GroupAttack(location);
                         numChosen++;
                     }

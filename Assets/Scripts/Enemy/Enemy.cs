@@ -237,7 +237,7 @@ namespace Cadenza
             }
         }
 
-        protected void MeleeState()
+        protected virtual void MeleeState()
         {
             this.rb.linearVelocity = Vector3.zero;
             if (this.isAttacking)
@@ -442,9 +442,19 @@ namespace Cadenza
             return this.TargetLocation;
         }
 
+        public Player GetFollow()
+        {
+            return this.follow;
+        }
+
         public void SetTargetLocation(Vector2 loc)
         {
             this.TargetLocation = loc;
+        }
+
+        public void SetFollow(Player f)
+        {
+            this.follow = f;
         }
     }
 }
