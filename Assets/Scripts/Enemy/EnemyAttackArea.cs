@@ -23,7 +23,8 @@ namespace Cadenza
             // Hit player.
             if (collider.TryGetComponent(out Character character))
             {
-                character.TakeDamage(this.damage);
+                if (!character.TakeDamage(this.damage))
+                    return;
 
                 // Add knockback.
                 Vector3 direction = collider.transform.position - this.transform.position;

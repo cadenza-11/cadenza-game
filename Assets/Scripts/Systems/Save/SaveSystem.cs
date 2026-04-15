@@ -5,6 +5,7 @@ using UnityEngine;
 using System.IO;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 public static class SaveSystem
 {
@@ -222,7 +223,7 @@ public static class SaveSystem
         // Save metadata.
         var metadata = new JObject()
         {
-            ["Timestamp"] = DateTime.UtcNow,
+            ["Timestamp"] = results.Timestamp,
             ["Level"] = results.LevelName,
         };
 
@@ -301,7 +302,7 @@ public static class SaveSystem
         Results results = new()
         {
             // Set metadata.
-            Timestamp = root["Metadata"]["Timestamp"]?.Value<DateTime>() ?? DateTime.MinValue,
+            Timestamp = ParseTimestamp(root["Metadata"]?["Timestamp"]),
             TeamName = root["Team"]["Name"]?.Value<string>() ?? string.Empty,
             LevelName = root["Metadata"]["Level"]?.Value<string>() ?? string.Empty,
             HighestStreak = root["HighestStreak"]?.Value<int>() ?? 0,
@@ -354,6 +355,42 @@ public static class SaveSystem
         }
 
         return results;
+    }
+
+    private static DateTimeOffset ParseTimestamp(JToken token)
+    {
+        if (token == null)
+            return DateTimeOffset.MinValue;
+
+        if (token.Type == JTokenType.Date && token is JValue value)
+        {
+            if (value.Value is DateTimeOffset timestampOffset)
+                return timestampOffset.ToUniversalTime();
+
+            if (value.Value is DateTime timestamp)
+                return new DateTimeOffset(timestamp.ToUniversalTime(), TimeSpan.Zero);
+        }
+
+        string timestampText = token.Value<string>();
+        if (DateTimeOffset.TryParse(
+            timestampText,
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+            out var parsedOffset))
+        {
+            return parsedOffset;
+        }
+
+        if (DateTime.TryParse(
+            timestampText,
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+            out var parsedTimestamp))
+        {
+            return new DateTimeOffset(parsedTimestamp.ToUniversalTime(), TimeSpan.Zero);
+        }
+
+        return DateTimeOffset.MinValue;
     }
 
     #endregion

@@ -6,6 +6,7 @@ namespace Cadenza
     public class StartMenu : UIPanel
     {
         private UIPanel characterSelect;
+        private UIPanel bandNameSelect;
         private UIPanel settingsMenu;
         private UIPanel leaderboardMenu;
 
@@ -22,6 +23,7 @@ namespace Cadenza
         public override void OnInitialize()
         {
             this.characterSelect = UISystem.FindPanel<CharacterSelect>();
+            this.bandNameSelect = UISystem.FindPanel<BandNameSelect>();
             this.settingsMenu = UISystem.FindPanel<SettingsMenu>();
             this.leaderboardMenu = UISystem.FindPanel<Leaderboard>();
 
@@ -74,6 +76,7 @@ namespace Cadenza
 
         public override void OnGameStop()
         {
+            // Show by default if redirecting to pregame.
             if (ApplicationController.CurrentLevel == null)
                 this.Show();
         }
@@ -111,7 +114,7 @@ namespace Cadenza
         private void OnNewRun()
         {
             SaveSystem.DeleteTeamFile();
-            this.TransitionTo(this.characterSelect);
+            this.TransitionTo(this.bandNameSelect);
         }
 
         private void OnLastRun()
@@ -134,12 +137,6 @@ namespace Cadenza
 
         private void OnLeaderboard()
         {
-            if (this.leaderboardMenu == null)
-            {
-                Debug.LogWarning("Leaderboard panel not found under UISystem.");
-                return;
-            }
-
             this.TransitionTo(this.leaderboardMenu);
         }
 

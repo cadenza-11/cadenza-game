@@ -1,7 +1,5 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="root" style="width: 100px; height: 100px;">
-        <ui:VisualElement name="indicator" style="flex-grow: 1; align-self: center; justify-content: center; display: none;">
-            <ui:Label text="?" style="-unity-font-style: bold; font-size: 80px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(255, 255, 255);" />
-        </ui:VisualElement>
+        <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_space.png?fileID=2800000&amp;guid=a4ab0592a93d0e9408679ffdb87121cc&amp;type=3#keyboard_space" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_button_color_a.png?fileID=2800000&amp;guid=01723e9abcb249a43a8735bd04645fea&amp;type=3#xbox_button_color_a" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_button_color_cross.png?fileID=2800000&amp;guid=d7c84fdd765414d449a1e14c7fd8255d&amp;type=3#playstation_button_color_cross" pulse-to-beat="true" name="indicator" style="width: 160px;"/>
     </ui:VisualElement>
 </ui:UXML>

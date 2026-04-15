@@ -16,16 +16,40 @@ namespace Cadenza
     public class ApplicationController : MonoBehaviour
     {
         private static ApplicationController singleton;
-        private ApplicationSystem[] systems;
-        private ApplicationState state;
-        public static ApplicationState State => singleton.state;
-        private bool isRedirecting;
-        public static bool IsRedirecting => singleton.isRedirecting;
 
         [SerializeField] private List<Level> levels;
+
+        private ApplicationSystem[] systems;
+        private ApplicationState state;
+        private bool isRedirecting;
         private Level currentLevel;
+        private Level previousLevel;
+
+        /// <summary>
+        /// The current state of the application.
+        /// </summary>
+        public static ApplicationState State => singleton.state;
+
+        /// <summary>
+        /// Whether the application is in the process of entering
+        /// or exiting from a level.
+        /// </summary>
+        public static bool IsRedirecting => singleton.isRedirecting;
+
+        /// <summary>
+        /// The available list of levels.
+        /// </summary>
         public static IReadOnlyList<Level> Levels => singleton.levels;
+
+        /// <summary>
+        /// The currently loaded gameplay level. Will not be null during a game session.
+        /// </summary>
         public static Level CurrentLevel => singleton.currentLevel;
+
+        /// <summary>
+        /// The previous level that was loaded. May be null.
+        /// </summary>
+        public static Level PreviousLevel => singleton.previousLevel;
 
         #region Unity Callbacks
 
@@ -128,7 +152,6 @@ namespace Cadenza
             }
 
             this.isRedirecting = true;
-
             int sceneIndex = 0;
 
             if (level == null)
@@ -138,7 +161,8 @@ namespace Cadenza
             else
                 sceneIndex = level.BuildIndex;
 
-            this.currentLevel = level;
+            this.previousLevel = this.currentLevel;
+            this.currentLevel = sceneIndex == 0 ? null : level;
 
             await Fader.ShowAsync();
             singleton.ChangeState(ApplicationState.Pregame);
@@ -150,7 +174,7 @@ namespace Cadenza
                 if (currentScene.buildIndex != 0)
                     await SceneManager.UnloadSceneAsync(currentScene);
 
-                // Load the given scene.
+                // Load the given scene if it isn't the root scene.
                 if (sceneIndex != 0)
                     await SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
 
@@ -160,12 +184,24 @@ namespace Cadenza
             if (sceneIndex != 0)
                 singleton.ChangeState(ApplicationState.GameSession);
 
+            await this.WaitForNextMarkerOrTimeoutAsync();
+            this.isRedirecting = false;
+            Fader.Hide();
+        }
+
+        private async Task WaitForNextMarkerOrTimeoutAsync()
+        {
             // The AudioSystem should always respond to a scene change
             // and trigger the next section of the track. This track
             // should always have a starting marker that client can detect.
-            await BeatSystem.WaitForNextMarkerAsync();
-            this.isRedirecting = false;
-            Fader.Hide();
+
+            // If no marker is passed within a given time frame, timeout.
+            const int MarkerTimeOutAsync = 5000;
+
+            await Task.WhenAny(
+                Task.Delay(MarkerTimeOutAsync),
+                BeatSystem.WaitForNextMarkerAsync()
+            );
         }
 
         private void ChangeState(ApplicationState newState)

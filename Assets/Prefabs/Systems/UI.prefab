@@ -176,6 +176,7 @@ Transform:
   - {fileID: 282507516178628650}
   - {fileID: 5971180210531556566}
   - {fileID: 4592023291387736838}
+  - {fileID: 8123456789012345679}
   - {fileID: 191295917078525619}
   - {fileID: 6726416416659335136}
   - {fileID: 2470285422591770758}
@@ -548,8 +549,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterSelect
   uiDocument: {fileID: 6410242120360780059}
-  startMenu: {fileID: 404073981900992975}
-  bandNameSelect: {fileID: 2221361485290833675}
   joiningTemplate: {fileID: 9197481963319205126, guid: 6ee44ba837057d747af63936c731ab68, type: 3}
   settingsTemplate: {fileID: 9197481963319205126, guid: c70d9a0d17884d5ca3af2d6d95e1896d, type: 3}
   hapticsTemplate: {fileID: 9197481963319205126, guid: a287643eaa784f57877f532fcd7f930a, type: 3}
@@ -558,6 +557,10 @@ MonoBehaviour:
   namingTemplate: {fileID: 9197481963319205126, guid: 357a4e3578bad184ebca6354e0c455ee, type: 3}
   readyTemplate: {fileID: 9197481963319205126, guid: 1b13ae536d2e7e44b8064fc2396375e3, type: 3}
   requiredCalibrationAttempts: 4
+  colorways:
+  - {fileID: 11400000, guid: b99a8e403d061b04dace2864f9ba7653, type: 2}
+  - {fileID: 11400000, guid: 3942851233ce9c748afa3ed1efc89298, type: 2}
+  - {fileID: 11400000, guid: 37cca17df898a144d8b20ecc2e2de239, type: 2}
 --- !u!114 &1979370985704355208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -649,6 +652,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.ResultsMenu
   uiDocument: {fileID: 1749276891392445599}
+  resultsMusicEvent:
+    Guid:
+      Data1: 158290650
+      Data2: 1285758998
+      Data3: -882299730
+      Data4: 947267253
+    Path: event:/SFX_ResultsSequence
+  tweenDuration: 0.5
 --- !u!1 &6869839045911253032
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,6 +798,77 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.DebugConsole
   uiDocument: {fileID: 2472185673363378710}
+--- !u!1 &8123456789012345678
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8123456789012345679}
+  - component: {fileID: 8123456789012345680}
+  - component: {fileID: 8123456789012345681}
+  m_Layer: 0
+  m_Name: LevelSelectMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8123456789012345679
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8123456789012345678}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1820362299702937105}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8123456789012345680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8123456789012345678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: a9efd3a193903934489f7229d03c2959, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: dd22a480feb1482b8b4a14fbd82a17c2, type: 3}
+  m_SortingOrder: 1
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &8123456789012345681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8123456789012345678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ac2ca0a0d4461eb5894ef85973cd03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.LevelSelectMenu
+  uiDocument: {fileID: 8123456789012345680}
+  levelCardTemplate: {fileID: 9197481963319205126, guid: 0281f323d17b41f899a5600c6d935e2b, type: 3}
+  levelVoteTemplate: {fileID: 9197481963319205126, guid: 88ed20e96ca44951a1005a4c328ceadb, type: 3}
 --- !u!1 &8770488882680184512
 GameObject:
   m_ObjectHideFlags: 0

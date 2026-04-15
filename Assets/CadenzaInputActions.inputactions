@@ -30,6 +30,17 @@
                 },
                 {
                     "name": "",
+                    "id": "40f3123e-1e8d-42b7-b9ac-3b9c3993bb47",
+                    "path": "<Mouse>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Join",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b60151e2-d81d-469b-b48c-48a1390a0e6d",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
@@ -140,6 +151,15 @@
                     "name": "Pause",
                     "type": "Button",
                     "id": "ad4fda9d-cda1-4e98-beff-59d1ce144794",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Parry",
+                    "type": "Button",
+                    "id": "c42c4fc4-5fbb-48a9-a0f6-2c57fb21aa59",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -364,6 +384,39 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "320ef060-16d6-4493-8325-f868ecd88a7c",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Parry",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c83c89b5-830e-4da1-9ff1-9be4b867c27a",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Parry",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "039f4bad-323b-4eba-b4a3-423a29e8a46a",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Parry",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

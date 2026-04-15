@@ -5,11 +5,17 @@ namespace Cadenza
     public class InteractionIndicator : UIPanel
     {
         protected override bool IsWorldSpace => true;
-        private VisualElement indicator;
+        private InputHint indicator;
 
         public override void OnInitialize()
         {
-            this.indicator = this.root.Q("indicator");
+            this.indicator = this.root.Q<InputHint>("indicator");
+        }
+
+        public void SetInputHint(ControllerType controller)
+        {
+            UnityEngine.Debug.Log($"Setting interaction button to {controller}");
+            this.indicator.ShowForControllerType(controller);
         }
 
         internal void OnPlayerInteractChanged(IInteractable interactable)

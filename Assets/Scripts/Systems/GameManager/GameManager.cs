@@ -27,6 +27,7 @@ namespace Cadenza
         public static event Action<Player> GamePaused;
         public static event Action GameUnpaused;
         public static bool IsPaused => singleton.isPaused;
+        public static Level SelectedLevel => singleton.selectedLevel;
 
         private bool isCombatActive;
         public static bool IsCombatActive => singleton.isCombatActive;
@@ -34,8 +35,22 @@ namespace Cadenza
         public static event Action CombatStarted;
         public static event Action<GameResult> CombatStopped;
 
+        private readonly PhaseHandler phaseHandler = new();
+        public static Phase? CurrentPhase => singleton.phaseHandler.CurrentPhase;
+        public static event Action<Phase> PhaseEntered
+        {
+            add => singleton.phaseHandler.PhaseEntered += value;
+            remove => singleton.phaseHandler.PhaseEntered -= value;
+        }
+        public static event Action<Phase> PhaseExited
+        {
+            add => singleton.phaseHandler.PhaseExited += value;
+            remove => singleton.phaseHandler.PhaseExited -= value;
+        }
+
         #endregion
 
+        private Level selectedLevel;
         private bool isPaused;
 
         #region Application Callbacks
@@ -56,6 +71,9 @@ namespace Cadenza
             // Stop combat.
             if (this.isCombatActive)
                 this.StopCombat(GameResult.Forfeit);
+
+            // Reset phases.
+            this.phaseHandler.OnGameStop();
 
             // Unpause game.
             if (this.isPaused)
@@ -79,6 +97,9 @@ namespace Cadenza
                 AudioSystem.SetState(AudioSystem.State.Stage);
             else
                 AudioSystem.SetState(AudioSystem.State.Backstage);
+
+            // Set phases.
+            this.phaseHandler.OnGameStart();
 
             // Spawn players.
             foreach (var player in PlayerSystem.Players)
@@ -129,6 +150,17 @@ namespace Cadenza
         #endregion
         #region Public Static Methods
 
+        public static void SetSelectedLevel(Level level)
+        {
+            singleton.selectedLevel = level;
+        }
+
+        public static void RedirectToSelectedLevel()
+        {
+            if (singleton.selectedLevel != null)
+                ApplicationController.SetLevelAsync(singleton.selectedLevel);
+        }
+
         public static void RedirectToBackstage()
         {
             ApplicationController.SetLevelAsync(singleton.startingLevel);
@@ -145,6 +177,11 @@ namespace Cadenza
                 return;
 
             ApplicationController.SetLevelAsync(null);
+        }
+
+        public static bool RequestNextPhase()
+        {
+            return singleton.phaseHandler.RequestNextPhase();
         }
 
         public static void PauseGame(Player requestingPlayer)
@@ -205,7 +242,7 @@ namespace Cadenza
             this.isCombatActive = false;
 
             // Set audio.
-            AudioSystem.SetState(AudioSystem.State.Stage);
+            AudioSystem.SetState(AudioSystem.State.Postcombat);
 
             Debug.Log($"Stopping combat with result {result}.");
             CombatStopped?.Invoke(result);

@@ -219,6 +219,7 @@ Transform:
   m_Children:
   - {fileID: 7239182979401787694}
   - {fileID: 7459484215511399675}
+  - {fileID: 2410763805311406785}
   - {fileID: 989529698284251720}
   - {fileID: 4163983894870712180}
   - {fileID: 2047404595199376384}
@@ -290,10 +291,12 @@ MonoBehaviour:
   AttackArea: {fileID: 2742966869210566379}
   Rigidbody: {fileID: 1458182412301763174}
   Sprite: {fileID: 6779959987335499425}
+  SpriteTransform: {fileID: 7459484215511399675}
   Animator: {fileID: 71435134034143840}
   accuracyBar: {fileID: 2866967900350389172}
   RevivalMeter: {fileID: 5342877388000212823}
   interactionIndicator: {fileID: 6171001511222046999}
+  selectionCircle: {fileID: 3513945487164057818}
   comboM: {fileID: 0}
   baseLightDamage: 0
   baseHeavyDamage: 0
@@ -467,7 +470,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2796413409399718665, guid: de72a5987212c40958c5c765e08bd188, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.68
       objectReference: {fileID: 0}
     - target: {fileID: 2796413409399718665, guid: de72a5987212c40958c5c765e08bd188, type: 3}
       propertyPath: m_LocalPosition.z
@@ -526,3 +529,76 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5136ee3869c646ff87223033f1283de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.InteractionIndicator
+--- !u!1001 &6679012345678901234
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7813739055769483968}
+    m_Modifications:
+    - target: {fileID: 6716758548182902111, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_Name
+      value: SelectionCircle
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+--- !u!4 &2410763805311406785 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9062472524982861107, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+  m_PrefabInstance: {fileID: 6679012345678901234}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3513945487164057818 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7815034646300952360, guid: 4acbc6973324a43d9b42286aa7e503fa, type: 3}
+  m_PrefabInstance: {fileID: 6679012345678901234}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74b38a4ce18d4439b84f1c7cc7d1737b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.SelectionCircle

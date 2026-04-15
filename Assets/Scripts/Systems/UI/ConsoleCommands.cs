@@ -120,6 +120,16 @@ namespace Cadenza
                         Debug.Log("Turning off audio debug sounds.");
                     }
                     break;
+
+                case "param":
+                    if (args.Length != 3 || !float.TryParse(args[2], out float value))
+                    {
+                        Debug.Log("Usage: audio param <string name> <float value>");
+                        return;
+                    }
+                    Debug.Log($"Attempting to set parameter {args[1]} to value {value}.");
+                    AudioSystem.SetParameter(args[1], value);
+                    break;
             }
         }
 
@@ -192,6 +202,14 @@ namespace Cadenza
 
                 case "delete":
                     SaveSystem.DeletePreviousRuns();
+                    break;
+
+                case "focus":
+                    if (args.Length >= 2 && int.TryParse(args[1], out int index))
+                    {
+                        var leaderboard = UISystem.FindPanel<Leaderboard>();
+                        leaderboard.FocusResult(index);
+                    }
                     break;
             }
         }

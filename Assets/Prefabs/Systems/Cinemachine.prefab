@@ -103,15 +103,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4028921152692718857}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4eb4843bae7d24943842ea23130dcd55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineGroupFraming
   FramingMode: 2
-  FramingSize: 0.8
+  FramingSize: 1
   CenterOffset: {x: 0, y: 0}
-  Damping: 2
+  Damping: 4
   SizeAdjustment: 2
   LateralAdjustment: 0
   FovRange: {x: 1, y: 100}
@@ -245,4 +245,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CinemachineTargetUpdater
   defaultTargetWeight: 1
-  defaultTargetRadius: 0.5
+  defaultTargetRadius: 2

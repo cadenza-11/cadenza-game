@@ -86,7 +86,7 @@ namespace Cadenza
         }
 
         #region IEnemy Interface
-        protected void MeleeAttack()
+        protected virtual void MeleeAttack()
         {
             this.isAttacking = true;
             this.attackArea.SetActive(true);
@@ -119,7 +119,7 @@ namespace Cadenza
             this.anim.SetTrigger("LightAttack");
         }
 
-        public void TakeDamage(int damage)
+        public virtual void TakeDamage(int damage)
         {
             this.currentHealth -= damage;
             this.anim.SetTrigger("IsHit");
@@ -281,10 +281,10 @@ namespace Cadenza
             }
         }
 
-        protected void SpecialState()
+        protected virtual void SpecialState()
         {
             this.rb.linearVelocity = Vector3.zero;
-            //Do Special Move
+            //Do Special Attack
             if (this.meleeState)
             {
                 this.meleeState = true;
@@ -374,7 +374,7 @@ namespace Cadenza
 
         }
 
-        protected void DeadState()
+        protected virtual void DeadState()
         {
             this.anim.SetBool("IsFainted", true);
             this.rb.linearVelocity = Vector3.zero;

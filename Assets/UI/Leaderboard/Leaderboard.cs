@@ -7,6 +7,13 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class Leaderboard : UIPanel, IInteractable
 {
+    public enum ShowMode
+    {
+        FromMenu,
+        FromGame,
+        FromResults,
+    }
+
     [SerializeField] private VisualTreeAsset resultLineAsset;
 
     protected override bool IsWorldSpace => true;
@@ -17,6 +24,7 @@ public class Leaderboard : UIPanel, IInteractable
     private Player openingPlayer;
     private ScrollView resultsElement;
     private Results[] results = System.Array.Empty<Results>();
+    private ShowMode showMode;
 
     public override void OnInitialize()
     {
@@ -29,16 +37,38 @@ public class Leaderboard : UIPanel, IInteractable
         this.resultsElement = this.root.Q<ScrollView>("results");
         this.resultsElement.focusable = false;
 
-        InputSystem.UIPlayerCancel += this.OnPlayerCancel;
         SaveSystem.ResultsFileCreated += this.RefreshResults;
         SaveSystem.ResultsFileDeleted += this.RefreshResults;
     }
 
     public override void OnApplicationStop()
     {
-        InputSystem.UIPlayerCancel -= this.OnPlayerCancel;
         SaveSystem.ResultsFileCreated -= this.RefreshResults;
         SaveSystem.ResultsFileDeleted -= this.RefreshResults;
+    }
+
+    public override void OnShow()
+    {
+        if (this.openingPlayer != null)
+            InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, this.openingPlayer);
+
+        this.RefreshResults();
+    }
+
+    public override void OnHide()
+    {
+        if (this.showMode == ShowMode.FromGame)
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+        else if (this.showMode == ShowMode.FromResults)
+            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
+
+        this.openingPlayer = null;
+    }
+
+    public void Show(ShowMode mode)
+    {
+        this.showMode = mode;
+        this.Show();
     }
 
     private VisualElement CreatePlayerStatsLine(Results.PlayerDef playerDef, ResultsDef playerResult)
@@ -84,28 +114,36 @@ public class Leaderboard : UIPanel, IInteractable
     {
         this.openingPlayer = player;
         this.previousPanel = null;
-        this.Show();
+        this.Show(ShowMode.FromGame);
     }
 
-    public override void OnShow()
+    public void FocusResult(Results result)
     {
-        if (this.openingPlayer != null)
-            InputSystem.SwitchInputMapSinglePlayer(InputSystem.InputMap.UI, this.openingPlayer);
-
         this.RefreshResults();
+
+        int index = System.Array.IndexOf(this.results, result);
+        this.FocusResult(index);
     }
 
-    public override void OnHide()
+    public void FocusResult(int index)
     {
-        if (ApplicationController.State == ApplicationState.GameSession)
-            InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.Player);
+        this.RefreshResults();
+        if (index >= 0 && index < this.resultsElement.childCount)
+        {
+            var resultLine = this.resultsElement.Children().ElementAt(index);
 
-        this.openingPlayer = null;
-    }
+            // Override default scrolling behavior with transitions.
+            // Restore default scrolling after transition ends or is cancelled.
+            var contentContainer = this.resultsElement.contentContainer;
+            contentContainer.AddToClassList("scroll-view--animated");
+            contentContainer.RegisterCallbackOnce<TransitionEndEvent>(_ => contentContainer.RemoveFromClassList("scroll-view--animated"));
+            contentContainer.RegisterCallbackOnce<TransitionCancelEvent>(_ => contentContainer.RemoveFromClassList("scroll-view--animated"));
+            this.resultsElement.ScrollTo(resultLine);
 
-    private void OnPlayerCancel(Player _)
-    {
-        this.Close();
+            var foldout = resultLine.Q<Foldout>();
+            foldout.Focus();
+            foldout.value = true;
+        }
     }
 
     private void RefreshResults()
@@ -127,7 +165,7 @@ public class Leaderboard : UIPanel, IInteractable
             string time = UI.GetHumanizedTime(result.Timestamp);
             string teamName = string.IsNullOrEmpty(result.TeamName) ? "Unnamed Team" : result.TeamName;
             string levelName = string.IsNullOrEmpty(result.LevelName) ? "Unnamed Level" : result.LevelName;
-            var resultLine = this.resultLineAsset.CloneTree();
+            var resultLine = this.resultLineAsset.CloneTree().Q<VisualElement>("result-entry");
             var foldout = resultLine.Q<Foldout>("result-foldout");
             var playerStats = resultLine.Q<VisualElement>("player-stats");
 

@@ -98,6 +98,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 71435134034143840, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: eef00cf07d9fdf8439f40cc7f203e3c7, type: 2}
     - target: {fileID: 756949604230155057, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: flowM
       value: 
@@ -143,20 +147,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-      propertyPath: m_Color.b
-      value: 0.5235849
-      objectReference: {fileID: 0}
-    - target: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-      propertyPath: m_Color.r
-      value: 0.56523186
-      objectReference: {fileID: 0}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 996076600, guid: 4825911bb0fd36b47a7ac7303c0c7f74, type: 3}
     - target: {fileID: 7239182979401787694, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.25
+      value: 0.427
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459484215511399675, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 7813739055769483968, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -234,30 +234,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4023698549463242690}
-    - targetCorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1490731011589808830}
   m_SourcePrefab: {fileID: 100100000, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
 --- !u!1 &1819034417208150137 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   m_PrefabInstance: {fileID: 4091136334406032024}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1490731011589808830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1819034417208150137}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60949ed1ba6021c43ae6d7baf1e76959, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.AttackArea
-  damage: 0
-  knockbackScale: 0
-  comboMove: 0
 --- !u!1 &5759731777474461351 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}

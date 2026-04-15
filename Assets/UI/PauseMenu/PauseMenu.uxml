@@ -10,6 +10,7 @@
         <ui:VisualElement name="spacer" style="height: 5%;"/>
         <ui:VisualElement name="c_Buttons" style="height: 40%; justify-content: space-around; font-size: 45px;">
             <ui:Button text="Unpause" name="b_Unpause"/>
+            <ui:Button text="Restart" name="b_Restart"/>
             <ui:Button text="Settings" name="b_Settings"/>
             <ui:Button text="Return to Main Menu" name="b_MainMenu"/>
             <ui:Button text="Close Game" name="b_Close"/>

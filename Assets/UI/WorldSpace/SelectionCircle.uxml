@@ -1,0 +1,9 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="root" style="width: 140px; height: 140px; align-items: center; justify-content: center;">
+        <ui:VisualElement name="c_Halo" style="width: 124px; height: 124px; border-top-left-radius: 62px; border-top-right-radius: 62px; border-bottom-right-radius: 62px; border-bottom-left-radius: 62px; background-color: rgba(255, 255, 255, 0.12); align-items: center; justify-content: center;">
+            <ui:VisualElement name="c_OuterRing" style="width: 104px; height: 104px; border-top-width: 4px; border-right-width: 4px; border-bottom-width: 4px; border-left-width: 4px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-left-radius: 52px; border-top-right-radius: 52px; border-bottom-right-radius: 52px; border-bottom-left-radius: 52px; background-color: rgba(255, 255, 255, 0.18); align-items: center; justify-content: center;">
+                <ui:VisualElement name="c_InnerRing" style="width: 72px; height: 72px; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-left-radius: 36px; border-top-right-radius: 36px; border-bottom-right-radius: 36px; border-bottom-left-radius: 36px; background-color: rgba(255, 255, 255, 0);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

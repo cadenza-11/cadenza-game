@@ -12,6 +12,7 @@ namespace Cadenza
         public CharacterClass CharacterClass { get; private set; }
         public Character Character { get; private set; }
         public PlayerInput Input { get; private set; }
+        public Colorway Colorway { get; private set; }
         public string Name;
         public double Latency => ScoreSystem.GetInputLatencyForPlayer(this);
 
@@ -37,6 +38,7 @@ namespace Cadenza
             this.ID = id;
             this.Input = input;
             this.Name = $"Player {id + 1}";
+            this.Colorway = null;
         }
 
         internal void SetCharacterClass(CharacterClass characterClass)
@@ -96,6 +98,11 @@ namespace Cadenza
             this.InteractChanged?.Invoke(null);
         }
 
+        public void SetColorway(Colorway colorway)
+        {
+            this.Colorway = colorway;
+        }
+
         #endregion
         #region Input
         private void RegisterCharacterCallbacks(InputActionAsset actionMaps)
@@ -107,6 +114,7 @@ namespace Cadenza
             var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
+            var parryAction = map.FindAction("Parry", throwIfNotFound: true);
             var pauseAction = map.FindAction("Pause", throwIfNotFound: true);
             this.interactAction = attackLightAction;
 
@@ -115,6 +123,7 @@ namespace Cadenza
             attackLightAction.performed += this.OnAttackLight;
             attackHeavyAction.performed += this.OnAttackHeavy;
             attackTeamAction.performed += this.OnAttackTeam;
+            parryAction.performed += this.OnParry;
             pauseAction.performed += this.OnPause;
         }
 
@@ -154,6 +163,18 @@ namespace Cadenza
                 this.Character.OnAttackTeam();
         }
 
+        private void OnParry(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+
+            var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
+            this.PlayerHit?.Invoke(score);
+
+            if (this.Character != null)
+                this.Character.OnParry(score);
+        }
+
         private void OnPause(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -169,12 +190,16 @@ namespace Cadenza
             var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
+            var parryAction = map.FindAction("Parry", throwIfNotFound: true);
+            var pauseAction = map.FindAction("Pause", throwIfNotFound: true);
 
             moveAction.performed -= this.OnMove;
             moveAction.canceled -= this.OnMove;
             attackLightAction.performed -= this.OnAttackLight;
             attackHeavyAction.performed -= this.OnAttackHeavy;
             attackTeamAction.performed -= this.OnAttackTeam;
+            parryAction.performed -= this.OnParry;
+            pauseAction.performed -= this.OnPause;
         }
 
         #endregion

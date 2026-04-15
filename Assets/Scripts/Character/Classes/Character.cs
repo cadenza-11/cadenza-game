@@ -19,10 +19,12 @@ namespace Cadenza
         [SerializeField] public AttackArea AttackArea;
         [SerializeField] public Rigidbody Rigidbody;
         [SerializeField] public SpriteRenderer Sprite;
+        [SerializeField] public Transform SpriteTransform;
         [SerializeField] public Animator Animator;
         [SerializeField] private AccuracyBar accuracyBar;
         [SerializeField] public ReviveMeter RevivalMeter;
         [SerializeField] private InteractionIndicator interactionIndicator;
+        [SerializeField] private SelectionCircle selectionCircle;
         [SerializeField] public ComboManager comboM;
         [SerializeField] public int baseLightDamage;
         [SerializeField] public int baseHeavyDamage;
@@ -40,21 +42,25 @@ namespace Cadenza
         public event Action<Character> Died;
         public event Action<float> FlowChanged;
         public event Action Revived;
+        public event Action Parried;
 
         private float flow;
         private float revive;
+        private float parryActiveUntil = float.NegativeInfinity;
 
         public class Input
         {
             public Vector2 move;
             public ScoreDef? lightAttack;
             public ScoreDef? heavyAttack;
+            public ScoreDef? parry;
             public bool wantTeam;
 
             public void Consume()
             {
                 this.lightAttack = null;
                 this.heavyAttack = null;
+                this.parry = null;
                 this.wantTeam = false;
             }
         }
@@ -63,9 +69,11 @@ namespace Cadenza
         private bool facingRight = true;
 
         private IState state;
+        public IState CurrentState => this.state;
         public readonly WalkingState walking = new();
         public readonly LightAttackState lightAttack = new();
         public readonly HeavyAttackState heavyAttack = new();
+        public readonly ParryState parry = new();
         public readonly HitStunState hitStun = new();
         public readonly FaintedState fainted = new();
 
@@ -86,6 +94,19 @@ namespace Cadenza
             this.SetHealth(this.maxHealth);
             this.SetFlow(0);
 
+            // Set sprite colors (shader).
+            this.Sprite.material.SetInt("_CharacterColor", 1);
+            if (this.Player.Colorway != null)
+            {
+                this.Sprite.material.SetColor("_PrimaryColor", this.Player.Colorway.PrimaryColor);
+                this.Sprite.material.SetColor("_SecondaryColor", this.Player.Colorway.SecondaryColor);
+                this.Sprite.material.SetColor("_TertiaryColor", this.Player.Colorway.TertiaryColor);
+            }
+
+            // Set selection circle color.
+            this.selectionCircle?.ApplyColorway(this.Player.Colorway);
+            this.selectionCircle?.Show();
+
             // Set default state.
             this.ChangeState(this.walking);
 
@@ -97,6 +118,7 @@ namespace Cadenza
                 DualShockGamepad => ControllerType.PlayStation,
                 _ => ControllerType.All,
             };
+            this.interactionIndicator.SetInputHint(controller);
             this.RevivalMeter.SetInputHint(controller);
             this.RevivalMeter.SetThreshold(this.reviveThreshold);
             this.RevivalMeter.Hide();
@@ -105,7 +127,8 @@ namespace Cadenza
         void OnDestroy()
         {
             // Unsubscribe from events.
-            this.Player.InteractChanged -= this.interactionIndicator.OnPlayerInteractChanged;
+            if (this.Player != null)
+                this.Player.InteractChanged -= this.interactionIndicator.OnPlayerInteractChanged;
         }
 
         void Update()
@@ -185,7 +208,6 @@ namespace Cadenza
         }
 
         #endregion
-
         #region Combat
 
         public void StartTeamAttack()
@@ -194,18 +216,29 @@ namespace Cadenza
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 4, immediate: false);
         }
 
-        public void TakeDamage(int damage)
+        public bool TakeDamage(int damage)
         {
+            // Parry.
+            if (this.IsParrying())
+            {
+                this.Parried?.Invoke();
+                this.ClearParryWindow();
+                return false;
+            }
+
+            // Lessen damage.
             float fDamage = damage;
             if (this.HasFlowBuff(1))
-            {
                 fDamage *= 0.8f;
-            }
+
+            // Take damage.
             this.SetHealth(this.currentHealth - fDamage);
+            return true;
         }
 
         public void SetHealth(float health)
         {
+            this.Sprite.material.SetInt("_Debuff", (health / this.maxHealth <= 0.33f) ? 1 : 0);
             if (health <= 0f && !this.isFainted)
             {
                 this.ChangeState(this.fainted);
@@ -261,8 +294,12 @@ namespace Cadenza
                 this.UpdateRevive(def, multiplier: 2);
         }
 
-        #endregion
+        public void OnCrowdSurf(bool isSurfing)
+        {
+            this.SpriteTransform.rotation = Quaternion.Euler(0, 0, isSurfing ? 60f : 0f);
+        }
 
+        #endregion
         #region Input
         public void OnMove(Vector2 move)
         {
@@ -284,8 +321,12 @@ namespace Cadenza
             this.input.wantTeam = true;
         }
 
-        #endregion
+        public void OnParry(ScoreDef score)
+        {
+            this.input.parry = score;
+        }
 
+        #endregion
         #region Flow
 
         private void SetFlow(float flow)
@@ -316,7 +357,6 @@ namespace Cadenza
         }
 
         #endregion
-
         #region Revive
 
         private void SetRevive(float revive)
@@ -329,6 +369,24 @@ namespace Cadenza
                 this.Revived?.Invoke();
                 this.ChangeState(this.walking);
             }
+        }
+
+        #endregion
+        #region Parry
+
+        internal void ActivateParryWindow(float seconds)
+        {
+            this.parryActiveUntil = Time.time + Mathf.Max(0.0f, seconds);
+        }
+
+        internal void ClearParryWindow()
+        {
+            this.parryActiveUntil = float.NegativeInfinity;
+        }
+
+        internal bool IsParrying()
+        {
+            return Time.time <= this.parryActiveUntil;
         }
 
         #endregion

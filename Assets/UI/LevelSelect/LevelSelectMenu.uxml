@@ -1,0 +1,20 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/LevelSelect/LevelSelectMenu.uss?fileID=7433441132597879392&amp;guid=9d60e8b2338f4b6dae0119d87d785dce&amp;type=3#LevelSelectMenu"/>
+    <ui:VisualElement name="c_Background" class="level-select__background">
+        <ui:VisualElement name="c_Panel" class="level-select__panel" style="margin-top: 33px; margin-right: 33px; margin-bottom: 33px; margin-left: 33px;">
+            <ui:Label text="Select a level" name="txt_Title" class="level-select__title"/>
+            <ui:Label text="0/0 players ready." name="txt_Status" class="level-select__status"/>
+            <ui:VisualElement name="c_LevelList" class="level-select__list"/>
+            <ui:VisualElement name="c_Footer" class="level-select__footer" style="flex-direction: row; justify-content: space-between;">
+                <ui:VisualElement name="c_NavBack" style="flex-direction: row;">
+                    <ui:Label text="cancel:" name="Label"/>
+                    <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_escape.png?fileID=2800000&amp;guid=c773e945f7894b74d84422743928f7fa&amp;type=3#keyboard_escape" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_button_b.png?fileID=2800000&amp;guid=88f2619711b705f4098becae865eb3a2&amp;type=3#xbox_button_b" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_button_circle.png?fileID=2800000&amp;guid=9abe050724e624e439d6c64240bb0fec&amp;type=3#playstation_button_circle" shown-controls="All" hint-size="50" name="InputHint"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="c_NavNext" class="navigation_next" style="flex-direction: row;">
+                    <ui:Label text="select:" name="Label"/>
+                    <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_space.png?fileID=2800000&amp;guid=a4ab0592a93d0e9408679ffdb87121cc&amp;type=3#keyboard_space" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_button_a.png?fileID=2800000&amp;guid=51eee82db9e9ea748a250ae4360e6e68&amp;type=3#xbox_button_a" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_button_cross.png?fileID=2800000&amp;guid=d80eacf870625d54799be19ee800a269&amp;type=3#playstation_button_cross" shown-controls="All" hint-size="50" name="InputHint"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

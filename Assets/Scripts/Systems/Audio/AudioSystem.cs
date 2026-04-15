@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
@@ -24,14 +25,15 @@ namespace Cadenza
             Paused,
             Menu,
             CharacterSelect,
+            LevelSelect,
             Backstage,
             Stage,
             Combat,
+            Postcombat,
             Results,
         }
 
         private const string ParamNameState = "GameState";
-        private const string ParamNameStage = "Stage";
 
         private struct AudioEvent : IEquatable<AudioEvent>
         {
@@ -73,7 +75,7 @@ namespace Cadenza
             }
         }
 
-        [SerializeField] private EventReference globalBeatEvent;
+        [SerializeField] private EventReference pregameMusicEvent;
         [SerializeField] private EventReference beatCallbackDebugEvent;
         [SerializeField] private EventReference playerOneShotsEvent;
         [SerializeField] private SoundCollection soundCollection;
@@ -86,6 +88,10 @@ namespace Cadenza
         private Bus masterBus;
         private Bus musicBus;
         private Bus sfxBus;
+
+        private FMODAudioVisualizer audioVisualizer;
+        public static float[] FFTSpectrum => singleton.audioVisualizer?.mFFTSpectrum;
+        public const int FFTWindowSize = FMODAudioVisualizer.WindowSize;
 
         #region Application Callbacks
 
@@ -101,18 +107,61 @@ namespace Cadenza
 
             // Listen for beat.
             BeatSystem.BeatPlayed += this.OnBeat;
+
+            // Play pregame music track.
+            BeatSystem.PlayTrack(this.pregameMusicEvent);
+        }
+
+        public override void OnApplicationStop()
+        {
+            this.audioVisualizer?.OnApplicationStop();
+        }
+
+        public override void OnUpdate()
+        {
+            this.audioVisualizer?.OnUpdate();
         }
 
         public override void OnGameStart()
         {
+            _ = this.OnGameStartAsync();
+
             this.playerSounds?.OnGameStart();
             this.uiSounds?.OnGameStart();
         }
 
         public override void OnGameStop()
         {
+            _ = this.OnGameStopAsync();
             this.playerSounds?.OnGameStop();
             this.uiSounds?.OnGameStop();
+        }
+
+        private async Task OnGameStartAsync()
+        {
+            // Stop level music if redirecting from pregame menus.
+            if (ApplicationController.PreviousLevel == null)
+            {
+                BeatSystem.StopTrack();
+                await BeatSystem.WaitForTrackStop();
+            }
+
+            // Play the music for the selected level, if not null.
+            if (GameManager.SelectedLevel is Level level && !level.MusicTrack.IsNull)
+                BeatSystem.PlayTrack(level.MusicTrack);
+        }
+
+        private async Task OnGameStopAsync()
+        {
+            // If there is no level queued up, stop current
+            // music and start the pregame music track.
+            if (ApplicationController.CurrentLevel == null)
+            {
+                BeatSystem.StopTrack();
+                await BeatSystem.WaitForTrackStop();
+
+                BeatSystem.PlayTrack(this.pregameMusicEvent);
+            }
         }
 
         private void OnBeat()
@@ -176,17 +225,42 @@ namespace Cadenza
 
         public static void SetState(State state)
         {
+            Debug.Log($"Audio state set to {state}");
             RuntimeManager.StudioSystem.setParameterByName(ParamNameState, (int)state);
-        }
-
-        public static void SetParameter(string parameterName, bool enabled)
-        {
-            RuntimeManager.StudioSystem.setParameterByName(parameterName, enabled ? 1 : 0);
         }
 
         public static void SetParameter(string parameterName, float value)
         {
-            RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
+            // Attempt to set global parameter.
+            FMOD.RESULT result = RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
+            if (result == FMOD.RESULT.OK)
+                return;
+
+            // Attempt to set as a local parameter instead.
+            result = BeatSystem.CurrentTrack.getDescription(out EventDescription desc);
+            if (result != FMOD.RESULT.OK)
+            {
+                Debug.LogWarning("Attempted to set parameter on current track, but no track is playing.");
+                return;
+            }
+
+            result = desc.getParameterDescriptionByName(parameterName, out PARAMETER_DESCRIPTION paramDesc);
+            if (result != FMOD.RESULT.OK)
+            {
+                Debug.LogWarning($"Attempted to set parameter {parameterName}, but no parameter was found.");
+                return;
+            }
+
+            // Check if the parameter used is global and set accordingly.
+            if (paramDesc.flags.HasFlag(PARAMETER_FLAGS.GLOBAL))
+                RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
+            else
+                BeatSystem.CurrentTrack.setParameterByName(parameterName, value);
+        }
+
+        public static float Lin2dB(float linear)
+        {
+            return Mathf.Clamp(Mathf.Log10(linear) * 20.0f, -80.0f, 0.0f);
         }
 
         #endregion
@@ -199,10 +273,10 @@ namespace Cadenza
             {
                 yield return null;
             }
-            this.BanksLoaded();
+            this.OnBanksLoaded();
         }
 
-        private void BanksLoaded()
+        private void OnBanksLoaded()
         {
             // Set up audio busses.
             this.masterBus = RuntimeManager.GetBus("bus:/Master");
@@ -214,6 +288,9 @@ namespace Cadenza
 
             this.uiSounds = new();
             this.uiSounds.Initialize();
+
+            this.audioVisualizer = new();
+            this.audioVisualizer.OnInitialize(this.musicBus);
 
             Debug.Log("Loaded all banks from FMOD.");
         }

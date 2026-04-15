@@ -1,7 +1,9 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/BandNameSelect/BandNameSelect.uss?fileID=7433441132597879392&amp;guid=b4705eaa9d6e8b347b066564fe5fb2e9&amp;type=3#BandNameSelect"/>
     <ui:VisualElement name="c_Background" style="flex-grow: 1; align-items: center; justify-content: center; background-image: url(&quot;project://database/Assets/Art/TEMPORARY_ASSETS/TEMP_BG_fm_green.jpg?fileID=2800000&amp;guid=55b1fc205837bad44abdfcb237a07ce5&amp;type=3#TEMP_BG_fm_green&quot;);">
-        <ui:Label text="Name your band!" name="txt_BandName" style="font-size: 100px; -unity-font-style: bold; -unity-text-outline-width: 10px; -unity-text-outline-color: rgb(26, 26, 26); color: rgb(255, 255, 255); letter-spacing: -5px;"/>
-        <Cadenza.OnScreenKeyboard max-character-limit="32" keys-per-row="7" style="width: 882px; overflow: hidden;"/>
+        <ui:VisualElement style="justify-content: center; border-top-left-radius: 40px; border-top-right-radius: 40px; border-bottom-right-radius: 40px; border-bottom-left-radius: 40px; background-color: rgba(0, 0, 0, 0.65); padding-top: 18px; padding-right: 18px; padding-bottom: 18px; padding-left: 18px;">
+            <ui:Label text="Name your band!" name="txt_BandName" style="font-size: 100px; -unity-font-style: bold; -unity-text-outline-width: 10px; -unity-text-outline-color: rgb(26, 26, 26); color: rgb(255, 255, 255); letter-spacing: -5px; -unity-text-align: middle-center;"/>
+            <Cadenza.OnScreenKeyboard max-character-limit="32" keys-per-row="7" style="width: 882px; overflow: hidden;"/>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

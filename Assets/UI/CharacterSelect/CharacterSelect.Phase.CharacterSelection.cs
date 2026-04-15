@@ -8,6 +8,8 @@ namespace Cadenza
     {
         private sealed class CharacterSelectionPhaseHandler : PhaseHandler
         {
+            private int colorIndex = 0;
+
             public CharacterSelectionPhaseHandler(CharacterSelect owner)
                 : base(owner)
             {
@@ -16,7 +18,10 @@ namespace Cadenza
             public override void OnSubmit(Player player, PlayerTracker tracker, PlayerContainer playerContainer)
             {
                 if (this.Owner.TrySelectCharacter(player))
+                {
                     tracker.Phase = SelectPhase.Settings;
+                    player.SetColorway(this.Owner.colorways[this.colorIndex]);
+                }
             }
 
             public override void OnCancel(Player player, PlayerTracker tracker, PlayerContainer playerContainer)
@@ -37,8 +42,13 @@ namespace Cadenza
                     // Select cosmetics.
                     if (cosmeticsPicker.ClassListContains("is_focus"))
                     {
-                        // TODO: Implement //
-                        Debug.LogWarning("There are no cosmetics.");
+                        if (moveDirection == MoveDirection.Right)
+                            this.colorIndex = this.colorIndex + 1 == this.Owner.colorways.Length ? 0 : this.colorIndex + 1;
+                        else
+                            this.colorIndex = this.colorIndex - 1 < 0 ? this.Owner.colorways.Length - 1 : this.colorIndex - 1;
+
+                        this.Owner.ChangeShownColor(cosmeticsPicker, this.Owner.colorways[this.colorIndex]);
+
                         return;
                     }
 
@@ -112,6 +122,15 @@ namespace Cadenza
             this.classManager.UnselectCharacter(player);
         }
 
+        private void ChangeShownColor(VisualElement cosmeticsPicker, Colorway color)
+        {
+            var portrait = cosmeticsPicker.Q<VisualElement>("portrait_Character");
+            var bgColor = color.PrimaryColor;
+            bgColor.a = 1;
+            portrait.style.backgroundColor = bgColor;
+            portrait.Q<VisualElement>("portrait_Character").style.backgroundImage = color.DisplayImage;
+        }
+
         private void OnPlayerAdded(Player player)
         {
             // Reset the tracker.
@@ -128,6 +147,7 @@ namespace Cadenza
             this.ChangeShownCharacter(container.CharacterSelectionContainer, this.classManager.GetNextCharacter(""));
             container.CharacterSelectionContainer.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
             container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
+            this.ChangeShownColor(container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker"), this.colorways[0]);
 
             // Set player settings.
             container.Container.Q<Label>("txt_PlayerName").text = player.Name;
@@ -155,6 +175,8 @@ namespace Cadenza
             this.ChangeShownCharacter(container.CharacterSelectionContainer, this.classManager.GetNextCharacter(""));
             container.CharacterSelectionContainer.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
             container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
+            container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
+            this.ChangeShownColor(container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker"), this.colorways[0]);
 
             // Show default phase.
             this.ShowPhase(container, SelectPhase.Joining);
