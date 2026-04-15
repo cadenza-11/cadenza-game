@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3352052260832737817}
-  - component: {fileID: 6272580789696211343}
   m_Layer: 0
   m_Name: VFX_Electric_Arc
   m_TagString: Untagged
@@ -37,23 +36,6 @@ Transform:
   - {fileID: 1514069425135976401}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6272580789696211343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1447353678038096940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
-  m_IsGlobal: 1
-  priority: 0
-  blendDistance: 0
-  weight: 1
-  sharedProfile: {fileID: 11400000, guid: eb9347da89a6c074db15c4bf3bb411fe, type: 2}
 --- !u!1 &3119726641908413336
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,21 +105,21 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: -1.097, y: -0.066, z: 0}
+      - m_Value: {x: -1.1468883, y: 2.184, z: -2.7027326}
         m_Name: Pos1
         m_Overridden: 1
-      - m_Value: {x: -1.23, y: 0.453, z: -0.188}
+      - m_Value: {x: -1.2798883, y: 2.703, z: -2.8907325}
         m_Name: Pos2
         m_Overridden: 1
-      - m_Value: {x: -1.063, y: 0.672, z: 0.906}
+      - m_Value: {x: -1.1128882, y: 2.922, z: -1.7967325}
         m_Name: Pos3
         m_Overridden: 1
-      - m_Value: {x: -1.218, y: 0, z: 0.868}
+      - m_Value: {x: -1.2678883, y: 2.25, z: -1.8347325}
         m_Name: Pos4
         m_Overridden: 1
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 14.148808, y: 47.38725, z: 111.09434, w: 0}
+      - m_Value: {x: 97.68345, y: 327.16183, z: 766.9959, w: 0}
         m_Name: Color
         m_Overridden: 1
     m_Uint:

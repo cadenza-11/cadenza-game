@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3352052260832737817}
-  - component: {fileID: 4404186911389788183}
+  - component: {fileID: 6744503406755954416}
   m_Layer: 0
-  m_Name: VFX_Electric_Arc_Random
+  m_Name: VFX_Electric_Arc_Guitar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,7 +37,7 @@ Transform:
   - {fileID: 1514069425135976401}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4404186911389788183
+--- !u!114 &6744503406755954416
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,13 +46,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1447353678038096940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edd7980a0ebb4a7488c1dca9a4c8f530, type: 3}
+  m_Script: {fileID: 11500000, guid: 151013744edd8ae4e8a5c762dd0bcac1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ElectricArcRandomization
+  m_EditorClassIdentifier: Assembly-CSharp::ElectricArcGuitar
   Pos1: {fileID: 3300993080722797685}
   Pos2: {fileID: 6187862380728942686}
   Pos3: {fileID: 8996154007045174610}
   Pos4: {fileID: 7224063631686956710}
+  attack: {fileID: 0}
+  hit: {fileID: 0}
 --- !u!1 &3119726641908413336
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,21 +124,21 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 0, y: 0, z: 0}
+      - m_Value: {x: -1.097, y: -0.066, z: 0}
         m_Name: Pos1
         m_Overridden: 1
-      - m_Value: {x: 0, y: 0, z: 0}
+      - m_Value: {x: -1.23, y: 0.453, z: -0.188}
         m_Name: Pos2
         m_Overridden: 1
-      - m_Value: {x: 0, y: 0, z: 0}
+      - m_Value: {x: -1.063, y: 0.672, z: 0.906}
         m_Name: Pos3
         m_Overridden: 1
-      - m_Value: {x: 0, y: 0, z: 0}
+      - m_Value: {x: -1.218, y: 0, z: 0.868}
         m_Name: Pos4
         m_Overridden: 1
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 228.75323, y: 511.33078, z: 766.99615, w: 0}
+      - m_Value: {x: 97.68345, y: 327.16183, z: 766.9959, w: 0}
         m_Name: Color
         m_Overridden: 1
     m_Uint:
@@ -308,7 +310,7 @@ Transform:
   m_GameObject: {fileID: 3300993080722797685}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.097, y: -0.066, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -339,7 +341,7 @@ Transform:
   m_GameObject: {fileID: 6187862380728942686}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.23, y: 0.453, z: -0.188}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -370,7 +372,7 @@ Transform:
   m_GameObject: {fileID: 7224063631686956710}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.218, y: 0, z: 0.868}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -401,7 +403,7 @@ Transform:
   m_GameObject: {fileID: 8996154007045174610}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.063, y: 0.672, z: 0.906}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

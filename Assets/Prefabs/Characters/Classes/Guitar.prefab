@@ -65,8 +65,7 @@ MeshRenderer:
   m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 50f786b45eba87940ac68552c9ba7e5f, type: 2}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -238,12 +237,28 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4023698549463242690}
+    - targetCorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5584852348910815891}
   m_SourcePrefab: {fileID: 100100000, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
 --- !u!1 &1819034417208150137 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   m_PrefabInstance: {fileID: 4091136334406032024}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5584852348910815891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819034417208150137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c654c9242d83ccd4588ebe27f6354d93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.GuitarAttackVFX
+  lightning: {fileID: 1447353678038096940, guid: 67e60c59835d91c42896c63fefbabc89, type: 3}
 --- !u!1 &5759731777474461351 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
