@@ -73,11 +73,15 @@ namespace Cadenza
                 container.style.display = DisplayStyle.Flex;
                 container.Q<Label>("update_CharacterName").text = $"{player.Name} ({player.CharacterClass.Name})";
                 container.Q<VisualElement>("portrait_Character").style.backgroundImage = player.CharacterClass.Portrait;
+                VisualElement background = container.Q<VisualElement>("c_BackLayer");
+                Color tint = player.Colorway.PrimaryColor;
+                tint.a = 1;
+                background.style.unityBackgroundImageTintColor = tint;
 
                 // Initialize health.
                 ProgressBar health = container.Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
                 health.highValue = player.Character.MaxHealth;
-                this.healthShakeTweens.Add(health.DOShake(duration: 0.5f, strength: 5f, vibrato: 10, randomnessMode: ShakeRandomnessMode.Harmonic).SetLoops(-1).Pause());
+                this.healthShakeTweens.Add(background.DOShake(duration: 0.5f, strength: 10f, vibrato: 10, randomnessMode: ShakeRandomnessMode.Harmonic).SetLoops(-1).Pause());
                 MaterialDefinition healthProgress = health.Q<VisualElement>(classes: "unity-progress-bar__progress").resolvedStyle.unityMaterial;
                 this.OnHealthChanged(health.highValue, health, healthProgress, this.healthShakeTweens.Count-1);
                 player.Character.HealthChanged += (healthValue, isFainted) =>

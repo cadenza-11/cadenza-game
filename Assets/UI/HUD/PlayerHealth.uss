@@ -22,7 +22,6 @@
 
 .fainted .player_container {
     -unity-background-image-tint-color: rgb(139, 0, 0);
-    background-color: rgba(139, 0, 0, 0.68);
 }
 
 .player_meter {
@@ -96,14 +95,14 @@
     bottom: 0;
     -unity-text-outline-width: 7px;
     letter-spacing: -3px;
-    background-color: rgba(26, 26, 26, 0.45);
+    text-shadow: 10px 10px 0 rgba(139, 0, 0, 0.68);
 }
 
 .player_container .faint_text {
     opacity: 0;
 }
 
-.player_container.fainted .faint_text {
+.fainted .faint_text {
     opacity: 1;
 }
 
