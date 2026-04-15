@@ -8,9 +8,10 @@ namespace Cadenza
     extra in them they will be removed */
     public class EnemyGrunt : Enemy
     {
-        private float moveTimer;
+        private float moveTimer = -1;
         private static int rotationNum = 0;
         private bool continueMelee;
+        private int moveDir;
         
 
         public override void Initialize()
@@ -27,35 +28,34 @@ namespace Cadenza
         protected override void IdleState()
         {
             //Need to make better plan for movement. Right now Idle movement will be random
-            if(this.moveTimer == 0) 
+            if(this.moveTimer <= 0) 
             {
-                int moveDir = UnityEngine.Random.Range(1, 5);
-                switch(moveDir)
-                {
-                    case 1:
-                        this.rb.linearVelocity = new Vector3(1, 0, 0);
-                        break;
-                    case 2:
-                        this.rb.linearVelocity = new Vector3(-1, 0, 0);
-                        break;
-                    case 3:
-                        this.rb.linearVelocity = new Vector3(0, 0, 1);
-                        break;
-                    case 4:
-                        this.rb.linearVelocity = new Vector3(0, 0, -1);
-                        break;
-                }
-                this.TargetLocation = base.FindNearestPlayerDist();
-
+                this.moveDir = UnityEngine.Random.Range(1, 5);
+                this.TargetLocation = this.FindNearestPlayerDist();
                 this.moveTimer = UnityEngine.Random.Range(1, 6);
             }
+            switch(this.moveDir)
+                {
+                    case 1:
+                        this.rb.linearVelocity = new Vector3(this.speed, this.rb.linearVelocity.y, 0);
+                        break;
+                    case 2:
+                        this.rb.linearVelocity = new Vector3(-1 * this.speed, this.rb.linearVelocity.y, 0);
+                        break;
+                    case 3:
+                        this.rb.linearVelocity = new Vector3(0, this.rb.linearVelocity.y, this.speed);
+                        break;
+                    case 4:
+                        this.rb.linearVelocity = new Vector3(0, this.rb.linearVelocity.y, -1 * this.speed);
+                        break;
+                }
             this.moveTimer -= Time.deltaTime;
 
             if(UnityEngine.Random.Range(1, 1000) < 2)
             {
                 this.moveTimer = 0;
                 this.continueMelee = true;
-                this.FindNearestPlayerDist();
+                this.TargetLocation = this.FindNearestPlayerDist();
                 EnemyManager.GroupAttack();
             }
         }
@@ -112,8 +112,6 @@ namespace Cadenza
 
         public void GroupAttack(Vector2 location)
         {
-            //Debug.Log("Grunt Starting Group Attack   " + rotationNum);
-            //Debug.Log("X: " + location.x + "  Y: " + location.y);
             //Sets the enemies targetLocation as the location plus Cos and Sin values. Does this so that the enemies will gather
             //In a circle around a player
             Vector2 target = new Vector2(location.x + 1 * Mathf.Cos(rotationNum * Mathf.PI/6), 

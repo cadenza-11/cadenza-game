@@ -62,7 +62,7 @@ namespace Cadenza
                 if(enemy is EnemyGrunt)
                 {
                     float chance = Random.Range(0f, 1f);
-                    if(chance < 0.5)
+                    if(chance < 0.75)
                     {
                         if(location == Vector2.zero)
                         {
@@ -71,7 +71,6 @@ namespace Cadenza
                         }
                         EnemyGrunt curEnemy = (EnemyGrunt)enemy;
                         curEnemy.SetFollow(follow);
-                        Debug.Log(location.x + ", " + location.y);
                         curEnemy.GroupAttack(location);
                         numChosen++;
                     }
