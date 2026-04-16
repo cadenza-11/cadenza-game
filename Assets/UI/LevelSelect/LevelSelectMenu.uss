@@ -1,7 +1,7 @@
 .level-select__background {
     flex-grow: 1;
-    background-image: url("project://database/Assets/Art/TEMPORARY_ASSETS/TEMP_BG_fm_orange.jpg?fileID=2800000&guid=572cce9d4fe981c4894d4a783eda8c57&type=3#TEMP_BG_fm_orange");
     -unity-background-scale-mode: scale-and-crop;
+    background-color: rgb(255, 0, 255);
 }
 
 .level-select__scrim {

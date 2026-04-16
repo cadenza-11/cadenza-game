@@ -47,3 +47,14 @@ Button:focus {
 .is-focused {
     background-color: rgb(255, 125, 0);
 }
+
+.background {
+    flex-grow: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -unity-material: url("project://database/Assets/Art/UI%20Backgrounds/Background%20Effects.shadergraph?fileID=-876546973899608171&guid=0f93fb7ab9325194bb8d5beaccf76fac&type=3#Background Effects");
+    background-color: rgb(255, 255, 255);
+}

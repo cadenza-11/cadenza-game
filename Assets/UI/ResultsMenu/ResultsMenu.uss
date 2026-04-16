@@ -12,7 +12,7 @@
     border-right-color: rgb(26, 26, 26);
     border-top-color: rgb(26, 26, 26);
     border-bottom-color: rgb(26, 26, 26);
-    background-color: rgba(0, 0, 0, 0.33);
+    background-color: rgba(0, 0, 0, 0.62);
     color: rgb(255, 255, 255);
     -unity-text-outline-color: rgb(26, 26, 26);
     -unity-text-outline-width: 2px;

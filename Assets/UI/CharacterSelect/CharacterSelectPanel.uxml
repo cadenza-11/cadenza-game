@@ -2,6 +2,7 @@
     <ui:Template name="PlayerContainer" src="project://database/Assets/UI/CharacterSelect/PlayerContainer.uxml?fileID=9197481963319205126&amp;guid=09cb54573c454de48b6bae5de0ade8eb&amp;type=3#PlayerContainer"/>
     <Style src="project://database/Assets/UI/CharacterSelect/CharacterSelectStyles.uss?fileID=7433441132597879392&amp;guid=59b97257f4907fa478d81ca94571fbd8&amp;type=3#CharacterSelectStyles"/>
     <ui:VisualElement name="c_Panel" class="panel_background" style="flex-grow: 1; display: flex;">
+        <ui:VisualElement name="Background" style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; -unity-material: url(&quot;project://database/Assets/Art/UI%20Backgrounds/Background%20Effects.shadergraph?fileID=-876546973899608171&amp;guid=0f93fb7ab9325194bb8d5beaccf76fac&amp;type=3#Background Effects&quot;) prop(&quot;_Background_Color&quot; rgb(0, 163, 0)) prop(&quot;_Lightening_Color&quot; rgb(183, 219, 182)) prop(&quot;_Halo_Color&quot; rgb(212, 198, 116)) prop(&quot;_Accent_Color&quot; rgb(23, 181, 1)); background-color: rgb(255, 255, 255);"/>
         <ui:Instance template="PlayerContainer" name="c_Player" class="player_container"/>
         <ui:Instance template="PlayerContainer" name="c_Player" class="player_container"/>
         <ui:Instance template="PlayerContainer" name="c_Player" class="player_container"/>
