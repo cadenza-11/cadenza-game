@@ -17,7 +17,10 @@
                 <ui:VisualElement name="spacer" class="spacer" style="flex-grow: 1;" />
                 <ui:Button text="Delete save data" name="b_DeleteSaveData" />
             </ui:VisualElement>
-            <ui:VisualElement name="c_VisualTab" style="flex-grow: 1; display: none;" />
+            <ui:VisualElement name="c_VisualTab" style="flex-grow: 1; display: none;">
+                <ui:Label text="Video Settings" style="color: rgb(255, 255, 255); -unity-font-style: bold; font-size: 40px; -unity-text-align: upper-center;" />
+                <ui:Slider label="Ambient camera shake" value="1" high-value="1" low-value="0" name="slider_AmbientImpulseForce" fill="true" />
+            </ui:VisualElement>
             <ui:VisualElement name="c_AudioTab" style="flex-grow: 1; display: none;">
                 <ui:Label text="Volume Settings" style="color: rgb(255, 255, 255); -unity-font-style: bold; font-size: 40px; -unity-text-align: upper-center;" />
                 <ui:Slider label="Master" value="42" high-value="1" name="slider_Master" fill="true" style="-unity-font-style: normal;" />

@@ -45,6 +45,11 @@ namespace Cadenza
             };
             this.root.Q<Toggle>("toggle_Haptics").RegisterValueChangedCallback(evt => InputSystem.SetHapticsEnabled(evt.newValue));
 
+            // Configure video.
+            var ambientImpulseForceSlider = this.root.Q<Slider>("slider_AmbientImpulseForce");
+            ambientImpulseForceSlider.RegisterValueChangedCallback(evt => CameraSystem.AmbientImpulseForce = evt.newValue);
+            ambientImpulseForceSlider.SetValueWithoutNotify(CameraSystem.AmbientImpulseForce);
+
             // Configure audio.
             this.root.Q<Slider>("slider_Master").RegisterValueChangedCallback(evt => AudioSystem.SetVolume(AudioSystem.Group.Master, evt.newValue));
             this.root.Q<Slider>("slider_Music").RegisterValueChangedCallback(evt => AudioSystem.SetVolume(AudioSystem.Group.Music, evt.newValue));
