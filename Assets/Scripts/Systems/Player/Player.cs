@@ -121,7 +121,8 @@ namespace Cadenza
             moveAction.performed += this.OnMove;
             moveAction.canceled += this.OnMove;
             attackLightAction.performed += this.OnAttackLight;
-            attackHeavyAction.performed += this.OnAttackHeavy;
+            attackHeavyAction.performed += this.OnAttackCharge;
+            attackHeavyAction.canceled += this.OnAttackHeavy;
             attackTeamAction.performed += this.OnAttackTeam;
             parryAction.performed += this.OnParry;
             pauseAction.performed += this.OnPause;
@@ -147,7 +148,7 @@ namespace Cadenza
 
         private void OnAttackHeavy(InputAction.CallbackContext context)
         {
-            if (!context.performed)
+            if (!context.canceled)
                 return;
 
             var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
@@ -155,6 +156,18 @@ namespace Cadenza
 
             if (this.Character != null)
                 this.Character.OnAttackHeavy(score);
+        }
+
+        private void OnAttackCharge(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+
+            var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
+            this.PlayerHit?.Invoke(score);
+
+            if (this.Character != null)
+                this.Character.OnAttackCharge(score);
         }
 
         private void OnAttackTeam(InputAction.CallbackContext context)
@@ -196,7 +209,8 @@ namespace Cadenza
             moveAction.performed -= this.OnMove;
             moveAction.canceled -= this.OnMove;
             attackLightAction.performed -= this.OnAttackLight;
-            attackHeavyAction.performed -= this.OnAttackHeavy;
+            attackHeavyAction.performed -= this.OnAttackCharge;
+            attackHeavyAction.canceled -= this.OnAttackHeavy;
             attackTeamAction.performed -= this.OnAttackTeam;
             parryAction.performed -= this.OnParry;
             pauseAction.performed -= this.OnPause;

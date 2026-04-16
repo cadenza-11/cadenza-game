@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using Cadenza.Combo;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.XInput;
+using UnityEngine.VFX;
 
 namespace Cadenza
 {
@@ -20,6 +21,7 @@ namespace Cadenza
         [SerializeField] public Rigidbody Rigidbody;
         [SerializeField] public SpriteRenderer Sprite;
         [SerializeField] public Transform SpriteTransform;
+        [SerializeField] public VisualEffect ChargeEffect;
         [SerializeField] public Animator Animator;
         [SerializeField] private AccuracyBar accuracyBar;
         [SerializeField] public ReviveMeter RevivalMeter;
@@ -37,6 +39,7 @@ namespace Cadenza
         public float FlowThreshold => this.flowThreshold;
         public bool IsFainted => this.isFainted;
         public bool FacingRight => this.facingRight;
+        public int ChargeBeatsPassed { get; internal set; }
 
         public Player Player { get; private set; }
         public static event Action TeamAttackInitiated;
@@ -57,6 +60,7 @@ namespace Cadenza
             public ScoreDef? lightAttack;
             public ScoreDef? heavyAttack;
             public ScoreDef? parry;
+            public ScoreDef? charge;
             public bool wantTeam;
 
             public void Consume()
@@ -64,6 +68,7 @@ namespace Cadenza
                 this.lightAttack = null;
                 this.heavyAttack = null;
                 this.parry = null;
+                this.charge = null;
                 this.wantTeam = false;
             }
         }
@@ -75,6 +80,7 @@ namespace Cadenza
         public IState CurrentState => this.state;
         public readonly WalkingState walking = new();
         public readonly LightAttackState lightAttack = new();
+        public readonly ChargingState charging = new();
         public readonly HeavyAttackState heavyAttack = new();
         public readonly ParryState parry = new();
         public readonly HitStunState hitStun = new();
@@ -210,6 +216,32 @@ namespace Cadenza
             this.AttackArea.transform.localPosition = localPos;
         }
 
+        public void UpdateGroundMovement()
+        {
+            int flowSpeed = this.HasFlowBuff(0) ? 1 : 0;
+            float speedModifier = this.speed * (1 + (0.25f * flowSpeed));
+
+            Vector3 velocity = new(
+                this.input.move.x * speedModifier,
+                this.Rigidbody.linearVelocity.y,
+                this.input.move.y * speedModifier
+            );
+
+            this.Rigidbody.linearVelocity = velocity;
+
+            bool moving = Mathf.Abs(velocity.x) > 0.001f || Mathf.Abs(velocity.z) > 0.001f;
+            this.Animator.SetBool("IsMove", moving);
+
+            if (Mathf.Abs(velocity.x) > 0.001f)
+                this.FlipSpriteFromVelocity(velocity);
+        }
+
+        public void StopGroundMovement()
+        {
+            this.Rigidbody.linearVelocity = Vector3.zero;
+            this.Animator.SetBool("IsMove", false);
+        }
+
         public bool HasFlowBuff(int idx)
         {
             return this.isFlowing && TeamSystem.IsClassFlowing(idx);
@@ -317,6 +349,11 @@ namespace Cadenza
         public void OnAttackLight(ScoreDef score)
         {
             this.input.lightAttack = score;
+        }
+
+        public void OnAttackCharge(ScoreDef score)
+        {
+            this.input.charge = score;
         }
 
         public void OnAttackHeavy(ScoreDef score)

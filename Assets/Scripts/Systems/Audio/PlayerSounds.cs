@@ -4,17 +4,20 @@ namespace Cadenza
     {
         public void Initialize()
         {
-            // Register for player hit events.
-            ScoreSystem.AnyPlayerHit += this.OnPlayerHit;
+            // Register for hit events.
             ScoreSystem.TeamHit += this.OnTeamHit;
         }
 
         public void OnGameStart()
         {
+            foreach (var player in PlayerSystem.Players)
+                player.PlayerHit += this.OnPlayerHit;
         }
 
         public void OnGameStop()
         {
+            foreach (var player in PlayerSystem.Players)
+                player.PlayerHit -= this.OnPlayerHit;
         }
 
         private void OnPlayerHit(ScoreDef def)
