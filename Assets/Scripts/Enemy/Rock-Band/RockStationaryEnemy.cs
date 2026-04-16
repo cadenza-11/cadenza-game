@@ -91,13 +91,11 @@ namespace Cadenza
 
             // Play animation
             this.anim.SetTrigger("LightAttack");
-            this.anim2.SetTrigger("LightAttack");
         }
 
         override protected void RangedAttack()
         {
             float[] wavePos = new float[10] {1.875f, 0.625f, -0.625f, -1.875f, 1.666f, 0.0f, -1.666f, 1.25f, 0.0f, -1.25f};
-            this.anim.SetTrigger("LightAttack");
             this.anim2.SetTrigger("LightAttack");
             switch (this.phase)
             {
