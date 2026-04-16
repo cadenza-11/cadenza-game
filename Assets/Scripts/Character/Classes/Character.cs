@@ -92,7 +92,9 @@ namespace Cadenza
             player.InteractChanged += this.interactionIndicator.OnPlayerInteractChanged;
             this.cClass = player.CharacterClass;
 
-            this.pcFactor = 4 / PlayerSystem.PlayerCount;
+            //Leaving this in in case it would be useful later
+            //Old attempt at player stat-based balancing, will be moving to enemy stat-based balancing
+            this.pcFactor = 1; // 4 / PlayerSystem.PlayerCount;
             this.maxHealth = this.baseHealth * this.pcFactor;
 
             this.input = new();
