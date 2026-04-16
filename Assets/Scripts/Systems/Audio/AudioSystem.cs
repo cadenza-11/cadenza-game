@@ -78,9 +78,11 @@ namespace Cadenza
         [SerializeField] private EventReference pregameMusicEvent;
         [SerializeField] private EventReference beatCallbackDebugEvent;
         [SerializeField] private EventReference playerOneShotsEvent;
+        [SerializeField] private EventReference playerHitEvent;
         [SerializeField] private SoundCollection soundCollection;
 
         public static EventReference PlayerOneShotsEvent => singleton.playerOneShotsEvent;
+        public static EventReference PlayerHitEvent => singleton.playerHitEvent;
         private HashSet<AudioEvent> beatSetOneShot;
         private PlayerSounds playerSounds;
         private UISounds uiSounds;

@@ -114,4 +114,11 @@ MonoBehaviour:
       Data3: -487267928
       Data4: -393337567
     Path: event:/SFX_PlayerInput
+  playerHitEvent:
+    Guid:
+      Data1: 1069191369
+      Data2: 1175938513
+      Data3: -316146813
+      Data4: 1930423878
+    Path: event:/SFX_Hit
   soundCollection: {fileID: 11400000, guid: 862955d230a6354419b79092d0cc43a4, type: 2}

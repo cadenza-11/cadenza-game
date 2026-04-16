@@ -19,6 +19,7 @@ namespace Cadenza
 
         private void OnPlayerHit(ScoreDef def)
         {
+            AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerHitEvent, "ClassID", def.Player.CharacterClass.ID, immediate: true);
         }
 
         private void OnTeamHit(TeamScoreDef def)
