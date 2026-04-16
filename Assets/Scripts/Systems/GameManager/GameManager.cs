@@ -242,7 +242,7 @@ namespace Cadenza
             this.isCombatActive = false;
 
             // Set audio.
-            AudioSystem.SetState(AudioSystem.State.Stage);
+            AudioSystem.SetState(AudioSystem.State.Postcombat);
 
             Debug.Log($"Stopping combat with result {result}.");
             CombatStopped?.Invoke(result);

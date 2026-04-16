@@ -8,6 +8,7 @@ namespace Cadenza
         private static EnemyManager singleton;
 
         [SerializeField] private GameObject enemyPrefab;
+        [SerializeField] private GameObject gruntPrefab;
 
         private readonly HashSet<Enemy> enemies = new();
 
@@ -48,6 +49,37 @@ namespace Cadenza
                 return true;
             }
             return false;
+        }
+
+        public static void GroupAttack()
+        {
+            Debug.Log("Starting Group Attack");
+            int numChosen = 0;
+            Vector2 location = Vector2.zero;
+            Player follow = null;
+            foreach(var enemy in singleton.enemies)
+            {
+                if(enemy is EnemyGrunt)
+                {
+                    float chance = Random.Range(0f, 1f);
+                    if(chance < 0.75)
+                    {
+                        if(location == Vector2.zero)
+                        {
+                            location = enemy.GetTargetLocation();
+                            follow = enemy.GetFollow();
+                        }
+                        EnemyGrunt curEnemy = (EnemyGrunt)enemy;
+                        curEnemy.SetFollow(follow);
+                        curEnemy.GroupAttack(location);
+                        numChosen++;
+                    }
+                }
+                if(numChosen >= 12)
+                {
+                    return;
+                }
+            }
         }
     }
 }

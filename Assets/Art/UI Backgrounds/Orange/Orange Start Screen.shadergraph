@@ -4168,7 +4168,7 @@
     "m_ObjectId": "624206b3802c48be86644e40ec287249",
     "m_Title": "Discs",
     "m_Position": {
-        "x": -2282.999755859375,
+        "x": -2283.0,
         "y": 284.0
     }
 }
@@ -6274,7 +6274,7 @@
     "m_Title": "Stars",
     "m_Position": {
         "x": -859.0,
-        "y": 785.9998779296875
+        "y": 786.0
     }
 }
 
@@ -8468,7 +8468,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "_SquiggleAmount",
     "m_StageCapability": 3,
-    "m_Value": 4.0,
+    "m_Value": 100.0,
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false

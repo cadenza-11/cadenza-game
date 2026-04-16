@@ -111,6 +111,7 @@ namespace Cadenza
         public static Results Results => singleton.results;
         public static event Action<ScoreDef> AnyPlayerHit;
         public static event Action<TeamScoreDef> TeamHit;
+        public static float MaxScore => singleton.maxScore;
 
         #endregion
 
@@ -153,7 +154,7 @@ namespace Cadenza
             // Save results to file.
             if (gameResult != GameManager.GameResult.Forfeit)
             {
-                this.results.Timestamp = DateTime.UtcNow;
+                this.results.Timestamp = DateTimeOffset.UtcNow;
 
                 // Calculate overall score (average of all player scores).
                 {
@@ -334,6 +335,20 @@ namespace Cadenza
                 ScoreClass.Bad => singleton.scoreWeights.badScoreWeight,
                 _ => 0
             };
+        }
+
+        /// <summary>
+        /// Returns a letter grade (S, A, B, C, D, F) for a given score value.
+        /// </summary>
+        public static string GetGradeLetter(float score)
+        {
+            float normalized = score / singleton.maxScore;
+            if (normalized >= 0.95f) return "S";
+            if (normalized >= 0.85f) return "A";
+            if (normalized >= 0.75f) return "B";
+            if (normalized >= 0.5f) return "C";
+            if (normalized >= 0.25f) return "D";
+            return "F";
         }
 
         #endregion

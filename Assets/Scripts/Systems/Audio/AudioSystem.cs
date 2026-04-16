@@ -25,14 +25,15 @@ namespace Cadenza
             Paused,
             Menu,
             CharacterSelect,
+            LevelSelect,
             Backstage,
             Stage,
             Combat,
+            Postcombat,
             Results,
         }
 
         private const string ParamNameState = "GameState";
-        private const string ParamNameStage = "Stage";
 
         private struct AudioEvent : IEquatable<AudioEvent>
         {
@@ -230,7 +231,13 @@ namespace Cadenza
 
         public static void SetParameter(string parameterName, float value)
         {
-            FMOD.RESULT result = BeatSystem.CurrentTrack.getDescription(out EventDescription desc);
+            // Attempt to set global parameter.
+            FMOD.RESULT result = RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
+            if (result == FMOD.RESULT.OK)
+                return;
+
+            // Attempt to set as a local parameter instead.
+            result = BeatSystem.CurrentTrack.getDescription(out EventDescription desc);
             if (result != FMOD.RESULT.OK)
             {
                 Debug.LogWarning("Attempted to set parameter on current track, but no track is playing.");
@@ -244,7 +251,7 @@ namespace Cadenza
                 return;
             }
 
-            // Check if the parameter is global and set accordingly.
+            // Check if the parameter used is global and set accordingly.
             if (paramDesc.flags.HasFlag(PARAMETER_FLAGS.GLOBAL))
                 RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
             else

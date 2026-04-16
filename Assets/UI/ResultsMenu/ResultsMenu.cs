@@ -6,6 +6,10 @@ namespace Cadenza
 {
     public class ResultsMenu : UIPanel
     {
+        [SerializeField] private FMODUnity.EventReference resultsMusicEvent;
+        [SerializeField] private float tweenDuration = 0.5f;
+
+        private readonly ResultsSequence resultsSequence = new();
         private WinLossBanner winLossBanner = new();
         private TeamStats playerTeamStats = new();
         private ActionButtons actionButtons = new();
@@ -49,6 +53,7 @@ namespace Cadenza
             public VisualElement Container;
             public Button NextButton;
             public Button RetryButton;
+            public Button LeaderboardButton;
             public Button MainMenuButton;
         }
 
@@ -61,10 +66,18 @@ namespace Cadenza
             this.actionButtons.Container = this.root.Q<VisualElement>("c_ActionButtons");
             this.actionButtons.NextButton = this.root.Q<Button>("b_Next");
             this.actionButtons.RetryButton = this.root.Q<Button>("b_Retry");
+            this.actionButtons.LeaderboardButton = this.root.Q<Button>("b_Leaderboard");
             this.actionButtons.MainMenuButton = this.root.Q<Button>("b_MainMenu");
+            this.resultsSequence.OnInitialize(
+                this.root,
+                this.resultsPanel,
+                this.actionButtons.Container,
+                this.resultsMusicEvent,
+                this.tweenDuration);
 
             this.actionButtons.NextButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.RedirectToBackstage());
             this.actionButtons.RetryButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.RestartLevel());
+            this.actionButtons.LeaderboardButton.RegisterCallback<NavigationSubmitEvent>(_ => this.ShowLeaderboard());
             this.actionButtons.MainMenuButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.ExitToPregame());
 
             this.winLossBanner.TeamName = this.root.Q<Label>("update_PlayerBand");
@@ -111,13 +124,8 @@ namespace Cadenza
             if (result == GameManager.GameResult.Forfeit)
                 return;
 
-            AudioSystem.SetState(AudioSystem.State.Results);
-
             this.gameResult = result;
             this.currentResults = ScoreSystem.Results;
-
-            this.resultsPanel.style.display = DisplayStyle.Flex;
-            this.actionButtons.Container.style.display = DisplayStyle.None;
 
             // Banner
             this.winLossBanner.ResultText.text = $"{result}!";
@@ -126,16 +134,7 @@ namespace Cadenza
 
             // Team Stats
             this.playerTeamStats.TeamName.text = TeamSystem.Team.Name;
-            this.playerTeamStats.Grade.text = this.currentResults.OverallScore switch
-            {
-                < 60 => "F",
-                < 70 => "D",
-                < 80 => "C",
-                < 90 => "B",
-                < 95 => "A",
-                < 101 => "S",
-                _ => "N/A"
-            };
+            this.playerTeamStats.Grade.text = ScoreSystem.GetGradeLetter(this.currentResults.OverallScore);
             this.playerTeamStats.TeamScore.text = this.currentResults.OverallScore.ToString("F2");
             for (int i = 0; i < this.playerTeamStats.ScoreCards.Length; i++)
                 this.playerTeamStats.ScoreCards[i].text = this.currentResults.JudgeScores[i].ToString("F0");
@@ -148,10 +147,12 @@ namespace Cadenza
             if (mvp != null) this.playerTeamStats.MvpPortrait.style.backgroundImage = mvp;
 
             this.Show();
+            this.resultsSequence.Play(this.currentResults);
         }
 
         public override void OnShow()
         {
+            this.resultsSequence.OnShow();
             InputSystem.UIPlayerSubmit += this.OnSubmit;
             InputSystem.UIPlayerCancel += this.OnCancel;
             InputSystem.SwitchInputMapMultiPlayer(InputSystem.InputMap.UI);
@@ -159,6 +160,8 @@ namespace Cadenza
 
         public override void OnHide()
         {
+            this.resultsSequence.OnHide();
+
             // Reset player containers.
             foreach (var statsContainer in this.availableContainers)
             {
@@ -175,13 +178,20 @@ namespace Cadenza
             InputSystem.UIPlayerCancel -= this.OnCancel;
         }
 
+        public override void OnGameStart()
+        {
+            this.resultsSequence.OnGameStart();
+        }
+
         public override void OnApplicationStop()
         {
+            this.resultsSequence.OnApplicationStop();
             GameManager.CombatStopped -= this.OnCombatStopped;
         }
 
         public override void OnGameStop()
         {
+            this.resultsSequence.OnGameStop();
             this.Hide();
         }
 
@@ -190,6 +200,9 @@ namespace Cadenza
 
         private void OnSubmit(Player player)
         {
+            if (this.resultsSequence.IsPlaying)
+                return;
+
             if (player == null)
                 return;
 
@@ -209,6 +222,9 @@ namespace Cadenza
         }
         private void OnCancel(Player player)
         {
+            if (this.resultsSequence.IsPlaying)
+                return;
+
             if (player == null)
                 return;
 
@@ -227,6 +243,7 @@ namespace Cadenza
             // Show next actions.
             this.actionButtons.Container.style.display = DisplayStyle.Flex;
             this.resultsPanel.style.display = DisplayStyle.None;
+            this.actionButtons.LeaderboardButton.style.display = DisplayStyle.Flex;
 
             if (this.gameResult == GameManager.GameResult.Victory)
             {
@@ -243,7 +260,6 @@ namespace Cadenza
         }
 
         #endregion
-
         #region Helper Methods
 
         private Texture2D PopulatePlayerStats()
@@ -291,6 +307,13 @@ namespace Cadenza
             }
 
             return highestScorerPortrait;
+        }
+
+        private void ShowLeaderboard()
+        {
+            var leaderboard = UISystem.FindPanel<Leaderboard>();
+            leaderboard.Show(Leaderboard.ShowMode.FromResults);
+            leaderboard.FocusResult(this.currentResults);
         }
 
         #endregion

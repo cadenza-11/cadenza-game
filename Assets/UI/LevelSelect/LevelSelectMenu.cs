@@ -53,6 +53,8 @@ namespace Cadenza
             this.RebuildVoteStates();
             this.RebuildLevelCards();
 
+            AudioSystem.SetState(AudioSystem.State.LevelSelect);
+
             InputSystem.UIPlayerSubmit += this.OnSubmit;
             InputSystem.UIPlayerCancel += this.OnCancel;
             InputSystem.UIPlayerNavigate += this.OnNavigate;
@@ -266,6 +268,15 @@ namespace Cadenza
         private void RefreshLevelCard(int levelIndex, bool isLeading)
         {
             var card = this.levelCards[levelIndex];
+
+            // Preview a new leading level.
+            if (isLeading && !card.Container.ClassListContains("is-leading"))
+                AudioSystem.SetParameter("SelectedLevelID", this.levels[levelIndex].ID);
+
+            // Stop previewing an old leading level.
+            else if (!isLeading && card.Container.ClassListContains("is-leading"))
+                AudioSystem.SetParameter("SelectedLevelID", 0);
+
             card.Container.EnableInClassList("is-leading", isLeading);
             card.SlotsContainer.Clear();
 

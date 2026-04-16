@@ -22,7 +22,6 @@
 
 .fainted .player_container {
     -unity-background-image-tint-color: rgb(139, 0, 0);
-    background-color: rgba(139, 0, 0, 0.68);
 }
 
 .player_meter {
@@ -96,14 +95,14 @@
     bottom: 0;
     -unity-text-outline-width: 7px;
     letter-spacing: -3px;
-    background-color: rgba(26, 26, 26, 0.45);
+    text-shadow: 10px 10px 0 rgba(139, 0, 0, 0.68);
 }
 
 .player_container .faint_text {
     opacity: 0;
 }
 
-.player_container.fainted .faint_text {
+.fainted .faint_text {
     opacity: 1;
 }
 
@@ -131,5 +130,10 @@
     border-left-width: 2px;
 }
 
-.meter .unity-progress-bar__progress {
+.health .meter .unity-progress-bar__progress {
+    -unity-material: url("project://database/Assets/Art/UI%20Backgrounds/Healthbar/ColoredMeters.shadergraph?fileID=-876546973899608171&guid=a8f74c7a88d76e34baa79a83ac73db9b&type=3#ColoredMeters") prop("_isHealthbar" 1) prop("_Progress" 0.5);
+}
+
+.flowstate .meter .unity-progress-bar__progress {
+    -unity-material: url("project://database/Assets/Art/UI%20Backgrounds/Healthbar/ColoredMeters.shadergraph?fileID=-876546973899608171&guid=a8f74c7a88d76e34baa79a83ac73db9b&type=3#ColoredMeters") prop("_isFlowstate" 1) prop("_Progress" 0.5);
 }

@@ -24,6 +24,7 @@ namespace Cadenza
         [SerializeField] private AccuracyBar accuracyBar;
         [SerializeField] public ReviveMeter RevivalMeter;
         [SerializeField] private InteractionIndicator interactionIndicator;
+        [SerializeField] private SelectionCircle selectionCircle;
         [SerializeField] public ComboManager comboM;
         [SerializeField] public int baseLightDamage;
         [SerializeField] public int baseHeavyDamage;
@@ -109,6 +110,10 @@ namespace Cadenza
                 this.Sprite.material.SetColor("_SecondaryColor", this.Player.Colorway.SecondaryColor);
                 this.Sprite.material.SetColor("_TertiaryColor", this.Player.Colorway.TertiaryColor);
             }
+
+            // Set selection circle color.
+            this.selectionCircle?.ApplyColorway(this.Player.Colorway);
+            this.selectionCircle?.Show();
 
             // Set default state.
             this.ChangeState(this.walking);
@@ -241,6 +246,7 @@ namespace Cadenza
 
         public void SetHealth(float health)
         {
+            this.Sprite.material.SetInt("_Debuff", (health / this.maxHealth <= 0.33f) ? 1 : 0);
             if (health <= 0f && !this.isFainted)
             {
                 this.ChangeState(this.fainted);

@@ -2,9 +2,9 @@
     <Style src="project://database/Assets/UI/Leaderboard/Leaderboard.uss?fileID=7433441132597879392&amp;guid=3f42ba80f02f44f7ad4de0e876123bbf&amp;type=3#Leaderboard"/>
     <ui:VisualElement name="root" class="leaderboard-root">
         <ui:VisualElement name="ribbon" class="leaderboard-ribbon">
-            <ui:Button name="b_Exit" class="leaderboard-exit" />
-            <ui:Label text="Leaderboard" class="leaderboard-title" />
+            <ui:Button name="b_Exit" class="leaderboard-exit"/>
+            <ui:Label text="Past Performances" class="leaderboard-title"/>
         </ui:VisualElement>
-        <ui:ScrollView name="results" scroll-deceleration-rate="0.2" class="leaderboard-results" />
+        <ui:ScrollView name="results" scroll-deceleration-rate="0.2" vertical-scroller-visibility="AlwaysVisible" horizontal-scroller-visibility="Hidden" class="leaderboard-results"/>
     </ui:VisualElement>
 </ui:UXML>

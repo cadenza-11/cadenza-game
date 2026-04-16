@@ -55,8 +55,9 @@ MonoBehaviour:
   scoreWeights:
     perfectScoreWeight: 1
     greatScoreWeight: 0.75
-    okScoreWeight: 0.4
-    badScoreWeight: 0
+    okScoreWeight: 0.5
+    badScoreWeight: 0.25
   maxScore: 100
   enableCalibration: 1
   latencyAlpha: 0.5
+  deathPenalty01: 0.02
