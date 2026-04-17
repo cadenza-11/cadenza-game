@@ -141,8 +141,11 @@ namespace Cadenza
 
         private async Task OnGameStartAsync()
         {
-            // Stop level music if redirecting from pregame menus.
-            if (ApplicationController.PreviousLevel == null)
+            bool isRestartingLevel = ApplicationController.PreviousLevel == ApplicationController.CurrentLevel;
+
+            // Stop level music if redirecting from pregame menus
+            // or if restarting the same level.
+            if (ApplicationController.PreviousLevel == null || isRestartingLevel)
             {
                 BeatSystem.StopTrack();
                 await BeatSystem.WaitForTrackStop();

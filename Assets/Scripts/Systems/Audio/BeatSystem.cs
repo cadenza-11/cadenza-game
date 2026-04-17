@@ -219,7 +219,8 @@ namespace Cadenza
 
         public static void PlayTrack(EventReference eventRef)
         {
-            if (singleton.currentEventReference.Equals(eventRef))
+            if (singleton.currentEventReference.Equals(eventRef)
+                && singleton.currentPlayState != PLAYBACK_STATE.STOPPED)
             {
                 Debug.Log($"Requested to play track ({eventRef}), but track is already playing.");
                 return;
@@ -465,12 +466,12 @@ namespace Cadenza
 
         private void StopCurrentTrack()
         {
-            if (this.currentPlayState == PLAYBACK_STATE.PLAYING)
-            {
-                this.currentTrack.getDescription(out EventDescription description);
-                description.unloadSampleData();
-                this.currentTrack.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            }
+            if (!this.currentTrack.isValid() || this.currentPlayState == PLAYBACK_STATE.STOPPED)
+                return;
+
+            this.currentTrack.getDescription(out EventDescription description);
+            description.unloadSampleData();
+            this.currentTrack.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
 
         private void UpdateDSPClock()
