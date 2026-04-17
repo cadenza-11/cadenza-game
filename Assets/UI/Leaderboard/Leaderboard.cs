@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Cadenza;
 using Cadenza.Utils;
@@ -24,11 +25,13 @@ public class Leaderboard : UIPanel, IInteractable
     private Player openingPlayer;
     private ScrollView resultsElement;
     private Results[] results = System.Array.Empty<Results>();
+    private readonly List<Foldout> resultFoldouts = new();
     private ShowMode showMode;
 
     public override void OnInitialize()
     {
         this.root.RegisterCallback<NavigationCancelEvent>(_ => this.Close(), TrickleDown.TrickleDown);
+        this.root.RegisterCallback<NavigationMoveEvent>(this.OnNavigationMove, TrickleDown.TrickleDown);
 
         // Configure exit button.
         this.exitButton = this.root.Q<Button>("b_Exit");
@@ -158,6 +161,7 @@ public class Leaderboard : UIPanel, IInteractable
             .ToArray();
 
         this.resultsElement.Clear();
+        this.resultFoldouts.Clear();
 
         int rank = 1;
         foreach (var result in this.results)
@@ -172,6 +176,7 @@ public class Leaderboard : UIPanel, IInteractable
             if (foldout == null || playerStats == null)
                 continue;
 
+            this.resultFoldouts.Add(foldout);
             foldout.text = $"#{rank}. {teamName} in {levelName} ({time})";
             rank++;
 
@@ -187,6 +192,95 @@ public class Leaderboard : UIPanel, IInteractable
 
             this.resultsElement.Add(resultLine);
         }
+    }
+
+    private void OnNavigationMove(NavigationMoveEvent evt)
+    {
+        if (evt.direction != NavigationMoveEvent.Direction.Up &&
+            evt.direction != NavigationMoveEvent.Direction.Down)
+            return;
+
+        // Don't perform default focus behavior (wrapping).
+        // Handle that in this method.
+        this.root.panel.focusController.IgnoreEvent(evt);
+
+        if (evt.target is not VisualElement target)
+            return;
+
+        // Move to first result from exit button.
+        if (evt.direction == NavigationMoveEvent.Direction.Down && this.IsInsideElement(target, this.exitButton))
+        {
+            if (this.TryFocusResult(0))
+                evt.StopImmediatePropagation();
+
+            return;
+        }
+
+        int focusedResultIndex = this.GetFocusedResultIndex(target);
+        if (focusedResultIndex < 0)
+            return;
+
+        if (evt.direction == NavigationMoveEvent.Direction.Up)
+        {
+            // Move to exit button from results.
+            if (focusedResultIndex == 0)
+                this.exitButton.Focus();
+            else
+                this.TryFocusResult(focusedResultIndex - 1);
+        }
+        else
+        {
+            this.TryFocusResult(focusedResultIndex + 1);
+        }
+    }
+
+    private int GetFocusedResultIndex(VisualElement target)
+    {
+        var foldout = this.GetAncestorOfType<Foldout>(target);
+        return foldout == null ? -1 : this.resultFoldouts.IndexOf(foldout);
+    }
+
+    private bool TryFocusResult(int index, bool expand = false)
+    {
+        if (index < 0 || index >= this.resultFoldouts.Count)
+            return false;
+
+        var foldout = this.resultFoldouts[index];
+        if (foldout == null)
+            return false;
+
+        this.resultsElement.ScrollTo(foldout.parent ?? foldout);
+        foldout.Focus();
+        if (expand)
+            foldout.value = true;
+
+        return true;
+    }
+
+    private bool IsInsideElement(VisualElement target, VisualElement container)
+    {
+        while (target != null)
+        {
+            if (target == container)
+                return true;
+
+            target = target.parent;
+        }
+
+        return false;
+    }
+
+    private T GetAncestorOfType<T>(VisualElement target) where T : VisualElement
+    {
+        while (target != null)
+        {
+            if (target is T matched)
+                return matched;
+
+            target = target.parent;
+        }
+
+        return null;
     }
 
     private void Close()

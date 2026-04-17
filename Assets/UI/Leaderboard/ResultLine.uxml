@@ -1,7 +1,8 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="result-entry" class="result-entry">
-        <ui:Foldout name="result-foldout" text="Result" value="false" class="result-foldout">
-            <ui:VisualElement name="player-stats" class="player-stats" />
+    <Style src="project://database/Assets/UI/Leaderboard/Leaderboard.uss?fileID=7433441132597879392&amp;guid=3f42ba80f02f44f7ad4de0e876123bbf&amp;type=3#Leaderboard"/>
+    <ui:VisualElement name="result-entry" focusable="true" class="result-entry">
+        <ui:Foldout name="result-foldout" text="Result" value="false" focusable="true" class="result-foldout">
+            <ui:VisualElement name="player-stats" class="player-stats"/>
         </ui:Foldout>
     </ui:VisualElement>
 </ui:UXML>
