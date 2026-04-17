@@ -196,7 +196,7 @@ namespace Cadenza
             // should always have a starting marker that client can detect.
 
             // If no marker is passed within a given time frame, timeout.
-            const int MarkerTimeOutAsync = 5000;
+            const int MarkerTimeOutAsync = 2000;
 
             await Task.WhenAny(
                 Task.Delay(MarkerTimeOutAsync),

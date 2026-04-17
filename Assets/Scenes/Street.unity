@@ -7087,6 +7087,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cinemachine
       objectReference: {fileID: 0}
+    - target: {fileID: 5477522582017432354, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477522582017432354, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 8.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477522582017432354, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477522582017432354, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9577724
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477522582017432354, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.2875277
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477522582017432354, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 33.42
+      objectReference: {fileID: 0}
     - target: {fileID: 7308358794563015728, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.98489
