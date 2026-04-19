@@ -315,10 +315,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 255
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -504,10 +504,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 255
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -677,10 +677,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 255
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -11160,6 +11160,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MultiDirectional-1 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1431053245464678585, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6800297298057825910, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.08
@@ -11318,6 +11322,10 @@ PrefabInstance:
     - target: {fileID: 1431053245464678585, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
       propertyPath: m_Name
       value: MultiDirectional-1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1431053245464678585, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6800297298057825910, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18084,10 +18092,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 255
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -18166,7 +18174,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &956824208
 Transform:
   m_ObjectHideFlags: 0
@@ -24279,6 +24287,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MultiDirectional-1 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1431053245464678585, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6800297298057825910, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.9799995
@@ -25868,6 +25880,67 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1001 &1754266921
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1010987114114650534, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_Name
+      value: Spin Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003244786977031834, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.007184366
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003244786977031834, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003244786977031834, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.1318617
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003244786977031834, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003244786977031834, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003244786977031834, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003244786977031834, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003244786977031834, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003244786977031834, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2003244786977031834, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435965369764384100, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
+      propertyPath: attackArea
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a55e6de2fb5b8464e8e36fd683d880c8, type: 3}
 --- !u!1 &1768345392
 GameObject:
   m_ObjectHideFlags: 0
@@ -25883,7 +25956,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1768345393
 Transform:
   m_ObjectHideFlags: 0
@@ -27074,6 +27147,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MultiDirectional-1
       objectReference: {fileID: 0}
+    - target: {fileID: 1431053245464678585, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6800297298057825910, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.03
@@ -27248,3 +27325,4 @@ SceneRoots:
   - {fileID: 1113831431}
   - {fileID: 603005299}
   - {fileID: 956824208}
+  - {fileID: 1754266921}
