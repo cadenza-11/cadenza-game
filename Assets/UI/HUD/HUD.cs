@@ -27,6 +27,8 @@ namespace Cadenza
         private Dictionary<Player, VisualElement> assignedContainers = new();
         private List<Tween> healthShakeTweens = new();
 
+        public ProgressBar TeamMeter => this.teamMeter;
+
         public enum MeterState
         {
             Paused,

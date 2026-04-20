@@ -5,6 +5,7 @@ using Cadenza.Combo;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.XInput;
 using UnityEngine.VFX;
+using Cadenza.Utils;
 
 namespace Cadenza
 {
@@ -136,13 +137,17 @@ namespace Cadenza
             this.RevivalMeter.SetInputHint(controller);
             this.RevivalMeter.SetThreshold(this.reviveThreshold);
             this.RevivalMeter.Hide();
+            Character.TeamAttackInitiated += this.TeamAttackEffect;
         }
 
         void OnDestroy()
         {
             // Unsubscribe from events.
             if (this.Player != null)
+            {
                 this.Player.InteractChanged -= this.interactionIndicator.OnPlayerInteractChanged;
+            }
+            Character.TeamAttackInitiated -= this.TeamAttackEffect;
         }
 
         void Update()
@@ -252,8 +257,17 @@ namespace Cadenza
 
         public void StartTeamAttack()
         {
-            TeamAttackInitiated?.Invoke();
-            AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 4, immediate: false);
+            if (UISystem.FindPanel<HUD>().TeamMeter.value >= UISystem.FindPanel<HUD>().TeamMeter.highValue)
+            {
+                TeamAttackInitiated?.Invoke();
+                AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 4, immediate: false);
+            }
+            //put in a negative sound effect if its not full
+        }
+
+        public void TeamAttackEffect()
+        {
+            this.SetFlow(20);
         }
 
         public bool TakeDamage(int damage)
