@@ -86,13 +86,19 @@ namespace Cadenza
                 Vector3 direction = collider.transform.position - this.transform.position;
                 Vector3 force = direction.normalized * this.knockbackScale;
                 force.y = 2f;
-                collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
+                collider.attachedRigidbody?.AddForce(force, ForceMode.Impulse);
             }
 
             // Hit ally.
             else if (collider.gameObject.TryGetComponent(out Character character) && this.attackScore.HasValue)
             {
                 character.OnAllyHit(this.attackScore.Value);
+            }
+
+            // Hit core (DJ-level).
+            else if (collider.gameObject.CompareTag("Core"))
+            {
+                collider.gameObject.GetComponent<DJCore>().TakeDamage(this.damage);
             }
         }
     }

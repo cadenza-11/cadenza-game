@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DJ
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Level
   ID: 4
-  Name: DJ
+  Name: DVDJ
   BuildIndex: 2
   IsBattleLevel: 1
   MusicTrack:
