@@ -29,6 +29,7 @@ namespace Cadenza
             this.speed = 0f;
             this.isAttacking = false;
             this.isActionable = true;
+            this.anim.SetBool("PhaseTwoComplete", false);
         }
 
         override protected void FixedUpdate(){}
@@ -93,51 +94,58 @@ namespace Cadenza
             {
                 case 0:
                     Debug.Log("// DJ PHASE : ONSLAUGHT 1 //");
-                    this.forcefield.SetActive(true);
-                    this.currentHealth = this.maxHealth;
-                    this.isDown = false;
-                    this.anim.SetBool("IsDowned", false);
-                    this.anim.SetBool("PhaseTwoComplete", false);
-                    foreach (var core in this.cores)
-                        core.Initialize(this.coreMaxHealth);
-                    this.spotlight.intensity = 200;
-                    this.spotlight.color = Color.softBlue;
+                    this.OnEarlyOnslaughtStart(this.coreMaxHealth, Color.softBlue);
                     break;
                 case 1:
                     Debug.Log("// DJ PHASE : DOWNED 1 //");
-                    this.forcefield.SetActive(false);
-                    this.anim.SetBool("IsDowned", true);
-                    this.spotlight.intensity = 1000;
-                    this.spotlight.color = Color.white;
+                    this.OnDownedStart();
                     break;
                 case 2:
                     Debug.Log("// DJ PHASE : ONSLAUGHT 2 //");
-                    this.forcefield.SetActive(true);
-                    this.currentHealth = this.maxHealth;
-                    this.isDown = false;
-                    this.anim.SetBool("IsDowned", false);
-                    foreach (var core in this.cores)
-                        core.Initialize((int)((float)this.coreMaxHealth*1.5f));
-                    this.spotlight.intensity = 200;
-                    this.spotlight.color = Color.softRed;
+                    this.OnEarlyOnslaughtStart((int)((float)this.coreMaxHealth*1.5f), Color.softRed);
                     break;
                 case 3:
                     Debug.Log("// DJ PHASE : DOWNED 2 //");
-                    this.forcefield.SetActive(false);
-                    this.anim.SetBool("IsDowned", true);
                     this.anim.SetBool("PhaseTwoComplete", true);
-                    this.spotlight.intensity = 200;
-                    this.spotlight.color = Color.white;
+                    this.OnDownedStart();
                     break;
                 default:
                     Debug.Log("// DJ PHASE : ONSLAUGHT 3 //");
-                    this.currentHealth = this.maxHealth;
-                    Debug.Log($"Phase {phase.Index} WIP");
-                    this.spotlight.intensity = 200;
-                    this.spotlight.color = Color.lightGoldenRodYellow;
+                    Debug.Log($"Phase {this.currentPhase.Index} WIP");
+                    this.OnFinalOnslaughtStart();
                     break;
             }
             this.healthMaterial.SetFloat("_HealthPercent", (float)this.currentHealth / (float)this.maxHealth);
+        }
+
+        private void OnEarlyOnslaughtStart(int coreHealth, Color spotlightColor)
+        {
+            Debug.Log($"Starting onslaught with core health: {coreHealth} and spotlight color: {spotlightColor}");
+            this.forcefield.SetActive(true);
+            this.currentHealth = this.maxHealth;
+            this.anim.SetBool("IsDowned", false);
+            foreach (var core in this.cores)
+                core.Initialize(coreHealth);
+            this.isDown = false;
+            this.spotlight.intensity = 200;
+            this.spotlight.color = spotlightColor;
+        }
+
+        private void OnDownedStart()
+        {
+            Debug.Log("Starting downed phase");
+            this.forcefield.SetActive(false);
+            this.anim.SetBool("IsDowned", true);
+            this.spotlight.intensity = 1000;
+            this.spotlight.color = Color.white;
+        }
+
+        private void OnFinalOnslaughtStart()
+        {
+            Debug.Log("Starting final onslaught");
+            this.currentHealth = this.maxHealth;
+            this.spotlight.intensity = 200;
+            this.spotlight.color = Color.lightGoldenRodYellow;
         }
     }
 }
