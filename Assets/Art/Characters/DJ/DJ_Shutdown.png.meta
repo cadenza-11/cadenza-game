@@ -858,28 +858,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DJ_Shutdown_34
-      rect:
-        serializedVersion: 2
-        x: 8640
-        y: 2160
-        width: 2160
-        height: 2160
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e4f70429fe35cdb4b994105ab8659e15
-      internalID: -1496905139
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: DJ_Shutdown_35
       rect:
         serializedVersion: 2
