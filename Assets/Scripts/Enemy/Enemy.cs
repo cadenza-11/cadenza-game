@@ -376,6 +376,7 @@ namespace Cadenza
 
         protected virtual void DeadState()
         {
+            Debug.Log("Goes into dead state");
             this.anim.SetBool("IsFainted", true);
             this.rb.linearVelocity = Vector3.zero;
             EnemyManager.RemoveEnemy(this);

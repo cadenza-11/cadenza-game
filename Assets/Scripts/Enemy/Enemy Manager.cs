@@ -35,6 +35,7 @@ namespace Cadenza
         {
             if (singleton.enemies.Remove(enemy))
             {
+                Debug.Log("Deleted Enemy");
                 Destroy(enemy.gameObject);
                 return true;
             }
@@ -80,6 +81,28 @@ namespace Cadenza
                     return;
                 }
             }
+        }
+
+        public static void GruntPhase()
+        {
+            //chooses a random number between 8 and 15 for the number of grunts spawned
+            for(int i = 0; i < Random.Range(8, 16); i++)
+            {
+                Vector3 position = new Vector3(Random.Range(-10, 10), 10, Random.Range(-10, 10));
+                Instantiate(singleton.gruntPrefab, position, Quaternion.identity);
+            }
+        }
+
+        public static bool CheckGrunts()
+        {
+            foreach(var enemy in singleton.enemies)
+            {
+                if(enemy is EnemyGrunt)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
