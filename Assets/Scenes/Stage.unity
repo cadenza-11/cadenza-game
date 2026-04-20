@@ -189,7 +189,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5730954463973504215, guid: c16d138ae5bc56142a3a1dfb6c22fb4c, type: 3}
       propertyPath: maxHealth
-      value: 150
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 5730954463973504215, guid: c16d138ae5bc56142a3a1dfb6c22fb4c, type: 3}
       propertyPath: spotlight
@@ -201,7 +201,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5730954463973504215, guid: c16d138ae5bc56142a3a1dfb6c22fb4c, type: 3}
       propertyPath: currentHealth
-      value: 150
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 5730954463973504215, guid: c16d138ae5bc56142a3a1dfb6c22fb4c, type: 3}
       propertyPath: healthbarHolder

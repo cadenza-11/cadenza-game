@@ -44,6 +44,7 @@ namespace Cadenza
                     // Faint anim
                     EnemyManager.RemoveEnemy(this);
                 }
+            else if (!this.isDown) return; // Can't damage DJ until he's down
             else if ((this.currentHealth / this.maxHealth) > .33f) // Early stages, more than 33% health
             {
                 this.currentHealth -= damage;

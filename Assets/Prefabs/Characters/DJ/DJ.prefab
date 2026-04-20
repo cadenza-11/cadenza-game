@@ -460,6 +460,7 @@ MonoBehaviour:
   coreMaxHealth: 100
   forcefield: {fileID: 5422693190319036874}
   spotlight: {fileID: 0}
+  healthbarHolder: {fileID: 0}
 --- !u!135 &5174012106333730180
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -470,17 +471,17 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 127
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 4
-  m_Center: {x: 0, y: -1.5, z: 1.5}
+  m_Center: {x: 0, y: -1.5, z: 1}
 --- !u!1 &6431649234925519548
 GameObject:
   m_ObjectHideFlags: 0
