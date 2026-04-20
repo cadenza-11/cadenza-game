@@ -35,8 +35,12 @@ namespace Cadenza
 
         public override void TakeDamage(int damage)
         {
+            Debug.Log($"DJ taking {damage} damage. isDown: {this.isDown}, currentHealth: {this.currentHealth}, maxHealth: {this.maxHealth}, currentPhase: {this.currentPhase.Index}");
             if (this.currentPhase.Index > 3) // Final stage
+            {
+                Debug.Log("Final stage hit!");
                 this.currentHealth -= damage;
+                this.healthMaterial.SetFloat("_HealthPercent", (float)this.currentHealth / (float)this.maxHealth);
                 this.anim.SetTrigger("IsHit");
                 AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 3, immediate: true);
                 if (this.currentHealth <= 0)
@@ -44,19 +48,26 @@ namespace Cadenza
                     // Faint anim
                     EnemyManager.RemoveEnemy(this);
                 }
-            else if (!this.isDown) return; // Can't damage DJ until he's down
-            else if ((this.currentHealth / this.maxHealth) > .33f) // Early stages, more than 33% health
+            }
+            else if (!this.isDown)
             {
+                Debug.Log("DJ not downed. Can't take damage.");
+                return; // Can't damage DJ until he's down
+            }
+            else if (((float)this.currentHealth / (float)this.maxHealth) > .33f) // Early stages, more than 33% health
+            {
+                Debug.Log("DJ hit but not downed. Health above 33%.");
                 this.currentHealth -= damage;
+                this.healthMaterial.SetFloat("_HealthPercent", (float)this.currentHealth / (float)this.maxHealth);
                 this.anim.SetTrigger("IsHit");
                 AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 3, immediate: true);
             }
             else // Reboot
             {
+                Debug.Log("DJ killed during downed phase. Initiating reboot.");
                 // GameManager.RequestNextPhase();
                 AudioSystem.SetParameter("MusicState", this.currentPhase.Index + 1);
             }
-            this.healthMaterial.SetFloat("_HealthPercent", (float)this.currentHealth / (float)this.maxHealth);
         }
 
         void Update()
