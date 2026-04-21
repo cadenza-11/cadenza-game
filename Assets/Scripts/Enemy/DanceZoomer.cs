@@ -9,7 +9,10 @@ namespace Cadenza
         bool inZoom = false;
         bool inZoomSetup = false;
         float lerpTime = 0;
+        float pillarLerpTime = 0;
         float startPosition;
+        [SerializeField] GameObject[] pillars = new GameObject[11];
+        bool[] isPillarRising = new bool[11];
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -138,9 +141,24 @@ namespace Cadenza
                 this.startPosition = this.transform.position.x;
                 this.inZoom = true;
                 this.inZoomSetup = true;
+                this.ChoosePillar();
             }
             else if(this.inZoomSetup)
             {
+                for(int i = 0; i < 11; i++)
+                {
+                    if(this.isPillarRising[i])
+                    {
+                        this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x, 
+                                Mathf.Lerp(-1.1f, 0.5f, this.pillarLerpTime), this.pillars[i].transform.position.z);
+                    }
+                    else
+                    {
+                        this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x,
+                                Mathf.Lerp(0.5f, -1.1f, this.pillarLerpTime), this.pillars[i].transform.position.z);
+                    }
+                }
+                this.pillarLerpTime += Time.deltaTime;
                 Vector2 distance = new Vector2(this.transform.position.x, this.transform.position.z) - this.TargetLocation;
                 if(distance.SqrMagnitude() < 2)
                 {
@@ -149,6 +167,7 @@ namespace Cadenza
 
                     this.TargetLocation.x *= -1;
                     this.lerpTime = 0;
+                    this.pillarLerpTime = 0;
                     this.attackArea.SetActive(true);
                 }
                 else
@@ -166,6 +185,11 @@ namespace Cadenza
                     this.inZoom = false;
                     this.lerpTime = 0;
                     this.attackArea.SetActive(false);
+
+                    for(int i = 0; i < 11; i++)
+                    {
+                        this.isPillarRising[i] = false;
+                    }
                 }
                 else
                 {
@@ -175,6 +199,37 @@ namespace Cadenza
                 }
             }
 
+        }
+
+        void ChoosePillar()
+        {
+            int numPillars = Random.Range(1, 12);
+            for(int i = 0; i < numPillars; i++)
+            {
+                int index = Random.Range(1, 12);
+                if(!this.isPillarRising[index])
+                {
+                    this.isPillarRising[index] = true;
+                }
+                else if(Random.Range(1, 3) < 2)
+                {
+                    int j = 0;
+                    while(this.isPillarRising[j])
+                    {
+                        j++;
+                    }
+                    this.isPillarRising[j] = true;
+                }
+                else
+                {
+                    int j = 10;
+                    while(this.isPillarRising[j])
+                    {
+                        j--;
+                    }
+                    this.isPillarRising[j] = true;
+                }
+            }
         }
     }
 }
