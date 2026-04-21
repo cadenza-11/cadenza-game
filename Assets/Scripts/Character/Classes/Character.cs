@@ -28,6 +28,7 @@ namespace Cadenza
         [SerializeField] public ReviveMeter RevivalMeter;
         [SerializeField] private InteractionIndicator interactionIndicator;
         [SerializeField] private SelectionCircle selectionCircle;
+        [SerializeField] private PlayerNameIndicator playerNameIndicator;
         [SerializeField] public ComboManager comboM;
         [SerializeField] public int baseLightDamage;
         [SerializeField] public int baseHeavyDamage;
@@ -108,6 +109,9 @@ namespace Cadenza
             this.input = new();
             this.SetHealth(this.maxHealth);
             this.SetFlow(0);
+
+            // Set name.
+            this.playerNameIndicator.SetName(player.Name);
 
             // Set sprite colors (shader).
             this.Sprite.material.SetInt("_CharacterColor", 1);
