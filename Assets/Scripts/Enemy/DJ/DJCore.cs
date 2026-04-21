@@ -21,7 +21,6 @@ namespace Cadenza
         void Start()
         {
             this.healthIndicatorOutline = this.GetComponent<Renderer>().materials[1]; 
-            BeatSystem.BeatPlayed += this.PlayPunch;
         }
 
         public void Initialize(int health)
@@ -31,8 +30,9 @@ namespace Cadenza
             this.OnHealthChanged(health);
             this.electricity.SetActive(false);
             this.isDestroyed = false;
+            
+            BeatSystem.BeatPlayed += this.PlayPunch;
         }
-
 
         public void TakeDamage(int damage)
         {
@@ -53,6 +53,8 @@ namespace Cadenza
             this.dedicatedSpotlight.DOIntensity(0, 0.5f);
             this.electricity.SetActive(true);
             this.transform.DOShakePosition(1f, strength: new Vector3(0.2f, 0f, 0.2f), vibrato: 10);
+            
+            BeatSystem.BeatPlayed -= this.PlayPunch;
         }
 
         private void PlayPunch()

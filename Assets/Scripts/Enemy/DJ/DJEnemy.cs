@@ -6,6 +6,7 @@ namespace Cadenza
     public class DJEnemy : Enemy
     {
         [SerializeField] private DJCore[] cores;
+        [SerializeField] private DroppingVinyl[] droppingVinyls;
         [SerializeField] private int coreMaxHealth;
         [SerializeField] private GameObject forcefield;
         [SerializeField] private Light spotlight;
@@ -45,7 +46,8 @@ namespace Cadenza
                 AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 3, immediate: true);
                 if (this.currentHealth <= 0)
                 {
-                    // Add faint anim
+                    foreach (var vinyl in this.droppingVinyls)
+                        vinyl.ShutDown();
                     EnemyManager.RemoveEnemy(this);
                 }
             }
@@ -87,7 +89,7 @@ namespace Cadenza
             {
                 case 0:
                     Debug.Log("// DJ PHASE : ONSLAUGHT 1 //");
-                    this.OnEarlyOnslaughtStart(this.coreMaxHealth, Color.softBlue);
+                    this.OnEarlyOnslaughtStart(this.coreMaxHealth, 15, Color.softBlue);
                     break;
                 case 1:
                     Debug.Log("// DJ PHASE : DOWNED 1 //");
@@ -95,7 +97,7 @@ namespace Cadenza
                     break;
                 case 2:
                     Debug.Log("// DJ PHASE : ONSLAUGHT 2 //");
-                    this.OnEarlyOnslaughtStart((int)((float)this.coreMaxHealth*1.5f), Color.softRed);
+                    this.OnEarlyOnslaughtStart((int)((float)this.coreMaxHealth*1.5f), 10, Color.softRed);
                     break;
                 case 3:
                     Debug.Log("// DJ PHASE : DOWNED 2 //");
@@ -111,7 +113,7 @@ namespace Cadenza
             this.healthMaterial.SetFloat("_HealthPercent", (float)this.currentHealth / (float)this.maxHealth);
         }
 
-        private void OnEarlyOnslaughtStart(int coreHealth, Color spotlightColor)
+        private void OnEarlyOnslaughtStart(int coreHealth, int homingBeats, Color spotlightColor)
         {
             Debug.Log($"Starting onslaught with core health: {coreHealth} and spotlight color: {spotlightColor}");
             this.forcefield.SetActive(true);
@@ -119,6 +121,8 @@ namespace Cadenza
             this.anim.SetBool("IsDowned", false);
             foreach (var core in this.cores)
                 core.Initialize(coreHealth);
+            foreach (var vinyl in this.droppingVinyls)
+                vinyl.Initialize(homingBeats);
             this.isDown = false;
             this.spotlight.intensity = 200;
             this.spotlight.color = spotlightColor;
@@ -127,6 +131,8 @@ namespace Cadenza
         private void OnDownedStart()
         {
             Debug.Log("Starting downed phase");
+            foreach (var vinyl in this.droppingVinyls)
+                vinyl.ShutDown();
             this.forcefield.SetActive(false);
             this.anim.SetBool("IsDowned", true);
             this.spotlight.intensity = 1000;
@@ -136,6 +142,8 @@ namespace Cadenza
         private void OnFinalOnslaughtStart()
         {
             Debug.Log("Starting final onslaught");
+            foreach (var vinyl in this.droppingVinyls)
+                vinyl.Initialize(5);
             this.currentHealth = this.maxHealth;
             this.spotlight.intensity = 200;
             this.spotlight.color = Color.lightGoldenRodYellow;
