@@ -143,13 +143,14 @@ namespace Cadenza
                 int playerId = Random.Range(1, numPlayers + 1);
                 Debug.Log("" + playerId + ",  " + numPlayers + 1);
                 Player targetPlayer = PlayerSystem.Players[playerId - 1];
+                Debug.Log(targetPlayer.Character.transform.position.x + ",  " + targetPlayer.Character.transform.position.z);
                 if(this.transform.position.x <= 0)
                 {
-                    this.TargetLocation = new Vector2(-7, targetPlayer.transform.position.z);
+                    this.TargetLocation = new Vector2(-7, targetPlayer.Character.transform.position.z);
                 }
                 else
                 {
-                    this.TargetLocation = new Vector2(7, targetPlayer.transform.position.z);
+                    this.TargetLocation = new Vector2(7, targetPlayer.Character.transform.position.z);
                 }
                 this.startPosition.x = this.transform.position.x;
                 this.startPosition.y = this.transform.position.z;
@@ -164,12 +165,12 @@ namespace Cadenza
                     if(this.isPillarRising[i])
                     {
                         this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x, 
-                                Mathf.Lerp(-1.1f, 0.5f, this.pillarLerpTime/6.0f), this.pillars[i].transform.position.z);
+                                Mathf.Lerp(-1.5f, 0.1f, this.pillarLerpTime/2.0f), this.pillars[i].transform.position.z);
                     }
                     else
                     {
                         this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x,
-                                Mathf.Lerp(0.5f, -1.1f, this.pillarLerpTime/6.0f), this.pillars[i].transform.position.z);
+                                Mathf.Lerp(0.1f, -1.5f, this.pillarLerpTime/2.0f), this.pillars[i].transform.position.z);
                     }
                 }
                 this.pillarLerpTime += Time.deltaTime;
@@ -187,8 +188,8 @@ namespace Cadenza
                 }
                 else
                 {
-                    this.transform.position = new Vector3(Mathf.Lerp(this.startPosition.x, this.TargetLocation.x, this.lerpTime/10.0f), 
-                                                        this.transform.position.y, Mathf.Lerp(this.startPosition.y, this.TargetLocation.y, this.lerpTime/10.0f));
+                    this.transform.position = new Vector3(Mathf.Lerp(this.startPosition.x, this.TargetLocation.x, this.lerpTime/1.0f), 
+                                                        this.transform.position.y, Mathf.Lerp(this.startPosition.y, this.TargetLocation.y, this.lerpTime/1.0f));
                     this.lerpTime += Time.deltaTime;
                 }
             }
@@ -208,8 +209,8 @@ namespace Cadenza
                 }
                 else
                 {
-                    this.transform.position = new Vector3(Mathf.Lerp(this.startPosition.x, this.TargetLocation.x, this.lerpTime/10.0f), 
-                                                        this.transform.position.y, Mathf.Lerp(this.startPosition.y, this.TargetLocation.y, this.lerpTime/10.0f));
+                    this.transform.position = new Vector3(Mathf.Lerp(this.startPosition.x, this.TargetLocation.x, this.lerpTime/1.0f), 
+                                                        this.transform.position.y, Mathf.Lerp(this.startPosition.y, this.TargetLocation.y, this.lerpTime/1.0f));
                     this.lerpTime += Time.deltaTime;
                 }
             }
