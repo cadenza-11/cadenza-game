@@ -55,7 +55,10 @@ namespace Cadenza
             if (!this.isActive) return;
             this.beatCounter++;
             if (this.beatCounter == this.beatsTillDrop) // Prepare for drop
+            {
                 this.isHoming = false;
+                this.attackSpotlight.DOColor(Color.red, 0.5f);
+            }
             if (this.beatCounter >= this.beatsTillDrop && this.beatCounter < this.beatsTillDrop + 3) // Warning shake window
                 this.transform.DOShakeScale(0.1f, strength: new Vector3(0.2f, 0f, 0.2f), vibrato: 10, randomnessMode: ShakeRandomnessMode.Harmonic);
             if (this.beatCounter == this.beatsTillDrop + 3) // Drop
@@ -102,6 +105,7 @@ namespace Cadenza
 
         private void RestartHoming()
         {
+            this.attackSpotlight.DOColor(Color.yellow, 0.5f);
             this.beatCounter = 0;
             this.FindTarget();
             this.isHoming = true;

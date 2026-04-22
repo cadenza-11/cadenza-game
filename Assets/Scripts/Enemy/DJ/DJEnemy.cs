@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 namespace Cadenza
@@ -10,6 +11,7 @@ namespace Cadenza
         [SerializeField] private int coreMaxHealth;
         [SerializeField] private GameObject forcefield;
         [SerializeField] private Light spotlight;
+        [SerializeField] private GameObject electricity;
         [SerializeField] private GameObject healthbarHolder;
 
         private Phase currentPhase;
@@ -31,6 +33,7 @@ namespace Cadenza
             this.isAttacking = false;
             this.isActionable = true;
             this.anim.SetBool("PhaseTwoComplete", false);
+            this.electricity.SetActive(false);
         }
 
         override protected void FixedUpdate(){}
@@ -42,13 +45,16 @@ namespace Cadenza
                 Debug.Log("Final stage hit!");
                 this.currentHealth -= damage;
                 this.healthMaterial.SetFloat("_HealthPercent", (float)this.currentHealth / (float)this.maxHealth);
-                this.anim.SetTrigger("IsHit");
                 AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 3, immediate: true);
-                if (this.currentHealth <= 0)
+                if (this.currentHealth > 0)
+                    this.anim.SetTrigger("IsHit");
+                else
                 {
                     foreach (var vinyl in this.droppingVinyls)
                         vinyl.ShutDown();
-                    EnemyManager.RemoveEnemy(this);
+                    this.anim.SetTrigger("Die");
+                    this.electricity.SetActive(true);
+                    this.spotlight.DOIntensity(0, 10f).OnComplete(() => EnemyManager.RemoveEnemy(this));
                 }
             }
             else if (!this.isDown) return; // Can't damage DJ until he's down
@@ -141,6 +147,7 @@ namespace Cadenza
 
         private void OnFinalOnslaughtStart()
         {
+            this.anim.SetBool("IsDowned", false);
             Debug.Log("Starting final onslaught");
             foreach (var vinyl in this.droppingVinyls)
                 vinyl.Initialize(5);
