@@ -249,7 +249,10 @@ namespace Cadenza
 
         public void StopGroundMovement()
         {
-            this.Rigidbody.linearVelocity = Vector3.zero;
+            Vector3 newVelocity = this.Rigidbody.linearVelocity;
+            newVelocity.x = 0;
+            newVelocity.z = 0;
+            this.Rigidbody.linearVelocity = newVelocity;
             this.Animator.SetBool("IsMove", false);
         }
 

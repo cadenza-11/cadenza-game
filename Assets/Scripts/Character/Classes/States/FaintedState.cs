@@ -5,6 +5,7 @@ namespace Cadenza
         public void Enter(Character character)
         {
             character.isFainted = true;
+            character.StopGroundMovement();
             character.Animator.SetBool("IsFainted", true);
             character.RevivalMeter.Show();
         }
@@ -20,6 +21,7 @@ namespace Cadenza
 
         public void FixedUpdate(Character character)
         {
+            character.StopGroundMovement();
         }
 
         public void Update(Character character)
