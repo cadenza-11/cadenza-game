@@ -429,9 +429,6 @@ namespace Cadenza
             if (this.isFlowing)
                 this.Sprite.material.SetFloat("_LineThickness", (this.flow - this.flowThreshold) / 1000);
 
-            // Set audio.
-            AudioSystem.SetParameter(this.cClass.Name, this.flow / this.flowThreshold);
-
             FlowChanged?.Invoke(this.flow);
         }
 
