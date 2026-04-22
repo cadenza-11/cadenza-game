@@ -13,26 +13,28 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="tab-views" style="flex-grow: 1; margin-top: 100px; margin-right: 100px; margin-bottom: 100px; margin-left: 100px; justify-content: center;">
-            <ui:VisualElement name="c_GeneralTab" style="flex-grow: 1; display: none;">
+            <ui:VisualElement name="c_GeneralTab" class="tab" style="flex-grow: 1; display: none;">
+                <ui:Label text="General Settings" class="header" style="-unity-font-style: bold; -unity-text-align: upper-center;"/>
                 <ui:Toggle label="Enable global controller haptics" name="toggle_Haptics" value="true" style="color: rgb(255, 255, 255);"/>
                 <ui:VisualElement name="spacer" class="spacer" style="flex-grow: 1;"/>
                 <ui:Button text="Delete save data" name="b_DeleteSaveData"/>
             </ui:VisualElement>
-            <ui:VisualElement name="c_VisualTab" style="flex-grow: 1; display: none;">
-                <ui:Label text="Video Settings" style="color: rgb(255, 255, 255); -unity-font-style: bold; font-size: 40px; -unity-text-align: upper-center;"/>
+            <ui:VisualElement name="c_VisualTab" class="tab" style="flex-grow: 1; display: none;">
+                <ui:Label text="Video Settings" class="header" style="-unity-font-style: bold; -unity-text-align: upper-center;"/>
                 <ui:Slider label="Ambient camera shake" value="1" high-value="1" low-value="0" name="slider_AmbientImpulseForce" fill="true"/>
+                <ui:Toggle label="Enable OpenDyslexic font" name="toggle_DyslexiaFriendly"/>
             </ui:VisualElement>
-            <ui:VisualElement name="c_AudioTab" style="flex-grow: 1; display: none;">
-                <ui:Label text="Volume Settings" style="color: rgb(255, 255, 255); -unity-font-style: bold; font-size: 40px; -unity-text-align: upper-center;"/>
+            <ui:VisualElement name="c_AudioTab" class="tab" style="flex-grow: 1; display: none;">
+                <ui:Label text="Volume Settings" class="header" style="-unity-font-style: bold; -unity-text-align: upper-center;"/>
                 <ui:Slider label="Master" value="42" high-value="1" name="slider_Master" fill="true" style="-unity-font-style: normal;"/>
                 <ui:Slider label="Music" value="42" high-value="1" name="slider_Music" fill="true"/>
                 <ui:Slider label="SFX" value="42" high-value="1" name="slider_SFX" fill="true"/>
             </ui:VisualElement>
-            <ui:VisualElement name="c_CalibrationTab" style="flex-grow: 1; display: none; justify-content: center;">
+            <ui:VisualElement name="c_CalibrationTab" class="tab" style="flex-grow: 1; display: none; justify-content: center;">
                 <ui:Label text="0ms" name="label_Latency" style="align-self: center; color: rgb(255, 255, 255); -unity-font-style: bold; font-size: 64px; -unity-text-align: middle-center;"/>
                 <Cadenza.BeatIndicator name="c_Blinker" style="padding-top: 64px; padding-right: 64px; padding-bottom: 64px; padding-left: 64px;"/>
                 <ui:SliderInt name="slider_Latency" style="color: rgb(255, 255, 255); font-size: 40px; margin-top: 10px; margin-right: 200px; margin-bottom: 10px; margin-left: 200px;"/>
-                <ui:Label text="Adjust the slider until the beat matches the flashing light!" style="align-self: center; color: rgb(255, 255, 255); -unity-font-style: italic; font-size: 29px;"/>
+                <ui:Label text="Adjust the slider until the beat matches the flashing light!" style="align-self: center; -unity-font-style: italic;"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

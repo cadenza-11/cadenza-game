@@ -28,14 +28,14 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="c_Panel" style="flex-grow: 1; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px; display: flex; border-top-width: 8px; border-right-width: 8px; border-bottom-width: 8px; border-left-width: 8px; border-top-left-radius: 70px; border-top-right-radius: 70px; border-bottom-right-radius: 70px; border-bottom-left-radius: 70px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); background-color: rgb(255, 215, 0);">
+    <ui:VisualElement name="c_Panel" style="flex-grow: 1; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px; display: none; border-top-width: 8px; border-right-width: 8px; border-bottom-width: 8px; border-left-width: 8px; border-top-left-radius: 70px; border-top-right-radius: 70px; border-bottom-right-radius: 70px; border-bottom-left-radius: 70px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); background-color: rgb(255, 215, 0);">
         <ui:VisualElement name="Background" style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; -unity-material: url(&quot;project://database/Assets/Art/UI%20Backgrounds/Background%20Effects.shadergraph?fileID=-876546973899608171&amp;guid=0f93fb7ab9325194bb8d5beaccf76fac&amp;type=3#Background Effects&quot;) prop(&quot;_Background_Color&quot; rgb(255, 22, 69)) prop(&quot;_Accent_Color&quot; rgb(255, 165, 0)) prop(&quot;_Lightening_Color&quot; rgb(240, 224, 132)); background-color: rgb(255, 255, 255); border-top-width: 8px; border-right-width: 8px; border-bottom-width: 8px; border-left-width: 8px; border-top-left-radius: 70px; border-top-right-radius: 70px; border-bottom-right-radius: 70px; border-bottom-left-radius: 70px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);"/>
-        <ui:VisualElement name="c_Title" style="align-items: center; font-size: 65px; flex-direction: row; justify-content: center; margin-bottom: 15px; margin-top: 15px; -unity-font-style: bold; color: rgb(255, 255, 255); -unity-text-outline-width: 5px; -unity-text-outline-color: rgb(0, 0, 0); width: 100%;">
+        <ui:VisualElement name="c_Title" style="align-items: center; font-size: 65px; flex-direction: row; justify-content: center; margin-bottom: 15px; margin-top: 15px; -unity-font-style: bold; color: rgb(255, 255, 255); -unity-text-outline-width: 5px; -unity-text-outline-color: rgb(0, 0, 0); width: 100%; height: 8%; max-height: 12%;">
             <ui:Label text="BAND NAME" name="update_PlayerBand" class="band_name"/>
             <ui:Label text="vs." name="txt_vs" style="margin-right: 5px; margin-left: 5px;"/>
             <ui:Label text="OPPONENT NAME" name="update_LevelName" class="band_name"/>
             <ui:Label text=":" name="txt_colon"/>
-            <ui:Label text="YOU WIN!" name="update_WinLoss" style="width: 20%; -unity-text-align: upper-center;"/>
+            <ui:Label text="YOU WIN!" name="update_WinLoss" style="width: 20%; -unity-text-align: upper-center; white-space: normal; -unity-text-generator: advanced; -unity-text-auto-size: best-fit 35px 65px;"/>
         </ui:VisualElement>
         <ui:VisualElement name="c_Scores" style="flex-grow: 1; flex-direction: row;">
             <ui:VisualElement name="c_IndividualStats" style="flex-grow: 1; width: 66%;">
@@ -49,7 +49,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="c_TeamStats" class="score_container" style="flex-grow: 1; width: 33%; align-items: center;">
-                <ui:Label text="Band Name" name="update_PlayerBandBanner" class="team_name"/>
+                <ui:Label text="Band Name" name="update_PlayerBandBanner" class="team_name" style="-unity-text-auto-size: best-fit 30px 96px;"/>
                 <ui:VisualElement name="spacer" class="score_spacer" style="flex-grow: 1; width: 100%;"/>
                 <ui:VisualElement name="c_Scores" class="team_stats">
                     <ui:VisualElement name="c_LetterGrade">
@@ -61,7 +61,7 @@
                         <ui:Label text="Team Score" name="txt_OverallTeamScore" style="align-self: center;"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="c_MVP" style="flex-grow: 1; height: 30%; width: 50%;">
+                <ui:VisualElement name="c_MVP" style="flex-grow: 1; height: 30%; width: 35px;">
                     <ui:VisualElement name="portrait_MVP" class="team_MVP_icon">
                         <ui:Label text="MVP" name="txt_MVP" class="team_MVP_text"/>
                     </ui:VisualElement>
@@ -74,7 +74,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="c_ActionButtons" style="flex-grow: 1; align-self: center; justify-content: center; display: none; width: 100%; background-color: rgba(0, 0, 0, 0.67);">
+    <ui:VisualElement name="c_ActionButtons" style="flex-grow: 1; align-self: center; justify-content: best-fit; display: none; width: 60px; background-color: rgba(0, 0, 0, 0.67);">
         <ui:Button text="Next level" name="b_Next" class="action_button"/>
         <ui:Button text="Retry level" name="b_Retry" class="action_button"/>
         <ui:Button text="View Leaderboard" name="b_Leaderboard" class="action_button"/>

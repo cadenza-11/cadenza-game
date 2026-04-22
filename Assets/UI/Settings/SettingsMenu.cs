@@ -1,9 +1,14 @@
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Cadenza
 {
     public class SettingsMenu : UIPanel
     {
+        [SerializeField] private PanelSettings cadenzaPanelSettings;
+        [SerializeField] private PanelSettings cadenzaWorldPanelSettings;
+        [SerializeField] private ThemeStyleSheet defaultThemeStyleSheet;
+        [SerializeField] private ThemeStyleSheet dyslexiaFriendlyThemeStyleSheet;
         private BeatIndicator blinker;
         private Button[] tabButtons;
         private VisualElement[] tabViews;
@@ -49,6 +54,9 @@ namespace Cadenza
             var ambientImpulseForceSlider = this.root.Q<Slider>("slider_AmbientImpulseForce");
             ambientImpulseForceSlider.RegisterValueChangedCallback(evt => CameraSystem.AmbientImpulseForce = evt.newValue);
             ambientImpulseForceSlider.SetValueWithoutNotify(CameraSystem.AmbientImpulseForce);
+            var dyslexiaFriendlyToggle = this.root.Q<Toggle>("toggle_DyslexiaFriendly");
+            dyslexiaFriendlyToggle.RegisterValueChangedCallback(evt => this.ToggleDyslexiaFriendly(evt.newValue));
+            dyslexiaFriendlyToggle.value = PlayerPrefs.GetInt("DyslexiaFriendly", 0) == 1;
 
             // Configure audio.
             this.root.Q<Slider>("slider_Master").RegisterValueChangedCallback(evt => AudioSystem.SetVolume(AudioSystem.Group.Master, evt.newValue));
@@ -117,6 +125,13 @@ namespace Cadenza
             this.tabIndex = tabIndex;
             this.tabViews[this.tabIndex].style.display = DisplayStyle.Flex;
             this.tabButtons[this.tabIndex].ToggleInClassList("selected");
+        }
+
+        private void ToggleDyslexiaFriendly(bool enabled)
+        {
+            PlayerPrefs.SetInt("DyslexiaFriendly", enabled ? 1 : 0);
+            this.cadenzaPanelSettings.themeStyleSheet = enabled ? this.dyslexiaFriendlyThemeStyleSheet : this.defaultThemeStyleSheet;
+            this.cadenzaWorldPanelSettings.themeStyleSheet = enabled ? this.dyslexiaFriendlyThemeStyleSheet : this.defaultThemeStyleSheet;
         }
 
         #endregion

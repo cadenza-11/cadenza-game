@@ -1,0 +1,5 @@
+:root {
+    -unity-font-definition: url("project://database/Assets/Fonts/Open%20Dyslexic/OpenDyslexic-Regular%20SDF.asset?fileID=11400000&guid=9d6c3711bde37424b8df87a1f66e4e42&type=2#OpenDyslexic-Regular SDF");
+    font-size: 32px;
+    white-space: normal;
+}

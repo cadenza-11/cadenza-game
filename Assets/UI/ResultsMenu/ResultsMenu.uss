@@ -17,10 +17,10 @@
     -unity-text-outline-color: rgb(26, 26, 26);
     -unity-text-outline-width: 2px;
     letter-spacing: -4px;
-    margin-top: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -64,19 +64,24 @@
     flex-grow: 1;
     height: 50%;
     flex-direction: row;
-    font-size: 25px;
+    font-size: 21px;
     align-items: center;
     margin-right: 10px;
     margin-left: 10px;
+    margin-bottom: -2px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
 }
 
 .score_spacer {
     flex-grow: 1;
     align-self: center;
-    margin-top: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
     background-color: rgb(255, 255, 255);
     border-top-width: 1px;
     border-right-width: 1px;
@@ -137,6 +142,14 @@
 
 .indiv_name {
     font-size: 48px;
+    padding-top: -10px;
+    padding-right: -10px;
+    padding-bottom: -10px;
+    padding-left: -10px;
+    margin-top: -2px;
+    margin-right: -2px;
+    margin-bottom: -2px;
+    margin-left: -2px;
 }
 
 .indiv_instrument {
@@ -147,6 +160,7 @@
 .team_stat {
     font-size: 96px;
     align-self: center;
+    margin-bottom: -20px;
 }
 
 .team_MVP_icon {

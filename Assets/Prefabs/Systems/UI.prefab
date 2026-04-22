@@ -729,6 +729,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.SettingsMenu
   uiDocument: {fileID: 1303972900527864231}
+  cadenzaPanelSettings: {fileID: 11400000, guid: a9efd3a193903934489f7229d03c2959, type: 2}
+  cadenzaWorldPanelSettings: {fileID: 11400000, guid: bb256e294d07c2b4cb492770298b7b1f, type: 2}
+  defaultThemeStyleSheet: {fileID: -4733365628477956816, guid: 6c7fd4304507d004983595a79123c013, type: 3}
+  dyslexiaFriendlyThemeStyleSheet: {fileID: -4733365628477956816, guid: a09b8d32f0f678644b1bf09ae2b87a9f, type: 3}
 --- !u!1 &8024687789544267347
 GameObject:
   m_ObjectHideFlags: 0
