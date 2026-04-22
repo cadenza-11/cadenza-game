@@ -6187,13 +6187,17 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2477996042757381313, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4395458272000507454, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6800297298057825910, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.98
+      value: -13.34
       objectReference: {fileID: 0}
     - target: {fileID: 6800297298057825910, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6201,7 +6205,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6800297298057825910, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.3
+      value: 10.16
       objectReference: {fileID: 0}
     - target: {fileID: 6800297298057825910, guid: c4993e860090b0546845e4f00b0b8e95, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6273,6 +6277,7 @@ MonoBehaviour:
   anim: {fileID: 328030994}
   projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
   curState: 0
+  TargetLocation: {x: 0, y: 0}
   curPhase: 0
   pillars:
   - {fileID: 870773258}

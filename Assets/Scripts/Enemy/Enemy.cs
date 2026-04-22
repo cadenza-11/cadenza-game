@@ -44,7 +44,7 @@ namespace Cadenza
         protected float nearestPlayerDist;
         protected float curAngle;
         protected Player follow;
-        protected Vector2 TargetLocation;
+        [SerializeField] protected Vector2 TargetLocation;
         //Unseriealize isActionable later
         protected bool isActionable;
 

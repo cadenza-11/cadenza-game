@@ -132,7 +132,8 @@ namespace Cadenza
             if(!EnemyManager.CheckGrunts(this))
             {
                 Debug.Log("Requests next phase");
-                GameManager.RequestNextPhase();
+                //Sets the phase Index to 1
+                AudioSystem.SetParameter("MusicState", 1);
             }
             base.DeadState();
         }

@@ -10,9 +10,9 @@ namespace Cadenza
         bool inZoomSetup = false;
         float lerpTime = 0;
         float pillarLerpTime = 0;
-        float startPosition;
+        Vector2 startPosition;
         [SerializeField] GameObject[] pillars = new GameObject[11];
-        bool[] isPillarRising = new bool[11];
+        bool[] isPillarRising = {false, false, false, false, false, false, false, false, false, false, false};
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -61,14 +61,20 @@ namespace Cadenza
         {
             this.curPhase = 1;
             //Moves enemy out of stage and freezes them in places
-            this.transform.position = new Vector3(100,100,100);
+            //this.transform.position = new Vector3(100,100,100);
             this.rb.constraints = RigidbodyConstraints.FreezeAll;
+            this.rb.linearVelocity = Vector3.zero;
             EnemyManager.GruntPhase();
         }
 
         private void Phase2()
         {
             Debug.Log("Goes into second phase");
+            //Resets enemy rigid body to allow movement but restrict rotation in the X and Z axis
+            this.rb.constraints = RigidbodyConstraints.FreezeRotation;
+            //Places enemy in center of the stage will add better animation to this later
+            this.transform.position = new Vector3(0.5f, 5, 6);
+            this.rb.linearVelocity = Vector3.zero;
             this.curPhase = 2;
 
         }
@@ -98,11 +104,6 @@ namespace Cadenza
         private void ExitPhase1()
         {
             Debug.Log("Exits first phase");
-            //Resets enemy rigid body to allow movement but restrict rotation in the X and Z axis
-            this.rb.constraints = RigidbodyConstraints.FreezeRotation;
-
-            //Places enemy in center of the stage will add better animation to this later
-            this.transform.position = new Vector3(0, 5, 5);
         }
 
         private void ExitPhase2()
@@ -132,20 +133,26 @@ namespace Cadenza
 
         void Zoom()
         {
-            Debug.Log("Goes into zoom");
             if(!this.inZoom) 
             {
-                int playerId = Random.Range(1, PlayerSystem.PlayerCount + 1);
-                Player targetPlayer = PlayerSystem.Players[playerId];
+                int numPlayers = 0;
+                foreach(var player in PlayerSystem.Players)
+                {
+                    numPlayers++;
+                }
+                int playerId = Random.Range(1, numPlayers + 1);
+                Debug.Log("" + playerId + ",  " + numPlayers + 1);
+                Player targetPlayer = PlayerSystem.Players[playerId - 1];
                 if(this.transform.position.x <= 0)
                 {
-                    this.TargetLocation = new Vector2(-10, targetPlayer.transform.position.z);
+                    this.TargetLocation = new Vector2(-7, targetPlayer.transform.position.z);
                 }
                 else
                 {
-                    this.TargetLocation = new Vector2(10, targetPlayer.transform.position.z);
+                    this.TargetLocation = new Vector2(7, targetPlayer.transform.position.z);
                 }
-                this.startPosition = this.transform.position.x;
+                this.startPosition.x = this.transform.position.x;
+                this.startPosition.y = this.transform.position.z;
                 this.inZoom = true;
                 this.inZoomSetup = true;
                 this.ChoosePillar();
@@ -157,12 +164,12 @@ namespace Cadenza
                     if(this.isPillarRising[i])
                     {
                         this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x, 
-                                Mathf.Lerp(-1.1f, 0.5f, this.pillarLerpTime), this.pillars[i].transform.position.z);
+                                Mathf.Lerp(-1.1f, 0.5f, this.pillarLerpTime/6.0f), this.pillars[i].transform.position.z);
                     }
                     else
                     {
                         this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x,
-                                Mathf.Lerp(0.5f, -1.1f, this.pillarLerpTime), this.pillars[i].transform.position.z);
+                                Mathf.Lerp(0.5f, -1.1f, this.pillarLerpTime/6.0f), this.pillars[i].transform.position.z);
                     }
                 }
                 this.pillarLerpTime += Time.deltaTime;
@@ -170,7 +177,8 @@ namespace Cadenza
                 if(distance.SqrMagnitude() < 2)
                 {
                     this.inZoomSetup = false;
-                    this.startPosition = this.TargetLocation.x;
+                    this.startPosition.x = this.TargetLocation.x;
+                    this.startPosition.y = this.TargetLocation.y;
 
                     this.TargetLocation.x *= -1;
                     this.lerpTime = 0;
@@ -179,8 +187,8 @@ namespace Cadenza
                 }
                 else
                 {
-                    this.transform.position = new Vector3(Mathf.Lerp(this.startPosition, this.TargetLocation.x, this.lerpTime), 
-                                                        this.transform.position.y, this.transform.position.z);
+                    this.transform.position = new Vector3(Mathf.Lerp(this.startPosition.x, this.TargetLocation.x, this.lerpTime/10.0f), 
+                                                        this.transform.position.y, Mathf.Lerp(this.startPosition.y, this.TargetLocation.y, this.lerpTime/10.0f));
                     this.lerpTime += Time.deltaTime;
                 }
             }
@@ -200,8 +208,8 @@ namespace Cadenza
                 }
                 else
                 {
-                    this.transform.position = new Vector3(Mathf.Lerp(this.startPosition, this.TargetLocation.x, this.lerpTime), 
-                                                        this.transform.position.y, this.transform.position.z);
+                    this.transform.position = new Vector3(Mathf.Lerp(this.startPosition.x, this.TargetLocation.x, this.lerpTime/10.0f), 
+                                                        this.transform.position.y, Mathf.Lerp(this.startPosition.y, this.TargetLocation.y, this.lerpTime/10.0f));
                     this.lerpTime += Time.deltaTime;
                 }
             }
@@ -214,9 +222,9 @@ namespace Cadenza
             for(int i = 0; i < numPillars; i++)
             {
                 int index = Random.Range(1, 12);
-                if(!this.isPillarRising[index])
+                if(!this.isPillarRising[index - 1])
                 {
-                    this.isPillarRising[index] = true;
+                    this.isPillarRising[index - 1] = true;
                 }
                 else if(Random.Range(1, 3) < 2)
                 {
