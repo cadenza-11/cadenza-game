@@ -8,10 +8,10 @@ namespace Cadenza
     extra in them they will be removed */
     public class EnemyGrunt : Enemy
     {
-        private float moveTimer = -1;
+        [SerializeField] private float moveTimer = -1;
         private static int rotationNum = 0;
         private bool continueMelee;
-        private int moveDir;
+        [SerializeField] private int moveDir = -1;
         
 
         public override void Initialize()
@@ -129,8 +129,9 @@ namespace Cadenza
 
         protected override void DeadState()
         {
-            if(!EnemyManager.CheckGrunts())
+            if(!EnemyManager.CheckGrunts(this))
             {
+                Debug.Log("Requests next phase");
                 GameManager.RequestNextPhase();
             }
             base.DeadState();

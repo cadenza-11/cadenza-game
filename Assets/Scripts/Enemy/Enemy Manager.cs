@@ -86,18 +86,18 @@ namespace Cadenza
         public static void GruntPhase()
         {
             //chooses a random number between 8 and 15 for the number of grunts spawned
-            for(int i = 0; i < Random.Range(8, 16); i++)
+            for(int i = 0; i < Random.Range(1, 2); i++)
             {
-                Vector3 position = new Vector3(Random.Range(-10, 10), 10, Random.Range(-10, 10));
+                Vector3 position = new Vector3(Random.Range(-7.0f, 7.0f), 6, Random.Range(1.0f, 10.0f));
                 Instantiate(singleton.gruntPrefab, position, Quaternion.identity);
             }
         }
 
-        public static bool CheckGrunts()
+        public static bool CheckGrunts(EnemyGrunt g)
         {
             foreach(var enemy in singleton.enemies)
             {
-                if(enemy is EnemyGrunt)
+                if(enemy is EnemyGrunt && enemy != g)
                 {
                     return true;
                 }

@@ -4,7 +4,7 @@ namespace Cadenza
 {
     public class DanceZoomer : Enemy
     {
-        int curPhase = 0;
+        [SerializeField] int curPhase = 0;
         int beatCount = 0;
         bool inZoom = false;
         bool inZoomSetup = false;
@@ -33,6 +33,7 @@ namespace Cadenza
 
         private void OnPhaseEntered(Phase phase)
         {
+            Debug.Log(phase.Index);
             switch(phase.Index)
             {
                 case 0: //Grunt onslaught this enemy does nothing
@@ -62,18 +63,19 @@ namespace Cadenza
             //Moves enemy out of stage and freezes them in places
             this.transform.position = new Vector3(100,100,100);
             this.rb.constraints = RigidbodyConstraints.FreezeAll;
+            EnemyManager.GruntPhase();
         }
 
         private void Phase2()
         {
+            Debug.Log("Goes into second phase");
             this.curPhase = 2;
-            //Places enemy in center of the stage will add better animation to this later
-            this.transform.position = new Vector3(0, 5, 0);
 
         }
 
         private void Phase3()
         {
+            Debug.Log("Goes into third phase");
             this.curPhase = 3;
         }
 
@@ -95,8 +97,12 @@ namespace Cadenza
 
         private void ExitPhase1()
         {
+            Debug.Log("Exits first phase");
             //Resets enemy rigid body to allow movement but restrict rotation in the X and Z axis
-            this.rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            this.rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+            //Places enemy in center of the stage will add better animation to this later
+            this.transform.position = new Vector3(0, 5, 5);
         }
 
         private void ExitPhase2()
@@ -126,6 +132,7 @@ namespace Cadenza
 
         void Zoom()
         {
+            Debug.Log("Goes into zoom");
             if(!this.inZoom) 
             {
                 int playerId = Random.Range(1, PlayerSystem.PlayerCount + 1);

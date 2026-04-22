@@ -45,6 +45,7 @@ namespace Cadenza
         protected float curAngle;
         protected Player follow;
         protected Vector2 TargetLocation;
+        //Unseriealize isActionable later
         protected bool isActionable;
 
         #endregion
@@ -53,6 +54,12 @@ namespace Cadenza
         void Start()
         {
             EnemyManager.AddEnemy(this);
+        }
+
+        void Awake()
+        {
+            Debug.Log("Goes into awake");
+            this.isActionable = true;
         }
 
         public virtual void Initialize()
