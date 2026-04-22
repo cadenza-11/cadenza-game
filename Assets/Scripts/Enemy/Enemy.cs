@@ -44,7 +44,8 @@ namespace Cadenza
         protected float nearestPlayerDist;
         protected float curAngle;
         protected Player follow;
-        protected Vector2 TargetLocation;
+        [SerializeField] protected Vector2 TargetLocation;
+        //Unseriealize isActionable later
         protected bool isActionable;
 
         #endregion
@@ -53,6 +54,12 @@ namespace Cadenza
         void Start()
         {
             EnemyManager.AddEnemy(this);
+        }
+
+        void Awake()
+        {
+            Debug.Log("Goes into awake");
+            this.isActionable = true;
         }
 
         public virtual void Initialize()
@@ -376,6 +383,7 @@ namespace Cadenza
 
         protected virtual void DeadState()
         {
+            Debug.Log("Goes into dead state");
             this.anim.SetBool("IsFainted", true);
             this.rb.linearVelocity = Vector3.zero;
             EnemyManager.RemoveEnemy(this);

@@ -8,10 +8,10 @@ namespace Cadenza
     extra in them they will be removed */
     public class EnemyGrunt : Enemy
     {
-        private float moveTimer = -1;
+        [SerializeField] private float moveTimer = -1;
         private static int rotationNum = 0;
         private bool continueMelee;
-        private int moveDir;
+        [SerializeField] private int moveDir = -1;
         
 
         public override void Initialize()
@@ -58,16 +58,11 @@ namespace Cadenza
                 this.TargetLocation = this.FindNearestPlayerDist();
                 EnemyManager.GroupAttack();
             }
-        }
 
-        protected override void RangedState()
-        {
-            
-        }
-
-        protected override void RunState()
-        {
-            
+            if(this.currentHealth <= 0)
+            {
+                this.curState = EnemyState.Dead;
+            }
         }
 
         protected override void MeleeState()
@@ -83,6 +78,11 @@ namespace Cadenza
             }
             this.MeleeAttack();
             this.moveTimer -= Time.deltaTime;
+
+            if(this.currentHealth <= 0)
+            {
+                this.curState = EnemyState.Dead;
+            }
         }
 
         protected override void FixedUpdate()
@@ -108,6 +108,11 @@ namespace Cadenza
             {
                 this.curState = EnemyState.Melee;
             }
+
+            if(this.currentHealth <= 0)
+            {
+                this.curState = EnemyState.Dead;
+            }
         }
 
         public void GroupAttack(Vector2 location)
@@ -120,6 +125,17 @@ namespace Cadenza
             rotationNum %= 12;
             this.TargetLocation = target;
             this.curState = EnemyState.Chase;
+        }
+
+        protected override void DeadState()
+        {
+            if(!EnemyManager.CheckGrunts(this))
+            {
+                Debug.Log("Requests next phase");
+                //Sets the phase Index to 1
+                AudioSystem.SetParameter("MusicState", 1);
+            }
+            base.DeadState();
         }
     }
 }
