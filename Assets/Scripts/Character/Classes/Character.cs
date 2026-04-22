@@ -5,7 +5,6 @@ using Cadenza.Combo;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.XInput;
 using UnityEngine.VFX;
-using Cadenza.Utils;
 
 namespace Cadenza
 {
@@ -16,6 +15,8 @@ namespace Cadenza
         [SerializeField] public float speed;
         [SerializeField] public float attackDuration;
         [SerializeField] public float baseHealth;
+        [SerializeField] private float postHitInvulnerabilityBeats;
+        [SerializeField] private float minimumInvulnerabilityTime;
 
         [Header("Assign in Inspector")]
         [SerializeField] public AttackArea AttackArea;
@@ -55,6 +56,7 @@ namespace Cadenza
         private float revive;
         private float parryActiveUntil = float.NegativeInfinity;
         private float pcFactor;
+        private bool isInvulnerable;
 
         public class Input
         {
@@ -276,6 +278,9 @@ namespace Cadenza
 
         public bool TakeDamage(int damage)
         {
+            if (this.isInvulnerable)
+                return false;
+
             // Parry.
             if (this.IsParrying())
             {
@@ -303,7 +308,15 @@ namespace Cadenza
                 this.Died?.Invoke(this);
             }
             else if (health < this.currentHealth && !this.isFainted)
+            {
                 this.ChangeState(this.hitStun.WithDuration(this.attackDuration));
+
+                // Give i-frames.
+                float invulnerabilitySeconds = Mathf.Max(
+                    this.minimumInvulnerabilityTime,
+                    (float)BeatSystem.SecondsPerBeat * this.postHitInvulnerabilityBeats);
+                this.BeginInvulnerability(invulnerabilitySeconds);
+            }
 
             this.currentHealth = Mathf.Clamp(health, 0.0f, this.maxHealth);
             this.HealthChanged?.Invoke(this.currentHealth, this.isFainted);
@@ -432,6 +445,22 @@ namespace Cadenza
                 this.Revived?.Invoke();
                 this.ChangeState(this.walking);
             }
+        }
+
+        #endregion
+        #region Invulnerability
+
+        private void BeginInvulnerability(float seconds)
+        {
+            this.isInvulnerable = true;
+            this.Sprite.material.SetInt("_Damage", 1);
+            this.Schedule(seconds, this.ClearInvulnerability);
+        }
+
+        private void ClearInvulnerability()
+        {
+            this.isInvulnerable = false;
+            this.Sprite.material.SetInt("_Damage", 0);
         }
 
         #endregion

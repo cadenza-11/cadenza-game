@@ -18,7 +18,6 @@ namespace Cadenza
             character.Animator.SetTrigger("IsHit");
             character.Schedule(this.duration, () =>
             {
-                character.Sprite.material.SetInt("_Damage", 0);
                 if (!character.isFainted)
                     character.ChangeState(character.walking);
             });
