@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: charli_idle_0
+      name: zoomer_idle_0
       rect:
         serializedVersion: 2
         x: 0
@@ -125,14 +125,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bcddb4c59c89f474598d03ff4e1cb535
-      internalID: -768658821
+      spriteID: f8cc1c8caf39cb942be5b502fc1e210a
+      internalID: 1595359396
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: charli_idle_1
+      name: zoomer_idle_1
       rect:
         serializedVersion: 2
         x: 2160
@@ -147,14 +147,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cf009513c1e7fdd48b4c22623f86a056
-      internalID: 654879995
+      spriteID: d0eb7f7d95382ad408ddab2a696431cf
+      internalID: 1613761510
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: charli_idle_2
+      name: zoomer_idle_2
       rect:
         serializedVersion: 2
         x: 4320
@@ -169,14 +169,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3b223950a78bfe346b2f46fdc420a24c
-      internalID: 1202375679
+      spriteID: 543f3d0f9623d4f4bb0c7bf343be251d
+      internalID: 1367391971
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: charli_idle_3
+      name: zoomer_idle_3
       rect:
         serializedVersion: 2
         x: 6480
@@ -191,14 +191,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1e381f29c5df8cd43885c1eb65fb534c
-      internalID: 1860802224
+      spriteID: 978e09e94106d0241b57792fe39d0272
+      internalID: -1647746718
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: charli_idle_4
+      name: zoomer_idle_4
       rect:
         serializedVersion: 2
         x: 0
@@ -213,8 +213,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fc5eed70b3dc9b440af270eece2a5524
-      internalID: 715389684
+      spriteID: b2db80129a15dfd43a21a3c07e5c2bb9
+      internalID: -392334994
       vertices: []
       indices: 
       edges: []
@@ -235,11 +235,11 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":2.0},"gridSpriteSize":{"x":2160.0,"y":2160.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      charli_idle_0: -768658821
-      charli_idle_1: 654879995
-      charli_idle_2: 1202375679
-      charli_idle_3: 1860802224
-      charli_idle_4: 715389684
+      zoomer_idle_0: 1595359396
+      zoomer_idle_1: 1613761510
+      zoomer_idle_2: 1367391971
+      zoomer_idle_3: -1647746718
+      zoomer_idle_4: -392334994
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

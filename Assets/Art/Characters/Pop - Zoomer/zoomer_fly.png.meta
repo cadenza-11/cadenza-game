@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 70b02b00d0d011f41a1148acc1154188
+guid: 1d5efbfff7516584aa916161501852f8
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,95 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: charli_charge_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 4320
-        width: 2160
-        height: 2160
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 58806adc85b32064eba6ca65645fa789
-      internalID: -709760263
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: charli_charge_1
-      rect:
-        serializedVersion: 2
-        x: 2160
-        y: 4320
-        width: 2160
-        height: 2160
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a96597d14ac0c7f44bd0413d4ab7e904
-      internalID: 797559398
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: charli_charge_2
-      rect:
-        serializedVersion: 2
-        x: 4320
-        y: 4320
-        width: 2160
-        height: 2160
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 29e24684da8bc2143ae2c1caa23af3d2
-      internalID: -1746826254
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: charli_charge_3
-      rect:
-        serializedVersion: 2
-        x: 6480
-        y: 4320
-        width: 2160
-        height: 2160
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 48d334a8840a0764da3e96e66a8d12a1
-      internalID: -918818101
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: charli_charge_4
+      name: zoomer_fly_0
       rect:
         serializedVersion: 2
         x: 0
@@ -213,14 +125,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 26612357789462e40b97ea0346dc88a6
-      internalID: -495006799
+      spriteID: 2ff578c1e10cd0143a07cfdf3c8d12d4
+      internalID: -275606792
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: charli_charge_5
+      name: zoomer_fly_1
       rect:
         serializedVersion: 2
         x: 2160
@@ -235,14 +147,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 55ed196e1028af14fabd1e402fa64963
-      internalID: 1227639105
+      spriteID: ba07de71069780747b729b510432056d
+      internalID: -1408144668
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: charli_charge_6
+      name: zoomer_fly_2
       rect:
         serializedVersion: 2
         x: 4320
@@ -257,14 +169,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 81e42b2f6803e2649b448e9d44d82321
-      internalID: 113737815
+      spriteID: da5110cd8aec82f4ba0fd9cf615efcd9
+      internalID: 1619433112
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: charli_charge_7
+      name: zoomer_fly_3
       rect:
         serializedVersion: 2
         x: 6480
@@ -279,14 +191,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 32d73381b9b276e478336e715a10f931
-      internalID: -1492034934
+      spriteID: 739147d6c1ab2944caa78db0c85a3af4
+      internalID: -740999273
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: charli_charge_8
+      name: zoomer_fly_4
       rect:
         serializedVersion: 2
         x: 0
@@ -301,30 +213,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 90f6f6e5b0ec28041b66c3cec6fd7428
-      internalID: -831413113
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: charli_charge_9
-      rect:
-        serializedVersion: 2
-        x: 2160
-        y: 0
-        width: 2160
-        height: 2160
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ee7fe04d3d95c164b903479d657a18fd
-      internalID: 428000516
+      spriteID: cded480db476594488115d50fc4e6283
+      internalID: 1706649048
       vertices: []
       indices: 
       edges: []
@@ -333,7 +223,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5103a6dd5bb27d547b88f956dfa3cf10
+    spriteID: 62b6ea0abaa4a4d48881a1a8cfcffdfa
     internalID: 0
     vertices: []
     indices: 
@@ -343,18 +233,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":3.0},"gridSpriteSize":{"x":2160.0,"y":2160.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":2.0},"gridSpriteSize":{"x":2160.0,"y":2160.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      charli_charge_0: -709760263
-      charli_charge_1: 797559398
-      charli_charge_2: -1746826254
-      charli_charge_3: -918818101
-      charli_charge_4: -495006799
-      charli_charge_5: 1227639105
-      charli_charge_6: 113737815
-      charli_charge_7: -1492034934
-      charli_charge_8: -831413113
-      charli_charge_9: 428000516
+      zoomer_fly_0: -275606792
+      zoomer_fly_1: -1408144668
+      zoomer_fly_2: 1619433112
+      zoomer_fly_3: -740999273
+      zoomer_fly_4: 1706649048
+      zoomer_fly_5: 1518931859
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
