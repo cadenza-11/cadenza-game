@@ -52,6 +52,7 @@ namespace Cadenza
             if (!this.playerTrackers.ContainsKey(player))
                 this.playerTrackers[player] = new PlayerTracker()
                 {
+                    SelectedColorIndex = 0,
                     SettingsFocusIndex = 0,
                     HapticsFocusIndex = 0,
                     SupportsRumbleHaptics = false,
@@ -61,6 +62,7 @@ namespace Cadenza
 
             // Show initial phase.
             this.playerTrackers[player].Phase = SelectPhase.Joining;
+            this.playerTrackers[player].SelectedColorIndex = 0;
             this.ShowPhase(this.playerContainers[player.ID], SelectPhase.Joining);
 
             // Enable the new player's UI input.

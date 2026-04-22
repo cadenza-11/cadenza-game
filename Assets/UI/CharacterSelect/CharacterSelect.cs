@@ -63,6 +63,7 @@ namespace Cadenza
         {
             public SelectPhase Phase;
             public int CalibrationAttempts;
+            public int SelectedColorIndex;
             public int SettingsFocusIndex;
             public int HapticsFocusIndex;
             public bool SupportsRumbleHaptics;
@@ -396,6 +397,9 @@ namespace Cadenza
             if (phase == SelectPhase.Haptics &&
                 this.TryGetPlayerByContainer(playerContainer, out _, out PlayerTracker hapticsTracker))
                 this.SetHapticsFocus(playerContainer, hapticsTracker.HapticsFocusIndex);
+            if (phase == SelectPhase.CharacterSelection &&
+                this.TryGetPlayerByContainer(playerContainer, out _, out PlayerTracker selectionTracker))
+                this.RefreshShownColor(playerContainer, selectionTracker);
 
             if (phase == SelectPhase.Joining)
                 playerContainer.Container.RemoveFromClassList("joined");
