@@ -31,6 +31,7 @@ namespace Cadenza
             this.isActionable = true;
             this.rangedTimer = 0.0f;
             this.phase = 4 - EnemyManager.EnemyCount;
+            this.curAngle = 100;
             this.combatStarted = true;
         }
 
@@ -40,15 +41,18 @@ namespace Cadenza
             {
                 this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
             }
-            if (this.curAngle * (180 / Math.PI) > -90 && this.curAngle * (180 / Math.PI) < 90)
+            if (this.combatStarted)
             {
-                // No rotation needed.
-                this.transform.rotation = Quaternion.Euler(0, 0, 0);
-            }
-            else
-            {
-                // Turn character to the left.
-                this.transform.rotation = Quaternion.Euler(0, 180, 0);
+                if (this.curAngle * (180 / Math.PI) > -90 && this.curAngle * (180 / Math.PI) < 90)
+                {
+                    // No rotation needed.
+                    this.transform.rotation = Quaternion.Euler(0, 0, 0);
+                }
+                else
+                {
+                    // Turn character to the left.
+                    this.transform.rotation = Quaternion.Euler(0, 180, 0);
+                }
             }
 
             //Checks if the Enemy's state needs to change
@@ -81,18 +85,18 @@ namespace Cadenza
         override protected void RangedAttack()
         {
             this.anim.SetTrigger("LightAttack");
-            for (int i = 0; i < 3 * this.phase; i++)
+            for (int i = 0; i < 2 * this.phase; i++)
             {
-                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.125f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
+                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-9.0f, 9.0f), -0.125f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
             }
         }
 
         protected override void RangedAttack(Vector2 direction)
         {
             this.anim.SetTrigger("LightAttack");
-            for (int i = 0; i < 3 * this.phase; i++)
+            for (int i = 0; i < 2 * this.phase; i++)
             {
-                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-15.0f, 15.0f), -0.125f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
+                GameObject projectileInstance = Instantiate(this.projectile, new Vector3(UnityEngine.Random.Range(-9.0f, 9.0f), -0.125f, UnityEngine.Random.Range(-2.5f, 2.5f)), Quaternion.identity);
             }
         }
 
