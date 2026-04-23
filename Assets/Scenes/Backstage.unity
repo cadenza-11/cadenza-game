@@ -4139,6 +4139,10 @@ PrefabInstance:
       value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 4210586607336845768, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4210586607336845768, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
       propertyPath: FollowOffset.z
       value: -6
       objectReference: {fileID: 0}
@@ -4200,17 +4204,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8733062356156706351, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9990483
+      value: 0.9975641
       objectReference: {fileID: 0}
     - target: {fileID: 8733062356156706351, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.043619405
+      value: 0.06975647
       objectReference: {fileID: 0}
     - target: {fileID: 8733062356156706351, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 5
+      value: 8
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4210586607336845768, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
     m_RemovedGameObjects:
     - {fileID: 4895900707932513258, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
     m_AddedGameObjects: []
