@@ -7151,6 +7151,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8157993186248040828, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
+      propertyPath: defaultTargetRadius
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8733062356156706351, guid: 33248809c542d4774bcc1e44a4f3362f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.98489
@@ -15606,7 +15610,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1050471762
 Transform:
   m_ObjectHideFlags: 0
@@ -19935,7 +19939,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1330896410
 Transform:
   m_ObjectHideFlags: 0
@@ -22432,7 +22436,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bb3120164ab38544fbd179f7d47efadd, type: 2}
+  - {fileID: 2100000, guid: 86b32b4857cf5ca4db249095a1bd538b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
