@@ -56,10 +56,9 @@ namespace Cadenza
             EnemyManager.AddEnemy(this);
         }
 
-        void Awake()
+        public virtual void Awake()
         {
             Debug.Log("Goes into awake");
-            this.isActionable = true;
         }
 
         public virtual void Initialize()

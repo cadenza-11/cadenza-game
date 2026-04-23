@@ -19,7 +19,12 @@ namespace Cadenza
             base.Initialize();
             this.moveTimer = 0;
         }
-
+        
+        public override void Awake()
+        {
+            this.isActionable = true;
+            base.Awake();
+        }
         protected override void RangedAttack()
         {
             
