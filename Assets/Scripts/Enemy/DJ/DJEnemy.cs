@@ -8,6 +8,8 @@ namespace Cadenza
     {
         [SerializeField] private DJCore[] cores;
         [SerializeField] private DroppingVinyl[] droppingVinyls;
+        [SerializeField] private SweepingLaser[] sweepingLasers;
+        [SerializeField] private ElectrifiedQuadrants electrifiedQuadrants;
         [SerializeField] private int coreMaxHealth;
         [SerializeField] private GameObject forcefield;
         [SerializeField] private Light spotlight;
@@ -22,18 +24,21 @@ namespace Cadenza
         {
             EnemyManager.AddEnemy(this);
             GameManager.PhaseEntered += this.OnPhaseEntered;
+            this.healthMaterial = this.healthbarHolder.GetComponent<Renderer>().materials[1];
+        }
+        
+        void OnDestroy()
+        {
+            GameManager.PhaseEntered -= this.OnPhaseEntered;
         }
 
         override public void Initialize()
         {
-            this.healthMaterial = this.healthbarHolder.GetComponent<Renderer>().materials[1];
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
             this.speed = 0f;
             this.isAttacking = false;
             this.isActionable = true;
-            this.anim.SetBool("PhaseTwoComplete", false);
-            this.electricity.SetActive(false);
         }
 
         override protected void FixedUpdate(){}
@@ -52,6 +57,8 @@ namespace Cadenza
                 {
                     foreach (var vinyl in this.droppingVinyls)
                         vinyl.ShutDown();
+                    foreach (var laser in this.sweepingLasers)
+                        laser.ShutDown();
                     this.anim.SetTrigger("Die");
                     this.electricity.SetActive(true);
                     this.spotlight.DOIntensity(0, 10f).OnComplete(() => EnemyManager.RemoveEnemy(this));
@@ -94,6 +101,7 @@ namespace Cadenza
             switch (phase.Index)
             {
                 case 0:
+                    this.electricity.SetActive(false);
                     Debug.Log("// DJ PHASE : ONSLAUGHT 1 //");
                     this.OnEarlyOnslaughtStart(this.coreMaxHealth, 15, Color.softBlue);
                     break;
@@ -125,10 +133,18 @@ namespace Cadenza
             this.forcefield.SetActive(true);
             this.currentHealth = this.maxHealth;
             this.anim.SetBool("IsDowned", false);
+            this.anim.SetBool("PhaseTwoComplete", false);
             foreach (var core in this.cores)
                 core.Initialize(coreHealth);
             foreach (var vinyl in this.droppingVinyls)
                 vinyl.Initialize(homingBeats);
+            int laserOffset = 0;
+            foreach (var laser in this.sweepingLasers)
+            {
+                laser.Initialize(homingBeats, laserOffset);
+                laserOffset += 5;
+            }
+            this.electrifiedQuadrants.Initialize(homingBeats, isPhaseThree: false);
             this.isDown = false;
             this.spotlight.intensity = 200;
             this.spotlight.color = spotlightColor;
@@ -139,6 +155,9 @@ namespace Cadenza
             Debug.Log("Starting downed phase");
             foreach (var vinyl in this.droppingVinyls)
                 vinyl.ShutDown();
+            foreach (var laser in this.sweepingLasers)
+                laser.ShutDown();
+            this.electrifiedQuadrants.ShutDown();
             this.forcefield.SetActive(false);
             this.anim.SetBool("IsDowned", true);
             this.spotlight.intensity = 1000;
@@ -151,6 +170,13 @@ namespace Cadenza
             Debug.Log("Starting final onslaught");
             foreach (var vinyl in this.droppingVinyls)
                 vinyl.Initialize(5);
+            int laserOffset = 0;
+            foreach (var laser in this.sweepingLasers)
+            {
+                laser.Initialize(5, laserOffset);
+                laserOffset += 2;
+            }
+            this.electrifiedQuadrants.Initialize(10, isPhaseThree: true);
             this.currentHealth = this.maxHealth;
             this.spotlight.intensity = 200;
             this.spotlight.color = Color.lightGoldenRodYellow;
