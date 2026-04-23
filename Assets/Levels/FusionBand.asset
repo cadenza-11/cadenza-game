@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FusionBand
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Level
   ID: 3
-  Name: Jazz-Funk Fusion
+  Name: The Orchestra
   BuildIndex: 3
   IsBattleLevel: 1
   MusicTrack:
@@ -24,3 +24,4 @@ MonoBehaviour:
       Data4: -607478218
     Path: event:/MUS_Fusion
   PreviewImage: {fileID: 2800000, guid: 04bd7d22403d0db4cad006bcaf066982, type: 3}
+  Phases: []

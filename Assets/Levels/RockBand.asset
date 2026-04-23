@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RockBand
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Level
   ID: 2
-  Name: Rock Band
+  Name: The Doppelgang
   BuildIndex: 4
   IsBattleLevel: 1
   MusicTrack:
@@ -24,3 +24,4 @@ MonoBehaviour:
       Data4: -968114322
     Path: event:/MUS_Rock_2
   PreviewImage: {fileID: 2800000, guid: 04bd7d22403d0db4cad006bcaf066982, type: 3}
+  Phases: []
