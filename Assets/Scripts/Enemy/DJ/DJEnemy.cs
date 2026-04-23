@@ -9,6 +9,7 @@ namespace Cadenza
         [SerializeField] private DJCore[] cores;
         [SerializeField] private DroppingVinyl[] droppingVinyls;
         [SerializeField] private SweepingLaser[] sweepingLasers;
+        [SerializeField] private ElectrifiedQuadrants electrifiedQuadrants;
         [SerializeField] private int coreMaxHealth;
         [SerializeField] private GameObject forcefield;
         [SerializeField] private Light spotlight;
@@ -143,6 +144,7 @@ namespace Cadenza
                 laser.Initialize(homingBeats, laserOffset);
                 laserOffset += 5;
             }
+            this.electrifiedQuadrants.Initialize(homingBeats, isPhaseThree: false);
             this.isDown = false;
             this.spotlight.intensity = 200;
             this.spotlight.color = spotlightColor;
@@ -155,6 +157,7 @@ namespace Cadenza
                 vinyl.ShutDown();
             foreach (var laser in this.sweepingLasers)
                 laser.ShutDown();
+            this.electrifiedQuadrants.ShutDown();
             this.forcefield.SetActive(false);
             this.anim.SetBool("IsDowned", true);
             this.spotlight.intensity = 1000;
@@ -173,6 +176,7 @@ namespace Cadenza
                 laser.Initialize(5, laserOffset);
                 laserOffset += 2;
             }
+            this.electrifiedQuadrants.Initialize(10, isPhaseThree: true);
             this.currentHealth = this.maxHealth;
             this.spotlight.intensity = 200;
             this.spotlight.color = Color.lightGoldenRodYellow;
