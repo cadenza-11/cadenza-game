@@ -413,16 +413,9 @@ namespace Cadenza
             this.flow = Mathf.Clamp(flow, 0.0f, 20.0f);
 
             // Set flow buffs.
-            if (this.flow >= this.flowThreshold)
-            {
-                TeamSystem.SetClassFlowing(this.cClass.ID, true);
-                this.isFlowing = true;
-            }
-            else
-            {
-                TeamSystem.SetClassFlowing(this.cClass.ID, false);
-                this.isFlowing = false;
-            }
+            bool isFlowing = this.flow >= this.flowThreshold;
+            TeamSystem.SetClassFlowing(this.cClass.ID, isFlowing);
+            this.isFlowing = isFlowing;
 
             // Set shader.
             this.Sprite.material.SetInt("_Flowstate", this.isFlowing ? 1 : 0);
