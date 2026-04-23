@@ -103,7 +103,7 @@ namespace Cadenza
                 case 0:
                     this.electricity.SetActive(false);
                     Debug.Log("// DJ PHASE : ONSLAUGHT 1 //");
-                    this.OnEarlyOnslaughtStart(this.coreMaxHealth, 15, Color.softBlue);
+                    this.OnEarlyOnslaughtStart(this.coreMaxHealth, 15, 2, Color.softBlue);
                     break;
                 case 1:
                     Debug.Log("// DJ PHASE : DOWNED 1 //");
@@ -111,7 +111,7 @@ namespace Cadenza
                     break;
                 case 2:
                     Debug.Log("// DJ PHASE : ONSLAUGHT 2 //");
-                    this.OnEarlyOnslaughtStart((int)((float)this.coreMaxHealth*1.5f), 10, Color.softRed);
+                    this.OnEarlyOnslaughtStart((int)((float)this.coreMaxHealth*1.5f), 10, 4, Color.softRed);
                     break;
                 case 3:
                     Debug.Log("// DJ PHASE : DOWNED 2 //");
@@ -127,7 +127,7 @@ namespace Cadenza
             this.healthMaterial.SetFloat("_HealthPercent", (float)this.currentHealth / (float)this.maxHealth);
         }
 
-        private void OnEarlyOnslaughtStart(int coreHealth, int homingBeats, Color spotlightColor)
+        private void OnEarlyOnslaughtStart(int coreHealth, int homingBeats, int shrapnelAmount, Color spotlightColor)
         {
             Debug.Log($"Starting onslaught with core health: {coreHealth} and spotlight color: {spotlightColor}");
             this.forcefield.SetActive(true);
@@ -137,7 +137,7 @@ namespace Cadenza
             foreach (var core in this.cores)
                 core.Initialize(coreHealth);
             foreach (var vinyl in this.droppingVinyls)
-                vinyl.Initialize(homingBeats);
+                vinyl.Initialize(homingBeats, shrapnelAmount);
             int laserOffset = 0;
             foreach (var laser in this.sweepingLasers)
             {
@@ -169,7 +169,7 @@ namespace Cadenza
             this.anim.SetBool("IsDowned", false);
             Debug.Log("Starting final onslaught");
             foreach (var vinyl in this.droppingVinyls)
-                vinyl.Initialize(5);
+                vinyl.Initialize(5, 8);
             int laserOffset = 0;
             foreach (var laser in this.sweepingLasers)
             {

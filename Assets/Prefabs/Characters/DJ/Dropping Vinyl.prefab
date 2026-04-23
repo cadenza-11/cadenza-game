@@ -301,3 +301,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.DroppingVinyl
   attackSpotlight: {fileID: 420538404811609487}
+  shrapnelPrefab: {fileID: 1754074464431012627, guid: 817bb9ff5d2b4094ab07d4a9443c938e, type: 3}
