@@ -25,7 +25,7 @@ namespace Cadenza
         public void OnGameStop()
         {
             this.SetLevel(null);
-            BeatSystem.MarkerPassed += this.OnMarkerPassed;
+            BeatSystem.MarkerPassed -= this.OnMarkerPassed;
         }
 
         private void OnMarkerPassed(string markerName)
