@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Orange
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Colorway
   Name: Kendrick Lamar
-  PrimaryColor: {r: 0.6039216, g: 0.36078432, b: 0.11764707, a: 0}
+  PrimaryColor: {r: 0.41960788, g: 0.23137257, b: 0.16470589, a: 0}
   SecondaryColor: {r: 0.9960785, g: 0.36862746, b: 0.08235294, a: 0}
   TertiaryColor: {r: 0.16078432, g: 0.19215688, b: 0.65882355, a: 0}
   DisplayImage: {fileID: 0}

@@ -78,11 +78,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.size
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.size
@@ -101,6 +101,10 @@ PrefabInstance:
       value: DistortionAmountTwo
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Name
+      value: DistortionAmountOne
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[0].m_Value
       value: 0.25
       objectReference: {fileID: 0}
@@ -109,8 +113,24 @@ PrefabInstance:
       value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Value
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[0].m_Name
       value: BeamSpeedTwo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[1].m_Name
+      value: DistortionSpeedOne
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[2].m_Name
+      value: BeamSpeedOne
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[3].m_Name
+      value: DistortionSpeedTwo
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Name
@@ -129,7 +149,23 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[0].m_Value.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[1].m_Value.x
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[2].m_Value.x
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[3].m_Value.x
       value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
@@ -138,39 +174,55 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.x
-      value: 21.735847
+      value: 0.74901956
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.y
-      value: 21.735847
-      objectReference: {fileID: 0}
-    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
-      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.z
-      value: 21.735847
-      objectReference: {fileID: 0}
-    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
-      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Value.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Value.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Value.y
-      value: 39.89416
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Value.z
-      value: 63.999992
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[0].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[1].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[2].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[3].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Overridden
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Overridden
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -179,6 +231,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5964364480967017964, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8682819810963249682}
+    - targetCorrespondingSourceObject: {fileID: 5964364480967017964, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5620479512681454485}
   m_SourcePrefab: {fileID: 100100000, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
 --- !u!4 &4191661286829228953 stripped
 Transform:
@@ -204,6 +259,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeamPianoFlip
   character: {fileID: 1662831655738370594}
   beam: {fileID: 8171114197445056138}
+--- !u!114 &5620479512681454485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6336766682942149416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d3e7ba21b5139344aaff1f8712a8f18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VFXColor
+  character: {fileID: 8520916654867685035}
+  VFX: {fileID: 8171114197445056138}
+  colorVarName: BeamColorOne
 --- !u!2083052967 &8171114197445056138 stripped
 VisualEffect:
   m_CorrespondingSourceObject: {fileID: 8381404848514269262, guid: 993d449d2eff03a4491bdf1c2cdeae29, type: 3}
@@ -401,12 +471,35 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: -7228706056705483593}
+    - targetCorrespondingSourceObject: {fileID: 8052373809749795212, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4635819012560453265}
   m_SourcePrefab: {fileID: 100100000, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
 --- !u!4 &309940641948804915 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7239182979401787694, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   m_PrefabInstance: {fileID: 6934311765754547741}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1118116045930311569 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8052373809749795212, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+  m_PrefabInstance: {fileID: 6934311765754547741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4635819012560453265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118116045930311569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d3e7ba21b5139344aaff1f8712a8f18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VFXColor
+  character: {fileID: 8520916654867685035}
+  VFX: {fileID: 6881882863390394284}
+  colorVarName: Color
 --- !u!1 &1662831655738370594 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
@@ -430,3 +523,19 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   m_PrefabInstance: {fileID: 6934311765754547741}
   m_PrefabAsset: {fileID: 0}
+--- !u!2083052967 &6881882863390394284 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 4592198064246557105, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+  m_PrefabInstance: {fileID: 6934311765754547741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8520916654867685035 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+  m_PrefabInstance: {fileID: 6934311765754547741}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662831655738370594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a8d5168068741eca1e4da9e8476970, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Character

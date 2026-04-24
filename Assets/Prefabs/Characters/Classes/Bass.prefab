@@ -58,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 647962606392273746}
     - target: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6779959987335499425, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: m_Sprite
@@ -167,6 +167,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 582841902479828674}
+    - targetCorrespondingSourceObject: {fileID: 8052373809749795212, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8374508231554070994}
   m_SourcePrefab: {fileID: 100100000, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
 --- !u!1 &647962606392273746 stripped
 GameObject:
@@ -186,6 +189,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.BassAttackVFX
   burst: {fileID: 2456918876159049095, guid: 41ecdc7043a45ef45ba0caa9090df9c4, type: 3}
+--- !u!2083052967 &1638436949537173506 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 4592198064246557105, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+  m_PrefabInstance: {fileID: 2956092496241670579}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4575051615587477765 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
@@ -197,6 +205,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6a8d5168068741eca1e4da9e8476970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Character
+--- !u!1 &5096352013271504959 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8052373809749795212, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+  m_PrefabInstance: {fileID: 2956092496241670579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8374508231554070994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5096352013271504959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d3e7ba21b5139344aaff1f8712a8f18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VFXColor
+  character: {fileID: 4575051615587477765}
+  VFX: {fileID: 1638436949537173506}
+  colorVarName: Color
 --- !u!4 &5580128052037456029 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7239182979401787694, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
@@ -228,6 +256,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5580128052037456029}
     m_Modifications:
+    - target: {fileID: 148860245793019085, guid: 5a0867dd88d95174b92049af36cd6641, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1021141532257641302, guid: 5a0867dd88d95174b92049af36cd6641, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5600245754840726438, guid: 5a0867dd88d95174b92049af36cd6641, type: 3}
       propertyPath: m_Name
       value: VFX_Slash
@@ -323,6 +359,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8820208737969299324, guid: 5a0867dd88d95174b92049af36cd6641, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1352379060024955856}
+    - targetCorrespondingSourceObject: {fileID: 8820208737969299324, guid: 5a0867dd88d95174b92049af36cd6641, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4757236971854742782}
   m_SourcePrefab: {fileID: 100100000, guid: 5a0867dd88d95174b92049af36cd6641, type: 3}
 --- !u!4 &2626323116410744678 stripped
 Transform:
@@ -347,3 +386,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlashRotation
   character: {fileID: 4575051615587477765}
+--- !u!114 &4757236971854742782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2716308533827587218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d3e7ba21b5139344aaff1f8712a8f18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlashColor
+  character: {fileID: 4575051615587477765}
+  VFX: {fileID: 5908225688431653048}
+  colorVarName: ColorOuter
+--- !u!2083052967 &5908225688431653048 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 1021141532257641302, guid: 5a0867dd88d95174b92049af36cd6641, type: 3}
+  m_PrefabInstance: {fileID: 6905681952327799790}
+  m_PrefabAsset: {fileID: 0}

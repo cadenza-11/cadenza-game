@@ -76,7 +76,7 @@ namespace Cadenza
                 container.Q<Label>("update_CharacterName").text = $"{player.Name} ({player.CharacterClass.Name})";
                 container.Q<VisualElement>("portrait_Character").style.backgroundImage = player.CharacterClass.Portrait;
                 VisualElement background = container.Q<VisualElement>("c_BackLayer");
-                Color tint = player.Colorway.PrimaryColor;
+                Color tint = player.Colorway.SecondaryColor;
                 tint.a = 1;
                 background.style.unityBackgroundImageTintColor = tint;
 

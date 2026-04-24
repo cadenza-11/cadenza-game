@@ -84,6 +84,18 @@ PrefabInstance:
       propertyPath: InitialModule.startLifetime.scalar
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 7919850715758435701, guid: fee29b35b68c1a745ac493cb763c845a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.45098042
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919850715758435701, guid: fee29b35b68c1a745ac493cb763c845a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.49923855
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919850715758435701, guid: fee29b35b68c1a745ac493cb763c845a, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8564160281540680511, guid: fee29b35b68c1a745ac493cb763c845a, type: 3}
       propertyPath: looping
       value: 0
@@ -103,6 +115,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1921079115439858272, guid: fee29b35b68c1a745ac493cb763c845a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8403750718589756299}
+    - targetCorrespondingSourceObject: {fileID: 5732563041826830037, guid: fee29b35b68c1a745ac493cb763c845a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1459902780384940584}
   m_SourcePrefab: {fileID: 100100000, guid: fee29b35b68c1a745ac493cb763c845a, type: 3}
 --- !u!1 &1780073998287542073 stripped
 GameObject:
@@ -125,6 +140,30 @@ MonoBehaviour:
 --- !u!4 &3677051012886805469 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3538315220092702340, guid: fee29b35b68c1a745ac493cb763c845a, type: 3}
+  m_PrefabInstance: {fileID: 152309402381088089}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5589876635017839500 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5732563041826830037, guid: fee29b35b68c1a745ac493cb763c845a, type: 3}
+  m_PrefabInstance: {fileID: 152309402381088089}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1459902780384940584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5589876635017839500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce4016dae7910814d8366ab6ccddbb0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ParticleColor
+  character: {fileID: 5921575267583293831}
+  particle: {fileID: 8067612538017671212}
+--- !u!198 &8067612538017671212 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7919850715758435701, guid: fee29b35b68c1a745ac493cb763c845a, type: 3}
   m_PrefabInstance: {fileID: 152309402381088089}
   m_PrefabAsset: {fileID: 0}
 --- !u!198 &8414728507256319590 stripped
@@ -292,12 +331,35 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: -5347380999704208309}
+    - targetCorrespondingSourceObject: {fileID: 8052373809749795212, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3707700753131572705}
   m_SourcePrefab: {fileID: 100100000, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
 --- !u!4 &2315105873137221663 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7239182979401787694, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   m_PrefabInstance: {fileID: 4924217895309797681}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3164219947840981181 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8052373809749795212, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+  m_PrefabInstance: {fileID: 4924217895309797681}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3707700753131572705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3164219947840981181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d3e7ba21b5139344aaff1f8712a8f18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VFXColor
+  character: {fileID: 5921575267583293831}
+  VFX: {fileID: 8929676920864956544}
+  colorVarName: Color
 --- !u!1 &3710501330391665934 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8586129573200258111, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
@@ -316,8 +378,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Combo.ComboManager
   ComboDB: {fileID: 11400000, guid: 37534014237d9f546825fda482101c79, type: 2}
+--- !u!114 &5921575267583293831 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+  m_PrefabInstance: {fileID: 4924217895309797681}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3710501330391665934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a8d5168068741eca1e4da9e8476970, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Character
 --- !u!1 &7326924408933465040 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2447742647739208417, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+  m_PrefabInstance: {fileID: 4924217895309797681}
+  m_PrefabAsset: {fileID: 0}
+--- !u!2083052967 &8929676920864956544 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 4592198064246557105, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
   m_PrefabInstance: {fileID: 4924217895309797681}
   m_PrefabAsset: {fileID: 0}
