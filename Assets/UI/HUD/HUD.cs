@@ -127,6 +127,9 @@ namespace Cadenza
                 container.style.display = DisplayStyle.None;
             }
 
+            this.healthShakeTweens.ForEach(tween => tween.Kill());
+            this.healthShakeTweens.Clear();
+
             this.assignedContainers.Clear();
 
             this.teamMeter.value = 0;
