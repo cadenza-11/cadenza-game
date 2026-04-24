@@ -123,7 +123,7 @@ namespace Cadenza
         private void ChangeShownColor(VisualElement cosmeticsPicker, Colorway color)
         {
             var portrait = cosmeticsPicker.Q<VisualElement>("portrait_Character");
-            var bgColor = color.PrimaryColor;
+            var bgColor = color.SecondaryColor;
             bgColor.a = 1;
             portrait.style.backgroundColor = bgColor;
             portrait.Q<VisualElement>("portrait_Character").style.backgroundImage = color.DisplayImage;

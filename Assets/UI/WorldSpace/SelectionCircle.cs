@@ -52,7 +52,7 @@ namespace Cadenza
 
         public void ApplyColorway(Colorway colorway)
         {
-            this.ApplyColor(colorway != null ? colorway.PrimaryColor : this.fallbackColor);
+            this.ApplyColor(colorway != null ? colorway.SecondaryColor : this.fallbackColor);
         }
 
         public void ApplyColor(Color color)
