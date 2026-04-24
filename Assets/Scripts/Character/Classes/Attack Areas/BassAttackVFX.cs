@@ -7,6 +7,7 @@ namespace Cadenza
     {
         private GameObject go = null;
         [SerializeField] private GameObject burst;
+        [SerializeField] private Character character;
 
         public void SetActive(bool enabled)
         {
@@ -20,7 +21,7 @@ namespace Cadenza
         {
             // Hit enemy.
             GameObject effect = Instantiate(this.burst);
-            effect.GetComponent<BurstBass>().Setup(collider.gameObject.transform);
+            effect.GetComponent<BurstBass>().Setup(collider.gameObject.transform, this.character);
         }
     }
 }

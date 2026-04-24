@@ -460,6 +460,8 @@ MonoBehaviour:
   TargetLocation: {x: 0, y: 0}
   cores: []
   droppingVinyls: []
+  sweepingLasers: []
+  electrifiedQuadrants: {fileID: 0}
   coreMaxHealth: 100
   forcefield: {fileID: 5422693190319036874}
   spotlight: {fileID: 0}
@@ -772,6 +774,18 @@ PrefabInstance:
     - target: {fileID: 3325359763249685113, guid: e68d89fd7456ced4c85b8fea06a6366c, type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[3].m_Value.z
       value: -0.11274004
+      objectReference: {fileID: 0}
+    - target: {fileID: 3325359763249685113, guid: e68d89fd7456ced4c85b8fea06a6366c, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.x
+      value: 0.09539406
+      objectReference: {fileID: 0}
+    - target: {fileID: 3325359763249685113, guid: e68d89fd7456ced4c85b8fea06a6366c, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.y
+      value: 0.31949422
+      objectReference: {fileID: 0}
+    - target: {fileID: 3325359763249685113, guid: e68d89fd7456ced4c85b8fea06a6366c, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.z
+      value: 0.74902
       objectReference: {fileID: 0}
     - target: {fileID: 3352052260832737817, guid: e68d89fd7456ced4c85b8fea06a6366c, type: 3}
       propertyPath: m_LocalPosition.x

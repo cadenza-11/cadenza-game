@@ -1,12 +1,12 @@
 using UnityEngine;
 
-
 namespace Cadenza
 {
     public class GuitarAttackVFX : MonoBehaviour
     {
         private GameObject go = null;
         [SerializeField] private GameObject lightning;
+        [SerializeField] private Character character;
 
         public void SetActive(bool enabled)
         {
@@ -20,7 +20,7 @@ namespace Cadenza
         {
             // Hit enemy.
             GameObject zap = Instantiate(this.lightning);
-            zap.GetComponent<ElectricArcGuitar>().Setup(this.gameObject.transform, collider.gameObject.transform);
+            zap.GetComponent<ElectricArcGuitar>().Setup(this.gameObject.transform, collider.gameObject.transform, this.character);
         }
     }
 }

@@ -189,6 +189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.BassAttackVFX
   burst: {fileID: 2456918876159049095, guid: 41ecdc7043a45ef45ba0caa9090df9c4, type: 3}
+  character: {fileID: 4575051615587477765}
 --- !u!2083052967 &1638436949537173506 stripped
 VisualEffect:
   m_CorrespondingSourceObject: {fileID: 4592198064246557105, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}

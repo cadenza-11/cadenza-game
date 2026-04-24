@@ -389,15 +389,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9081951288355444862, guid: a9f7f1f42744cee4db9f1f0850feb782, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.x
-      value: 195.62265
+      value: 0.74902
       objectReference: {fileID: 0}
     - target: {fileID: 9081951288355444862, guid: a9f7f1f42744cee4db9f1f0850feb782, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.y
-      value: 75.97119
+      value: 0.29088625
       objectReference: {fileID: 0}
     - target: {fileID: 9081951288355444862, guid: a9f7f1f42744cee4db9f1f0850feb782, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.z
-      value: 26.759708
+      value: 0.10246031
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -456,6 +456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.GuitarAttackVFX
   lightning: {fileID: 1447353678038096940, guid: 67e60c59835d91c42896c63fefbabc89, type: 3}
+  character: {fileID: 3367950973467265582}
 --- !u!114 &3367950973467265582 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
