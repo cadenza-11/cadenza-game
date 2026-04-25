@@ -12,7 +12,9 @@ namespace Cadenza
         Special,
         Run,
         Ranged,
-        Dead
+        Dead,
+        Assist,
+        Zigzag
     }
 
     public class Enemy : MonoBehaviour
