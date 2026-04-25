@@ -12,12 +12,24 @@ namespace Cadenza
         private bool continueMelee;
         [SerializeField] private int moveDir = -1;
         private EnemyState mainState;
+        private float stateTimer;
 
+        void Start()
+        {
+            EnemyManager.AddEnemy(this);
+            this.Initialize();
+        }
 
         public override void Initialize()
         {
             base.Initialize();
             this.moveTimer = 0;
+            this.stateTimer = 0;
+            this.RandomMainState();
+        }
+
+        private void RandomMainState()
+        {
             switch (UnityEngine.Random.Range(0, 3))
             {
                 case (0):
@@ -88,6 +100,16 @@ namespace Cadenza
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+        }
+
+        private void Update()
+        {
+            this.stateTimer += Time.deltaTime;
+            if(this.stateTimer >= 10f)
+            {
+                this.stateTimer = 0f;
+                this.RandomMainState();
+            }
         }
 
         protected override void CheckState()
