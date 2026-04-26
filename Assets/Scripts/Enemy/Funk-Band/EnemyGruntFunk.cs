@@ -8,7 +8,6 @@ namespace Cadenza
     public class EnemyGruntFunk : Enemy
     {
         [SerializeField] private float moveTimer = -1;
-        private static int rotationNum = 0;
         private bool continueMelee;
         [SerializeField] private int moveDir = -1;
         private EnemyState mainState;
@@ -58,7 +57,6 @@ namespace Cadenza
 
         protected override void IdleState()
         {
-            //Need to make better plan for movement. Right now Idle movement will be random
 
             if (this.moveTimer <= 0)
             {
@@ -169,7 +167,7 @@ namespace Cadenza
             this.curAngle = (float)Math.Atan2(toTarget.y, toTarget.x);
             Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
             this.FindNearestPlayerDist();
-            if(this.nearestPlayerDist >= 3f)
+            if(this.nearestPlayerDist >= 3f || this.nearestPlayerDist <= 1f)
             {
                 this.rb.linearVelocity = moveDir;
             }
@@ -194,11 +192,13 @@ namespace Cadenza
             this.TargetLocation.y = this.follow.Character.transform.position.z;
             Vector2 toTarget = new Vector2(this.TargetLocation.x - this.transform.position.x,
                                             this.TargetLocation.y - this.transform.position.z);
+            this.curAngle = (float)Math.Atan2(toTarget.y, toTarget.x);
+            Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
             if (this.moveTimer <= 0)
             {
-                this.moveDir = UnityEngine.Random.Range(1, 5);
+                this.moveDir = UnityEngine.Random.Range(1, 6);
                 this.TargetLocation = this.FindNearestPlayerDist();
-                this.moveTimer = UnityEngine.Random.Range(1, 6);
+                this.moveTimer = UnityEngine.Random.Range(1, 4);
             }
             switch (this.moveDir)
             {
@@ -213,6 +213,9 @@ namespace Cadenza
                     break;
                 case 4:
                     this.rb.linearVelocity = new Vector3(0, this.rb.linearVelocity.y, -1 * this.speed);
+                    break;
+                case 5:
+                    this.rb.linearVelocity = moveDir;
                     break;
             }
             this.moveTimer -= Time.deltaTime;

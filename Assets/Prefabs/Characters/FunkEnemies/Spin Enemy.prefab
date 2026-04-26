@@ -29,8 +29,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.124, y: 0.72, z: 1.51832}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5351821400751885952}
   m_Father: {fileID: 0}
@@ -72,10 +72,10 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 503
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
@@ -106,10 +106,7 @@ MonoBehaviour:
   anim: {fileID: 6195701624303688636}
   projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
   curState: 0
-  direction: {x: 0, y: 0, z: 0}
-  checkx: 0
-  checkz: 0
-  timer: 0
+  TargetLocation: {x: 0, y: 0}
 --- !u!1 &1203646789165182342
 GameObject:
   m_ObjectHideFlags: 0
