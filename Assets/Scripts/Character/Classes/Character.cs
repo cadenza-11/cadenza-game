@@ -175,8 +175,8 @@ namespace Cadenza
 
         void onBeat()
         {
-            this.SetFlow(this.flow - (float)(BeatSystem.SecondsPerBeat * 1.5));
-            this.SetRevive(this.revive - (float)(BeatSystem.SecondsPerBeat * 1.5));
+            this.SetFlow(this.flow - 0.75f);
+            this.SetRevive(this.revive - 0.75f);
         }
 
         void LateUpdate()
