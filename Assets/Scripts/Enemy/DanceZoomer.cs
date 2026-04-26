@@ -165,17 +165,19 @@ namespace Cadenza
                     if(this.isPillarRising[i])
                     {
                         this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x, 
-                                Mathf.Lerp(-1.5f, 0.1f, this.pillarLerpTime/2.0f), this.pillars[i].transform.position.z);
+                                Mathf.Lerp(this.pillars[i].transform.position.y, 0.1f, this.pillarLerpTime/2.0f), 
+                                this.pillars[i].transform.position.z);
                     }
                     else
                     {
                         this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x,
-                                Mathf.Lerp(0.1f, -1.5f, this.pillarLerpTime/2.0f), this.pillars[i].transform.position.z);
+                                Mathf.Lerp(this.pillars[i].transform.position.y, -2.0f, this.pillarLerpTime/2.0f), 
+                                this.pillars[i].transform.position.z);
                     }
                 }
                 this.pillarLerpTime += Time.deltaTime;
                 Vector2 distance = new Vector2(this.transform.position.x, this.transform.position.z) - this.TargetLocation;
-                if(distance.SqrMagnitude() < 2)
+                if(distance.SqrMagnitude() < 2 && this.pillarLerpTime >= 2.0f)
                 {
                     this.inZoomSetup = false;
                     this.startPosition.x = this.TargetLocation.x;
@@ -220,6 +222,7 @@ namespace Cadenza
         void ChoosePillar()
         {
             int numPillars = Random.Range(1, 12);
+            Debug.Log(numPillars);
             for(int i = 0; i < numPillars; i++)
             {
                 int index = Random.Range(1, 12);
