@@ -28,6 +28,9 @@ namespace Cadenza
 
             switch (command)
             {
+                case "app":
+                    this.OnCommandApp(args);
+                    break;
                 case "level":
                     this.OnCommandLevel(args);
                     break;
@@ -49,6 +52,12 @@ namespace Cadenza
                 default:
                     break;
             }
+        }
+
+        private void OnCommandApp(string[] args)
+        {
+            if (string.Equals(args[0], "fps") && int.TryParse(args[1], out int fps))
+                Application.targetFrameRate = fps;
         }
 
         private void OnCommandKill(string[] args)
