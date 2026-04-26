@@ -8,8 +8,10 @@ namespace Cadenza
         int beatCount = 0;
         bool inZoom = false;
         bool inZoomSetup = false;
+        bool phase3Transition = true;
         float lerpTime = 0;
         float pillarLerpTime = 0;
+        [SerializeField] float downedTime = 0;
         Vector2 startPosition;
         [SerializeField] GameObject[] pillars = new GameObject[11];
         [SerializeField] ZoomerAttack attackBox;
@@ -61,7 +63,7 @@ namespace Cadenza
 
         private void Phase1()
         {
-            this.curPhase = 1;
+            this.curPhase++;
             //Moves enemy out of stage and freezes them in places
             //this.transform.position = new Vector3(100,100,100);
             this.rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -77,14 +79,16 @@ namespace Cadenza
             //Places enemy in center of the stage will add better animation to this later
             this.transform.position = new Vector3(0.5f, 5, 6);
             this.rb.linearVelocity = Vector3.zero;
-            this.curPhase = 2;
+            this.curPhase++;
 
         }
 
         private void Phase3()
         {
             Debug.Log("Goes into third phase");
-            this.curPhase = 3;
+            this.phase3Transition = true;
+            this.pillarLerpTime = 0;
+            this.curPhase++;
         }
 
         private void OnPhaseExit(Phase phase)
@@ -121,14 +125,24 @@ namespace Cadenza
         // Update is called once per frame
         protected override void FixedUpdate()
         {
-            switch(this.curPhase)
+            switch(this.curPhase % 3)
             {
+                //Technically the third phase since this is mod3
+                case 0:
+                    if(this.phase3Transition)
+                    {
+                        this.ThirdPhaseTransition();
+                    }
+                    if(this.downedTime >= 10.0f)
+                    {
+                        AudioSystem.SetParameter("MusicState", this.curPhase);
+                    }
+                    this.downedTime += Time.deltaTime;
+                    break;
                 case 1:
                     break;
                 case 2:
                     this.Zoom();
-                    break;
-                case 3:
                     break;
             }
         }
@@ -206,6 +220,7 @@ namespace Cadenza
 
                     if(this.attackBox.GetNumCollisions() >= 3)
                     {
+                        this.attackBox.SetActive(false);
                         AudioSystem.SetParameter("MusicState", 2);
                     }
 
@@ -226,7 +241,7 @@ namespace Cadenza
 
         void ChoosePillar()
         {
-            int numPillars = Random.Range(1, 7);
+            int numPillars = Random.Range(1, 12);
             for(int i = 0; i < numPillars; i++)
             {
                 int index = Random.Range(1, 12);
@@ -252,6 +267,22 @@ namespace Cadenza
                     }
                     this.isPillarRising[j] = true;
                 }
+            }
+        }
+
+        void ThirdPhaseTransition()
+        {
+            this.pillarLerpTime += Time.deltaTime;
+            for(int i = 0; i < 11; i++)
+            {
+                this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x,
+                                Mathf.Lerp(this.pillars[i].transform.position.y, -2.0f, this.pillarLerpTime/2.0f), 
+                                this.pillars[i].transform.position.z);
+            }
+
+            if(this.pillarLerpTime >= 2.0f)
+            {
+                this.phase3Transition = false;
             }
         }
     }

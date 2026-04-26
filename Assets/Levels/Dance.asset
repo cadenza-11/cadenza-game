@@ -31,3 +31,9 @@ MonoBehaviour:
     FMODMarkerName: Song_Downed
   - Index: 2
     FMODMarkerName: Song_Onslaught-2
+  - Index: 2
+    FMODMarkerName: Song_Downed-2
+  - Index: 4
+    FMODMarkerName: Song_Onslaught-3
+  - Index: 5
+    FMODMarkerName: Song_Downed-3
