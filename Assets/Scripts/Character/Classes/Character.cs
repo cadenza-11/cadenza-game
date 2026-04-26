@@ -144,6 +144,7 @@ namespace Cadenza
             this.RevivalMeter.SetThreshold(this.reviveThreshold);
             this.RevivalMeter.Hide();
             Character.TeamAttackInitiated += this.TeamAttackEffect;
+            BeatSystem.BeatPlayed += this.onBeat;
         }
 
         void OnDestroy()
@@ -168,12 +169,14 @@ namespace Cadenza
 
             this.state?.FixedUpdate(this);
 
-            // Update flow.
-            this.SetFlow(this.flow - 0.03f);
-            this.SetRevive(this.revive - 0.03f);
-
             if (this.HasFlowBuff(3))
                 this.SetHealth(this.currentHealth + 0.01f);
+        }
+
+        void onBeat()
+        {
+            this.SetFlow(this.flow - (float)(BeatSystem.SecondsPerBeat * 1.5));
+            this.SetRevive(this.revive - (float)(BeatSystem.SecondsPerBeat * 1.5));
         }
 
         void LateUpdate()
