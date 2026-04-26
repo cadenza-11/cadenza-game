@@ -12,6 +12,8 @@ namespace Cadenza
         float pillarLerpTime = 0;
         Vector2 startPosition;
         [SerializeField] GameObject[] pillars = new GameObject[11];
+        [SerializeField] ZoomerAttack attackBox;
+        
         bool[] isPillarRising = {false, false, false, false, false, false, false, false, false, false, false};
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -141,9 +143,7 @@ namespace Cadenza
                     numPlayers++;
                 }
                 int playerId = Random.Range(1, numPlayers + 1);
-                Debug.Log("" + playerId + ",  " + numPlayers + 1);
                 Player targetPlayer = PlayerSystem.Players[playerId - 1];
-                Debug.Log(targetPlayer.Character.transform.position.x + ",  " + targetPlayer.Character.transform.position.z);
                 if(this.transform.position.x <= 0)
                 {
                     this.TargetLocation = new Vector2(-7, targetPlayer.Character.transform.position.z);
@@ -186,7 +186,7 @@ namespace Cadenza
                     this.TargetLocation.x *= -1;
                     this.lerpTime = 0;
                     this.pillarLerpTime = 0;
-                    this.attackArea.SetActive(true);
+                    this.attackBox.SetActive(true);
                 }
                 else
                 {
@@ -202,7 +202,12 @@ namespace Cadenza
                 {
                     this.inZoom = false;
                     this.lerpTime = 0;
-                    this.attackArea.SetActive(false);
+                    this.attackBox.SetActive(false);
+
+                    if(this.attackBox.GetNumCollisions() >= 3)
+                    {
+                        AudioSystem.SetParameter("MusicState", 2);
+                    }
 
                     for(int i = 0; i < 11; i++)
                     {
@@ -221,8 +226,7 @@ namespace Cadenza
 
         void ChoosePillar()
         {
-            int numPillars = Random.Range(1, 12);
-            Debug.Log(numPillars);
+            int numPillars = Random.Range(1, 7);
             for(int i = 0; i < numPillars; i++)
             {
                 int index = Random.Range(1, 12);
