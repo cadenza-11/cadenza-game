@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 898f4d7746291fe48a06f7d5292f95aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.RockStationaryWaveHitbox
-  damage: 5
+  damage: 4
   knockbackScale: 3
 --- !u!1 &7112849784751295373
 GameObject:

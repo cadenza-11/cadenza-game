@@ -34,6 +34,8 @@ namespace Cadenza
             this.currentProjectile = null;
             this.phase = 4 - EnemyManager.EnemyCount;
             this.combatStarted = true;
+            this.maxHealth *= PlayerSystem.PlayerCount;
+            this.currentHealth *= PlayerSystem.PlayerCount;
         }
 
         override protected void FixedUpdate()

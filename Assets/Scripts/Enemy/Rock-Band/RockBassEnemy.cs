@@ -40,6 +40,8 @@ namespace Cadenza
             this.currentlyCharging = false;
             this.curAngle = 100;
             this.init = true;
+            this.maxHealth *= PlayerSystem.PlayerCount;
+            this.currentHealth *= PlayerSystem.PlayerCount;
             BeatSystem.BeatPlayed += this.onBeat;
         }
 

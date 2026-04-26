@@ -53,5 +53,13 @@ public class RockBassShockwave : MonoBehaviour
         {
             this.warning.SetActive(true);
         }
+        if (!GameManager.IsCombatActive)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+    private void OnDestroy()
+    {
+        BeatSystem.BeatPlayed -= this.BeatPass;
     }
 }

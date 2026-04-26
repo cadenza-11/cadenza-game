@@ -33,6 +33,8 @@ namespace Cadenza
             this.phase = 4 - EnemyManager.EnemyCount;
             this.curAngle = 100;
             this.combatStarted = true;
+            this.maxHealth *= PlayerSystem.PlayerCount;
+            this.currentHealth *= PlayerSystem.PlayerCount;
         }
 
         override protected void FixedUpdate()

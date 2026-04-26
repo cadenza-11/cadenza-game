@@ -99,8 +99,8 @@ MonoBehaviour:
   speed: 1.5
   meleeDuration: 0.25
   rangedDuration: 0.25
-  maxHealth: 50
-  currentHealth: 50
+  maxHealth: 30
+  currentHealth: 30
   attackArea: {fileID: 4501090668073902876}
   rb: {fileID: 259284012352757776}
   sr: {fileID: 4940573528697529019}
@@ -290,6 +290,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  damage: 4
+  damage: 2
   knockbackScale: 3
   comboMove: 0

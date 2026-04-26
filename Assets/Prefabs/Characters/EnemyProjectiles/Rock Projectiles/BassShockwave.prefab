@@ -107,7 +107,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7013078488814417011
 Transform:
   m_ObjectHideFlags: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb9b5a2f9099f9b4c860131b87216015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.RockBassShockwaveHitbox
-  damage: 5
+  damage: 3
   knockbackScale: 5
 --- !u!1 &2442893043919937900
 GameObject:
