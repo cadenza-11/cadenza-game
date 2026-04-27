@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace Cadenza
 {
@@ -7,7 +8,11 @@ namespace Cadenza
         [SerializeField] int curPhase = 0;
         int beatCount = 0;
         float lerpTime = 0;
-        [SerializeField] new DanceShooterProjectile projectile;
+        bool enterPhase1 = false;
+        bool enterPhase3 = false;
+        float phaseTime = 0;
+        [SerializeField] float downedTime = 0;
+        [SerializeField] int beatsPerAttack;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -19,6 +24,15 @@ namespace Cadenza
             GameManager.PhaseEntered += this.OnPhaseEntered;
             GameManager.PhaseExited += this.OnPhaseExit;
             BeatSystem.BeatPlayed += this.onBeat;
+        }
+
+        protected override void OnDestroy()
+        {
+            Debug.Log("Goes into OnDestroy");
+            GameManager.PhaseEntered -= this.OnPhaseEntered;
+            GameManager.PhaseExited -= this.OnPhaseExit;
+            BeatSystem.BeatPlayed -= this.onBeat;
+            base.OnDestroy();
         }
 
         private void onBeat()
@@ -54,25 +68,23 @@ namespace Cadenza
         private void Phase1()
         {
             this.curPhase++;
-            //Moves enemy out of stage and freezes them in places
-            this.transform.position = new Vector3(100,100,100);
-            this.rb.constraints = RigidbodyConstraints.FreezeAll;
+            this.enterPhase1 = true;
+            this.phaseTime = 0;
             this.rb.linearVelocity = Vector3.zero;
-            EnemyManager.GruntPhase();
         }
 
         private void Phase2()
         {
-            //Resets enemy rigid body to allow movement but restrict rotation in the X and Z axis
-            //Places enemy in center of the stage will add better animation to this later
-            this.transform.position = new Vector3(0.5f, 5, 6);
-            this.rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            this.rb.linearVelocity = Vector3.zero;
+            //Entering the second phase does nothing for this enemy
             this.curPhase++;
+            this.phaseTime = 0;
         }
 
         private void Phase3()
         {
+            this.curPhase++;
+            this.enterPhase3 = true;
+            this.downedTime = 0;
         }
 
         private void OnPhaseExit(Phase phase)
@@ -108,12 +120,118 @@ namespace Cadenza
         // Update is called once per frame
         protected override void FixedUpdate()
         {
-            switch(this.curPhase % 3)
+            if(this.currentHealth <= 0)
             {
-                case 0:
+                this.DeadState();
+            }
+            switch(this.curPhase)
+            {
+                case 1:
+                    if(this.phaseTime >= 30.0f)
+                    {
+                        AudioSystem.SetParameter("MusicState", this.curPhase);
+                    }
+                    if(this.enterPhase1)
+                    {
+                        this.Phase1Setup();
+                    }
+                    else if(this.beatCount % this.beatsPerAttack == 0)
+                    {
+                        //Does Ranged Attack
+                        this.RangedAttack();
+                    }
                     break;
-                default:
+                case 2:
+                    if(this.beatCount % this.beatsPerAttack == 0)
+                    {
+                        //Does Ranged Attack
+                        this.RangedAttack();
+                    }
                     break;
+                case 3:
+                    if(this.enterPhase3)
+                    {
+                        this.KnockDownSetup();
+                    }
+                    else
+                    {
+                        if(this.downedTime > 10)
+                        {
+                            AudioSystem.SetParameter("MusicState", this.curPhase);
+                            this.downedTime = 0;
+                        }
+                        this.downedTime += Time.deltaTime;
+                    }
+                    break;
+                case 4:
+                    if(this.enterPhase1)
+                    {
+                        this.Phase1Setup();
+                    }
+                    else if(this.beatCount % this.beatsPerAttack == 0)
+                    {
+                        //Does Ranged Attack
+                        this.RangedAttack();
+                    }
+                    break;
+                case 5:
+                    if(this.beatCount % this.beatsPerAttack == 0)
+                    {
+                        //Does Ranged Attack
+                        this.RangedAttack();
+                    }
+                    break;
+                case 6:
+                    if(this.enterPhase3)
+                    {
+                        this.KnockDownSetup();
+                    }
+                    //Wait for player to kill enemy
+                    //Will balance it so that players should be able to kill the enemy in this amount of phases
+                    break;
+            }
+        }
+
+        protected override void RangedAttack()
+        {
+            GameObject projectileInstance = Instantiate(this.projectile, this.gameObject.transform.position, Quaternion.identity);
+            projectileInstance.GetComponent<DanceShooterProjectile>().SetP0(this.transform.position);
+            int numPlayers = 0;
+            foreach(var player in PlayerSystem.Players)
+            {
+                numPlayers++;
+            }
+            int playerId = UnityEngine.Random.Range(1, numPlayers + 1);
+            Player p = PlayerSystem.Players[playerId - 1];
+            projectileInstance.GetComponent<DanceShooterProjectile>().SetPlayer(p);
+            this.anim.SetTrigger("LightAttack");
+        }
+
+        void Phase1Setup()
+        {
+            if(this.lerpTime <= 4.0f)
+            {
+                this.transform.position = new Vector3(this.transform.position.x, Mathf.Lerp(this.transform.position.y, 7, this.lerpTime/4),
+                                            this.transform.position.z);
+                this.lerpTime += Time.deltaTime;
+            }
+            else
+            {
+                this.enterPhase1 = false;
+            }
+        }
+
+        void KnockDownSetup()
+        {
+            if(this.downedTime <= 1.0f)
+            {
+                this.transform.position = new Vector3(this.transform.position.x, Mathf.Lerp(this.transform.position.y, 0, this.downedTime),
+                                                    this.transform.position.z);
+                this.downedTime += Time.deltaTime;
+            }
+            else
+            {
+                this.enterPhase3 = false;
             }
         }
     }

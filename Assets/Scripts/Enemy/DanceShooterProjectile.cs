@@ -6,7 +6,11 @@ public class DanceShooterProjectile : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private float timer = 0.0f;
     private Rigidbody rb;
-    public Vector2 direction;
+    private Player target;
+    private Vector3 p0;
+    private Vector3 p1;
+    private Vector3 p2;
+    private Vector3 p3;
     public bool speedSet = true;
     public float knockbackScale;
     [SerializeField] private int speed = 1;
@@ -19,24 +23,16 @@ public class DanceShooterProjectile : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(this.direction.y == 1)
-        {
-            //Debug.Log(this.rb.linearVelocity.x + ", " + this.rb.linearVelocity.y + ", " + this.rb.linearVelocity.z);
-            //Debug.Log(this.speed * this.direction.y);
-        }
         this.timer += Time.deltaTime;
-        if (this.timer > 5.0f)
-            Destroy(this.gameObject);
-
-        if (this.speedSet == false)
+        if(this.timer <= 1.5f)
         {
-            Vector3 moveDir = new Vector3(this.speed * this.direction.x, 0, this.speed * this.direction.y);
-            this.rb.linearVelocity = moveDir;
-            if(this.direction.y == 1)
-            {
-                //Debug.Log(moveDir.z + ", " + this.rb.linearVelocity.y);
-            }
-            this.speedSet = true;
+            this.p3 = this.target.Character.transform.position;
+            this.CalculateCurvePoints(this.p0, this.p3, out this.p1, out this.p2);
+        }
+        this.rb.transform.position = this.BezierCurve(this.timer, this.p0, this.p1, this.p2, this.p3);
+        if(this.rb.transform.position == this.p3)
+        {
+            Destroy(this.gameObject);
         }
     }
 
@@ -63,5 +59,27 @@ public class DanceShooterProjectile : MonoBehaviour
             collider.attachedRigidbody.AddForce(direction.normalized * this.knockbackScale, ForceMode.Impulse);
         }
         Destroy(this.gameObject);
+    }
+
+    Vector3 BezierCurve(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        return ((1-t) * (1-t) * (1-t)*p0) + (3 * (1-t) * (1-t) * t * p1) + (3 * (1-t) * t * t * p2) + (t * t * t * p3);
+    }
+
+    void CalculateCurvePoints(Vector3 start, Vector3 end, out Vector3 p1, out Vector3 p2)
+    {
+        Vector3 difference = end - start;
+        p1 = new Vector3(start.x + difference.x/3.0f, start.y + difference.y/3.0f, start.z + difference.y/3.0f);
+        p2 = new Vector3(start.x + difference.x * 2.0f/3.0f, start.y + difference.y * 2.0f/3.0f, start.z + difference.z * 2.0f/3.0f);
+    }
+
+    public void SetP0(Vector3 start)
+    {
+        this.p0 = start;
+    }
+
+    public void SetPlayer(Player p)
+    {
+        this.target = p;
     }
 }
