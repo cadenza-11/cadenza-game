@@ -27,6 +27,11 @@ namespace Cadenza
             SaveSystem.TeamFileDeleted += DeleteTeam;
         }
 
+        public override void OnGameStart()
+        {
+            this.ClearFlowState();
+        }
+
         public override void OnGameStop()
         {
             this.ClearFlowState();
