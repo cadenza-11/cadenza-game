@@ -31,12 +31,12 @@ namespace Cadenza
                 enemy.Initialize();
         }
 
-        public static bool RemoveEnemy(Enemy enemy)
+        public static bool RemoveEnemy(Enemy enemy, bool destroy = false)
         {
             if (singleton.enemies.Remove(enemy))
             {
-                Debug.Log("Deleted Enemy");
-                Destroy(enemy.gameObject);
+                if (destroy)
+                    Destroy(enemy.gameObject);
                 return true;
             }
             return false;

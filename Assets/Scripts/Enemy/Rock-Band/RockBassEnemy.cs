@@ -17,6 +17,7 @@ namespace Cadenza
         private int beatCount;
         private bool specialOut;
         private bool currentlyCharging;
+        private bool init = false;
         #endregion
 
         // Do this in Start so that EnemyManager is initialized.
@@ -37,6 +38,10 @@ namespace Cadenza
             this.beatCount = 0;
             this.specialOut = false;
             this.currentlyCharging = false;
+            this.curAngle = 100;
+            this.init = true;
+            this.maxHealth *= PlayerSystem.PlayerCount;
+            this.currentHealth *= PlayerSystem.PlayerCount;
             BeatSystem.BeatPlayed += this.onBeat;
         }
 
@@ -51,15 +56,17 @@ namespace Cadenza
             {
                 this.rb.AddForce(Physics.gravity * 1f, ForceMode.Acceleration);
             }
-            if (this.curAngle * (180 / Math.PI) > -90 && this.curAngle * (180 / Math.PI) < 90)
-            {
-                // No rotation needed.
-                this.transform.rotation = Quaternion.Euler(0, 0, 0);
-            }
-            else
-            {
-                // Turn character to the left.
-                this.transform.rotation = Quaternion.Euler(0, 180, 0);
+            if (this.init) {
+                if (this.curAngle * (180 / Math.PI) > -90 && this.curAngle * (180 / Math.PI) < 90)
+                {
+                    // No rotation needed.
+                    this.transform.rotation = Quaternion.Euler(0, 0, 0);
+                }
+                else
+                {
+                    // Turn character to the left.
+                    this.transform.rotation = Quaternion.Euler(0, 180, 0);
+                }
             }
 
             //Checks if the Enemy's state needs to change

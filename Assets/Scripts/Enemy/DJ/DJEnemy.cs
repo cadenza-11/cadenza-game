@@ -8,6 +8,8 @@ namespace Cadenza
     {
         [SerializeField] private DJCore[] cores;
         [SerializeField] private DroppingVinyl[] droppingVinyls;
+        [SerializeField] private SweepingLaser[] sweepingLasers;
+        [SerializeField] private ElectrifiedQuadrants electrifiedQuadrants;
         [SerializeField] private int coreMaxHealth;
         [SerializeField] private GameObject forcefield;
         [SerializeField] private Light spotlight;
@@ -22,18 +24,22 @@ namespace Cadenza
         {
             EnemyManager.AddEnemy(this);
             GameManager.PhaseEntered += this.OnPhaseEntered;
+            this.healthMaterial = this.healthbarHolder.GetComponent<Renderer>().materials[1];
+        }
+
+        protected override void OnDestroy()
+        {
+            GameManager.PhaseEntered -= this.OnPhaseEntered;
+            base.OnDestroy();
         }
 
         override public void Initialize()
         {
-            this.healthMaterial = this.healthbarHolder.GetComponent<Renderer>().materials[1];
             this.runHealth = (int)(0.2 * this.maxHealth);
             this.hasRun = false;
             this.speed = 0f;
             this.isAttacking = false;
             this.isActionable = true;
-            this.anim.SetBool("PhaseTwoComplete", false);
-            this.electricity.SetActive(false);
         }
 
         override protected void FixedUpdate(){}
@@ -52,9 +58,11 @@ namespace Cadenza
                 {
                     foreach (var vinyl in this.droppingVinyls)
                         vinyl.ShutDown();
+                    foreach (var laser in this.sweepingLasers)
+                        laser.ShutDown();
                     this.anim.SetTrigger("Die");
                     this.electricity.SetActive(true);
-                    this.spotlight.DOIntensity(0, 10f).OnComplete(() => EnemyManager.RemoveEnemy(this));
+                    this.spotlight.DOIntensity(0, 10f).OnComplete(() => EnemyManager.RemoveEnemy(this, destroy: true));
                 }
             }
             else if (!this.isDown) return; // Can't damage DJ until he's down
@@ -94,8 +102,9 @@ namespace Cadenza
             switch (phase.Index)
             {
                 case 0:
+                    this.electricity.SetActive(false);
                     Debug.Log("// DJ PHASE : ONSLAUGHT 1 //");
-                    this.OnEarlyOnslaughtStart(this.coreMaxHealth, 15, Color.softBlue);
+                    this.OnEarlyOnslaughtStart(this.coreMaxHealth, 15, 2, Color.softBlue);
                     break;
                 case 1:
                     Debug.Log("// DJ PHASE : DOWNED 1 //");
@@ -103,7 +112,7 @@ namespace Cadenza
                     break;
                 case 2:
                     Debug.Log("// DJ PHASE : ONSLAUGHT 2 //");
-                    this.OnEarlyOnslaughtStart((int)((float)this.coreMaxHealth*1.5f), 10, Color.softRed);
+                    this.OnEarlyOnslaughtStart((int)((float)this.coreMaxHealth*1.5f), 10, 4, Color.softRed);
                     break;
                 case 3:
                     Debug.Log("// DJ PHASE : DOWNED 2 //");
@@ -119,16 +128,24 @@ namespace Cadenza
             this.healthMaterial.SetFloat("_HealthPercent", (float)this.currentHealth / (float)this.maxHealth);
         }
 
-        private void OnEarlyOnslaughtStart(int coreHealth, int homingBeats, Color spotlightColor)
+        private void OnEarlyOnslaughtStart(int coreHealth, int homingBeats, int shrapnelAmount, Color spotlightColor)
         {
             Debug.Log($"Starting onslaught with core health: {coreHealth} and spotlight color: {spotlightColor}");
             this.forcefield.SetActive(true);
             this.currentHealth = this.maxHealth;
             this.anim.SetBool("IsDowned", false);
+            this.anim.SetBool("PhaseTwoComplete", false);
             foreach (var core in this.cores)
                 core.Initialize(coreHealth);
             foreach (var vinyl in this.droppingVinyls)
-                vinyl.Initialize(homingBeats);
+                vinyl.Initialize(homingBeats, shrapnelAmount);
+            int laserOffset = 0;
+            foreach (var laser in this.sweepingLasers)
+            {
+                laser.Initialize(homingBeats, laserOffset);
+                laserOffset += 5;
+            }
+            this.electrifiedQuadrants.Initialize(homingBeats, isPhaseThree: false);
             this.isDown = false;
             this.spotlight.intensity = 200;
             this.spotlight.color = spotlightColor;
@@ -139,6 +156,9 @@ namespace Cadenza
             Debug.Log("Starting downed phase");
             foreach (var vinyl in this.droppingVinyls)
                 vinyl.ShutDown();
+            foreach (var laser in this.sweepingLasers)
+                laser.ShutDown();
+            this.electrifiedQuadrants.ShutDown();
             this.forcefield.SetActive(false);
             this.anim.SetBool("IsDowned", true);
             this.spotlight.intensity = 1000;
@@ -150,7 +170,14 @@ namespace Cadenza
             this.anim.SetBool("IsDowned", false);
             Debug.Log("Starting final onslaught");
             foreach (var vinyl in this.droppingVinyls)
-                vinyl.Initialize(5);
+                vinyl.Initialize(5, 8);
+            int laserOffset = 0;
+            foreach (var laser in this.sweepingLasers)
+            {
+                laser.Initialize(5, laserOffset);
+                laserOffset += 2;
+            }
+            this.electrifiedQuadrants.Initialize(10, isPhaseThree: true);
             this.currentHealth = this.maxHealth;
             this.spotlight.intensity = 200;
             this.spotlight.color = Color.lightGoldenRodYellow;

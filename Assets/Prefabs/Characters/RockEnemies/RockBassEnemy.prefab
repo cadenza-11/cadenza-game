@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1010987114114650534}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 5.124, y: 0.72, z: 1.51832}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -36,7 +36,7 @@ Transform:
   - {fileID: 5351821400751885952}
   - {fileID: 2692469938626586935}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!135 &1595507460558127831
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -100,14 +100,15 @@ MonoBehaviour:
   speed: 2
   meleeDuration: 0.25
   rangedDuration: 0.25
-  maxHealth: 80
-  currentHealth: 80
+  maxHealth: 50
+  currentHealth: 50
   attackArea: {fileID: 4501090668073902876}
   rb: {fileID: 259284012352757776}
   sr: {fileID: 4940573528697529019}
   anim: {fileID: 6195701624303688636}
   projectile: {fileID: 7980564938967752292, guid: bf7c9171b7f06cb4e9bc868d6b6b59db, type: 3}
   curState: 0
+  TargetLocation: {x: 0, y: 0}
   chargeParticles: {fileID: 818351733439761188}
 --- !u!1 &1203646789165182342
 GameObject:
@@ -291,7 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d87ed0b24c69df54b857c5e837343386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  damage: 2
+  damage: 1
   knockbackScale: 5
   comboMove: 0
 --- !u!1001 &8180119365183777118
@@ -388,15 +389,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9081951288355444862, guid: a9f7f1f42744cee4db9f1f0850feb782, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.x
-      value: 195.62265
+      value: 0.74902
       objectReference: {fileID: 0}
     - target: {fileID: 9081951288355444862, guid: a9f7f1f42744cee4db9f1f0850feb782, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.y
-      value: 75.97119
+      value: 0.29088625
       objectReference: {fileID: 0}
     - target: {fileID: 9081951288355444862, guid: a9f7f1f42744cee4db9f1f0850feb782, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.z
-      value: 26.759708
+      value: 0.10246031
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

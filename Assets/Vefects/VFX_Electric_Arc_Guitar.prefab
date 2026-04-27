@@ -53,8 +53,7 @@ MonoBehaviour:
   Pos2: {fileID: 6187862380728942686}
   Pos3: {fileID: 8996154007045174610}
   Pos4: {fileID: 7224063631686956710}
-  attack: {fileID: 0}
-  hit: {fileID: 0}
+  VFX: {fileID: 3325359763249685113}
 --- !u!1 &3119726641908413336
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,7 +137,7 @@ VisualEffect:
         m_Overridden: 1
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 97.68345, y: 327.16183, z: 766.9959, w: 0}
+      - m_Value: {x: 0.22908507, y: 0.2670407, z: 0.33962262, w: 0}
         m_Name: Color
         m_Overridden: 1
     m_Uint:

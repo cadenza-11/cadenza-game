@@ -1,4 +1,6 @@
+using Cadenza;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class ElectricArcGuitar : MonoBehaviour
 {
@@ -6,9 +8,11 @@ public class ElectricArcGuitar : MonoBehaviour
     [SerializeField] private GameObject Pos2;
     [SerializeField] private GameObject Pos3;
     [SerializeField] private GameObject Pos4;
+    [SerializeField] private VisualEffect VFX;
     private Transform attack;
     private Transform hit;
     private float timer;
+    private Color sColor;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -16,10 +20,13 @@ public class ElectricArcGuitar : MonoBehaviour
         this.timer = 0.0f;
     }
 
-    public void Setup(Transform a, Transform h)
+    public void Setup(Transform a, Transform h, Character character)
     {
         this.attack = a;
         this.hit = h;
+        this.sColor = character.Player.Colorway.SecondaryColor;
+        this.sColor.a = 1;
+        this.VFX.SetVector4("Color", this.sColor);
     }
 
     // Update is called once per frame

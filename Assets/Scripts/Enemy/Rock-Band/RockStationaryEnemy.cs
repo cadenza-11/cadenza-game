@@ -34,6 +34,8 @@ namespace Cadenza
             this.currentProjectile = null;
             this.phase = 4 - EnemyManager.EnemyCount;
             this.combatStarted = true;
+            this.maxHealth *= PlayerSystem.PlayerCount;
+            this.currentHealth *= PlayerSystem.PlayerCount;
         }
 
         override protected void FixedUpdate()
@@ -95,7 +97,7 @@ namespace Cadenza
 
         override protected void RangedAttack()
         {
-            float[] wavePos = new float[10] {1.875f, 0.625f, -0.625f, -1.875f, 1.666f, 0.0f, -1.666f, 1.25f, 0.0f, -1.25f};
+            float[] wavePos = new float[10] { 1.875f, 0.625f, -0.625f, -1.875f, 1.666f, 0.0f, -1.666f, 1.25f, 0.0f, -1.25f };
             this.anim2.SetTrigger("LightAttack");
             switch (this.phase)
             {
@@ -133,7 +135,7 @@ namespace Cadenza
             this.anim.SetBool("IsFainted", true);
             this.anim2.SetBool("IsFainted", true);
             this.rb.linearVelocity = Vector3.zero;
-            EnemyManager.RemoveEnemy(this);
+            EnemyManager.RemoveEnemy(this, destroy: true);
         }
         #endregion
     }

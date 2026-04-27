@@ -12,7 +12,9 @@ namespace Cadenza
         Special,
         Run,
         Ranged,
-        Dead
+        Dead,
+        Assist,
+        Zigzag
     }
 
     public class Enemy : MonoBehaviour
@@ -59,6 +61,11 @@ namespace Cadenza
         public virtual void Awake()
         {
             Debug.Log("Goes into awake");
+        }
+
+        protected virtual void OnDestroy()
+        {
+            EnemyManager.RemoveEnemy(this, destroy: false);
         }
 
         public virtual void Initialize()
@@ -385,7 +392,7 @@ namespace Cadenza
             Debug.Log("Goes into dead state");
             this.anim.SetBool("IsFainted", true);
             this.rb.linearVelocity = Vector3.zero;
-            EnemyManager.RemoveEnemy(this);
+            EnemyManager.RemoveEnemy(this, destroy: true);
         }
 
         protected Vector2 FindNearestPlayerDist()

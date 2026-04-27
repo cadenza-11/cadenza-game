@@ -27,6 +27,10 @@ namespace Cadenza
 
         private void OnTeamHit(TeamScoreDef def)
         {
+            // Don't play a sound if there's only one player in the team.
+            if (def.PlayerIDs.Length == 1)
+                return;
+
             int soundID = def.Class switch
             {
                 ScoreClass.Bad => 0,

@@ -10,7 +10,7 @@ public class Projectile : MonoBehaviour
     public bool speedSet = true;
     public float knockbackScale;
     [SerializeField] private int speed = 1;
-    [SerializeField] private int damage = 2;
+    [SerializeField] protected int damage = 2;
     void Start()
     {
         this.rb = this.gameObject.GetComponent<Rigidbody>();
@@ -40,7 +40,7 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider collider)
+    protected virtual void OnTriggerEnter(Collider collider)
     {
         if (collider.CompareTag("Player"))
         {

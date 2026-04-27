@@ -31,6 +31,14 @@ namespace Cadenza
             BeatSystem.BeatPlayed += this.onBeat;
         }
 
+        protected override void OnDestroy()
+        {
+            GameManager.PhaseEntered -= this.OnPhaseEntered;
+            GameManager.PhaseExited -= this.OnPhaseExit;
+            BeatSystem.BeatPlayed -= this.onBeat;
+            base.OnDestroy();
+        }
+
         private void onBeat()
         {
             this.beatCount++;

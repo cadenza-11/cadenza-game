@@ -18,6 +18,7 @@ namespace Cadenza
         void Start()
         {
             EnemyManager.AddEnemy(this);
+            this.Initialize();
         }
 
         public override void Initialize()
@@ -129,7 +130,7 @@ namespace Cadenza
             this.Schedule(this.meleeDuration, () => this.isActionable = true);
 
             bool temp = UnityEngine.Random.value > 0.5f;
-            this.direction = Vector3.Normalize(Quaternion.AngleAxis((temp ? 45f : -45f) + 180f, Vector3.up) * this.direction);
+            this.direction = Vector3.Normalize(Quaternion.AngleAxis((temp ? 90f : -90f), Vector3.up) * this.direction);
 
             AudioSystem.PlayOneShotWithParameter(AudioSystem.PlayerOneShotsEvent, "ID", 3, immediate: true);
         }

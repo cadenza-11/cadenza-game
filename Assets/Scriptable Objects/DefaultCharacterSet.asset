@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultCharacterSet
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterSet
   Values:
-  - {fileID: 11400000, guid: cda20754fcd514e8f8d90723ac11b9e5, type: 2}
-  - {fileID: 11400000, guid: a8016ff13eb5642c990da52e9c2eb5e0, type: 2}
   - {fileID: 11400000, guid: ae8914c139d804a62b31a3c14bbf57d4, type: 2}
+  - {fileID: 11400000, guid: a8016ff13eb5642c990da52e9c2eb5e0, type: 2}
+  - {fileID: 11400000, guid: cda20754fcd514e8f8d90723ac11b9e5, type: 2}
   - {fileID: 11400000, guid: efd3ab957a08649749161d487cdc17d4, type: 2}

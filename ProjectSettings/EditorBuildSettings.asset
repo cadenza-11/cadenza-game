@@ -12,16 +12,16 @@ EditorBuildSettings:
     path: Assets/Scenes/Backstage.unity
     guid: 1732c24e9d66360478fe4e6b83a6e593
   - enabled: 1
-    path: Assets/Scenes/Stage.unity
+    path: Assets/Scenes/Stage_DVDJ.unity
     guid: 2069143ab2d064b4aa74ce6ff863639c
   - enabled: 1
-    path: Assets/Scenes/BattleFusion.unity
+    path: Assets/Scenes/Stage_Orchestra.unity
     guid: 908fe1da183f2fd4ebee9c312b0b0403
   - enabled: 1
     path: Assets/Scenes/Street.unity
     guid: 23fb129e0f784034fb77788d9e796554
   - enabled: 1
-    path: Assets/Scenes/BattleDance.unity
+    path: Assets/Scenes/Stage_Dance.unity
     guid: 22286aeee2776054eaa57c7c22ef8891
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

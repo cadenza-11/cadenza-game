@@ -667,6 +667,18 @@ PrefabInstance:
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[3].m_Value.z
       value: -0.768
       objectReference: {fileID: 0}
+    - target: {fileID: 3325359763249685113, guid: 288aaf86f7951ef4f9cbeb54c0221741, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.x
+      value: 0.22339183
+      objectReference: {fileID: 0}
+    - target: {fileID: 3325359763249685113, guid: 288aaf86f7951ef4f9cbeb54c0221741, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.y
+      value: 0.49934646
+      objectReference: {fileID: 0}
+    - target: {fileID: 3325359763249685113, guid: 288aaf86f7951ef4f9cbeb54c0221741, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.z
+      value: 0.7490197
+      objectReference: {fileID: 0}
     - target: {fileID: 3352052260832737817, guid: 288aaf86f7951ef4f9cbeb54c0221741, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5

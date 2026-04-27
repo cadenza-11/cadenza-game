@@ -27,6 +27,11 @@ namespace Cadenza
             SaveSystem.TeamFileDeleted += DeleteTeam;
         }
 
+        public override void OnGameStop()
+        {
+            this.ClearFlowState();
+        }
+
         #region Team Creation
 
         private const string DefaultTeamName = "Unnamed Team";
@@ -64,13 +69,19 @@ namespace Cadenza
         [SerializeField] private CharacterSet availableClasses;
         public static CharacterSet AvailableClasses => singleton.availableClasses;
         private BitArray isCharacterFlowing;
+        private int flowingCount;
 
         public static void SetClassFlowing(int classID, bool isFlowing)
         {
             if (classID < 0 || classID >= singleton.isCharacterFlowing.Length)
                 return;
 
+            if (singleton.isCharacterFlowing[classID] == isFlowing)
+                return;
+
             singleton.isCharacterFlowing[classID] = isFlowing;
+            singleton.flowingCount += isFlowing ? 1 : -1;
+            singleton.UpdateChromaticAberration();
         }
 
         public static bool IsClassFlowing(int classID)
@@ -79,6 +90,21 @@ namespace Cadenza
                 return false;
 
             return singleton.isCharacterFlowing[classID];
+        }
+
+        private void UpdateChromaticAberration()
+        {
+            // Increase chromatic aberration intensity by
+            // the number of characters currently flowing.
+            float targetValue = Mathf.Clamp01((float)this.flowingCount / PlayerSystem.PlayerCount);
+            CameraSystem.ChromaticAberration = targetValue;
+        }
+
+        private void ClearFlowState()
+        {
+            this.isCharacterFlowing?.SetAll(false);
+            this.flowingCount = 0;
+            this.UpdateChromaticAberration();
         }
 
         #endregion

@@ -1,7 +1,7 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="IndividualResults" src="project://database/Assets/UI/ResultsMenu/IndividualResults.uxml?fileID=9197481963319205126&amp;guid=ad36b2b648f03f84f978739140031799&amp;type=3#IndividualResults"/>
     <Style src="project://database/Assets/UI/ResultsMenu/ResultsMenu.uss?fileID=7433441132597879392&amp;guid=2d58f611297d5d249bf908e30b6c0457&amp;type=3#ResultsMenu"/>
-    <ui:VisualElement name="c_JudgeResults" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.65); display: flex;">
+    <ui:VisualElement name="c_JudgeResults" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.65);">
         <ui:Label text="the results are in..." class="text_header"/>
         <ui:VisualElement name="c_OverallResults" class="score_cards_container">
             <ui:VisualElement name="score_Overall" class="judge_result">
@@ -74,7 +74,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="c_ActionButtons" style="flex-grow: 1; align-self: center; justify-content: best-fit; display: none; width: 60px; background-color: rgba(0, 0, 0, 0.67);">
+    <ui:VisualElement name="c_ActionButtons" style="display: none; background-color: rgba(0, 0, 0, 0.67); flex-grow: 1; justify-content: center;">
         <ui:Button text="Next level" name="b_Next" class="action_button"/>
         <ui:Button text="Retry level" name="b_Retry" class="action_button"/>
         <ui:Button text="View Leaderboard" name="b_Leaderboard" class="action_button"/>

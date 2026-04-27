@@ -60,6 +60,8 @@ namespace Cadenza
 
             for (int i = 0; i < this.availableContainers.Count; i++)
                 this.availableContainers[i].style.display = DisplayStyle.None;
+
+            BeatSystem.BeatPlayed += this.onBeat;
         }
 
         public override void OnGameStart()
@@ -76,7 +78,7 @@ namespace Cadenza
                 container.Q<Label>("update_CharacterName").text = $"{player.Name} ({player.CharacterClass.Name})";
                 container.Q<VisualElement>("portrait_Character").style.backgroundImage = player.CharacterClass.Portrait;
                 VisualElement background = container.Q<VisualElement>("c_BackLayer");
-                Color tint = player.Colorway.PrimaryColor;
+                Color tint = player.Colorway.SecondaryColor;
                 tint.a = 1;
                 background.style.unityBackgroundImageTintColor = tint;
 
@@ -127,6 +129,9 @@ namespace Cadenza
                 container.style.display = DisplayStyle.None;
             }
 
+            this.healthShakeTweens.ForEach(tween => tween.Kill());
+            this.healthShakeTweens.Clear();
+
             this.assignedContainers.Clear();
 
             this.teamMeter.value = 0;
@@ -141,13 +146,15 @@ namespace Cadenza
             if (ApplicationController.State != ApplicationState.GameSession)
                 return;
 
+            this.beatIndicator.Update();
+        }
+
+        void onBeat()
+        {
             // Update meter.
             var nextState = this.GetMeterState();
             if (nextState != MeterState.Filled)
-                this.FillMeter(Time.deltaTime);
-
-            // Update beat indicator.
-            this.beatIndicator.Update();
+                this.FillMeter((float)BeatSystem.SecondsPerBeat);
         }
 
         #endregion

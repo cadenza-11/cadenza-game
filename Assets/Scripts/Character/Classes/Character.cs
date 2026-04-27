@@ -144,6 +144,7 @@ namespace Cadenza
             this.RevivalMeter.SetThreshold(this.reviveThreshold);
             this.RevivalMeter.Hide();
             Character.TeamAttackInitiated += this.TeamAttackEffect;
+            BeatSystem.BeatPlayed += this.OnBeat;
         }
 
         void OnDestroy()
@@ -154,6 +155,7 @@ namespace Cadenza
                 this.Player.InteractChanged -= this.interactionIndicator.OnPlayerInteractChanged;
             }
             Character.TeamAttackInitiated -= this.TeamAttackEffect;
+            BeatSystem.BeatPlayed -= this.OnBeat;
         }
 
         void Update()
@@ -168,10 +170,6 @@ namespace Cadenza
 
             this.state?.FixedUpdate(this);
 
-            // Update flow.
-            this.SetFlow(this.flow - 0.03f);
-            this.SetRevive(this.revive - 0.03f);
-
             if (this.HasFlowBuff(3))
                 this.SetHealth(this.currentHealth + 0.01f);
         }
@@ -179,6 +177,12 @@ namespace Cadenza
         void LateUpdate()
         {
             this.input.Consume();
+        }
+
+        private void OnBeat()
+        {
+            this.SetFlow(this.flow - 0.75f);
+            this.SetRevive(this.revive - 0.75f);
         }
 
         #region States
@@ -413,16 +417,9 @@ namespace Cadenza
             this.flow = Mathf.Clamp(flow, 0.0f, 20.0f);
 
             // Set flow buffs.
-            if (this.flow >= this.flowThreshold)
-            {
-                TeamSystem.SetClassFlowing(this.cClass.ID, true);
-                this.isFlowing = true;
-            }
-            else
-            {
-                TeamSystem.SetClassFlowing(this.cClass.ID, false);
-                this.isFlowing = false;
-            }
+            bool isFlowing = this.flow >= this.flowThreshold;
+            TeamSystem.SetClassFlowing(this.cClass.ID, isFlowing);
+            this.isFlowing = isFlowing;
 
             // Set shader.
             this.Sprite.material.SetInt("_Flowstate", this.isFlowing ? 1 : 0);
