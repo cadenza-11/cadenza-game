@@ -140,10 +140,8 @@ namespace Cadenza
                 return;
 
             var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
-            this.PlayerHit?.Invoke(score);
-
-            if (this.Character != null)
-                this.Character.OnAttackLight(score);
+            if (this.Character != null && this.Character.OnAttackLight(score))
+                this.PlayerHit?.Invoke(score);
         }
 
         private void OnAttackHeavy(InputAction.CallbackContext context)
@@ -152,10 +150,8 @@ namespace Cadenza
                 return;
 
             var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
-            this.PlayerHit?.Invoke(score);
-
-            if (this.Character != null)
-                this.Character.OnAttackHeavy(score);
+            if (this.Character != null && this.Character.OnAttackHeavy(score))
+                this.PlayerHit?.Invoke(score);
         }
 
         private void OnAttackCharge(InputAction.CallbackContext context)
@@ -164,10 +160,8 @@ namespace Cadenza
                 return;
 
             var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
-            this.PlayerHit?.Invoke(score);
-
-            if (this.Character != null)
-                this.Character.OnAttackCharge(score);
+            if (this.Character != null && this.Character.OnAttackCharge(score))
+                this.PlayerHit?.Invoke(score);
         }
 
         private void OnAttackTeam(InputAction.CallbackContext context)
@@ -182,10 +176,8 @@ namespace Cadenza
                 return;
 
             var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
-            this.PlayerHit?.Invoke(score);
-
-            if (this.Character != null)
-                this.Character.OnParry(score);
+            if (this.Character != null && this.Character.OnParry(score))
+                this.PlayerHit?.Invoke(score);
         }
 
         private void OnPause(InputAction.CallbackContext context)

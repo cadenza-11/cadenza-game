@@ -6,15 +6,20 @@ namespace Cadenza.Combo
     [CreateAssetMenu(fileName = "ComboDB", menuName = "Cadenza/Combos/ComboDB", order = 1)]
     public class ComboDatabase : ScriptableObject
     {
-        public float ComboTimeout;
         public List<ComboDefinition> ComboDefinitions;
 
         public ComboNode BuildTree()
         {
             var root = new ComboNode();
 
+            if (this.ComboDefinitions == null)
+                return root;
+
             foreach (var combo in this.ComboDefinitions)
             {
+                if (combo == null || combo.Moves == null)
+                    continue;
+
                 var current = root;
                 foreach (var move in combo.Moves)
                 {

@@ -12,8 +12,9 @@ namespace Cadenza
 
     public enum AttkTypes
     {
-        None,
-        Light,
-        Heavy
+        Rest = 0,
+        Light = 1,
+        Charge = 2,
+        ChargeRelease = 3
     }
 }

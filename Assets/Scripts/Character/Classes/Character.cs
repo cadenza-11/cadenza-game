@@ -57,6 +57,9 @@ namespace Cadenza
         private float parryActiveUntil = float.NegativeInfinity;
         private float pcFactor;
         private bool isInvulnerable;
+        private int lastReservedCombatBeat = int.MinValue;
+        private bool hasAcceptedCharge;
+        private int acceptedChargeBeat = int.MinValue;
 
         public class Input
         {
@@ -109,6 +112,9 @@ namespace Cadenza
             this.maxHealth = this.baseHealth * this.pcFactor;
 
             this.input = new();
+            this.lastReservedCombatBeat = int.MinValue;
+            this.hasAcceptedCharge = false;
+            this.acceptedChargeBeat = int.MinValue;
             this.SetHealth(this.maxHealth);
             this.SetFlow(0);
 
@@ -384,19 +390,69 @@ namespace Cadenza
             this.input.move = move;
         }
 
-        public void OnAttackLight(ScoreDef score)
+        public bool OnAttackLight(ScoreDef score)
         {
+            if (this.state != this.walking && this.state != this.fainted)
+                return false;
+
+            if (!this.TryReserveCombatBeat(score.Beat))
+                return false;
+
             this.input.lightAttack = score;
+            return true;
         }
 
-        public void OnAttackCharge(ScoreDef score)
+        public bool OnAttackCharge(ScoreDef score)
         {
+            if (this.state != this.walking)
+                return false;
+
+            if (!this.TryReserveCombatBeat(score.Beat))
+                return false;
+
             this.input.charge = score;
+            this.hasAcceptedCharge = true;
+            this.acceptedChargeBeat = score.Beat;
+            return true;
         }
 
-        public void OnAttackHeavy(ScoreDef score)
+        public bool OnAttackHeavy(ScoreDef score)
         {
+            if (this.state == this.fainted)
+            {
+                if (!this.TryReserveCombatBeat(score.Beat))
+                    return false;
+
+                this.input.heavyAttack = score;
+                return true;
+            }
+
+            if (!this.hasAcceptedCharge)
+                return false;
+
+            if (score.Beat == this.acceptedChargeBeat || score.Beat == this.lastReservedCombatBeat)
+            {
+                this.CancelCharge();
+                return false;
+            }
+
+            if (this.state != this.charging && this.state != this.walking)
+            {
+                this.CancelCharge();
+                return false;
+            }
+
+            if (!this.TryReserveCombatBeat(score.Beat))
+            {
+                this.CancelCharge();
+                return false;
+            }
+
+            this.input.charge = null;
             this.input.heavyAttack = score;
+            this.hasAcceptedCharge = false;
+            this.acceptedChargeBeat = int.MinValue;
+            return true;
         }
 
         public void OnAttackTeam()
@@ -404,9 +460,53 @@ namespace Cadenza
             this.input.wantTeam = true;
         }
 
-        public void OnParry(ScoreDef score)
+        public bool OnParry(ScoreDef score)
         {
+            if (this.state != this.walking)
+                return false;
+
+            if (!this.TryReserveCombatBeat(score.Beat))
+                return false;
+
             this.input.parry = score;
+            return true;
+        }
+
+        internal void ProcessHeldChargeBeat(int beat)
+        {
+            if (this.state != this.charging || !this.hasAcceptedCharge)
+                return;
+
+            if (!this.TryReserveCombatBeat(beat))
+                return;
+
+            this.comboM.ProcessHeldCharge(beat);
+            this.ChargeBeatsPassed++;
+        }
+
+        internal void ClearChargeTracking()
+        {
+            this.hasAcceptedCharge = false;
+            this.acceptedChargeBeat = int.MinValue;
+        }
+
+        private bool TryReserveCombatBeat(int beat)
+        {
+            if (this.lastReservedCombatBeat == beat)
+                return false;
+
+            this.lastReservedCombatBeat = beat;
+            return true;
+        }
+
+        private void CancelCharge()
+        {
+            this.input.charge = null;
+            this.input.heavyAttack = null;
+            this.ClearChargeTracking();
+
+            if (this.state == this.charging)
+                this.ChangeState(this.walking);
         }
 
         #endregion
