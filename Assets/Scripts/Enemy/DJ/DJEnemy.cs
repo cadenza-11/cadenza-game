@@ -26,10 +26,11 @@ namespace Cadenza
             GameManager.PhaseEntered += this.OnPhaseEntered;
             this.healthMaterial = this.healthbarHolder.GetComponent<Renderer>().materials[1];
         }
-        
-        void OnDestroy()
+
+        protected override void OnDestroy()
         {
             GameManager.PhaseEntered -= this.OnPhaseEntered;
+            base.OnDestroy();
         }
 
         override public void Initialize()
