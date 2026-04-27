@@ -9,6 +9,7 @@ namespace Cadenza
         public AttkEffect comboMove = AttkEffect.None;
         private GameObject go = null;
         private int numCollisions = 0;
+        bool hasCollided = false;
 
         public void SetActive(bool enabled)
         {
@@ -21,7 +22,6 @@ namespace Cadenza
 
         private void OnTriggerEnter(Collider collider)
         {
-            Debug.Log("Goes into isTrigger");
             // Hit player.
             if (collider.TryGetComponent(out Character character))
             {
@@ -36,8 +36,8 @@ namespace Cadenza
             }
             else if(collider.CompareTag("Pillar"))
             {
-                Debug.Log("Ran into pillar");
                 this.numCollisions++;
+                this.hasCollided = true;
             }
 
             this.comboMove = AttkEffect.None;
@@ -46,6 +46,21 @@ namespace Cadenza
         public int GetNumCollisions()
         {
             return this.numCollisions;
+        }
+
+        public void ResetNumCollisions()
+        {
+            this.numCollisions = 0;
+        }
+
+        public bool GetHasCollided()
+        {
+            return this.hasCollided;
+        }
+
+        public void ResetHasCollided()
+        {
+            this.hasCollided = false;
         }
     }
 }

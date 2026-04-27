@@ -9,6 +9,7 @@ namespace Cadenza
         bool inZoom = false;
         bool inZoomSetup = false;
         bool phase3Transition = true;
+        bool hasCollided = false;
         float lerpTime = 0;
         float pillarLerpTime = 0;
         [SerializeField] float downedTime = 0;
@@ -37,7 +38,6 @@ namespace Cadenza
 
         private void OnPhaseEntered(Phase phase)
         {
-            Debug.Log(phase.Index);
             switch(phase.Index)
             {
                 case 0: //Grunt onslaught this enemy does nothing
@@ -49,7 +49,7 @@ namespace Cadenza
                 case 2: //Enemy Downed
                     this.Phase3();
                     break;
-                case 3:
+                case 3: //Grunt onslaught again
                     this.Phase1();
                     break;
                 case 4:
@@ -65,7 +65,7 @@ namespace Cadenza
         {
             this.curPhase++;
             //Moves enemy out of stage and freezes them in places
-            //this.transform.position = new Vector3(100,100,100);
+            this.transform.position = new Vector3(100,100,100);
             this.rb.constraints = RigidbodyConstraints.FreezeAll;
             this.rb.linearVelocity = Vector3.zero;
             EnemyManager.GruntPhase();
@@ -73,21 +73,20 @@ namespace Cadenza
 
         private void Phase2()
         {
-            Debug.Log("Goes into second phase");
             //Resets enemy rigid body to allow movement but restrict rotation in the X and Z axis
-            this.rb.constraints = RigidbodyConstraints.FreezeRotation;
             //Places enemy in center of the stage will add better animation to this later
             this.transform.position = new Vector3(0.5f, 5, 6);
+            this.rb.constraints = RigidbodyConstraints.FreezeRotation;
             this.rb.linearVelocity = Vector3.zero;
             this.curPhase++;
-
         }
 
         private void Phase3()
         {
-            Debug.Log("Goes into third phase");
+            Debug.Log("Enters phase 3");
             this.phase3Transition = true;
             this.pillarLerpTime = 0;
+            this.attackBox.ResetNumCollisions();
             this.curPhase++;
         }
 
@@ -109,7 +108,6 @@ namespace Cadenza
 
         private void ExitPhase1()
         {
-            Debug.Log("Exits first phase");
         }
 
         private void ExitPhase2()
@@ -125,6 +123,10 @@ namespace Cadenza
         // Update is called once per frame
         protected override void FixedUpdate()
         {
+            if(this.currentHealth <= 0)
+            {
+                this.DeadState();
+            }
             switch(this.curPhase % 3)
             {
                 //Technically the third phase since this is mod3
@@ -136,6 +138,7 @@ namespace Cadenza
                     if(this.downedTime >= 10.0f)
                     {
                         AudioSystem.SetParameter("MusicState", this.curPhase);
+                        this.downedTime = 0;
                     }
                     this.downedTime += Time.deltaTime;
                     break;
@@ -158,13 +161,22 @@ namespace Cadenza
                 }
                 int playerId = Random.Range(1, numPlayers + 1);
                 Player targetPlayer = PlayerSystem.Players[playerId - 1];
+                float zLocation = targetPlayer.Character.transform.position.z;
+                if(zLocation > 10.5)
+                {
+                    zLocation = 10.4f;
+                }
+                else if(zLocation < 2.5)
+                {
+                    zLocation = 2.6f;
+                }
                 if(this.transform.position.x <= 0)
                 {
-                    this.TargetLocation = new Vector2(-7, targetPlayer.Character.transform.position.z);
+                    this.TargetLocation = new Vector2(-7, zLocation);
                 }
                 else
                 {
-                    this.TargetLocation = new Vector2(7, targetPlayer.Character.transform.position.z);
+                    this.TargetLocation = new Vector2(7, zLocation);
                 }
                 this.startPosition.x = this.transform.position.x;
                 this.startPosition.y = this.transform.position.z;
@@ -212,18 +224,34 @@ namespace Cadenza
             else
             {
                 Vector2 distance = new Vector2(this.transform.position.x, this.transform.position.z) - this.TargetLocation;
-                if(distance.SqrMagnitude() < 2)
+                if(this.hasCollided)
+                {
+                    this.Collision();
+                }
+                else if(this.attackBox.GetHasCollided())
+                {
+                    Debug.Log("Collided");
+                    this.hasCollided = true;
+                    this.lerpTime = 0;
+                    this.pillarLerpTime = 0;
+                    this.attackBox.SetActive(false);
+                    for(int i = 0; i < 11; i++)
+                    {
+                        this.isPillarRising[i] = false;
+                    }
+
+                    Debug.Log(this.attackBox.GetNumCollisions());
+                    if(this.attackBox.GetNumCollisions() >= 3)
+                    {
+                        Debug.Log("Tries to enter downed state");
+                        AudioSystem.SetParameter("MusicState", this.curPhase);
+                    }
+                }
+                else if(distance.SqrMagnitude() < 2)
                 {
                     this.inZoom = false;
                     this.lerpTime = 0;
                     this.attackBox.SetActive(false);
-
-                    if(this.attackBox.GetNumCollisions() >= 3)
-                    {
-                        this.attackBox.SetActive(false);
-                        AudioSystem.SetParameter("MusicState", 2);
-                    }
-
                     for(int i = 0; i < 11; i++)
                     {
                         this.isPillarRising[i] = false;
@@ -270,6 +298,29 @@ namespace Cadenza
             }
         }
 
+        void Collision()
+        {
+            if(this.pillarLerpTime <= 2)
+            {
+                for(int i = 0; i < 11; i++)
+                {
+                    this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x,
+                                Mathf.Lerp(this.pillars[i].transform.position.y, -2.0f, this.pillarLerpTime/2.0f), 
+                                this.pillars[i].transform.position.z);
+                }
+                this.pillarLerpTime += Time.deltaTime;
+            }
+            if(this.downedTime > 3)
+            {
+                this.inZoom = false;
+                this.hasCollided = false;
+                this.attackBox.ResetHasCollided();
+                this.pillarLerpTime = 0;
+                this.downedTime = 0;
+            }
+            this.downedTime += Time.deltaTime;
+        }
+
         void ThirdPhaseTransition()
         {
             this.pillarLerpTime += Time.deltaTime;
@@ -283,6 +334,7 @@ namespace Cadenza
             if(this.pillarLerpTime >= 2.0f)
             {
                 this.phase3Transition = false;
+                this.pillarLerpTime = 0;
             }
         }
     }
