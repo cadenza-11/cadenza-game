@@ -3,11 +3,10 @@ using UnityEngine;
 
 namespace Cadenza
 {
-    public class BassAttackVFX : MonoBehaviour
+    public class BurstAttackVFX : MonoBehaviour
     {
         private GameObject go = null;
         [SerializeField] private GameObject burst;
-        [SerializeField] private Character character;
 
         public void SetActive(bool enabled)
         {
@@ -20,8 +19,13 @@ namespace Cadenza
         private void OnTriggerEnter(Collider collider)
         {
             // Hit enemy.
-            GameObject effect = Instantiate(this.burst);
-            effect.GetComponent<BurstBass>().Setup(collider.gameObject.transform, this.character);
+            this.burst.SetActive(true);
+            this.burst.transform.position = collider.transform.position;
+        }
+
+        private void OnDisable()
+        {
+            this.burst.SetActive(false);
         }
     }
 }

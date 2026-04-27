@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 2767625768321418382}
   - component: {fileID: 811339778497194924}
   - component: {fileID: 1762553660212611749}
-  - component: {fileID: 1538748905445118928}
-  - component: {fileID: 448520365874023491}
   m_Layer: 0
   m_Name: VFX_BurstParticles
   m_TagString: Untagged
@@ -59,7 +57,7 @@ VisualEffect:
       m_Array:
       - m_Value: {x: -0.36249995, y: 0.2282942, z: -0.35044}
         m_Name: BurstPos
-        m_Overridden: 1
+        m_Overridden: 0
     m_Vector4f:
       m_Array: []
     m_Uint:
@@ -123,38 +121,6 @@ VFXRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
---- !u!114 &1538748905445118928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 929294484872118609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
-  m_ExecuteInEditor: 1
-  m_Bindings:
-  - {fileID: 448520365874023491}
-  m_VisualEffect: {fileID: 811339778497194924}
---- !u!114 &448520365874023491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 929294484872118609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07c3070554d0a8944a95ff8f018c2c9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPositionBinder
-  Space: 0
-  m_Property:
-    m_Name: BurstPos
-  Target: {fileID: 7206170260767402013}
 --- !u!1 &1843827731631099482
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +168,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1414989058625444068
 Transform:
   m_ObjectHideFlags: 0
@@ -211,7 +177,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2456918876159049095}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.36249995, y: 0.2282942, z: -0.35044}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -232,5 +198,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d40195aa28ccf1342a80837c472c9bec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BurstBass
-  Pos1: {fileID: 1843827731631099482}
   VFX: {fileID: 811339778497194924}
+  character: {fileID: 0}
