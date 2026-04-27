@@ -63,6 +63,11 @@ namespace Cadenza
             Debug.Log("Goes into awake");
         }
 
+        protected virtual void OnDestroy()
+        {
+            EnemyManager.RemoveEnemy(this, destroy: false);
+        }
+
         public virtual void Initialize()
         {
             this.runHealth = (int)(0.2 * this.maxHealth);
@@ -387,7 +392,7 @@ namespace Cadenza
             Debug.Log("Goes into dead state");
             this.anim.SetBool("IsFainted", true);
             this.rb.linearVelocity = Vector3.zero;
-            EnemyManager.RemoveEnemy(this);
+            EnemyManager.RemoveEnemy(this, destroy: true);
         }
 
         protected Vector2 FindNearestPlayerDist()

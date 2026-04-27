@@ -61,7 +61,7 @@ namespace Cadenza
                         laser.ShutDown();
                     this.anim.SetTrigger("Die");
                     this.electricity.SetActive(true);
-                    this.spotlight.DOIntensity(0, 10f).OnComplete(() => EnemyManager.RemoveEnemy(this));
+                    this.spotlight.DOIntensity(0, 10f).OnComplete(() => EnemyManager.RemoveEnemy(this, destroy: true));
                 }
             }
             else if (!this.isDown) return; // Can't damage DJ until he's down
