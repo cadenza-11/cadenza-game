@@ -18,11 +18,11 @@ MonoBehaviour:
   IsBattleLevel: 1
   MusicTrack:
     Guid:
-      Data1: 1857119990
-      Data2: 1329744374
-      Data3: 690888860
-      Data4: 382254968
-    Path: event:/MUS_DJ
+      Data1: -531059043
+      Data2: 1113401745
+      Data3: -717729617
+      Data4: 1422825577
+    Path: event:/MUS_Dance
   PreviewImage: {fileID: 2800000, guid: cc796c559f27747edb2e072649cd1a37, type: 3}
   Phases:
   - Index: 0
