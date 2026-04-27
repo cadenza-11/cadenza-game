@@ -33,6 +33,7 @@ namespace Cadenza
 
         protected override void OnDestroy()
         {
+            Debug.Log("Goes into OnDestroy");
             GameManager.PhaseEntered -= this.OnPhaseEntered;
             GameManager.PhaseExited -= this.OnPhaseExit;
             BeatSystem.BeatPlayed -= this.onBeat;
@@ -135,25 +136,37 @@ namespace Cadenza
             {
                 this.DeadState();
             }
-            switch(this.curPhase % 3)
+            switch(this.curPhase)
             {
-                //Technically the third phase since this is mod3
-                case 0:
+                case 1:
+                    break;
+                case 2:
+                    this.Zoom();
+                    break;
+                case 3:
                     if(this.phase3Transition)
                     {
                         this.ThirdPhaseTransition();
                     }
                     if(this.downedTime >= 10.0f)
                     {
+                        Debug.Log("Trying to get out of downed phase");
                         AudioSystem.SetParameter("MusicState", this.curPhase);
                         this.downedTime = 0;
                     }
                     this.downedTime += Time.deltaTime;
                     break;
-                case 1:
+                case 4:
                     break;
-                case 2:
+                case 5:
                     this.Zoom();
+                    break;
+                case 6:
+                    if(this.phase3Transition)
+                    {
+                        this.ThirdPhaseTransition();
+                    }
+                    //Wait until players kill enemy
                     break;
             }
         }
