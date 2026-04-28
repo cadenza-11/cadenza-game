@@ -25,6 +25,7 @@ namespace Cadenza
         public void FailAttack(Character character)
         {
             character.ChargeBeatsPassed = 0;
+            character.PlayFailSound();
             character.Animator.SetTrigger("Fail");
             character.Schedule(
                 character.attackDuration * 2f,
@@ -35,6 +36,7 @@ namespace Cadenza
         {
             // Charge release attack.
             character.AttackArea.StartHeavyAttack(character);
+            AudioSystem.PlayOneShot(Sound.Gameplay.HeavyAttack, immediate: true);
             character.Animator.SetTrigger("HeavyAttack");
             character.Schedule(
                 character.attackDuration * 2f,

@@ -316,6 +316,7 @@ namespace Cadenza
             if (this.IsParrying())
             {
                 knockbackMultiplier = 0f;
+                AudioSystem.PlayOneShot(Sound.Gameplay.Parry, immediate: true);
                 this.Parried?.Invoke();
                 return false;
             }
@@ -333,6 +334,7 @@ namespace Cadenza
 
             // Take damage.
             this.SetHealth(this.currentHealth - fDamage, interruptOnDamage: !blocked);
+            AudioSystem.PlayOneShot(Sound.Gameplay.CharacterHit, immediate: true);
             return true;
         }
 
@@ -430,10 +432,16 @@ namespace Cadenza
         public bool OnAttackCharge(ScoreDef score)
         {
             if (this.state != this.walking)
+            {
+                this.PlayFailSound();
                 return false;
+            }
 
             if (!this.TryReserveCombatBeat(score.Beat))
+            {
+                this.PlayFailSound();
                 return false;
+            }
 
             this.input.charge = score;
             this.hasAcceptedCharge = true;
@@ -453,23 +461,29 @@ namespace Cadenza
             }
 
             if (!this.hasAcceptedCharge)
+            {
+                this.PlayFailSound();
                 return false;
+            }
 
             if (score.Beat == this.acceptedChargeBeat || score.Beat == this.lastReservedCombatBeat)
             {
                 this.CancelCharge();
+                this.PlayFailSound();
                 return false;
             }
 
             if (this.state != this.charging && this.state != this.walking)
             {
                 this.CancelCharge();
+                this.PlayFailSound();
                 return false;
             }
 
             if (!this.TryReserveCombatBeat(score.Beat))
             {
                 this.CancelCharge();
+                this.PlayFailSound();
                 return false;
             }
 
@@ -530,6 +544,7 @@ namespace Cadenza
 
             this.comboM.ProcessHeldCharge(beat);
             this.ChargeBeatsPassed++;
+            this.PlayChargeSound(this.ChargeBeatsPassed + 1);
         }
 
         internal void ClearChargeTracking()
@@ -555,6 +570,23 @@ namespace Cadenza
 
             if (this.state == this.charging)
                 this.ChangeState(this.walking);
+        }
+
+        internal void PlayChargeSound(int chargeLevel)
+        {
+            Sound.Gameplay sound = Mathf.Clamp(chargeLevel, 1, 3) switch
+            {
+                1 => Sound.Gameplay.Charge1,
+                2 => Sound.Gameplay.Charge2,
+                _ => Sound.Gameplay.Charge3,
+            };
+
+            AudioSystem.PlayOneShot(sound, immediate: chargeLevel == 1);
+        }
+
+        internal void PlayFailSound()
+        {
+            AudioSystem.PlayOneShot(Sound.Gameplay.FailedAttack, immediate: true);
         }
 
         #endregion
@@ -618,12 +650,20 @@ namespace Cadenza
 
         internal void BeginBlock()
         {
+            if (this.isBlocking)
+                return;
+
             this.isBlocking = true;
+            AudioSystem.PlayOneShot(Sound.Gameplay.BlockStarted, immediate: true);
         }
 
         internal void EndBlock()
         {
+            if (!this.isBlocking)
+                return;
+
             this.isBlocking = false;
+            AudioSystem.PlayOneShot(Sound.Gameplay.BlockEnded, immediate: true);
         }
 
         internal bool IsBlocking()

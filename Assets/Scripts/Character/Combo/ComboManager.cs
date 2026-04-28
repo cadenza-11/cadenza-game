@@ -124,6 +124,7 @@ namespace Cadenza.Combo
             if (this.m_CurrentComboNode.IsEnd)
             {
                 reward = this.m_CurrentComboNode.Reward;
+                AudioSystem.PlayOneShot(Sound.Gameplay.ComboSucceeded, immediate: true);
                 this.ResetComboProgress();
             }
 

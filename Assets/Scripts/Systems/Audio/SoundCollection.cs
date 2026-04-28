@@ -17,9 +17,16 @@ namespace Cadenza
 
         public enum Gameplay
         {
-            PlayerAttackLight = 0,
-            PlayerAttackHeavy = 1,
-            PlayerDamaged = 2,
+            Parry = 0,
+            BlockStarted = 1,
+            BlockEnded = 2,
+            CharacterHit = 3,
+            Charge1 = 4,
+            Charge2 = 5,
+            Charge3 = 6,
+            HeavyAttack = 7,
+            FailedAttack = 8,
+            ComboSucceeded = 9,
         }
     }
 

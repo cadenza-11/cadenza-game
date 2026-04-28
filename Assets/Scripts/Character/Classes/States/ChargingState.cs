@@ -25,6 +25,11 @@ namespace Cadenza
             character.comboM.ProcessCombo(AttkTypes.Charge, score, out _);
             character.comboM.SetChargeHeld(true);
 
+            if (score.Class == ScoreClass.Bad)
+                character.PlayFailSound();
+            else
+                character.PlayChargeSound(1);
+
             // Set visuals.
             character.Animator.SetBool("IsCharging", true);
             character.ChargeEffect.enabled = true;

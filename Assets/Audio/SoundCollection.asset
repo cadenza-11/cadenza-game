@@ -45,20 +45,62 @@ MonoBehaviour:
     Path: event:/SFX/UI/SFX_UI_CharacterSelected
   gameplayEvents:
   - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1789445241
+      Data2: 1176519234
+      Data3: 1776662420
+      Data4: -731719594
+    Path: event:/SFX/Gameplay/SFX_Combat_Parry
   - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -868032952
+      Data2: 1145843947
+      Data3: -1340601450
+      Data4: -1638484457
+    Path: event:/SFX/Gameplay/SFX_Combat_Block_Started
   - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -91029244
+      Data2: 1332220120
+      Data3: 62140086
+      Data4: 1290130189
+    Path: event:/SFX/Gameplay/SFX_Combat_Block_Ended
+  - Guid:
+      Data1: -49660684
+      Data2: 1102736574
+      Data3: -2008129377
+      Data4: 200510506
+    Path: event:/SFX/Gameplay/SFX_Combat_CharacterHit
+  - Guid:
+      Data1: 955400621
+      Data2: 1260729781
+      Data3: 717917345
+      Data4: 917671568
+    Path: event:/SFX/Gameplay/SFX_Combat_Charge1
+  - Guid:
+      Data1: -1253104515
+      Data2: 1131451209
+      Data3: -1264143960
+      Data4: -171060877
+    Path: event:/SFX/Gameplay/SFX_Combat_Charge2
+  - Guid:
+      Data1: 636441435
+      Data2: 1222797243
+      Data3: 180790144
+      Data4: -1344205001
+    Path: event:/SFX/Gameplay/SFX_Combat_Charge3
+  - Guid:
+      Data1: 113255795
+      Data2: 1101059903
+      Data3: 1546972854
+      Data4: 1996760110
+    Path: event:/SFX/Gameplay/SFX_Combat_HeavyAttack
+  - Guid:
+      Data1: 1455560428
+      Data2: 1159025961
+      Data3: -885803875
+      Data4: 571392211
+    Path: event:/SFX/Gameplay/SFX_Combat_Fail
+  - Guid:
+      Data1: 664352374
+      Data2: 1310057202
+      Data3: 2119867573
+      Data4: 1133152585
+    Path: event:/SFX/Gameplay/SFX_Combat_Combo_Succeed
