@@ -86,6 +86,7 @@ namespace Cadenza
         {
             this.curPhase++;
             this.enterPhase3 = true;
+            this.phaseTime = 0;
             this.downedTime = 0;
         }
 
@@ -129,9 +130,10 @@ namespace Cadenza
             switch(this.curPhase)
             {
                 case 1:
-                    if(this.phaseTime >= 30.0f)
+                    if(this.phaseTime >= 15.0f)
                     {
                         AudioSystem.SetParameter("MusicState", this.curPhase);
+                        this.phaseTime = 0;
                     }
                     if(this.enterPhase1)
                     {
@@ -147,8 +149,14 @@ namespace Cadenza
                     {
                         this.shotProjectile = false;
                     }
+                    this.phaseTime += Time.deltaTime;
                     break;
                 case 2:
+                    if(this.phaseTime >= 15.0f)
+                    {
+                        AudioSystem.SetParameter("MusicState", this.curPhase);
+                        this.phaseTime = 0;
+                    }
                     if(this.beatCount % this.beatsPerAttack == 0 && !this.shotProjectile)
                     {
                         //Does Ranged Attack
@@ -159,6 +167,7 @@ namespace Cadenza
                     {
                         this.shotProjectile = false;
                     }
+                    this.phaseTime += Time.deltaTime;
                     break;
                 case 3:
                     if(this.enterPhase3)
@@ -176,22 +185,44 @@ namespace Cadenza
                     }
                     break;
                 case 4:
+                    if(this.phaseTime >= 15.0f)
+                    {
+                        AudioSystem.SetParameter("MusicState", this.curPhase);
+                        this.phaseTime = 0;
+                    }
                     if(this.enterPhase1)
                     {
                         this.Phase1Setup();
                     }
-                    else if(this.beatCount % this.beatsPerAttack == 0)
+                    else if(this.beatCount % this.beatsPerAttack == 0 && !this.shotProjectile)
                     {
                         //Does Ranged Attack
                         this.RangedAttack();
+                        this.shotProjectile = true;
                     }
+                    else if(this.beatCount % this.beatsPerAttack != 0 && this.shotProjectile)
+                    {
+                        this.shotProjectile = false;
+                    }
+                    this.phaseTime += Time.deltaTime;
                     break;
                 case 5:
-                    if(this.beatCount % this.beatsPerAttack == 0)
+                    if(this.phaseTime >= 15.0f)
+                    {
+                        AudioSystem.SetParameter("MusicState", this.curPhase);
+                        this.phaseTime = 0;
+                    }
+                    if(this.beatCount % this.beatsPerAttack == 0 && !this.shotProjectile)
                     {
                         //Does Ranged Attack
                         this.RangedAttack();
+                        this.shotProjectile = true;
                     }
+                    else if(this.beatCount % this.beatsPerAttack != 0 && this.shotProjectile)
+                    {
+                        this.shotProjectile = false;
+                    }
+                    this.phaseTime += Time.deltaTime;
                     break;
                 case 6:
                     if(this.enterPhase3)
@@ -230,6 +261,7 @@ namespace Cadenza
             else
             {
                 this.enterPhase1 = false;
+                this.lerpTime = 0;
             }
         }
 

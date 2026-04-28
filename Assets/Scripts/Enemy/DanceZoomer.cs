@@ -73,6 +73,7 @@ namespace Cadenza
         private void Phase1()
         {
             this.curPhase++;
+            this.rb.constraints = RigidbodyConstraints.None;
             //Moves enemy out of stage and freezes them in places
             this.transform.position = new Vector3(100,100,100);
             this.rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -96,6 +97,7 @@ namespace Cadenza
             this.phase3Transition = true;
             this.pillarLerpTime = 0;
             this.attackBox.ResetNumCollisions();
+            this.rb.constraints = RigidbodyConstraints.FreezeAll;
             this.curPhase++;
         }
 

@@ -70,9 +70,8 @@ namespace Cadenza
             this.moveTimer -= Time.deltaTime;
 
             this.FindNearestPlayerDist();
-            Debug.Log(this.nearestPlayerDist + ",  " + this.beatCount);
 
-            if(this.nearestPlayerDist < 2 && this.beatCount > 4)
+            if(this.nearestPlayerDist < 1.5f && this.beatCount > 4)
             {
                 this.MeleeAttack();
                 this.beatCount = 0;
