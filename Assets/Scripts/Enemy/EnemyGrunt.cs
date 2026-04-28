@@ -11,7 +11,7 @@ namespace Cadenza
         [SerializeField] private float moveTimer = -1;
         private static int rotationNum = 0;
         private bool continueMelee;
-        private int beatCount;
+        private int beatCount = 0;
         [SerializeField] private int moveDir = -1;
         
 
@@ -19,12 +19,12 @@ namespace Cadenza
         {
             base.Initialize();
             this.moveTimer = 0;
-            BeatSystem.BeatPlayed += this.onBeat;
         }
         
         public override void Awake()
         {
             this.isActionable = true;
+            BeatSystem.BeatPlayed += this.onBeat;
             base.Awake();
         }
 
@@ -34,7 +34,7 @@ namespace Cadenza
             base.OnDestroy();
         }
 
-        void onBeat()
+        private void onBeat()
         {
             this.beatCount++;
         }
@@ -70,6 +70,7 @@ namespace Cadenza
             this.moveTimer -= Time.deltaTime;
 
             this.FindNearestPlayerDist();
+            Debug.Log(this.nearestPlayerDist + ",  " + this.beatCount);
 
             if(this.nearestPlayerDist < 2 && this.beatCount > 4)
             {
