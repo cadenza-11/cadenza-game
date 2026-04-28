@@ -24,7 +24,7 @@ public class DanceShooterProjectile : MonoBehaviour
     void FixedUpdate()
     {
         this.timer += Time.deltaTime;
-        if(this.timer <= 1.5f)
+        if(this.timer <= 0.5f)
         {
             this.p3 = this.target.Character.transform.position;
             this.CalculateCurvePoints(this.p0, this.p3, out this.p1, out this.p2);
@@ -49,11 +49,6 @@ public class DanceShooterProjectile : MonoBehaviour
                 return;
             }
         }
-        if (collider.CompareTag("Enemy"))
-        {
-            Enemy hitEntity = collider.gameObject.GetComponent<Enemy>();
-            hitEntity.TakeDamage(2);
-        }
 
         if (collider.attachedRigidbody != null)
         {
@@ -71,8 +66,8 @@ public class DanceShooterProjectile : MonoBehaviour
     void CalculateCurvePoints(Vector3 start, Vector3 end, out Vector3 p1, out Vector3 p2)
     {
         Vector3 difference = end - start;
-        p1 = new Vector3(start.x + difference.x/3.0f, start.y + difference.y/3.0f, start.z + difference.y/3.0f);
-        p2 = new Vector3(start.x + difference.x * 2.0f/3.0f, start.y + difference.y * 2.0f/3.0f, start.z + difference.z * 2.0f/3.0f);
+        p1 = new Vector3(start.x + 3 * difference.x/3.0f, start.y + difference.y/3.0f, start.z + 2 *difference.y/3.0f);
+        p2 = new Vector3(start.x + 3 * difference.x * 2.0f/3.0f, start.y + difference.y * 2.0f/3.0f, start.z + 2 * difference.z * 2.0f/3.0f);
     }
 
     public void SetP0(Vector3 start)
