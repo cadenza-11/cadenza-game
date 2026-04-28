@@ -73,6 +73,7 @@ namespace Cadenza
         private void Phase1()
         {
             this.curPhase++;
+            this.rb.constraints = RigidbodyConstraints.None;
             //Moves enemy out of stage and freezes them in places
             this.transform.position = new Vector3(100,100,100);
             this.rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -96,6 +97,8 @@ namespace Cadenza
             this.phase3Transition = true;
             this.pillarLerpTime = 0;
             this.attackBox.ResetNumCollisions();
+            this.attackBox.SetActive(false);
+            this.rb.constraints = RigidbodyConstraints.FreezeAll;
             this.curPhase++;
         }
 
@@ -235,7 +238,8 @@ namespace Cadenza
                     this.lerpTime = 0;
                     this.pillarLerpTime = 0;
                     this.attackBox.SetActive(true);
-                    //this.anim.SetTrigger("zoomer_fly");
+                    this.anim.SetBool("IsMove", true);
+                    Debug.Log("Is in Charging?: " + this.anim.GetCurrentAnimatorStateInfo(0).IsName("Charging"));
                 }
                 else
                 {
@@ -246,6 +250,7 @@ namespace Cadenza
             }
             else
             {
+                Debug.Log("Is in Charging?: " + this.anim.GetCurrentAnimatorStateInfo(0).IsName("Charging"));
                 Vector2 distance = new Vector2(this.transform.position.x, this.transform.position.z) - this.TargetLocation;
                 if(this.hasCollided)
                 {
@@ -253,9 +258,9 @@ namespace Cadenza
                 }
                 else if(this.attackBox.GetHasCollided())
                 {
+                     this.anim.SetBool("IsMove", false);
                     Debug.Log("Collided");
                     this.hasCollided = true;
-                    this.lerpTime = 0;
                     this.pillarLerpTime = 0;
                     this.attackBox.SetActive(false);
                     for(int i = 0; i < 11; i++)
@@ -263,15 +268,20 @@ namespace Cadenza
                         this.isPillarRising[i] = false;
                     }
                     //this.anim.SetTrigger("zoomer_land");
-                    Debug.Log(this.attackBox.GetNumCollisions());
                     if(this.attackBox.GetNumCollisions() >= 3)
                     {
                         Debug.Log("Tries to enter downed state");
                         AudioSystem.SetParameter("MusicState", this.curPhase);
                     }
+
+                    //Moves enemy a bit even after it has collided with a pillar
+                    this.transform.position = new Vector3(Mathf.Lerp(this.startPosition.x, this.TargetLocation.x, this.lerpTime/1.0f), 
+                                                        this.transform.position.y, Mathf.Lerp(this.startPosition.y, this.TargetLocation.y, this.lerpTime/1.0f));
+                    this.lerpTime = 0;
                 }
                 else if(distance.SqrMagnitude() < 2)
                 {
+                    this.anim.SetBool("IsMove", false);
                     this.inZoom = false;
                     this.lerpTime = 0;
                     this.attackBox.SetActive(false);
