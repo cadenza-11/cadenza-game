@@ -79,8 +79,10 @@ namespace Cadenza
         [SerializeField] private EventReference beatCallbackDebugEvent;
         [SerializeField] private EventReference playerOneShotsEvent;
         [SerializeField] private EventReference playerHitEvent;
+        [SerializeField] private EventReference audienceEvent;
         [SerializeField] private SoundCollection soundCollection;
 
+        private EventInstance audienceInstance;
         public static EventReference PlayerOneShotsEvent => singleton.playerOneShotsEvent;
         public static EventReference PlayerHitEvent => singleton.playerHitEvent;
         private HashSet<AudioEvent> beatSetOneShot;
@@ -148,6 +150,11 @@ namespace Cadenza
             if (ApplicationController.PreviousLevel == null || isRestartingLevel)
             {
                 BeatSystem.StopTrack();
+
+                // Play audience track.
+                this.audienceInstance = RuntimeManager.CreateInstance(this.audienceEvent);
+                this.audienceInstance.start();
+
                 await BeatSystem.WaitForTrackStop();
             }
 
@@ -163,6 +170,11 @@ namespace Cadenza
             if (ApplicationController.CurrentLevel == null)
             {
                 BeatSystem.StopTrack();
+
+                // Stop audience track.
+                if (this.audienceInstance.isValid())
+                    this.audienceInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
                 await BeatSystem.WaitForTrackStop();
 
                 BeatSystem.PlayTrack(this.pregameMusicEvent);
