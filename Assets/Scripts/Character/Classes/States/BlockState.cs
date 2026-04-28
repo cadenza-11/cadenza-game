@@ -19,13 +19,12 @@ namespace Cadenza
 
             // Animate.
             character.Animator.SetBool("IsMove", false);
-
-            // Stop velocity.
-            character.Rigidbody.linearVelocity = new Vector3(0f, character.Rigidbody.linearVelocity.y, 0f);
+            character.Animator.SetBool("IsBlocking", true);
         }
 
         public void Exit(Character character)
         {
+            character.Animator.SetBool("IsBlocking", false);
             character.EndBlock();
         }
 
