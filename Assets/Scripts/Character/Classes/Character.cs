@@ -344,9 +344,10 @@ namespace Cadenza
                 this.ChangeState(this.fainted);
                 this.Died?.Invoke(this);
             }
-            else if (interruptOnDamage && health < this.currentHealth && !this.isFainted)
+            else if (health < this.currentHealth && !this.isFainted)
             {
-                this.ChangeState(this.hitStun.WithDuration(this.attackDuration));
+                if (interruptOnDamage)
+                    this.ChangeState(this.hitStun.WithDuration(this.attackDuration));
 
                 // Give i-frames.
                 float invulnerabilitySeconds = Mathf.Max(

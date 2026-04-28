@@ -42,6 +42,8 @@ namespace Cadenza
 
         public void FixedUpdate(Character character)
         {
+            // Stop velocity.
+            character.Rigidbody.linearVelocity = new Vector3(0f, character.Rigidbody.linearVelocity.y, 0f);
         }
     }
 }
