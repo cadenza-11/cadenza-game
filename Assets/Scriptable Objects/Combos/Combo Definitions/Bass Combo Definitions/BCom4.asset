@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5efeaaa2f24fc349bd738beaee02a5c, type: 3}
   m_Name: BCom4
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Combo.ComboDefinition
-  Moves: 020000000100000001000000
+  Moves: 02000000020000000200000003000000
   Reward:
-    Multiplier: 4
-    Knockback: 5
+    Multiplier: 5
+    Knockback: 10
     AttackEffect: 0

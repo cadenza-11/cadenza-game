@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Combo.ComboDefinition
   Moves: 01000000010000000200000003000000
   Reward:
-    Multiplier: 3
+    Multiplier: 4
     Knockback: 7
     AttackEffect: 0
