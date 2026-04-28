@@ -204,6 +204,7 @@ namespace Cadenza
                 this.inZoom = true;
                 this.inZoomSetup = true;
                 this.ChoosePillar();
+                //this.anim.SetTrigger("zoomer_charge");
             }
             else if(this.inZoomSetup)
             {
@@ -234,6 +235,7 @@ namespace Cadenza
                     this.lerpTime = 0;
                     this.pillarLerpTime = 0;
                     this.attackBox.SetActive(true);
+                    //this.anim.SetTrigger("zoomer_fly");
                 }
                 else
                 {
@@ -260,7 +262,7 @@ namespace Cadenza
                     {
                         this.isPillarRising[i] = false;
                     }
-
+                    //this.anim.SetTrigger("zoomer_land");
                     Debug.Log(this.attackBox.GetNumCollisions());
                     if(this.attackBox.GetNumCollisions() >= 3)
                     {

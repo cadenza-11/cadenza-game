@@ -10,6 +10,7 @@ namespace Cadenza
         float lerpTime = 0;
         bool enterPhase1 = false;
         bool enterPhase3 = false;
+        bool shotProjectile = false;
         float phaseTime = 0;
         [SerializeField] float downedTime = 0;
         [SerializeField] int beatsPerAttack;
@@ -71,6 +72,7 @@ namespace Cadenza
             this.enterPhase1 = true;
             this.phaseTime = 0;
             this.rb.linearVelocity = Vector3.zero;
+            this.rb.constraints = RigidbodyConstraints.FreezeAll;
         }
 
         private void Phase2()
@@ -135,17 +137,27 @@ namespace Cadenza
                     {
                         this.Phase1Setup();
                     }
-                    else if(this.beatCount % this.beatsPerAttack == 0)
+                    else if(this.beatCount % this.beatsPerAttack == 0 && !this.shotProjectile)
                     {
                         //Does Ranged Attack
                         this.RangedAttack();
+                        this.shotProjectile = true;
+                    }
+                    else if(this.beatCount % this.beatsPerAttack != 0 && this.shotProjectile)
+                    {
+                        this.shotProjectile = false;
                     }
                     break;
                 case 2:
-                    if(this.beatCount % this.beatsPerAttack == 0)
+                    if(this.beatCount % this.beatsPerAttack == 0 && !this.shotProjectile)
                     {
                         //Does Ranged Attack
                         this.RangedAttack();
+                        this.shotProjectile = true;
+                    }
+                    else if(this.beatCount % this.beatsPerAttack != 0 && this.shotProjectile)
+                    {
+                        this.shotProjectile = false;
                     }
                     break;
                 case 3:
