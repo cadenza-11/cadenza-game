@@ -170,7 +170,7 @@ namespace Cadenza
 
             this.state?.FixedUpdate(this);
 
-            if (this.HasFlowBuff(3))
+            if (this.HasFlowBuff(3) && !this.isFainted)
                 this.SetHealth(this.currentHealth + 0.01f);
         }
 
