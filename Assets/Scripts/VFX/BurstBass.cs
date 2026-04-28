@@ -5,18 +5,18 @@ using UnityEngine.VFX;
 public class BurstBass : MonoBehaviour
 {
     [SerializeField] private VisualEffect VFX;
-    [SerializeField] private Character character;
+    private float timer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        this.Setup();
+        this.timer = 0f;
     }
 
-    public void Setup()
+    public void Setup(Character character)
     {
-        Color sColor = this.character.Player.Colorway.SecondaryColor;
-        Color tColor = this.character.Player.Colorway.TertiaryColor;
+        Color sColor = character.Player.Colorway.SecondaryColor;
+        Color tColor = character.Player.Colorway.TertiaryColor;
         sColor.a = 1;
         tColor.a = 1;
         this.VFX.SetVector4("8thNoteColor", sColor);
@@ -26,6 +26,10 @@ public class BurstBass : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        this.timer += Time.deltaTime;
+        if(this.timer > 0.5f)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
