@@ -7,8 +7,13 @@ namespace Cadenza
             if (character.input.heavyAttack == null)
                 return;
 
-            if (character.input.heavyAttack.Value.Class == ScoreClass.Bad)
+            var score = character.input.heavyAttack.Value;
+            character.UpdateAccuracy(score);
+            character.UpdateFlow(score);
+
+            if (score.Class == ScoreClass.Bad)
             {
+                character.comboM.ProcessCombo(AttkTypes.ChargeRelease, score, out _);
                 this.FailAttack(character);
             }
             else
@@ -28,11 +33,7 @@ namespace Cadenza
 
         public void DoHeavyAttack(Character character)
         {
-            var score = character.input.heavyAttack.Value;
-            character.UpdateAccuracy(score);
-            character.UpdateFlow(score);
-
-            //Heavy Attack.
+            // Charge release attack.
             character.AttackArea.StartHeavyAttack(character);
             character.Animator.SetTrigger("HeavyAttack");
             character.Schedule(

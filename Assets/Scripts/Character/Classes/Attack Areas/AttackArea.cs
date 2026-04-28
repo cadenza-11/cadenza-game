@@ -22,7 +22,7 @@ namespace Cadenza
         public void StartLightAttack(Character character)
         {
             this.attackScore = character.input.lightAttack;
-            character.comboM.ProcessCombo(AttkTypes.Light, out var reward);
+            character.comboM.ProcessCombo(AttkTypes.Light, this.attackScore.Value, out var reward);
             character.ManageAttackDirection();
 
 
@@ -35,7 +35,7 @@ namespace Cadenza
         public void StartHeavyAttack(Character character)
         {
             this.attackScore = character.input.heavyAttack;
-            character.comboM.ProcessCombo(AttkTypes.Heavy, out var reward);
+            character.comboM.ProcessCombo(AttkTypes.ChargeRelease, this.attackScore.Value, out var reward);
             character.ManageAttackDirection();
 
             this.damage = this.CalcDamageMod(character, reward, character.baseHeavyDamage); //should be float (maybe)

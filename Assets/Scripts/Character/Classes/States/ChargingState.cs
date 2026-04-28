@@ -3,13 +3,27 @@ namespace Cadenza
     public class ChargingState : IState
     {
         private Character chargingCharacter;
+        private int pendingHeldChargeBeat = int.MinValue;
 
         public void Enter(Character character)
         {
             this.chargingCharacter = character;
+            this.pendingHeldChargeBeat = int.MinValue;
             character.ChargeBeatsPassed = 0;
 
             BeatSystem.BeatPlayed += this.OnBeatPlayed;
+
+            if (!character.input.charge.HasValue)
+            {
+                character.ChangeState(character.walking);
+                return;
+            }
+
+            var score = character.input.charge.Value;
+            character.UpdateAccuracy(score);
+            character.UpdateFlow(score);
+            character.comboM.ProcessCombo(AttkTypes.Charge, score, out _);
+            character.comboM.SetChargeHeld(true);
 
             // Set visuals.
             character.Animator.SetBool("IsCharging", true);
@@ -22,6 +36,9 @@ namespace Cadenza
         public void Exit(Character character)
         {
             BeatSystem.BeatPlayed -= this.OnBeatPlayed;
+            this.pendingHeldChargeBeat = int.MinValue;
+            character.comboM.SetChargeHeld(false);
+            character.ClearChargeTracking();
             character.Animator.SetBool("IsCharging", false);
             character.ChargeEffect.enabled = false;
         }
@@ -29,7 +46,12 @@ namespace Cadenza
         public void Update(Character character)
         {
             if (character.input.heavyAttack.HasValue)
+            {
                 character.ChangeState(character.heavyAttack);
+                return;
+            }
+
+            this.ProcessPendingHeldCharge(character);
         }
 
         public void FixedUpdate(Character character)
@@ -40,7 +62,21 @@ namespace Cadenza
         private void OnBeatPlayed()
         {
             if (this.chargingCharacter != null)
-                this.chargingCharacter.ChargeBeatsPassed++;
+                this.pendingHeldChargeBeat = BeatSystem.GetClosestBeat(BeatSystem.CurrentTrackTime);
+        }
+
+        private void ProcessPendingHeldCharge(Character character)
+        {
+            if (this.pendingHeldChargeBeat == int.MinValue || BeatSystem.SecondsPerBeat <= 0)
+                return;
+
+            double heldChargeTime = this.pendingHeldChargeBeat * BeatSystem.SecondsPerBeat;
+            double graceSeconds = ScoreSystem.IndividualThresholds.okScoreMs / 1000d;
+            if (BeatSystem.CurrentTrackTime < heldChargeTime + graceSeconds)
+                return;
+
+            character.ProcessHeldChargeBeat(this.pendingHeldChargeBeat);
+            this.pendingHeldChargeBeat = int.MinValue;
         }
     }
 }
