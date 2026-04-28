@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 1000
+  spritePixelsToUnits: 500
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -114,9 +114,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 12960
-        width: 2160
-        height: 2160
+        y: 6480
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -135,10 +135,10 @@ TextureImporter:
       name: DJ_Shutdown_1
       rect:
         serializedVersion: 2
-        x: 2160
-        y: 12960
-        width: 2160
-        height: 2160
+        x: 1080
+        y: 6480
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -157,10 +157,10 @@ TextureImporter:
       name: DJ_Shutdown_2
       rect:
         serializedVersion: 2
-        x: 4320
-        y: 12960
-        width: 2160
-        height: 2160
+        x: 2160
+        y: 6480
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -179,10 +179,10 @@ TextureImporter:
       name: DJ_Shutdown_3
       rect:
         serializedVersion: 2
-        x: 6480
-        y: 12960
-        width: 2160
-        height: 2160
+        x: 3240
+        y: 6480
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -201,10 +201,10 @@ TextureImporter:
       name: DJ_Shutdown_4
       rect:
         serializedVersion: 2
-        x: 8640
-        y: 12960
-        width: 2160
-        height: 2160
+        x: 4320
+        y: 6480
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -223,10 +223,10 @@ TextureImporter:
       name: DJ_Shutdown_5
       rect:
         serializedVersion: 2
-        x: 10800
-        y: 12960
-        width: 2160
-        height: 2160
+        x: 5400
+        y: 6480
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -246,9 +246,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 10800
-        width: 2160
-        height: 2160
+        y: 5400
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -267,10 +267,10 @@ TextureImporter:
       name: DJ_Shutdown_7
       rect:
         serializedVersion: 2
-        x: 2160
-        y: 10800
-        width: 2160
-        height: 2160
+        x: 1080
+        y: 5400
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -289,10 +289,10 @@ TextureImporter:
       name: DJ_Shutdown_8
       rect:
         serializedVersion: 2
-        x: 4320
-        y: 10800
-        width: 2160
-        height: 2160
+        x: 2160
+        y: 5400
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -311,10 +311,10 @@ TextureImporter:
       name: DJ_Shutdown_9
       rect:
         serializedVersion: 2
-        x: 6480
-        y: 10800
-        width: 2160
-        height: 2160
+        x: 3240
+        y: 5400
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -333,10 +333,10 @@ TextureImporter:
       name: DJ_Shutdown_10
       rect:
         serializedVersion: 2
-        x: 8640
-        y: 10800
-        width: 2160
-        height: 2160
+        x: 4320
+        y: 5400
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -355,10 +355,10 @@ TextureImporter:
       name: DJ_Shutdown_11
       rect:
         serializedVersion: 2
-        x: 10800
-        y: 10800
-        width: 2160
-        height: 2160
+        x: 5400
+        y: 5400
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -378,9 +378,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 8640
-        width: 2160
-        height: 2160
+        y: 4320
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -399,10 +399,10 @@ TextureImporter:
       name: DJ_Shutdown_13
       rect:
         serializedVersion: 2
-        x: 2160
-        y: 8640
-        width: 2160
-        height: 2160
+        x: 1080
+        y: 4320
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -421,10 +421,10 @@ TextureImporter:
       name: DJ_Shutdown_14
       rect:
         serializedVersion: 2
-        x: 4320
-        y: 8640
-        width: 2160
-        height: 2160
+        x: 2160
+        y: 4320
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -443,10 +443,10 @@ TextureImporter:
       name: DJ_Shutdown_15
       rect:
         serializedVersion: 2
-        x: 6480
-        y: 8640
-        width: 2160
-        height: 2160
+        x: 3240
+        y: 4320
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -465,10 +465,10 @@ TextureImporter:
       name: DJ_Shutdown_16
       rect:
         serializedVersion: 2
-        x: 8640
-        y: 8640
-        width: 2160
-        height: 2160
+        x: 4320
+        y: 4320
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -487,10 +487,10 @@ TextureImporter:
       name: DJ_Shutdown_17
       rect:
         serializedVersion: 2
-        x: 10800
-        y: 8640
-        width: 2160
-        height: 2160
+        x: 5400
+        y: 4320
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -510,9 +510,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 6480
-        width: 2160
-        height: 2160
+        y: 3240
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -531,10 +531,10 @@ TextureImporter:
       name: DJ_Shutdown_19
       rect:
         serializedVersion: 2
-        x: 2160
-        y: 6480
-        width: 2160
-        height: 2160
+        x: 1080
+        y: 3240
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -553,10 +553,10 @@ TextureImporter:
       name: DJ_Shutdown_20
       rect:
         serializedVersion: 2
-        x: 4320
-        y: 6480
-        width: 2160
-        height: 2160
+        x: 2160
+        y: 3240
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -575,10 +575,10 @@ TextureImporter:
       name: DJ_Shutdown_21
       rect:
         serializedVersion: 2
-        x: 6480
-        y: 6480
-        width: 2160
-        height: 2160
+        x: 3240
+        y: 3240
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -597,10 +597,10 @@ TextureImporter:
       name: DJ_Shutdown_22
       rect:
         serializedVersion: 2
-        x: 8640
-        y: 6480
-        width: 2160
-        height: 2160
+        x: 4320
+        y: 3240
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -619,10 +619,10 @@ TextureImporter:
       name: DJ_Shutdown_23
       rect:
         serializedVersion: 2
-        x: 10800
-        y: 6480
-        width: 2160
-        height: 2160
+        x: 5400
+        y: 3240
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -642,9 +642,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 4320
-        width: 2160
-        height: 2160
+        y: 2160
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -663,10 +663,10 @@ TextureImporter:
       name: DJ_Shutdown_25
       rect:
         serializedVersion: 2
-        x: 2160
-        y: 4320
-        width: 2160
-        height: 2160
+        x: 1080
+        y: 2160
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -685,10 +685,10 @@ TextureImporter:
       name: DJ_Shutdown_26
       rect:
         serializedVersion: 2
-        x: 4320
-        y: 4320
-        width: 2160
-        height: 2160
+        x: 2160
+        y: 2160
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -707,10 +707,10 @@ TextureImporter:
       name: DJ_Shutdown_27
       rect:
         serializedVersion: 2
-        x: 6480
-        y: 4320
-        width: 2160
-        height: 2160
+        x: 3240
+        y: 2160
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -729,10 +729,10 @@ TextureImporter:
       name: DJ_Shutdown_28
       rect:
         serializedVersion: 2
-        x: 8640
-        y: 4320
-        width: 2160
-        height: 2160
+        x: 4320
+        y: 2160
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -751,10 +751,10 @@ TextureImporter:
       name: DJ_Shutdown_29
       rect:
         serializedVersion: 2
-        x: 10800
-        y: 4320
-        width: 2160
-        height: 2160
+        x: 5400
+        y: 2160
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -774,9 +774,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 2160
-        width: 2160
-        height: 2160
+        y: 1080
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -795,10 +795,10 @@ TextureImporter:
       name: DJ_Shutdown_31
       rect:
         serializedVersion: 2
-        x: 2160
-        y: 2160
-        width: 2160
-        height: 2160
+        x: 1080
+        y: 1080
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -817,10 +817,10 @@ TextureImporter:
       name: DJ_Shutdown_32
       rect:
         serializedVersion: 2
-        x: 4320
-        y: 2160
-        width: 2160
-        height: 2160
+        x: 2160
+        y: 1080
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -839,10 +839,10 @@ TextureImporter:
       name: DJ_Shutdown_33
       rect:
         serializedVersion: 2
-        x: 6480
-        y: 2160
-        width: 2160
-        height: 2160
+        x: 3240
+        y: 1080
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -861,10 +861,10 @@ TextureImporter:
       name: DJ_Shutdown_35
       rect:
         serializedVersion: 2
-        x: 10800
-        y: 2160
-        width: 2160
-        height: 2160
+        x: 5400
+        y: 1080
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -885,8 +885,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2160
-        height: 2160
+        width: 1080
+        height: 1080
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -897,6 +897,28 @@ TextureImporter:
       bones: []
       spriteID: 29a807d96745a084ab58aa081ee51f60
       internalID: -1382019265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DJ_Shutdown_34
+      rect:
+        serializedVersion: 2
+        x: 4320
+        y: 1080
+        width: 1080
+        height: 1080
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52cd00a007adda143924b9b4b233be1f
+      internalID: -1496905139
       vertices: []
       indices: 
       edges: []
@@ -915,7 +937,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":6.0,"y":7.0},"gridSpriteSize":{"x":2160.0,"y":2160.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":6.0,"y":7.0},"gridSpriteSize":{"x":1080.0,"y":1080.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       DJ_Shutdown_0: 1245240956
       DJ_Shutdown_1: 1485187047
