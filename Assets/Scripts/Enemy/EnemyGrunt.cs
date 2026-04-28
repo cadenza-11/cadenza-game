@@ -45,6 +45,8 @@ namespace Cadenza
 
         protected override void IdleState()
         {
+            bool lookLeft = false;
+
             //Need to make better plan for movement. Right now Idle movement will be random
             if(this.moveTimer <= 0) 
             {
@@ -52,13 +54,22 @@ namespace Cadenza
                 this.TargetLocation = this.FindNearestPlayerDist();
                 this.moveTimer = UnityEngine.Random.Range(1, 6);
             }
+
+            Vector2 playerLocation = this.FindNearestPlayerDist();
+            if(playerLocation.x < this.transform.position.x)
+            {
+                lookLeft = true;
+            }
+            
             switch(this.moveDir)
                 {
                     case 1:
                         this.rb.linearVelocity = new Vector3(this.speed, this.rb.linearVelocity.y, 0);
+                        lookLeft = false;
                         break;
                     case 2:
                         this.rb.linearVelocity = new Vector3(-1 * this.speed, this.rb.linearVelocity.y, 0);
+                        lookLeft = true;
                         break;
                     case 3:
                         this.rb.linearVelocity = new Vector3(0, this.rb.linearVelocity.y, this.speed);
@@ -69,9 +80,7 @@ namespace Cadenza
                 }
             this.moveTimer -= Time.deltaTime;
 
-            this.FindNearestPlayerDist();
-
-            if(this.nearestPlayerDist < 1.5f && this.beatCount > 4)
+            if(this.nearestPlayerDist < 1.0f && this.beatCount > 4)
             {
                 this.MeleeAttack();
                 this.beatCount = 0;
@@ -88,6 +97,15 @@ namespace Cadenza
             if(this.currentHealth <= 0)
             {
                 this.curState = EnemyState.Dead;
+            }
+
+            if(!lookLeft)
+            {
+                this.transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+            else
+            {
+                this.transform.rotation = Quaternion.Euler(0, 180, 0);
             }
         }
 
@@ -129,6 +147,18 @@ namespace Cadenza
             Vector2 toTarget = new Vector2(this.TargetLocation.x - this.transform.position.x, 
                                             this.TargetLocation.y - this.transform.position.z);
             this.curAngle = (float)Math.Atan2(toTarget.y, toTarget.x);
+
+            if (this.curAngle * (180 / Math.PI) > -90 && this.curAngle * (180 / Math.PI) < 90)
+            {
+                // No rotation needed.
+                this.transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+            else
+            {
+                // Turn character to the left.
+                this.transform.rotation = Quaternion.Euler(0, 180, 0);
+            }
+
             Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
             this.rb.linearVelocity = moveDir;
             if(toTarget.SqrMagnitude() < meleeDistance * meleeDistance)

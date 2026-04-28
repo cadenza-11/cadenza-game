@@ -130,7 +130,7 @@ namespace Cadenza
             switch(this.curPhase)
             {
                 case 1:
-                    if(this.phaseTime >= 15.0f)
+                    if(this.phaseTime >= 20.0f)
                     {
                         AudioSystem.SetParameter("MusicState", this.curPhase);
                         this.phaseTime = 0;
@@ -152,7 +152,7 @@ namespace Cadenza
                     this.phaseTime += Time.deltaTime;
                     break;
                 case 2:
-                    if(this.phaseTime >= 15.0f)
+                    if(this.phaseTime >= 20.0f)
                     {
                         AudioSystem.SetParameter("MusicState", this.curPhase);
                         this.phaseTime = 0;
@@ -185,7 +185,7 @@ namespace Cadenza
                     }
                     break;
                 case 4:
-                    if(this.phaseTime >= 15.0f)
+                    if(this.phaseTime >= 20.0f)
                     {
                         AudioSystem.SetParameter("MusicState", this.curPhase);
                         this.phaseTime = 0;
@@ -207,7 +207,7 @@ namespace Cadenza
                     this.phaseTime += Time.deltaTime;
                     break;
                 case 5:
-                    if(this.phaseTime >= 15.0f)
+                    if(this.phaseTime >= 20.0f)
                     {
                         AudioSystem.SetParameter("MusicState", this.curPhase);
                         this.phaseTime = 0;
