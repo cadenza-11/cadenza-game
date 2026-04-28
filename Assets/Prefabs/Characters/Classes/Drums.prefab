@@ -208,6 +208,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -5347380999704208309}
     - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
+      propertyPath: teamWave
+      value: 
+      objectReference: {fileID: 1176528784242881005, guid: 04da1b612caab784e92f9595eb044987, type: 3}
+    - target: {fileID: 1620169153954812086, guid: 6c0399bb1d7bf28489c8ec802d336d9f, type: 3}
       propertyPath: maxHealth
       value: 50
       objectReference: {fileID: 0}

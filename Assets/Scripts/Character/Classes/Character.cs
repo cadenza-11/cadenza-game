@@ -35,6 +35,7 @@ namespace Cadenza
         [SerializeField] public int baseHeavyDamage;
         [SerializeField] private float flowThreshold;
         [SerializeField] private float reviveThreshold;
+        [SerializeField] private GameObject teamWave;
         private float maxHealth;
 
         [NonSerialized] public float currentHealth;
@@ -280,7 +281,7 @@ namespace Cadenza
 
         public void TeamAttackEffect()
         {
-            this.SetFlow(20);
+            Instantiate(this.teamWave, this.gameObject.transform.position, Quaternion.identity);
         }
 
         public bool TakeDamage(int damage)
