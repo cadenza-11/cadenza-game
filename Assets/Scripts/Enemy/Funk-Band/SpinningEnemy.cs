@@ -108,13 +108,14 @@ namespace Cadenza
                 }
                 if (collision.gameObject.TryGetComponent(out Character character))
                 {
-                    if (!character.TakeDamage(3))
+                    if (!character.TakeDamage(3, out float knockbackMultiplier))
                         return;
 
                     // Add knockback.
                     Vector3 knockDirection = collision.transform.position - this.transform.position;
                     Vector3 force = knockDirection.normalized * 3;
                     force.y = 2f;
+                    force *= knockbackMultiplier;
                     collision.gameObject.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
                 }
             }

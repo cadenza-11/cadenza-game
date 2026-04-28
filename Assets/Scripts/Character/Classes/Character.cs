@@ -18,6 +18,10 @@ namespace Cadenza
         [SerializeField] private float postHitInvulnerabilityBeats;
         [SerializeField] private float minimumInvulnerabilityTime;
 
+        [Header("Defense")]
+        [SerializeField, Range(0f, 1f)] private float blockDamageMultiplier = 0.5f;
+        [SerializeField, Range(0f, 1f)] private float blockKnockbackMultiplier = 0.5f;
+
         [Header("Assign in Inspector")]
         [SerializeField] public AttackArea AttackArea;
         [SerializeField] public Rigidbody Rigidbody;
@@ -58,6 +62,7 @@ namespace Cadenza
         private float parryActiveUntil = float.NegativeInfinity;
         private float pcFactor;
         private bool isInvulnerable;
+        private bool isBlocking;
         private int lastReservedCombatBeat = int.MinValue;
         private bool hasAcceptedCharge;
         private int acceptedChargeBeat = int.MinValue;
@@ -67,15 +72,18 @@ namespace Cadenza
             public Vector2 move;
             public ScoreDef? lightAttack;
             public ScoreDef? heavyAttack;
-            public ScoreDef? parry;
+            public ScoreDef? blockPressed;
+            public ScoreDef? blockReleased;
             public ScoreDef? charge;
             public bool wantTeam;
+            public bool blockHeld;
 
             public void Consume()
             {
                 this.lightAttack = null;
                 this.heavyAttack = null;
-                this.parry = null;
+                this.blockPressed = null;
+                this.blockReleased = null;
                 this.charge = null;
                 this.wantTeam = false;
             }
@@ -90,7 +98,7 @@ namespace Cadenza
         public readonly LightAttackState lightAttack = new();
         public readonly ChargingState charging = new();
         public readonly HeavyAttackState heavyAttack = new();
-        public readonly ParryState parry = new();
+        public readonly BlockState block = new();
         public readonly HitStunState hitStun = new();
         public readonly FaintedState fainted = new();
 
@@ -113,6 +121,8 @@ namespace Cadenza
             this.maxHealth = this.baseHealth * this.pcFactor;
 
             this.input = new();
+            this.isBlocking = false;
+            this.ClearParryWindow();
             this.lastReservedCombatBeat = int.MinValue;
             this.hasAcceptedCharge = false;
             this.acceptedChargeBeat = int.MinValue;
@@ -292,28 +302,41 @@ namespace Cadenza
 
         public bool TakeDamage(int damage)
         {
+            return this.TakeDamage(damage, out _);
+        }
+
+        public bool TakeDamage(int damage, out float knockbackMultiplier)
+        {
+            knockbackMultiplier = 1f;
+
             if (this.isInvulnerable)
                 return false;
 
             // Parry.
             if (this.IsParrying())
             {
+                knockbackMultiplier = 0f;
                 this.Parried?.Invoke();
-                this.ClearParryWindow();
                 return false;
             }
 
+            bool blocked = this.IsBlocking();
+            if (blocked)
+                knockbackMultiplier = Mathf.Clamp01(this.blockKnockbackMultiplier);
+
             // Lessen damage.
             float fDamage = damage;
+            if (blocked)
+                fDamage *= Mathf.Clamp01(this.blockDamageMultiplier);
             if (this.HasFlowBuff(1))
                 fDamage *= 0.8f;
 
             // Take damage.
-            this.SetHealth(this.currentHealth - fDamage);
+            this.SetHealth(this.currentHealth - fDamage, interruptOnDamage: !blocked);
             return true;
         }
 
-        public void SetHealth(float health)
+        public void SetHealth(float health, bool interruptOnDamage = true)
         {
             this.Sprite.material.SetInt("_Debuff", (health / this.maxHealth <= 0.33f) ? 1 : 0);
             if (health <= 0f && !this.isFainted)
@@ -321,7 +344,7 @@ namespace Cadenza
                 this.ChangeState(this.fainted);
                 this.Died?.Invoke(this);
             }
-            else if (health < this.currentHealth && !this.isFainted)
+            else if (interruptOnDamage && health < this.currentHealth && !this.isFainted)
             {
                 this.ChangeState(this.hitStun.WithDuration(this.attackDuration));
 
@@ -461,15 +484,38 @@ namespace Cadenza
             this.input.wantTeam = true;
         }
 
-        public bool OnParry(ScoreDef score)
+        public bool OnBlockPressed(ScoreDef score)
         {
-            if (this.state != this.walking)
+            if (this.state == this.fainted)
+                return false;
+
+            this.input.blockHeld = true;
+
+            if (this.state != this.walking && this.state != this.block)
                 return false;
 
             if (!this.TryReserveCombatBeat(score.Beat))
                 return false;
 
-            this.input.parry = score;
+            this.input.blockPressed = score;
+            return true;
+        }
+
+        public bool OnBlockReleased(ScoreDef score)
+        {
+            this.input.blockHeld = false;
+
+            if (this.state != this.block && this.state != this.walking)
+                return false;
+
+            if (!this.TryReserveCombatBeat(score.Beat))
+                return false;
+
+            if (this.state == this.walking)
+                this.ProcessBlockTiming(score);
+            else
+                this.input.blockReleased = score;
+
             return true;
         }
 
@@ -562,7 +608,36 @@ namespace Cadenza
         }
 
         #endregion
-        #region Parry
+        #region Block
+
+        internal bool IsBlockHeld()
+        {
+            return this.input != null && this.input.blockHeld;
+        }
+
+        internal void BeginBlock()
+        {
+            this.isBlocking = true;
+        }
+
+        internal void EndBlock()
+        {
+            this.isBlocking = false;
+        }
+
+        internal bool IsBlocking()
+        {
+            return this.isBlocking;
+        }
+
+        internal void ProcessBlockTiming(ScoreDef score)
+        {
+            this.UpdateAccuracy(score);
+            this.UpdateFlow(score);
+
+            if (score.Class == ScoreClass.Perfect)
+                this.ActivateParryWindow(this.attackDuration);
+        }
 
         internal void ActivateParryWindow(float seconds)
         {

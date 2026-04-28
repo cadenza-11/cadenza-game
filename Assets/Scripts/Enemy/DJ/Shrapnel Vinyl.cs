@@ -8,8 +8,9 @@ namespace Cadenza
         {
             if (collider.CompareTag("Player"))
             {
+                float knockbackMultiplier = 1f;
                 Character hitEntity = collider.gameObject.GetComponent<Character>();
-                if (hitEntity != null && !hitEntity.TakeDamage(this.damage))
+                if (hitEntity != null && !hitEntity.TakeDamage(this.damage, out knockbackMultiplier))
                 {
                     Destroy(this.gameObject);
                     return;
@@ -17,7 +18,7 @@ namespace Cadenza
                 if (collider.attachedRigidbody != null)
                 {
                     Vector3 direction = collider.transform.position - this.transform.position;
-                    collider.attachedRigidbody.AddForce(direction.normalized * this.knockbackScale, ForceMode.Impulse);
+                    collider.attachedRigidbody.AddForce(direction.normalized * this.knockbackScale * knockbackMultiplier, ForceMode.Impulse);
                     Destroy(this.gameObject);
                 }
             }

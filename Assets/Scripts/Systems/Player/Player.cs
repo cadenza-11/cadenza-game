@@ -114,7 +114,7 @@ namespace Cadenza
             var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
-            var parryAction = map.FindAction("Parry", throwIfNotFound: true);
+            var blockAction = map.FindAction("Block", throwIfNotFound: true);
             var pauseAction = map.FindAction("Pause", throwIfNotFound: true);
             this.interactAction = attackLightAction;
 
@@ -124,7 +124,8 @@ namespace Cadenza
             attackHeavyAction.performed += this.OnAttackCharge;
             attackHeavyAction.canceled += this.OnAttackHeavy;
             attackTeamAction.performed += this.OnAttackTeam;
-            parryAction.performed += this.OnParry;
+            blockAction.performed += this.OnBlockPressed;
+            blockAction.canceled += this.OnBlockReleased;
             pauseAction.performed += this.OnPause;
         }
 
@@ -170,13 +171,23 @@ namespace Cadenza
                 this.Character.OnAttackTeam();
         }
 
-        private void OnParry(InputAction.CallbackContext context)
+        private void OnBlockPressed(InputAction.CallbackContext context)
         {
             if (!context.performed)
                 return;
 
             var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
-            if (this.Character != null && this.Character.OnParry(score))
+            if (this.Character != null && this.Character.OnBlockPressed(score))
+                this.PlayerHit?.Invoke(score);
+        }
+
+        private void OnBlockReleased(InputAction.CallbackContext context)
+        {
+            if (!context.canceled)
+                return;
+
+            var score = ScoreSystem.GetScore(BeatSystem.CurrentTrackTime, this);
+            if (this.Character != null && this.Character.OnBlockReleased(score))
                 this.PlayerHit?.Invoke(score);
         }
 
@@ -195,7 +206,7 @@ namespace Cadenza
             var attackLightAction = map.FindAction("Attack/Light", throwIfNotFound: true);
             var attackHeavyAction = map.FindAction("Attack/Heavy", throwIfNotFound: true);
             var attackTeamAction = map.FindAction("Attack/Team", throwIfNotFound: true);
-            var parryAction = map.FindAction("Parry", throwIfNotFound: true);
+            var blockAction = map.FindAction("Block", throwIfNotFound: true);
             var pauseAction = map.FindAction("Pause", throwIfNotFound: true);
 
             moveAction.performed -= this.OnMove;
@@ -204,7 +215,8 @@ namespace Cadenza
             attackHeavyAction.performed -= this.OnAttackCharge;
             attackHeavyAction.canceled -= this.OnAttackHeavy;
             attackTeamAction.performed -= this.OnAttackTeam;
-            parryAction.performed -= this.OnParry;
+            blockAction.performed -= this.OnBlockPressed;
+            blockAction.canceled -= this.OnBlockReleased;
             pauseAction.performed -= this.OnPause;
         }
 

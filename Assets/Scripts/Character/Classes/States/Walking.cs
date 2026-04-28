@@ -26,8 +26,8 @@ namespace Cadenza
             else if (character.input.heavyAttack.HasValue)
                 character.ChangeState(character.heavyAttack);
 
-            else if (character.input.parry.HasValue)
-                character.ChangeState(character.parry);
+            else if (character.input.blockPressed.HasValue || character.IsBlockHeld())
+                character.ChangeState(character.block);
         }
 
         public void FixedUpdate(Character character)

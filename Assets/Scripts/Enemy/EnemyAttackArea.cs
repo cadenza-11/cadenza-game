@@ -23,13 +23,14 @@ namespace Cadenza
             // Hit player.
             if (collider.TryGetComponent(out Character character))
             {
-                if (!character.TakeDamage(this.damage))
+                if (!character.TakeDamage(this.damage, out float knockbackMultiplier))
                     return;
 
                 // Add knockback.
                 Vector3 direction = collider.transform.position - this.transform.position;
                 Vector3 force = direction.normalized * this.knockbackScale;
                 force.y = 2f;
+                force *= knockbackMultiplier;
                 collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
             }
 
