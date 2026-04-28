@@ -9,7 +9,10 @@ namespace Cadenza
     {
         #region Variables
         [SerializeField] private GameObject meleePrefab;
+        [SerializeField] protected SpriteRenderer sr2;
         [SerializeField] protected Animator anim2;
+        [SerializeField] private Colorway color1;
+        [SerializeField] private Colorway color2;
 
         private float meleeTimer = 0.0f;
         private GameObject currentProjectile;
@@ -21,6 +24,14 @@ namespace Cadenza
         void Start()
         {
             EnemyManager.AddEnemy(this);
+            this.sr.material.SetInt("_CharacterColor", 1);
+            this.sr.material.SetColor("_PrimaryColor", this.color1.PrimaryColor);
+            this.sr.material.SetColor("_SecondaryColor", this.color1.SecondaryColor);
+            this.sr.material.SetColor("_TertiaryColor", this.color1.TertiaryColor);
+            this.sr2.material.SetInt("_CharacterColor", 1);
+            this.sr2.material.SetColor("_PrimaryColor", this.color2.PrimaryColor);
+            this.sr2.material.SetColor("_SecondaryColor", this.color2.SecondaryColor);
+            this.sr2.material.SetColor("_TertiaryColor", this.color2.TertiaryColor);
         }
 
         override public void Initialize()

@@ -57,8 +57,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.42835975
-  m_Center: {x: 0.015044451, y: -0.017910093, z: 0}
+  m_Radius: 0.45
+  m_Center: {x: 0, y: -0.1, z: 0}
 --- !u!54 &259284012352757776
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -111,6 +111,7 @@ MonoBehaviour:
   curState: 0
   TargetLocation: {x: 0, y: 0}
   chargeParticles: {fileID: 818351733439761188}
+  color: {fileID: 11400000, guid: f7aaf0daea787874ca8c991d8286741f, type: 2}
 --- !u!114 &9019381679909748763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +136,7 @@ GameObject:
   - component: {fileID: 5351821400751885952}
   - component: {fileID: 4940573528697529019}
   - component: {fileID: 6195701624303688636}
+  - component: {fileID: 4481900149010726257}
   m_Layer: 3
   m_Name: Square
   m_TagString: Enemy
@@ -183,7 +185,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: fb88f5c43947d7e449ecbf3bc1c5696d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -206,8 +208,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 349226214, guid: c466dd5a90ae32d44890db601577b358, type: 3}
-  m_Color: {r: 1, g: 0.5254902, b: 0.5254902, a: 1}
+  m_Sprite: {fileID: 1083689193, guid: b98be41dbbbe4364f8c1aa885daea511, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -226,7 +228,7 @@ Animator:
   m_GameObject: {fileID: 1203646789165182342}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: fec5b2b5ac917a44b92ee35bcf4cc1d5, type: 2}
+  m_Controller: {fileID: 22100000, guid: 24e565271b3ef3649aafde42d9b9599f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -238,6 +240,28 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4481900149010726257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203646789165182342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb342019b9654229abf8dc6c4e4f05b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.BeatSyncedAnimator
+  animator: {fileID: 6195701624303688636}
+  listenForBeat: 0
+  listenForUpBeat: 0
+  beatTriggerName: OnBeat
+  restartStateOnBeat: 0
+  stateName: Idle
+  stateLayer: 0
+  retimeAnimatorSpeed: 1
+  beatsPerLoop: 1
+  baseLoopLengthSeconds: 1
 --- !u!1 &8087050639953767444
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,7 @@ namespace Cadenza
     {
         #region Variables
         [SerializeField] private GameObject chargeParticles;
+        [SerializeField] private Colorway color;
         new protected const int chaseDistance = 8;
         new protected const int meleeDistance = 1;
         new protected const int rangedDistance = 30;
@@ -24,6 +25,10 @@ namespace Cadenza
         void Start()
         {
             EnemyManager.AddEnemy(this);
+            this.sr.material.SetInt("_CharacterColor", 1);
+            this.sr.material.SetColor("_PrimaryColor", this.color.PrimaryColor);
+            this.sr.material.SetColor("_SecondaryColor", this.color.SecondaryColor);
+            this.sr.material.SetColor("_TertiaryColor", this.color.TertiaryColor);
         }
 
         override public void Initialize()
@@ -110,6 +115,7 @@ namespace Cadenza
         /// </summary>
         override protected void ChaseState()
         {
+            this.anim.SetBool("IsMove", true);
             this.TargetLocation = this.FindNearestPlayerDist();
             this.curAngle = (float)Math.Atan2(this.TargetLocation.y - this.transform.position.z, this.TargetLocation.x - this.transform.position.x);
 
@@ -120,11 +126,13 @@ namespace Cadenza
             //Move Towards target location here
             if (this.nearestPlayerDist > rangedDistance)
             {
+                this.anim.SetBool("IsMove", false);
                 this.curState = EnemyState.Idle;
                 this.rb.linearVelocity = Vector3.zero;
             }
             else if (this.nearestPlayerDist <= meleeDistance)
             {
+                this.anim.SetBool("IsMove", false);
                 this.meleeState = true;
                 this.curState = EnemyState.Melee;
                 this.rb.linearVelocity = Vector3.zero;
@@ -132,6 +140,7 @@ namespace Cadenza
 
             if (this.currentHealth <= 0)
             {
+                this.anim.SetBool("IsMove", false);
                 this.curState = EnemyState.Dead;
                 this.rb.linearVelocity = Vector3.zero;
             }
