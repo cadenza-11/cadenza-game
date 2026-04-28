@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace Cadenza
 {
-    [DisallowMultipleComponent]
     [RequireComponent(typeof(Enemy))]
     public sealed class EnemyHealthParameterBinding : MonoBehaviour
     {

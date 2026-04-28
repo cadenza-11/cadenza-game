@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1595507460558127831}
   - component: {fileID: 259284012352757776}
   - component: {fileID: -3966146955479761092}
+  - component: {fileID: 8325362173832380218}
   m_Layer: 3
   m_Name: RockGuitarEnemy
   m_TagString: Enemy
@@ -108,6 +109,19 @@ MonoBehaviour:
   projectile: {fileID: 7980564938967752292, guid: 9cd4f3532c9438c4f80a4c9f0e76b1a2, type: 3}
   curState: 0
   TargetLocation: {x: 0, y: 0}
+--- !u!114 &8325362173832380218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010987114114650534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d3fdce4e3fb4721a7f304f2efd9c9bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.EnemyHealthParameterBinding
+  parameterName: Guitar
 --- !u!1 &1203646789165182342
 GameObject:
   m_ObjectHideFlags: 0

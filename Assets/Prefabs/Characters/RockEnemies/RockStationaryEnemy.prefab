@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4912841694964548888}
   - component: {fileID: 259284012352757776}
   - component: {fileID: 5640413051421087767}
+  - component: {fileID: 1370112220187712251}
   m_Layer: 3
   m_Name: RockStationaryEnemy
   m_TagString: Enemy
@@ -111,6 +112,19 @@ MonoBehaviour:
   TargetLocation: {x: 0, y: 0}
   meleePrefab: {fileID: 7980564938967752292, guid: 385ca16ae71921140af196bb9d1509e4, type: 3}
   anim2: {fileID: 7019298492499714684}
+--- !u!114 &1370112220187712251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010987114114650534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d3fdce4e3fb4721a7f304f2efd9c9bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cadenza.EnemyHealthParameterBinding
+  parameterName: Piano
 --- !u!1 &1203646789165182342
 GameObject:
   m_ObjectHideFlags: 0
