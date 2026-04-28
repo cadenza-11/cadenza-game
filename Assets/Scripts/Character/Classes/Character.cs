@@ -451,6 +451,8 @@ namespace Cadenza
 
         public bool OnAttackHeavy(ScoreDef score)
         {
+            this.Animator.SetBool("IsCharging", false);
+
             if (this.state == this.fainted)
             {
                 if (!this.TryReserveCombatBeat(score.Beat))
