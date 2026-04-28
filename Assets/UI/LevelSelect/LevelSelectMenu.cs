@@ -73,6 +73,7 @@ namespace Cadenza
             this.playerVotes.Clear();
             this.levelCards.Clear();
             this.levelList?.Clear();
+            AudioSystem.SetParameter("SelectedLevelID", 0);
         }
 
         private void OnSubmit(Player player)
