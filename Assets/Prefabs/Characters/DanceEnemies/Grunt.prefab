@@ -284,11 +284,14 @@ MonoBehaviour:
   speed: 1.5
   meleeDuration: 0.25
   rangedDuration: 0.25
-  maxHealth: 10
-  currentHealth: 10
+  maxHealth: 20
+  currentHealth: 20
   attackArea: {fileID: 7001324152832192710}
   rb: {fileID: 6685466425446593482}
   sr: {fileID: 2003772355394204001}
   anim: {fileID: 767064290990262374}
   projectile: {fileID: 1343075117792191343, guid: a4f87c077289f4f409ffe9b7aef58330, type: 3}
   curState: 0
+  TargetLocation: {x: 0, y: 0}
+  moveTimer: -1
+  moveDir: -1

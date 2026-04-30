@@ -254,7 +254,7 @@ namespace Cadenza
         {
             if(this.lerpTime <= 4.0f)
             {
-                this.transform.position = new Vector3(this.transform.position.x, Mathf.Lerp(this.transform.position.y, 7, this.lerpTime/4),
+                this.transform.position = new Vector3(this.transform.position.x, Mathf.Lerp(this.transform.position.y, 4.0f, this.lerpTime/4),
                                             this.transform.position.z);
                 this.lerpTime += Time.deltaTime;
             }
