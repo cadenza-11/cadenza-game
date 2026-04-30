@@ -95,7 +95,7 @@
     border-left-width: 4px;
     flex-shrink: 0;
     align-items: stretch;
-    aspect-ratio: 0.5714286;
+    aspect-ratio: 0.6;
 }
 
 .level-card.is-leading {
@@ -118,6 +118,10 @@
     border-bottom-color: rgba(255, 255, 255, 0.78);
     background-image: none;
     flex-shrink: 0;
+    aspect-ratio: 1;
+    align-self: center;
+    -unity-background-scale-mode: scale-and-crop;
+    max-height: 55%;
 }
 
 .level-card__header {
@@ -135,6 +139,9 @@
     white-space: normal;
     align-self: center;
     -unity-text-align: middle-center;
+    height: 15%;
+    -unity-text-outline-width: 4px;
+    -unity-text-outline-color: rgb(0, 0, 0);
 }
 
 .level-card__status {
@@ -148,7 +155,7 @@
     padding-right: 16px;
     padding-bottom: 16px;
     padding-left: 16px;
-    min-height: 92px;
+    min-height: 180px;
     background-color: rgba(0, 0, 0, 0.22);
     border-top-left-radius: 18px;
     border-top-right-radius: 18px;
