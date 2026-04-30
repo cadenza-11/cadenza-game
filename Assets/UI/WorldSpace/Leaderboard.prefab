@@ -64,6 +64,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5326106295159060165}
+  - component: {fileID: 7100435337316179741}
   m_Layer: 0
   m_Name: Leaderboard
   m_TagString: Untagged
@@ -88,6 +89,18 @@ Transform:
   - {fileID: 4034053570996163289}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7100435337316179741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5375371763745665514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b98de2f314dfa44d83824f5cdee6345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BillboardUIToCamera
 --- !u!1 &6716702179537471910
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +193,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Leaderboard
   uiDocument: {fileID: 2778734844498184716}
-  previousPanel: {fileID: 0}
   resultLineAsset: {fileID: 9197481963319205126, guid: 717ff2d70b7374dcbb7435b859661e62, type: 3}
 --- !u!114 &324931734504573382
 MonoBehaviour:
