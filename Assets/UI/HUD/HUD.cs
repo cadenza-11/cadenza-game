@@ -88,12 +88,14 @@ namespace Cadenza
                     portraitMaterial.SetColor("_TertiaryColor", player.Colorway.TertiaryColor);
                     portrait.style.unityMaterial = portraitMaterial;
                 });
+<<<<<<< HEAD
+                portrait.style.backgroundColor = player.Colorway.SecondaryColor;
+=======
+>>>>>>> 878d6e0b6cf5121bd99dc0f352a3c4d8f6b296bc
 
                 // Show colorway on border.
                 VisualElement background = container.Q<VisualElement>("c_BackLayer");
-                Color tint = player.Colorway.SecondaryColor;
-                tint.a = 1;
-                background.style.unityBackgroundImageTintColor = tint;
+                background.style.unityBackgroundImageTintColor = player.Colorway.SecondaryColor;
 
                 // Initialize health.
                 ProgressBar health = container.Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
