@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8ae13a186f6f214688ffd226894d1a0, type: 3}
-  m_Name: GuitaristDefault
+  m_Name: White
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Colorway
-  Name: Guitarist
-  PrimaryColor: {r: 0.5529412, g: 0.39607844, b: 0.29411766, a: 0}
-  SecondaryColor: {r: 0.5686275, g: 0.0627451, b: 0.101960786, a: 0}
-  TertiaryColor: {r: 0.9137255, g: 0.64705884, b: 0.05490196, a: 0}
+  Name: The White Stripes
+  PrimaryColor: {r: 0.92549026, g: 0.72156864, b: 0.61960787, a: 1}
+  SecondaryColor: {r: 0.98823535, g: 0.93725497, b: 0.91372555, a: 1}
+  TertiaryColor: {r: 0.74509805, g: 0.121568635, b: 0.10980393, a: 1}
   DisplayImage: {fileID: 0}

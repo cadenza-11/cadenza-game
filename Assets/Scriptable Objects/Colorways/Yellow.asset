@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8ae13a186f6f214688ffd226894d1a0, type: 3}
-  m_Name: Blue
+  m_Name: Yellow
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Colorway
-  Name: Jay-Z
-  PrimaryColor: {r: 0.6039216, g: 0.3529412, b: 0.24313727, a: 0}
-  SecondaryColor: {r: 0.007843138, g: 0.37254903, b: 0.77647066, a: 0}
-  TertiaryColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0}
+  Name: Wu-Tang Clan
+  PrimaryColor: {r: 0.42352945, g: 0.28627452, b: 0.20000002, a: 1}
+  SecondaryColor: {r: 1, g: 0.7725491, b: 0.13333334, a: 1}
+  TertiaryColor: {r: 1, g: 0.20392159, b: 0.16078432, a: 1}
   DisplayImage: {fileID: 0}

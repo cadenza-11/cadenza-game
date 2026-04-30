@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Purple
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Colorway
   Name: Prince
-  PrimaryColor: {r: 0.6039216, g: 0.42352945, b: 0.2784314, a: 0}
-  SecondaryColor: {r: 0.5764706, g: 0.2392157, b: 0.6745098, a: 0}
-  TertiaryColor: {r: 1, g: 1, b: 1, a: 0}
+  PrimaryColor: {r: 0.6039216, g: 0.42352945, b: 0.2784314, a: 1}
+  SecondaryColor: {r: 0.5764706, g: 0.2392157, b: 0.6745098, a: 1}
+  TertiaryColor: {r: 1, g: 1, b: 1, a: 1}
   DisplayImage: {fileID: 0}
