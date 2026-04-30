@@ -1,0 +1,28 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Credits/Credits.uss?fileID=7433441132597879392&amp;guid=a1b2dc710960f784e8350a9774a6b713&amp;type=3#Credits"/>
+    <ui:VisualElement name="c_Panel" style="flex-grow: 1; background-color: rgb(51, 51, 51); -unity-font-style: bold; -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(255, 255, 255);">
+        <ui:VisualElement name="Background" style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; -unity-material: url(&quot;project://database/Assets/Art/UI%20Backgrounds/Background%20Effects.shadergraph?fileID=-876546973899608171&amp;guid=0f93fb7ab9325194bb8d5beaccf76fac&amp;type=3#Background Effects&quot;) prop(&quot;_Background_Color&quot; rgb(0, 255, 255)) prop(&quot;_Lightening_Color&quot; rgb(176, 224, 230)) prop(&quot;_Halo_Color&quot; rgb(255, 192, 203)) prop(&quot;_Accent_Color&quot; rgb(0, 250, 154)) prop(&quot;_enablePulse&quot; 0) prop(&quot;_flipY&quot; 1); background-color: rgb(0, 0, 0);"/>
+        <ui:VisualElement name="c_Credits" style="flex-grow: 1; margin-top: 30px; margin-right: 30px; margin-bottom: 30px; margin-left: 30px; background-color: rgba(175, 238, 238, 0.82); border-top-left-radius: 50px; border-top-right-radius: 50px; border-bottom-right-radius: 50px; border-bottom-left-radius: 50px; -unity-text-align: middle-center; padding-top: 50px; padding-right: 50px; padding-bottom: 50px; padding-left: 50px;">
+            <ui:Button text="&lt;" name="b_Back" style="position: absolute; aspect-ratio: 1; width: 5%;"/>
+            <ui:Label text="CREDITS" name="txt_PageHeader" style="font-size: 100px; -unity-font-style: bold; -unity-text-outline-color: rgb(255, 255, 255); -unity-text-outline-width: 4px;"/>
+            <ui:VisualElement name="spacer" class="spacer"/>
+            <ui:ScrollView style="height: 85%;">
+                <ui:VisualElement name="c_ScrollView" style="flex-grow: 1; flex-direction: row; align-content: center; justify-content: space-around;">
+                    <ui:VisualElement name="col_Left" style="width: 45%;">
+                        <ui:Label text="Developers" name="txt_SectionHeader" class="section_header"/>
+                        <ui:Label text="Cole Kauffman&#10;Marlo Ongkingco&#10;Royce Ortega&#10;Nicky Victoriano" name="txt_Section" class="section"/>
+                        <ui:Label text="Artists" name="txt_SectionHeader" class="section_header"/>
+                        <ui:Label text="Sole Burnett&#10;Daryl Casas" name="txt_Section" class="section"/>
+                        <ui:Label text="Advisor" name="txt_SectionHeader" class="section_header"/>
+                        <ui:Label text="Gunnar Wambaugh" name="txt_Section" class="section"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="col_Right" style="width: 45%;">
+                        <ui:Label text="Made with" name="txt_SectionHeader" class="section_header"/>
+                        <ui:VisualElement name="fmod" style="background-image: url(&quot;project://database/Assets/Plugins/FMOD/images/FMODLogoBlack.png?fileID=2800000&amp;guid=36e46b3c334e47e41a0b4ff2f26905ea&amp;type=3#FMODLogoBlack&quot;); -unity-background-scale-mode: scale-to-fit; height: 20%;"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:ScrollView>
+            <ui:VisualElement name="beatdown" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Art/BEATDOWN_logo.png?fileID=2800000&amp;guid=1c046ea92837b6841a2996abb9a3a4c9&amp;type=3#BEATDOWN_logo&quot;); margin-top: 0; height: 35%; -unity-background-scale-mode: scale-to-fit;"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

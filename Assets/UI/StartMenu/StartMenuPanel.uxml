@@ -24,6 +24,10 @@
                     <ui:VisualElement name="icon_Focused" class="focus_icon"/>
                     <ui:Label text="Settings" name="txt_Action" class="button_text"/>
                 </ui:Button>
+                <ui:Button text="&#10;" name="b_Credits" class="start_menu_button">
+                    <ui:VisualElement name="icon_Focused" class="focus_icon"/>
+                    <ui:Label text="Credits" name="txt_Action" class="button_text"/>
+                </ui:Button>
                 <ui:Button text="&#10;" name="b_Exit" class="start_menu_button">
                     <ui:VisualElement name="icon_Focused" class="focus_icon"/>
                     <ui:Label text="Exit Game" name="txt_Action" class="button_text"/>

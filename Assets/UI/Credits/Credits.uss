@@ -1,0 +1,27 @@
+:root {
+}
+
+.section_header {
+    font-size: 50px;
+}
+
+.spacer {
+    flex-grow: 1;
+    height: 5px;
+    background-color: rgb(0, 0, 0);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    width: 70%;
+    align-self: center;
+    margin-bottom: 30px;
+}
+
+.section {
+    margin-bottom: 30px;
+}

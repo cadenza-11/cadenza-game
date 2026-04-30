@@ -8,6 +8,7 @@ namespace Cadenza
         private UIPanel characterSelect;
         private UIPanel bandNameSelect;
         private UIPanel settingsMenu;
+        private UIPanel creditsMenu;
         private UIPanel leaderboardMenu;
 
         private VisualElement containerJoin;
@@ -17,6 +18,7 @@ namespace Cadenza
         private Button buttonLastRun;
         private Button buttonLeaderboard;
         private Button buttonSettings;
+        private Button buttonCredits;
         private Button buttonExit;
 
         #region System Events
@@ -25,6 +27,7 @@ namespace Cadenza
             this.characterSelect = UISystem.FindPanel<CharacterSelect>();
             this.bandNameSelect = UISystem.FindPanel<BandNameSelect>();
             this.settingsMenu = UISystem.FindPanel<SettingsMenu>();
+            this.creditsMenu = UISystem.FindPanel<CreditsMenu>();
             this.leaderboardMenu = UISystem.FindPanel<Leaderboard>();
 
             this.containerJoin = this.root.Q<VisualElement>("phase_Join");
@@ -34,12 +37,14 @@ namespace Cadenza
             this.buttonLastRun = this.root.Q<Button>("b_LastRun");
             this.buttonLeaderboard = this.root.Q<Button>("b_Leaderboard");
             this.buttonSettings = this.root.Q<Button>("b_Settings");
+            this.buttonCredits = this.root.Q<Button>("b_Credits");
             this.buttonExit = this.root.Q<Button>("b_Exit");
 
             this.buttonStartGame.clicked += this.OnNewRun;
             this.buttonLastRun.clicked += this.OnLastRun;
             this.buttonLeaderboard.clicked += this.OnLeaderboard;
             this.buttonSettings.clicked += this.OnSettings;
+            this.buttonCredits.clicked += this.OnCredits;
             this.buttonExit.clicked += this.OnExit;
 
             // Configure "continue last run" button.
@@ -138,6 +143,11 @@ namespace Cadenza
         private void OnLeaderboard()
         {
             this.TransitionTo(this.leaderboardMenu);
+        }
+
+        private void OnCredits()
+        {
+            this.TransitionTo(this.creditsMenu);
         }
 
         private void OnExit()
