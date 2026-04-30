@@ -82,7 +82,7 @@ namespace Cadenza
                 this.transform.DOShakeScale(0.1f, strength: new Vector3(0.2f, 0f, 0.2f), vibrato: 10, randomnessMode: ShakeRandomnessMode.Harmonic);
             if (this.beatCounter == this.beatsTillDrop + 3) // Drop
             {
-                this.transform.DOMoveY(-0.77f, 0.2f).OnComplete(() =>
+                this.transform.DOMoveY(-0.77f, 0.2f).SetEase(Ease.InSine).OnComplete(() =>
                 {
                     this.transform.DOShakeScale(0.1f, strength: new Vector3(0.2f, 0f, 0.2f), vibrato: 10, randomnessMode: ShakeRandomnessMode.Harmonic);
                     this.ReleaseShrapnel(this.shrapnelAmount);
