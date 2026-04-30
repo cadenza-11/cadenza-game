@@ -146,11 +146,16 @@ namespace Cadenza
             this.playerTeamStats.MvpPortrait.style.opacity = mvp == null ? 0 : 1;
             if (mvp != null)
             {
-                MaterialDefinition portraitMaterial = this.playerTeamStats.MvpPortrait.resolvedStyle.unityMaterial;
-                portraitMaterial.SetTexture("_Portrait", mvp);
-                portraitMaterial.SetColor("_PrimaryColor", mvpColorway.PrimaryColor);
-                portraitMaterial.SetColor("_SecondaryColor", mvpColorway.SecondaryColor);
-                portraitMaterial.SetColor("_TertiaryColor", mvpColorway.TertiaryColor);
+                this.playerTeamStats.MvpPortrait.schedule.Execute(() =>
+                {
+                    var styleMaterial = this.playerTeamStats.MvpPortrait.resolvedStyle.unityMaterial.material;
+                    var portraitMaterial = Instantiate(styleMaterial);
+                    portraitMaterial.SetTexture("_Portrait", mvp);
+                    portraitMaterial.SetColor("_PrimaryColor", mvpColorway.PrimaryColor);
+                    portraitMaterial.SetColor("_SecondaryColor", mvpColorway.SecondaryColor);
+                    portraitMaterial.SetColor("_TertiaryColor", mvpColorway.TertiaryColor);
+                    this.playerTeamStats.MvpPortrait.style.unityMaterial = portraitMaterial;
+                });
                 this.playerTeamStats.MvpPortrait.style.backgroundColor = mvpColorway.SecondaryColor;
             }
 
@@ -289,11 +294,16 @@ namespace Cadenza
                 stats.Instrument.text = player.CharacterClass.Name;
                 stats.CharacterPortrait.style.backgroundColor = player.Colorway.SecondaryColor;
                 stats.CharacterPortrait.style.backgroundImage = player.CharacterClass.HeadshotPortrait;
-                MaterialDefinition portraitMaterial = stats.CharacterPortrait.resolvedStyle.unityMaterial;
-                portraitMaterial.SetTexture("_Portrait", player.CharacterClass.HeadshotPortrait);
-                portraitMaterial.SetColor("_PrimaryColor", player.Colorway.PrimaryColor);
-                portraitMaterial.SetColor("_SecondaryColor", player.Colorway.SecondaryColor);
-                portraitMaterial.SetColor("_TertiaryColor", player.Colorway.TertiaryColor);
+                stats.CharacterPortrait.schedule.Execute(() =>
+                {
+                    var styleMaterial = stats.CharacterPortrait.resolvedStyle.unityMaterial.material;
+                    var portraitMaterial = Instantiate(styleMaterial);
+                    portraitMaterial.SetTexture("_Portrait", player.CharacterClass.HeadshotPortrait);
+                    portraitMaterial.SetColor("_PrimaryColor", player.Colorway.PrimaryColor);
+                    portraitMaterial.SetColor("_SecondaryColor", player.Colorway.SecondaryColor);
+                    portraitMaterial.SetColor("_TertiaryColor", player.Colorway.TertiaryColor);
+                    stats.CharacterPortrait.style.unityMaterial = portraitMaterial;
+                });
 
                 Results.PlayerDef playerDef = new Results.PlayerDef
                 {

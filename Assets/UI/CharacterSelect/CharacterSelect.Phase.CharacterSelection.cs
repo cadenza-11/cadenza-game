@@ -71,18 +71,25 @@ namespace Cadenza
 
         private void ChangeShownCharacter(VisualElement characterSelectContainer, UIClassManager.CharacterSelectInfo shownClass, Colorway selectedColorway)
         {
+            Colorway activeColorway = selectedColorway != null ? selectedColorway : this.colorways[0];
+
             // Update label.
             characterSelectContainer.Q<Label>("update_CharacterName").text = shownClass.Class.Name;
 
             // Update portrait.
             VisualElement portrait = characterSelectContainer.Q<VisualElement>("portrait_Character");
-            MaterialDefinition portraitMaterial = portrait.resolvedStyle.unityMaterial;
-            portraitMaterial.SetTexture("_Portrait", shownClass.Class.FullBodyPortrait);
-            portraitMaterial.SetColor("_PrimaryColor", (selectedColorway == null) ? this.colorways[0].PrimaryColor : selectedColorway.PrimaryColor);
-            portraitMaterial.SetColor("_SecondaryColor", (selectedColorway == null) ? this.colorways[0].SecondaryColor : selectedColorway.SecondaryColor);
-            portraitMaterial.SetColor("_TertiaryColor", (selectedColorway == null) ? this.colorways[0].TertiaryColor : selectedColorway.TertiaryColor);
+            portrait.schedule.Execute(() =>
+            {
+                var styleMaterial = portrait.resolvedStyle.unityMaterial.material;
+                var portraitMaterial = Instantiate(styleMaterial);
+                portraitMaterial.SetTexture("_Portrait", shownClass.Class.FullBodyPortrait);
+                portraitMaterial.SetColor("_PrimaryColor", activeColorway.PrimaryColor);
+                portraitMaterial.SetColor("_SecondaryColor", activeColorway.SecondaryColor);
+                portraitMaterial.SetColor("_TertiaryColor", activeColorway.TertiaryColor);
+                portrait.style.unityMaterial = portraitMaterial;
+            });
             portrait.style.backgroundImage = shownClass.Class.FullBodyPortrait;
-            portrait.style.backgroundColor = (selectedColorway == null) ? this.colorways[0].SecondaryColor : selectedColorway.SecondaryColor;
+            portrait.style.backgroundColor = activeColorway.SecondaryColor;
 
             // Update taken status.
             VisualElement selector = characterSelectContainer.Q<VisualElement>("c_CharacterPicker");

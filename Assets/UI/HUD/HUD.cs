@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using DG.Tweening;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -19,7 +18,7 @@ namespace Cadenza
         [SerializeField, Min(1.0f)] private float comboMultiplier;
 
         private ProgressBar teamMeter;
-        private MaterialDefinition teamMeterProgress;
+        private Material teamMeterProgress;
         private BeatIndicator beatIndicator;
         private Label teamStreak;
         private Dictionary<int, string> streakLabels = new();
@@ -78,11 +77,17 @@ namespace Cadenza
                 container.Q<Label>("update_CharacterName").text = $"{player.Name} ({player.CharacterClass.Name})";
 
                 // Set portrait with colorway tint.
-                MaterialDefinition portraitMaterial = container.Q<VisualElement>("portrait_Character").resolvedStyle.unityMaterial;
-                portraitMaterial.SetTexture("_Portrait", player.CharacterClass.HeadshotPortrait);
-                portraitMaterial.SetColor("_PrimaryColor", player.Colorway.PrimaryColor);
-                portraitMaterial.SetColor("_SecondaryColor", player.Colorway.SecondaryColor);
-                portraitMaterial.SetColor("_TertiaryColor", player.Colorway.TertiaryColor);
+                VisualElement portrait = container.Q<VisualElement>("portrait_Character");
+                portrait.schedule.Execute(() =>
+                {
+                    var styleMaterial = portrait.resolvedStyle.unityMaterial.material;
+                    var portraitMaterial = Instantiate(styleMaterial);
+                    portraitMaterial.SetTexture("_Portrait", player.CharacterClass.HeadshotPortrait);
+                    portraitMaterial.SetColor("_PrimaryColor", player.Colorway.PrimaryColor);
+                    portraitMaterial.SetColor("_SecondaryColor", player.Colorway.SecondaryColor);
+                    portraitMaterial.SetColor("_TertiaryColor", player.Colorway.TertiaryColor);
+                    portrait.style.unityMaterial = portraitMaterial;
+                });
 
                 // Show colorway on border.
                 VisualElement background = container.Q<VisualElement>("c_BackLayer");
@@ -93,12 +98,21 @@ namespace Cadenza
                 // Initialize health.
                 ProgressBar health = container.Q<VisualElement>("c_HealthBar").Q<ProgressBar>("bar");
                 health.highValue = player.Character.MaxHealth;
+                int healthShakeTweenIndex = this.healthShakeTweens.Count;
                 this.healthShakeTweens.Add(background.DOShake(duration: 0.5f, strength: 10f, vibrato: 10, randomnessMode: ShakeRandomnessMode.Harmonic).SetLoops(-1).Pause());
-                MaterialDefinition healthProgress = health.Q<VisualElement>(classes: "unity-progress-bar__progress").resolvedStyle.unityMaterial;
-                this.OnHealthChanged(health.highValue, health, healthProgress, this.healthShakeTweens.Count-1);
+                Material healthProgress = null;
+                VisualElement healthProgressElement = health.Q<VisualElement>(classes: "unity-progress-bar__progress");
+                healthProgressElement.schedule.Execute(() =>
+                {
+                    var styleMaterial = healthProgressElement.resolvedStyle.unityMaterial.material;
+                    healthProgress = Instantiate(styleMaterial);
+                    healthProgressElement.style.unityMaterial = healthProgress;
+                    this.OnHealthChanged(health.value, health, healthProgress, healthShakeTweenIndex);
+                });
+                this.OnHealthChanged(health.highValue, health, healthProgress, healthShakeTweenIndex);
                 player.Character.HealthChanged += (healthValue, isFainted) =>
                 {
-                    this.OnHealthChanged(healthValue, health, healthProgress, this.healthShakeTweens.Count-1);
+                    this.OnHealthChanged(healthValue, health, healthProgress, healthShakeTweenIndex);
                     if (isFainted) container.AddToClassList("fainted");
                     else container.RemoveFromClassList("fainted");
                 };
@@ -107,7 +121,16 @@ namespace Cadenza
                 // Initialize flow.
                 ProgressBar flow = container.Q<VisualElement>("c_FlowBar").Q<ProgressBar>("bar");
                 flow.highValue = player.Character.FlowThreshold;
-                MaterialDefinition flowProgress = flow.Q<VisualElement>(classes: "unity-progress-bar__progress").resolvedStyle.unityMaterial;
+                Material flowProgress = null;
+                VisualElement flowProgressElement = flow.Q<VisualElement>(classes: "unity-progress-bar__progress");
+                flowProgressElement.schedule.Execute(() =>
+                {
+                    var styleMaterial = flowProgressElement.resolvedStyle.unityMaterial.material;
+                    flowProgress = Instantiate(styleMaterial);
+                    flowProgressElement.style.unityMaterial = flowProgress;
+                    this.OnFlowChanged(flow.value, flow, flowProgress);
+                });
+                this.OnFlowChanged(flow.value, flow, flowProgress);
                 player.Character.FlowChanged += (flowValue) => this.OnFlowChanged(flowValue, flow, flowProgress);
 
                 // Initialize accuracy.
@@ -115,8 +138,14 @@ namespace Cadenza
             }
 
             this.teamMeter.value = 0;
-            this.teamMeterProgress = this.teamMeter.Q<VisualElement>(classes: "unity-progress-bar__progress").resolvedStyle.unityMaterial;
-            this.teamMeterProgress.SetFloat("_Progress", this.teamMeter.value/this.teamMeter.highValue);
+            VisualElement teamMeterProgressElement = this.teamMeter.Q<VisualElement>(classes: "unity-progress-bar__progress");
+            teamMeterProgressElement.schedule.Execute(() =>
+            {
+                var styleMaterial = teamMeterProgressElement.resolvedStyle.unityMaterial.material;
+                this.teamMeterProgress = Instantiate(styleMaterial);
+                teamMeterProgressElement.style.unityMaterial = this.teamMeterProgress;
+                this.teamMeterProgress.SetFloat("_Progress", this.teamMeter.value / this.teamMeter.highValue);
+            });
             this.beatIndicator.Start();
 
             ScoreSystem.TeamHit += this.OnTeamHit;
@@ -188,14 +217,16 @@ namespace Cadenza
         private void OnTeamAttackInitiated()
         {
             this.teamMeter.value = 0;
-            this.teamMeterProgress.SetFloat("_Progress", this.teamMeter.value/this.teamMeter.highValue);
+            if (this.teamMeterProgress != null)
+                this.teamMeterProgress.SetFloat("_Progress", this.teamMeter.value / this.teamMeter.highValue);
         }
 
         // Advance the meter by a number of seconds.
         private void FillMeter(float seconds)
         {
             this.teamMeter.value = Mathf.Clamp(this.teamMeter.value + seconds, this.teamMeter.lowValue, this.teamMeter.highValue);
-            this.teamMeterProgress.SetFloat("_Progress", this.teamMeter.value/this.teamMeter.highValue);
+            if (this.teamMeterProgress != null)
+                this.teamMeterProgress.SetFloat("_Progress", this.teamMeter.value / this.teamMeter.highValue);
         }
 
         private MeterState GetMeterState()
@@ -209,24 +240,29 @@ namespace Cadenza
         #endregion
         #region Health Bar
 
-        private void OnHealthChanged(float health, ProgressBar bar, MaterialDefinition progress, int tweenIndex)
+        private void OnHealthChanged(float health, ProgressBar bar, Material progress, int tweenIndex)
         {
             bar.value = health;
-            progress.SetFloat("_Progress", health/bar.highValue);
+            if (progress != null)
+                progress.SetFloat("_Progress", health / bar.highValue);
+            if (tweenIndex < 0 || tweenIndex >= this.healthShakeTweens.Count)
+                return;
+
             if (bar.value / bar.highValue <= 0.33f)
                 this.healthShakeTweens[tweenIndex].Play();
             else
                 this.healthShakeTweens[tweenIndex].Pause();
-            
+
         }
 
         #endregion
         #region Flow Bar
 
-        private void OnFlowChanged(float flow, ProgressBar bar, MaterialDefinition progress)
+        private void OnFlowChanged(float flow, ProgressBar bar, Material progress)
         {
             bar.value = Mathf.Min(flow, bar.highValue);
-            progress.SetFloat("_Progress", bar.value/bar.highValue);
+            if (progress != null)
+                progress.SetFloat("_Progress", bar.value / bar.highValue);
         }
 
         #endregion
