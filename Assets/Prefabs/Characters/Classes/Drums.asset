@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterType
   ID: 2
   Name: Drums
-  Portrait: {fileID: 2800000, guid: e4340b659aa764546a7c294fc2b0c3ea, type: 3}
+  FullBodyPortrait: {fileID: 2800000, guid: 18e607db7e62a7c4c922fa5a99946f0c, type: 3}
+  HeadshotPortrait: {fileID: 2800000, guid: f060c4f8d60ac304f8189546ab381e0e, type: 3}
   Prefab: {fileID: 3710501330391665934, guid: f2eb7ff7d2b9343c9abda27a024a9a89, type: 3}

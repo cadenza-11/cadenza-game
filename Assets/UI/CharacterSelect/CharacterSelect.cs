@@ -235,8 +235,7 @@ namespace Cadenza
             var ready = this.readyTemplate.Instantiate();
             var naming = this.namingTemplate.Instantiate();
 
-            VisualElement cosmeticsPicker = selection.Q<VisualElement>("c_CosmeticsPicker");
-            this.ChangeShownColor(cosmeticsPicker, this.colorways[0]);
+            this.ChangeShownColor(selection, this.colorways[0]);
 
             phaseContainer.Clear();
             phaseContainer.Add(joining);

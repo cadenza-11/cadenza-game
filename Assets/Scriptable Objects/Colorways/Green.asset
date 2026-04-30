@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8ae13a186f6f214688ffd226894d1a0, type: 3}
-  m_Name: Pink
+  m_Name: Green
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Colorway
-  Name: P!nk
-  PrimaryColor: {r: 0.9176471, g: 0.68235296, b: 0.5921569, a: 0}
-  SecondaryColor: {r: 0.9490197, g: 0.29411766, b: 0.6039216, a: 0}
-  TertiaryColor: {r: 0.86666673, g: 0.78823537, b: 0.75294125, a: 0}
+  Name: CharlieXCX
+  PrimaryColor: {r: 0.9921569, g: 0.78823537, b: 0.5686275, a: 1}
+  SecondaryColor: {r: 0.5411765, g: 0.80784315, b: 0, a: 1}
+  TertiaryColor: {r: 0.23529413, g: 0.6901961, b: 0.9215687, a: 1}
   DisplayImage: {fileID: 0}

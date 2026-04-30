@@ -181,6 +181,7 @@
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
     align-self: center;
+    -unity-material: url("project://database/Assets/Art/UI%20Backgrounds/RGB%20Character%20Portrait.shadergraph?fileID=-876546973899608171&guid=cb8c372293beaba43b8db722f3122359&type=3#RGB Character Portrait") prop("_Portrait" url("project://database/Assets/Art/Characters/Guitarist/Guitarist_Full.png?fileID=2800000&guid=f02b923a0d72c3a47b7fc72748806941&type=3#Guitarist_Full")) prop("_PrimaryColor" rgb(139, 69, 19)) prop("_SecondaryColor" rgb(255, 0, 0)) prop("_TertiaryColor" rgb(255, 215, 0));
 }
 
 .team_MVP_text {
@@ -224,6 +225,7 @@
 
 .no_player * {
     opacity: 0.13;
+    background-image: none;
 }
 
 .ready .score_container * {

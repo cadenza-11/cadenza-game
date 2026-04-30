@@ -140,11 +140,24 @@ namespace Cadenza
                 this.playerTeamStats.ScoreCards[i].text = this.currentResults.JudgeScores[i].ToString("F0");
 
             // Player Stats
-            Texture2D mvp = this.PopulatePlayerStats();
+            (Texture2D mvp, Colorway mvpColorway) = this.PopulatePlayerStats();
 
             // MVP
             this.playerTeamStats.MvpPortrait.style.opacity = mvp == null ? 0 : 1;
-            if (mvp != null) this.playerTeamStats.MvpPortrait.style.backgroundImage = mvp;
+            if (mvp != null)
+            {
+                this.playerTeamStats.MvpPortrait.schedule.Execute(() =>
+                {
+                    var styleMaterial = this.playerTeamStats.MvpPortrait.resolvedStyle.unityMaterial.material;
+                    var portraitMaterial = Instantiate(styleMaterial);
+                    portraitMaterial.SetTexture("_Portrait", mvp);
+                    portraitMaterial.SetColor("_PrimaryColor", mvpColorway.PrimaryColor);
+                    portraitMaterial.SetColor("_SecondaryColor", mvpColorway.SecondaryColor);
+                    portraitMaterial.SetColor("_TertiaryColor", mvpColorway.TertiaryColor);
+                    this.playerTeamStats.MvpPortrait.style.unityMaterial = portraitMaterial;
+                });
+                this.playerTeamStats.MvpPortrait.style.backgroundColor = mvpColorway.SecondaryColor;
+            }
 
             this.Show();
             this.resultsSequence.Play(this.currentResults);
@@ -262,10 +275,11 @@ namespace Cadenza
         #endregion
         #region Helper Methods
 
-        private Texture2D PopulatePlayerStats()
+        private (Texture2D, Colorway) PopulatePlayerStats()
         {
             float highestScore = 0f;
             Texture2D highestScorerPortrait = null;
+            Colorway highestScorerColorway = null;
 
             // Assign player stat containers to active players.
             for (int i = 0; i < Mathf.Min(PlayerSystem.Players.Length, this.availableContainers.Count); i++)
@@ -278,7 +292,18 @@ namespace Cadenza
                 stats.Container.RemoveFromClassList("no_player");
                 stats.PlayerName.text = player.Name;
                 stats.Instrument.text = player.CharacterClass.Name;
-                stats.CharacterPortrait.style.backgroundImage = player.CharacterClass.Portrait;
+                stats.CharacterPortrait.style.backgroundColor = player.Colorway.SecondaryColor;
+                stats.CharacterPortrait.style.backgroundImage = player.CharacterClass.HeadshotPortrait;
+                stats.CharacterPortrait.schedule.Execute(() =>
+                {
+                    var styleMaterial = stats.CharacterPortrait.resolvedStyle.unityMaterial.material;
+                    var portraitMaterial = Instantiate(styleMaterial);
+                    portraitMaterial.SetTexture("_Portrait", player.CharacterClass.HeadshotPortrait);
+                    portraitMaterial.SetColor("_PrimaryColor", player.Colorway.PrimaryColor);
+                    portraitMaterial.SetColor("_SecondaryColor", player.Colorway.SecondaryColor);
+                    portraitMaterial.SetColor("_TertiaryColor", player.Colorway.TertiaryColor);
+                    stats.CharacterPortrait.style.unityMaterial = portraitMaterial;
+                });
 
                 Results.PlayerDef playerDef = new Results.PlayerDef
                 {
@@ -293,7 +318,8 @@ namespace Cadenza
                 if (highestScore < playerResults.ScoreTotal)
                 {
                     highestScore = playerResults.ScoreTotal;
-                    highestScorerPortrait = player.CharacterClass.Portrait;
+                    highestScorerPortrait = player.CharacterClass.HeadshotPortrait;
+                    highestScorerColorway = player.Colorway;
                 }
 
                 // Streak -> Perfect -> Good -> OK -> Bad -> Deaths
@@ -306,7 +332,7 @@ namespace Cadenza
                 stats.Stats[5].text = playerResults.Deaths.ToString();
             }
 
-            return highestScorerPortrait;
+            return (highestScorerPortrait, highestScorerColorway);
         }
 
         private void ShowLeaderboard()
