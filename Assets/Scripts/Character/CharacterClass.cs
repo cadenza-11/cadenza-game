@@ -7,7 +7,8 @@ namespace Cadenza
     {
         public int ID;
         public string Name;
-        public Texture2D Portrait;
+        public Texture2D FullBodyPortrait;
+        public Texture2D HeadshotPortrait;
         public GameObject Prefab;
     }
 }

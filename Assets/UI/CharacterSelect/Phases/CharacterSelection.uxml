@@ -5,7 +5,7 @@
             <ui:Label text="Character Name" name="update_CharacterName" style="-unity-text-align: upper-center;"/>
             <ui:VisualElement name="c_CharacterPicker" focusable="true" class="selector">
                 <ui:Button name="b_Left" focusable="false" class="navigation_icon selector_arrow" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-1008301579157283121&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left@2x&quot;);"/>
-                <ui:VisualElement name="portrait_Character" class="portrait" style="justify-content: center; background-color: rgba(173, 255, 47, 0.53);">
+                <ui:VisualElement name="portrait_Character" class="portrait" style="justify-content: center; background-image: url(&quot;project://database/Assets/Art/Characters/Guitarist/Guitarist_Full.png?fileID=2800000&amp;guid=f02b923a0d72c3a47b7fc72748806941&amp;type=3#Guitarist_Full&quot;); -unity-material: url(&quot;project://database/Assets/Art/UI%20Backgrounds/RGB%20Character%20Portrait.shadergraph?fileID=-876546973899608171&amp;guid=cb8c372293beaba43b8db722f3122359&amp;type=3#RGB Character Portrait&quot;) prop(&quot;_Portrait&quot; url(&quot;project://database/Assets/Art/Characters/Guitarist/Guitarist_Full.png?fileID=2800000&amp;guid=f02b923a0d72c3a47b7fc72748806941&amp;type=3#Guitarist_Full&quot;)) prop(&quot;_PrimaryColor&quot; rgb(139, 69, 19)) prop(&quot;_SecondaryColor&quot; rgb(255, 0, 0)) prop(&quot;_TertiaryColor&quot; rgb(255, 215, 0));">
                     <ui:Label text="TAKEN!" name="txt_Taken" class="warning"/>
                 </ui:VisualElement>
                 <ui:Button name="b_Right" focusable="false" class="navigation_icon selector_arrow" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-right@2x&quot;);"/>
@@ -15,7 +15,7 @@
     <ui:VisualElement name="c_Cosmetics" style="flex-grow: 1;">
         <ui:VisualElement name="c_CosmeticsPicker" focusable="true" class="selector">
             <ui:Button name="b_Left" focusable="false" class="navigation_icon selector_arrow" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-1008301579157283121&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-left@2x&quot;);"/>
-            <ui:VisualElement name="portrait_Character" class="portrait"/>
+            <ui:VisualElement name="display_Color" class="portrait"/>
             <ui:Button name="b_Right" focusable="false" class="navigation_icon selector_arrow" style="background-image: url(&quot;project://database/Assets/UI/Common/CadenzaRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=6c7fd4304507d004983595a79123c013&amp;type=3#arrow-right@2x&quot;);"/>
         </ui:VisualElement>
     </ui:VisualElement>

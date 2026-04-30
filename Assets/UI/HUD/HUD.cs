@@ -76,7 +76,15 @@ namespace Cadenza
                 // Initialize player container.
                 container.style.display = DisplayStyle.Flex;
                 container.Q<Label>("update_CharacterName").text = $"{player.Name} ({player.CharacterClass.Name})";
-                container.Q<VisualElement>("portrait_Character").style.backgroundImage = player.CharacterClass.Portrait;
+
+                // Set portrait with colorway tint.
+                MaterialDefinition portraitMaterial = container.Q<VisualElement>("portrait_Character").resolvedStyle.unityMaterial;
+                portraitMaterial.SetTexture("_Portrait", player.CharacterClass.HeadshotPortrait);
+                portraitMaterial.SetColor("_PrimaryColor", player.Colorway.PrimaryColor);
+                portraitMaterial.SetColor("_SecondaryColor", player.Colorway.SecondaryColor);
+                portraitMaterial.SetColor("_TertiaryColor", player.Colorway.TertiaryColor);
+
+                // Show colorway on border.
                 VisualElement background = container.Q<VisualElement>("c_BackLayer");
                 Color tint = player.Colorway.SecondaryColor;
                 tint.a = 1;

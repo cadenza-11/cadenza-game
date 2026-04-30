@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.CharacterType
   ID: 1
   Name: Bass
-  Portrait: {fileID: 2800000, guid: 1a62730b725381f4ebd142e2fe761028, type: 3}
+  FullBodyPortrait: {fileID: 2800000, guid: 5dca9eb6645e3b6459fa447478f5bc78, type: 3}
+  HeadshotPortrait: {fileID: 2800000, guid: 18389b2cfbf846946b2e8d7a124c8057, type: 3}
   Prefab: {fileID: 6786406964424170892, guid: be2c7af87cc4a46d2a02452831d57389, type: 3}

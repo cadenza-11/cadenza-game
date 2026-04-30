@@ -56,7 +56,7 @@ namespace Cadenza
                         ? this.Owner.classManager.GetNextCharacter(currentChar)
                         : this.Owner.classManager.GetPreviousCharacter(currentChar);
 
-                    this.Owner.ChangeShownCharacter(container, shownCharacter);
+                    this.Owner.ChangeShownCharacter(container, shownCharacter, this.Owner.GetSelectedColorway(tracker));
                 }
 
                 // Move up or down.
@@ -69,14 +69,20 @@ namespace Cadenza
             }
         }
 
-        private void ChangeShownCharacter(VisualElement characterSelectContainer, UIClassManager.CharacterSelectInfo shownClass)
+        private void ChangeShownCharacter(VisualElement characterSelectContainer, UIClassManager.CharacterSelectInfo shownClass, Colorway selectedColorway)
         {
             // Update label.
             characterSelectContainer.Q<Label>("update_CharacterName").text = shownClass.Class.Name;
 
             // Update portrait.
             VisualElement portrait = characterSelectContainer.Q<VisualElement>("portrait_Character");
-            portrait.style.backgroundImage = shownClass.Class.Portrait;
+            MaterialDefinition portraitMaterial = portrait.resolvedStyle.unityMaterial;
+            portraitMaterial.SetTexture("_Portrait", shownClass.Class.FullBodyPortrait);
+            portraitMaterial.SetColor("_PrimaryColor", (selectedColorway == null) ? this.colorways[0].PrimaryColor : selectedColorway.PrimaryColor);
+            portraitMaterial.SetColor("_SecondaryColor", (selectedColorway == null) ? this.colorways[0].SecondaryColor : selectedColorway.SecondaryColor);
+            portraitMaterial.SetColor("_TertiaryColor", (selectedColorway == null) ? this.colorways[0].TertiaryColor : selectedColorway.TertiaryColor);
+            portrait.style.backgroundImage = shownClass.Class.FullBodyPortrait;
+            portrait.style.backgroundColor = (selectedColorway == null) ? this.colorways[0].SecondaryColor : selectedColorway.SecondaryColor;
 
             // Update taken status.
             VisualElement selector = characterSelectContainer.Q<VisualElement>("c_CharacterPicker");
@@ -91,9 +97,10 @@ namespace Cadenza
             // Update UI whenever a character is taken.
             foreach (var container in this.playerContainers)
             {
+                Colorway colors = (Colorway)container.CharacterSelectionContainer.Q<VisualElement>("display_Color").dataSource;
                 string currentClassName = container.CharacterSelectionContainer.Q<Label>("update_CharacterName").text;
                 var currentCharacter = this.classManager.GetCharacter(currentClassName);
-                this.ChangeShownCharacter(container.CharacterSelectionContainer, currentCharacter);
+                this.ChangeShownCharacter(container.CharacterSelectionContainer, currentCharacter, colors);
             }
         }
 
@@ -120,13 +127,16 @@ namespace Cadenza
             this.classManager.UnselectCharacter(player);
         }
 
-        private void ChangeShownColor(VisualElement cosmeticsPicker, Colorway color)
+        private void ChangeShownColor(VisualElement characterSelectContainer, Colorway color)
         {
-            var portrait = cosmeticsPicker.Q<VisualElement>("portrait_Character");
+            var display = characterSelectContainer.Q<VisualElement>("display_Color");
+            display.dataSource = color;
             var bgColor = color.SecondaryColor;
             bgColor.a = 1;
-            portrait.style.backgroundColor = bgColor;
-            portrait.Q<VisualElement>("portrait_Character").style.backgroundImage = color.DisplayImage;
+            display.style.backgroundColor = bgColor;
+            display.style.backgroundImage = color.DisplayImage;
+            if (this.IsVisible)
+                this.ChangeShownCharacter(characterSelectContainer, this.classManager.GetCharacter(characterSelectContainer.Q<Label>("update_CharacterName").text), color);
         }
 
         private Colorway GetSelectedColorway(PlayerTracker tracker)
@@ -138,7 +148,7 @@ namespace Cadenza
         private void RefreshShownColor(PlayerContainer playerContainer, PlayerTracker tracker)
         {
             this.ChangeShownColor(
-                playerContainer.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker"),
+                playerContainer.CharacterSelectionContainer,
                 this.GetSelectedColorway(tracker)
             );
         }
@@ -150,13 +160,14 @@ namespace Cadenza
             tracker.Phase = SelectPhase.CharacterSelection;
             tracker.SettingsFocusIndex = 0;
             tracker.HapticsFocusIndex = 0;
+            tracker.SelectedColorIndex = 0;
 
             // Reset calibration.
             this.ResetCalibration(player);
 
             // Reset shown character.
             var container = this.playerContainers[player.ID];
-            this.ChangeShownCharacter(container.CharacterSelectionContainer, this.classManager.GetNextCharacter(""));
+            this.ChangeShownCharacter(container.CharacterSelectionContainer, this.classManager.GetNextCharacter(""), this.colorways[0]);
             container.CharacterSelectionContainer.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
             container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
             this.RefreshShownColor(container, tracker);
@@ -178,13 +189,14 @@ namespace Cadenza
             // Reset the tracker.
             var tracker = this.playerTrackers[player];
             tracker.Phase = SelectPhase.Joining;
+            tracker.SelectedColorIndex = 0;
 
             // Reset calibration.
             this.ResetCalibration(player);
 
             // Reset shown character.
             var container = this.playerContainers[player.ID];
-            this.ChangeShownCharacter(container.CharacterSelectionContainer, this.classManager.GetNextCharacter(""));
+            this.ChangeShownCharacter(container.CharacterSelectionContainer, this.classManager.GetNextCharacter(""), this.colorways[0]);
             container.CharacterSelectionContainer.Q<VisualElement>("c_CharacterPicker").AddToClassList("is_focus");
             container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
             container.CharacterSelectionContainer.Q<VisualElement>("c_CosmeticsPicker").RemoveFromClassList("is_focus");
