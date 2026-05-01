@@ -40,6 +40,9 @@ namespace Cadenza
             this.speed = 0f;
             this.isAttacking = false;
             this.isActionable = true;
+            this.maxHealth = (int)(this.maxHealth * (1 + (0.33f*(PlayerSystem.PlayerCount - 1))));
+            this.currentHealth = this.maxHealth;
+            this.coreMaxHealth = (int)(this.coreMaxHealth * (1 + (0.33f*(PlayerSystem.PlayerCount - 1))));
         }
 
         override protected void FixedUpdate(){}
@@ -170,7 +173,7 @@ namespace Cadenza
             this.anim.SetBool("IsDowned", false);
             Debug.Log("Starting final onslaught");
             foreach (var vinyl in this.droppingVinyls)
-                vinyl.Initialize(5, 8);
+                vinyl.Initialize(10, 8);
             int laserOffset = 0;
             foreach (var laser in this.sweepingLasers)
             {
