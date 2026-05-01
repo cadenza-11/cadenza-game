@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Cadenza
@@ -16,15 +17,23 @@ namespace Cadenza
 
         [SerializeField] private InstrumentType[] instrumentTypes;
 
+        private List<InstrumentType> availableInstruments = new List<InstrumentType>();
+
         void Awake()
         {
             singleton = this;
+            this.availableInstruments.Clear();
+            this.availableInstruments.AddRange(this.instrumentTypes);
         }
 
         public static void AssignInstrument(EnemyGruntFunk grunt)
         {
+            if (singleton.availableInstruments.Count == 0)
+                return;
+
             // Get random instrument.
             var instrumentType = singleton.instrumentTypes[UnityEngine.Random.Range(0, singleton.instrumentTypes.Length)];
+            singleton.availableInstruments.Remove(instrumentType);
 
             // Place instrument.
             if (instrumentType.InstrumentPrefab != null && grunt.handBone != null)
@@ -33,6 +42,8 @@ namespace Cadenza
             // Associate FMOD parameter.
             if (grunt.TryGetComponent<EnemyHealthParameterBinding>(out var paramController))
                 paramController.parameterName = instrumentType.FMODParameterName;
+
+            Debug.Log($"Assigned {instrumentType.FMODParameterName} to {grunt.name}");
         }
     }
 }

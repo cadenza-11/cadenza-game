@@ -45,11 +45,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   instrumentTypes:
-  - FMODParameterName: 
-    InstrumentPrefab: {fileID: 919132149155446097, guid: 3ababb4002b33f840a03121c4c2efd5e, type: 3}
-  - FMODParameterName: 
-    InstrumentPrefab: {fileID: 919132149155446097, guid: 33f08e5add5a5664d9c48dd40ca16eda, type: 3}
+  - FMODParameterName: Altos
+    InstrumentPrefab: {fileID: 0}
+  - FMODParameterName: Baritones
+    InstrumentPrefab: {fileID: 0}
+  - FMODParameterName: Bass
+    InstrumentPrefab: {fileID: 919132149155446097, guid: f2a2cd53895c1aa4498edf9649944ee5, type: 3}
   - FMODParameterName: 
     InstrumentPrefab: {fileID: 919132149155446097, guid: bd2fc34376d0c8840819f132aba6aaf3, type: 3}
-  - FMODParameterName: 
+  - FMODParameterName: BassDrum
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 660454cafbeb4ea4d976c2ed91c2e373, type: 3}
+  - FMODParameterName: Bassoon
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 96e7deabd28552b4c844d2d5f33c2b74, type: 3}
+  - FMODParameterName: Cellos
     InstrumentPrefab: {fileID: 919132149155446097, guid: f2a2cd53895c1aa4498edf9649944ee5, type: 3}
+  - FMODParameterName: Clarinet
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 96e7deabd28552b4c844d2d5f33c2b74, type: 3}
+  - FMODParameterName: Contrabass
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 96e7deabd28552b4c844d2d5f33c2b74, type: 3}
+  - FMODParameterName: Flute
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 663afa4de5fd43446b5d3f3dfcf55c2a, type: 3}
+  - FMODParameterName: Horns1
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 3ababb4002b33f840a03121c4c2efd5e, type: 3}
+  - FMODParameterName: Horns2
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 3ababb4002b33f840a03121c4c2efd5e, type: 3}
+  - FMODParameterName: Oboe
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 96e7deabd28552b4c844d2d5f33c2b74, type: 3}
+  - FMODParameterName: Piccolo
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 663afa4de5fd43446b5d3f3dfcf55c2a, type: 3}
+  - FMODParameterName: Sopranos
+    InstrumentPrefab: {fileID: 0}
+  - FMODParameterName: Tenors
+    InstrumentPrefab: {fileID: 0}
+  - FMODParameterName: Timpani
+    InstrumentPrefab: {fileID: 919132149155446097, guid: b120b061d18a6134cae25546f09d9792, type: 3}
+  - FMODParameterName: Trombones
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 3ababb4002b33f840a03121c4c2efd5e, type: 3}
+  - FMODParameterName: Trumpet
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 3ababb4002b33f840a03121c4c2efd5e, type: 3}
+  - FMODParameterName: Tuba
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 3ababb4002b33f840a03121c4c2efd5e, type: 3}
+  - FMODParameterName: Violas
+    InstrumentPrefab: {fileID: 919132149155446097, guid: bd2fc34376d0c8840819f132aba6aaf3, type: 3}
+  - FMODParameterName: Violins1
+    InstrumentPrefab: {fileID: 919132149155446097, guid: bd2fc34376d0c8840819f132aba6aaf3, type: 3}
+  - FMODParameterName: Violins2
+    InstrumentPrefab: {fileID: 919132149155446097, guid: bd2fc34376d0c8840819f132aba6aaf3, type: 3}

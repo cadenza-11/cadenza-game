@@ -1,5 +1,4 @@
 using Cadenza;
-using System;
 using UnityEngine;
 
 public class FunkPhaseManager : MonoBehaviour
@@ -49,8 +48,9 @@ public class FunkPhaseManager : MonoBehaviour
 
     void PhaseOneStart()
     {
+        Instantiate(this.gruntEnemy, new Vector3(8f, -0.83f, 4f), Quaternion.identity);
+        Instantiate(this.gruntEnemy, new Vector3(-7.5f, -0.83f, 4f), Quaternion.identity);
         Instantiate(this.Boss, new Vector3(4.4f, -0.83f, 7f), Quaternion.identity);
-        Instantiate(this.Boss, new Vector3(-3.6f, -0.83f, 7f), Quaternion.identity);
         this.phase++;
     }
 
@@ -65,14 +65,17 @@ public class FunkPhaseManager : MonoBehaviour
         Instantiate(this.gruntEnemy, new Vector3(8f, -0.83f, 6f), Quaternion.identity);
         Instantiate(this.gruntEnemy, new Vector3(8f, -0.83f, 8f), Quaternion.identity);
         Instantiate(this.Boss, new Vector3(0.4f, -0.83f, 7f), Quaternion.identity);
+        Instantiate(this.Boss, new Vector3(0.4f, -0.83f, 7f), Quaternion.identity);
         this.phase++;
     }
 
     void PhaseThreeStart()
     {
         Instantiate(this.gruntEnemy, new Vector3(8f, -0.83f, 4f), Quaternion.identity);
+        Instantiate(this.gruntEnemy, new Vector3(8f, -0.83f, 5f), Quaternion.identity);
         Instantiate(this.gruntEnemy, new Vector3(8f, -0.83f, 6f), Quaternion.identity);
         Instantiate(this.gruntEnemy, new Vector3(-7.5f, -0.83f, 4f), Quaternion.identity);
+        Instantiate(this.gruntEnemy, new Vector3(-7.5f, -0.83f, 5f), Quaternion.identity);
         Instantiate(this.gruntEnemy, new Vector3(-7.5f, -0.83f, 6f), Quaternion.identity);
         Instantiate(this.Boss, new Vector3(0.4f, -0.83f, 7f), Quaternion.identity);
         Instantiate(this.Boss, new Vector3(4.4f, -0.83f, 7f), Quaternion.identity);
@@ -82,7 +85,7 @@ public class FunkPhaseManager : MonoBehaviour
 
     void PhaseCheck()
     {
-        if(EnemyManager.EnemyCount <= 1 && this.timer >= 3.0f)
+        if (EnemyManager.EnemyCount <= 1 && this.timer >= 3.0f)
         {
             Debug.Log("Moving to Phase " + this.phase);
             this.timer = 0;
