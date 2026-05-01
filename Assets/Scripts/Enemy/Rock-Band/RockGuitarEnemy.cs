@@ -13,8 +13,9 @@ namespace Cadenza
         new protected const int meleeDistance = 1;
         new protected const int rangedDistance = 30;
         private int phase;
-        private float rangedTimer = 0.0f;
+        private int rangedTimer = 0;
         private bool combatStarted = false;
+        private int meleeTimer;
         #endregion
 
         // Do this in Start so that EnemyManager is initialized.
@@ -34,12 +35,20 @@ namespace Cadenza
             this.speed = 1.5f;
             this.isAttacking = false;
             this.isActionable = true;
-            this.rangedTimer = 0.0f;
+            this.rangedTimer = 0;
             this.phase = 4 - EnemyManager.EnemyCount;
             this.curAngle = 100;
             this.combatStarted = true;
+            this.meleeTimer = 0;
             this.maxHealth *= PlayerSystem.PlayerCount;
             this.currentHealth *= PlayerSystem.PlayerCount;
+            BeatSystem.BeatPlayed += this.onBeat;
+        }
+
+        private void onBeat()
+        {
+            this.meleeTimer++;
+            this.rangedTimer++;
         }
 
         override protected void FixedUpdate()
@@ -71,17 +80,13 @@ namespace Cadenza
         {
             if (this.combatStarted)
             {
-                if (this.curState != EnemyState.Ranged)
+                if (this.curState == EnemyState.Ranged)
                 {
-                    this.rangedTimer += Time.deltaTime;
+                    this.rangedTimer = 0;
                 }
-                else
+                if (this.rangedTimer >= 10)
                 {
-                    this.rangedTimer = 0.0f;
-                }
-                if (this.rangedTimer >= 10.0f)
-                {
-                    this.rangedTimer = 0.0f;
+                    this.rangedTimer = 0;
                     this.RangedAttack();
                 }
             }
@@ -176,7 +181,7 @@ namespace Cadenza
                 this.curState = EnemyState.Dead;
             }
 
-            if (this.curState == EnemyState.Melee)
+            if (this.curState == EnemyState.Melee && this.meleeTimer == 1)
             {
                 this.MeleeAttack();
             }
@@ -184,6 +189,7 @@ namespace Cadenza
             {
                 this.isAttacking = false;
             }
+            this.meleeTimer = 0;
         }
 
         override protected void RangedState()

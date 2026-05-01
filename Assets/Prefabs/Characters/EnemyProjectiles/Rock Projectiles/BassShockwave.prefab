@@ -201,7 +201,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 0
-  m_Color: {r: 0.735849, g: 0.5469616, b: 0.33668566, a: 1}
+  m_Color: {r: 0.7019608, g: 0.5411765, b: 0.6784314, a: 1}
   m_Intensity: 20
   m_Range: 5
   m_SpotAngle: 112.22025
@@ -328,7 +328,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 0
-  m_Color: {r: 0.735849, g: 0.5469616, b: 0.33668566, a: 1}
+  m_Color: {r: 0.7019608, g: 0.5411765, b: 0.6784314, a: 1}
   m_Intensity: 20
   m_Range: 4
   m_SpotAngle: 104.083885
@@ -556,7 +556,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 0
-  m_Color: {r: 0.735849, g: 0.5469616, b: 0.33668566, a: 1}
+  m_Color: {r: 0.7019608, g: 0.5411765, b: 0.6784314, a: 1}
   m_Intensity: 20
   m_Range: 3
   m_SpotAngle: 94.32025
@@ -711,6 +711,18 @@ PrefabInstance:
     - target: {fileID: 7919850715758435701, guid: 604c3055ea6d84a44b6a9e47765513a9, type: 3}
       propertyPath: playOnAwake
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919850715758435701, guid: 604c3055ea6d84a44b6a9e47765513a9, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.6784314
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919850715758435701, guid: 604c3055ea6d84a44b6a9e47765513a9, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.5411765
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919850715758435701, guid: 604c3055ea6d84a44b6a9e47765513a9, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.7019608
       objectReference: {fileID: 0}
     - target: {fileID: 8564160281540680511, guid: 604c3055ea6d84a44b6a9e47765513a9, type: 3}
       propertyPath: playOnAwake

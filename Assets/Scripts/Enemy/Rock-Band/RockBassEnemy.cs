@@ -14,7 +14,7 @@ namespace Cadenza
         new protected const int meleeDistance = 1;
         new protected const int rangedDistance = 30;
         private int phase;
-        private int specialCooldown;
+        private int meleeTimer;
         private int beatCount;
         private bool specialOut;
         private bool currentlyCharging;
@@ -38,7 +38,7 @@ namespace Cadenza
             this.speed = 2.0f;
             this.isAttacking = false;
             this.isActionable = true;
-            this.specialCooldown = 0;
+            this.meleeTimer = 0;
             this.phase = 4 - EnemyManager.EnemyCount;
             this.beatCount = 0;
             this.specialOut = false;
@@ -53,6 +53,7 @@ namespace Cadenza
         private void onBeat()
         {
             this.beatCount++;
+            this.meleeTimer++;
         }
 
         override protected void FixedUpdate()
@@ -152,8 +153,6 @@ namespace Cadenza
             if (this.isAttacking)
                 return;
 
-            this.specialCooldown++;
-
             this.FindNearestPlayerDist();
             if (this.nearestPlayerDist > rangedDistance)
             {
@@ -169,12 +168,12 @@ namespace Cadenza
                 this.curState = EnemyState.Dead;
             }
 
-            if (UnityEngine.Random.Range(1, 100) <= 20 && this.beatCount >= 4)
+            if (UnityEngine.Random.Range(1, 100) <= 20 && this.beatCount >= 4 && this.meleeTimer == 1)
             {
                 this.beatCount = 0;
                 this.curState = EnemyState.Special;
             }
-            if (this.curState == EnemyState.Melee)
+            if (this.curState == EnemyState.Melee && this.meleeTimer == 1)
             {
                 this.MeleeAttack();
             }
@@ -182,6 +181,7 @@ namespace Cadenza
             {
                 this.isAttacking = false;
             }
+            this.meleeTimer = 0;
         }
 
         override protected void SpecialState()
@@ -205,6 +205,7 @@ namespace Cadenza
                         break;
                 }
                 this.specialOut = true;
+                this.rb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             }
             if(this.beatCount == 1 && this.currentlyCharging == false)
             {
@@ -212,7 +213,7 @@ namespace Cadenza
                 this.anim.SetTrigger("LightAttack");
                 this.chargeParticles.SetActive(true);
             }
-            else if (this.beatCount == 3)
+            else if (this.beatCount == 3 && this.currentlyCharging == true)
             {
                 this.chargeParticles.SetActive(false);
                 this.currentlyCharging = false;
@@ -222,6 +223,7 @@ namespace Cadenza
             {
                 this.beatCount = 0;
                 this.specialOut = false;
+                this.rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
                 if (this.meleeState)
                 {
                     this.meleeState = true;

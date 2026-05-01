@@ -202,7 +202,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 0
-  m_Color: {r: 1, g: 0.9676694, b: 0.41037738, a: 1}
+  m_Color: {r: 0, g: 0.42352942, b: 1, a: 1}
   m_Intensity: 15
   m_Range: 4
   m_SpotAngle: 113.01818
@@ -421,16 +421,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9081951288355444862, guid: a9f7f1f42744cee4db9f1f0850feb782, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081951288355444862, guid: a9f7f1f42744cee4db9f1f0850feb782, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.x
-      value: 0.7490197
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9081951288355444862, guid: a9f7f1f42744cee4db9f1f0850feb782, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.y
-      value: 0.51941806
+      value: 0.42352942
       objectReference: {fileID: 0}
     - target: {fileID: 9081951288355444862, guid: a9f7f1f42744cee4db9f1f0850feb782, type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.z
-      value: 0.038864233
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -504,6 +508,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7919850715758435701, guid: df7f65c8eb6791042856fa58d48da273, type: 3}
       propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919850715758435701, guid: df7f65c8eb6791042856fa58d48da273, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919850715758435701, guid: df7f65c8eb6791042856fa58d48da273, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.42352942
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919850715758435701, guid: df7f65c8eb6791042856fa58d48da273, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8564160281540680511, guid: df7f65c8eb6791042856fa58d48da273, type: 3}
