@@ -17,6 +17,5 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="c_Accuracy" class="accuracy_markers"/>
-        <ui:Label text="DOWNED!" name="txt_Faint" class="faint_text"/>
     </ui:VisualElement>
 </ui:UXML>
