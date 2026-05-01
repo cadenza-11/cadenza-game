@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 804738fac3a973e4795496ec6de2998d
+guid: 6a64a99f3409c2849a0a893ad0710cf0
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,95 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: zoomer_land_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 2160
-        width: 1080
-        height: 1080
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 57608c561c754334aacb433e7deb3572
-      internalID: -572854971
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: zoomer_land_1
-      rect:
-        serializedVersion: 2
-        x: 1080
-        y: 2160
-        width: 1080
-        height: 1080
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f411d60ad3052cb4db14aec00dbeb770
-      internalID: -998178289
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: zoomer_land_2
-      rect:
-        serializedVersion: 2
-        x: 2160
-        y: 2160
-        width: 1080
-        height: 1080
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 22b4a881005771b4498a0512f2ece9ee
-      internalID: -372577151
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: zoomer_land_3
-      rect:
-        serializedVersion: 2
-        x: 3240
-        y: 2160
-        width: 1080
-        height: 1080
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 309e268241a4dd545b5ef123b33149b1
-      internalID: 668342913
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: zoomer_land_4
+      name: fan_swing_0
       rect:
         serializedVersion: 2
         x: 0
@@ -213,14 +125,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 822ae414101eccc47bf85da8f1bdba73
-      internalID: 1185268805
+      spriteID: 532299c840a41ce42af444a15690c932
+      internalID: -412135534
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: zoomer_land_5
+      name: fan_swing_1
       rect:
         serializedVersion: 2
         x: 1080
@@ -235,58 +147,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1c665256f44a5514d876a9e6cad31747
-      internalID: -407743353
+      spriteID: ef52b2c60a34dba4399187d079901c8a
+      internalID: -1732973202
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: zoomer_land_6
-      rect:
-        serializedVersion: 2
-        x: 2160
-        y: 1080
-        width: 1080
-        height: 1080
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c648b09d05f48864ea7103c3aad99f94
-      internalID: -1632458560
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: zoomer_land_7
-      rect:
-        serializedVersion: 2
-        x: 3240
-        y: 1080
-        width: 1080
-        height: 1080
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 25215adb614f78e40a52e2ebd81a3c01
-      internalID: 1548435505
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: zoomer_land_8
+      name: fan_swing_2
       rect:
         serializedVersion: 2
         x: 0
@@ -301,14 +169,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5580eea3a2a85c348a90ac6c43d802b5
-      internalID: -1113676769
+      spriteID: 0aedef45cc3135b46add7f3f39482d36
+      internalID: -1178436095
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: zoomer_land_9
+      name: fan_swing_3
       rect:
         serializedVersion: 2
         x: 1080
@@ -323,8 +191,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9a6f95979a4e84e48ab2c79a76e11d1c
-      internalID: 1322394035
+      spriteID: 29f0698b6d046a446a0085d00eeb8c85
+      internalID: -878081086
       vertices: []
       indices: 
       edges: []
@@ -333,7 +201,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: b0eb0c5a481034b49b37d727a8140a33
+    spriteID: 6dc749c0aeec7014cb8f10a4f3414efd
     internalID: 0
     vertices: []
     indices: 
@@ -343,18 +211,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":3.0},"gridSpriteSize":{"x":1080.0,"y":1080.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":2.0,"y":2.0},"gridSpriteSize":{"x":1080.0,"y":1080.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      zoomer_land_0: -572854971
-      zoomer_land_1: -998178289
-      zoomer_land_2: -372577151
-      zoomer_land_3: 668342913
-      zoomer_land_4: 1185268805
-      zoomer_land_5: -407743353
-      zoomer_land_6: -1632458560
-      zoomer_land_7: 1548435505
-      zoomer_land_8: -1113676769
-      zoomer_land_9: 1322394035
+      fan_swing_0: -412135534
+      fan_swing_1: -1732973202
+      fan_swing_2: -1178436095
+      fan_swing_3: -878081086
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
