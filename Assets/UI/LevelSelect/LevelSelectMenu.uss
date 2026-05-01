@@ -82,7 +82,6 @@
     padding-right: 24px;
     padding-bottom: 24px;
     padding-left: 24px;
-    flex-grow: 1;
     margin-right: 8px;
     margin-left: 8px;
     border-left-color: rgba(255, 255, 255, 0.78);
@@ -93,9 +92,13 @@
     border-right-width: 4px;
     border-bottom-width: 4px;
     border-left-width: 4px;
-    flex-shrink: 0;
     align-items: stretch;
-    aspect-ratio: 0.6;
+    flex-shrink: 1;
+    flex-grow: 1;
+    align-self: center;
+    align-content: center;
+    aspect-ratio: auto;
+    width: 100%;
 }
 
 .level-card.is-leading {
@@ -117,11 +120,12 @@
     border-top-color: rgba(255, 255, 255, 0.78);
     border-bottom-color: rgba(255, 255, 255, 0.78);
     background-image: none;
-    flex-shrink: 0;
     aspect-ratio: 1;
     align-self: center;
     -unity-background-scale-mode: scale-and-crop;
     max-height: 55%;
+    flex-shrink: 1;
+    max-width: 100%;
 }
 
 .level-card__header {

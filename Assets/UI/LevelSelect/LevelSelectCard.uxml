@@ -1,7 +1,7 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/LevelSelect/LevelSelectMenu.uss?fileID=7433441132597879392&amp;guid=9d60e8b2338f4b6dae0119d87d785dce&amp;type=3#LevelSelectMenu"/>
-    <ui:VisualElement name="c_LevelCard" class="level-card" style="width: initial;">
-        <ui:Label text="level name" name="txt_LevelName" class="level-card__name"/>
+    <ui:VisualElement name="c_LevelCard" class="level-card" style="width: auto; max-width: 100%; flex-basis: 0;">
+        <ui:Label text="Level Name" name="txt_LevelName" class="level-card__name" style="flex-shrink: 1; min-width: 0; white-space: pre-wrap;"/>
         <ui:VisualElement name="c_VoteTrack" class="level-card__track" style="margin-bottom: 16px;">
             <ui:VisualElement name="c_VoteSlots" class="level-card__slots"/>
         </ui:VisualElement>
