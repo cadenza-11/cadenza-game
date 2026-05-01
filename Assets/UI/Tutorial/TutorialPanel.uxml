@@ -1,0 +1,34 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/UI/Tutorial/TutorialPanel.uss?fileID=7433441132597879392&amp;guid=f081b58ee2914af6ab5e951dc1ed7d60&amp;type=3#TutorialPanel"/>
+    <ui:VisualElement name="root" style="flex-grow: 1;">
+        <ui:VisualElement name="c_TutorialPanel" class="tutorial-panel" style="bottom: 175px;">
+            <ui:VisualElement name="p_Attack" class="tutorial-page">
+                <ui:Label text="Press" class="tutorial-copy"/>
+                <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_space.png?fileID=2800000&amp;guid=a4ab0592a93d0e9408679ffdb87121cc&amp;type=3#keyboard_space" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_button_color_a.png?fileID=2800000&amp;guid=01723e9abcb249a43a8735bd04645fea&amp;type=3#xbox_button_color_a" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_button_color_cross.png?fileID=2800000&amp;guid=d7c84fdd765414d449a1e14c7fd8255d&amp;type=3#playstation_button_color_cross" shown-controls="All" pulse-to-beat="true" hint-size="52" class="tutorial-hint"/>
+                <ui:Label text="to Attack!" class="tutorial-copy"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="p_Charge" class="tutorial-page">
+                <ui:Label text="Hold and release" class="tutorial-copy"/>
+                <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_e.png?fileID=2800000&amp;guid=2ce128264f24d5341b932fc084371379&amp;type=3#keyboard_e" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_button_color_b.png?fileID=2800000&amp;guid=65e57680d29b27a4bae7727cf8d30dcd&amp;type=3#xbox_button_color_b" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_button_color_circle.png?fileID=2800000&amp;guid=610e05c1b240a474893dfe7913f8b633&amp;type=3#playstation_button_color_circle" shown-controls="All" pulse-to-beat="true" hint-size="52" class="tutorial-hint"/>
+                <ui:Label text="on beat for a heavy attack!" class="tutorial-copy"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="p_Block" class="tutorial-page">
+                <ui:Label text="Hold" class="tutorial-copy"/>
+                <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_ctrl.png?fileID=2800000&amp;guid=490862ac6d28e6c4498a5d4aab3c8946&amp;type=3#keyboard_ctrl" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_lt.png?fileID=2800000&amp;guid=3dae36053c1678944adafc6e9f0ffaed&amp;type=3#xbox_lt" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_trigger_l2.png?fileID=2800000&amp;guid=67b5665c92fe18e4aa30e158b1b863f9&amp;type=3#playstation_trigger_l2" shown-controls="All" pulse-to-beat="true" hint-size="52" class="tutorial-hint"/>
+                <ui:Label text="or" class="tutorial-copy tutorial-copy-small"/>
+                <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_ctrl.png?fileID=2800000&amp;guid=490862ac6d28e6c4498a5d4aab3c8946&amp;type=3#keyboard_ctrl" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_rt.png?fileID=2800000&amp;guid=38e694bb2c0756144ae1e6f4cfb0e8e4&amp;type=3#xbox_rt" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_trigger_r2.png?fileID=2800000&amp;guid=cabe411d69d61b242aec1d23681a7824&amp;type=3#playstation_trigger_r2" shown-controls="All" pulse-to-beat="true" hint-size="52" class="tutorial-hint"/>
+                <ui:Label text="to Block!" class="tutorial-copy"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="p_Parry" class="tutorial-page">
+                <ui:Label text="Block" class="tutorial-copy"/>
+                <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_ctrl.png?fileID=2800000&amp;guid=490862ac6d28e6c4498a5d4aab3c8946&amp;type=3#keyboard_ctrl" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_lt.png?fileID=2800000&amp;guid=3dae36053c1678944adafc6e9f0ffaed&amp;type=3#xbox_lt" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_trigger_l2.png?fileID=2800000&amp;guid=67b5665c92fe18e4aa30e158b1b863f9&amp;type=3#playstation_trigger_l2" shown-controls="All" pulse-to-beat="true" hint-size="52" class="tutorial-hint"/>
+                <ui:Label text="on beat to parry incoming damage!" class="tutorial-copy"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="p_TeamAttack" class="tutorial-page">
+                <ui:Label text="Press" class="tutorial-copy"/>
+                <Cadenza.InputHint keyboard-hint="project://database/Assets/Art/Input%20Hints/KeyboardMouse/keyboard_q.png?fileID=2800000&amp;guid=9f938227853b3fd46bb0ed0ea3e2ad29&amp;type=3#keyboard_q" xbox-hint="project://database/Assets/Art/Input%20Hints/Xbox/xbox_rb.png?fileID=2800000&amp;guid=c821bc3b15b214e409056a9d4c71ca49&amp;type=3#xbox_rb" p-s-hint="project://database/Assets/Art/Input%20Hints/Playstation/playstation_trigger_l2_alternative.png?fileID=2800000&amp;guid=2d3523e123b03f74ab0da72c287031f5&amp;type=3#playstation_trigger_l2_alternative" shown-controls="All" pulse-to-beat="true" hint-size="52" class="tutorial-hint"/>
+                <ui:Label text="when the team meter is full to start a team attack!" class="tutorial-copy"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,64 @@
+.tutorial-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 148px;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+    padding-right: 24px;
+    padding-bottom: 0;
+    padding-left: 24px;
+}
+
+.tutorial-page {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 92px;
+    padding-top: 14px;
+    padding-right: 28px;
+    padding-bottom: 14px;
+    padding-left: 28px;
+    background-color: rgba(0, 0, 0, 0.62);
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-top-color: rgba(255, 255, 255, 0.7);
+    border-right-color: rgba(255, 255, 255, 0.7);
+    border-bottom-color: rgba(255, 255, 255, 0.7);
+    border-left-color: rgba(255, 255, 255, 0.7);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.tutorial-copy {
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 3px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    font-size: 38px;
+    margin-top: 0;
+    margin-right: 12px;
+    margin-bottom: 0;
+    margin-left: 12px;
+}
+
+.tutorial-copy-small {
+    font-size: 30px;
+    margin-right: 4px;
+    margin-left: 4px;
+}
+
+.tutorial-hint {
+    margin-top: 0;
+    margin-right: 8px;
+    margin-bottom: 0;
+    margin-left: 8px;
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+}
