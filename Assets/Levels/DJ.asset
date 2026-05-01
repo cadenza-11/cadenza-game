@@ -23,7 +23,7 @@ MonoBehaviour:
       Data3: 690888860
       Data4: 382254968
     Path: event:/MUS_DJ
-  PreviewImage: {fileID: 2800000, guid: 17e1544d005d749ca85110d1b928e307, type: 3}
+  PreviewImage: {fileID: 2800000, guid: 2bbb1f4fa80b72846a815ac27b5bd2f0, type: 3}
   Phases:
   - Index: 0
     FMODMarkerName: Song_Onslaught-1
