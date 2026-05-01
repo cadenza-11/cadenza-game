@@ -51,7 +51,6 @@ namespace Cadenza
         private class ActionButtons
         {
             public VisualElement Container;
-            public Button NextButton;
             public Button RetryButton;
             public Button LeaderboardButton;
             public Button MainMenuButton;
@@ -64,7 +63,6 @@ namespace Cadenza
             // Grab references to UI elements.
             this.resultsPanel = this.root.Q<VisualElement>("c_Panel");
             this.actionButtons.Container = this.root.Q<VisualElement>("c_ActionButtons");
-            this.actionButtons.NextButton = this.root.Q<Button>("b_Next");
             this.actionButtons.RetryButton = this.root.Q<Button>("b_Retry");
             this.actionButtons.LeaderboardButton = this.root.Q<Button>("b_Leaderboard");
             this.actionButtons.MainMenuButton = this.root.Q<Button>("b_MainMenu");
@@ -75,7 +73,6 @@ namespace Cadenza
                 this.resultsMusicEvent,
                 this.tweenDuration);
 
-            this.actionButtons.NextButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.RedirectToBackstage());
             this.actionButtons.RetryButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.RestartLevel());
             this.actionButtons.LeaderboardButton.RegisterCallback<NavigationSubmitEvent>(_ => this.ShowLeaderboard());
             this.actionButtons.MainMenuButton.RegisterCallback<NavigationSubmitEvent>(_ => GameManager.ExitToPregame());
@@ -260,13 +257,11 @@ namespace Cadenza
 
             if (this.gameResult == GameManager.GameResult.Victory)
             {
-                this.actionButtons.NextButton.style.display = DisplayStyle.Flex;
                 this.actionButtons.RetryButton.style.display = DisplayStyle.None;
                 this.actionButtons.MainMenuButton.style.display = DisplayStyle.Flex;
             }
             else if (this.gameResult == GameManager.GameResult.Loss)
             {
-                this.actionButtons.NextButton.style.display = DisplayStyle.None;
                 this.actionButtons.RetryButton.style.display = DisplayStyle.Flex;
                 this.actionButtons.MainMenuButton.style.display = DisplayStyle.Flex;
             }

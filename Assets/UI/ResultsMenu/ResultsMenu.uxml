@@ -75,7 +75,6 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="c_ActionButtons" style="display: none; background-color: rgba(0, 0, 0, 0.67); flex-grow: 1; justify-content: center;">
-        <ui:Button text="Next level" name="b_Next" class="action_button"/>
         <ui:Button text="Retry level" name="b_Retry" class="action_button"/>
         <ui:Button text="View Leaderboard" name="b_Leaderboard" class="action_button"/>
         <ui:Button text="Return to main menu" name="b_MainMenu" class="action_button"/>
