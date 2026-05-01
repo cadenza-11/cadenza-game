@@ -29,6 +29,8 @@ namespace Cadenza
             GameManager.PhaseEntered += this.OnPhaseEntered;
             GameManager.PhaseExited += this.OnPhaseExit;
             BeatSystem.BeatPlayed += this.onBeat;
+            this.maxHealth = 50 * PlayerSystem.PlayerCount;
+            this.currentHealth = this.maxHealth;
         }
 
         protected override void OnDestroy()
@@ -258,7 +260,7 @@ namespace Cadenza
                 }
                 else if(this.attackBox.GetHasCollided())
                 {
-                     this.anim.SetBool("IsMove", false);
+                    this.anim.SetBool("IsMove", false);
                     Debug.Log("Collided");
                     this.hasCollided = true;
                     this.pillarLerpTime = 0;
