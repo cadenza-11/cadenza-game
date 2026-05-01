@@ -12,6 +12,7 @@ namespace Cadenza
         [SerializeField] private int moveDir = -1;
         private EnemyState mainState;
         private float stateTimer;
+        private int meleeTimer;
 
         void Start()
         {
@@ -24,7 +25,14 @@ namespace Cadenza
             base.Initialize();
             this.moveTimer = 0;
             this.stateTimer = 0;
+            this.meleeTimer = 0;
+            BeatSystem.BeatPlayed += this.onBeat;
             this.RandomMainState();
+        }
+
+        private void onBeat()
+        {
+            this.meleeTimer++;
         }
 
         private void RandomMainState()
@@ -86,13 +94,17 @@ namespace Cadenza
             {
                 this.curState = EnemyState.Idle;
             }
-            this.MeleeAttack();
+            if(this.meleeTimer == 1)
+            {
+                this.MeleeAttack();
+            }
             this.moveTimer -= Time.deltaTime;
 
             if (this.currentHealth <= 0)
             {
                 this.curState = EnemyState.Dead;
             }
+            this.meleeTimer = 0;
         }
 
         protected override void FixedUpdate()

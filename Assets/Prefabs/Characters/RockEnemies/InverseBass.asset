@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: InverseBass
   m_EditorClassIdentifier: Assembly-CSharp::Cadenza.Colorway
   Name: Inverse Bassist
-  PrimaryColor: {r: 0.96862745, g: 0.78431374, b: 0.6509804, a: 0}
-  SecondaryColor: {r: 0.7019608, g: 0.5411765, b: 0.6784314, a: 0}
-  TertiaryColor: {r: 0.4745098, g: 0.2784314, b: 0.18039216, a: 0}
+  PrimaryColor: {r: 0.96862745, g: 0.78431374, b: 0.6509804, a: 1}
+  SecondaryColor: {r: 0.7019608, g: 0.5411765, b: 0.6784314, a: 1}
+  TertiaryColor: {r: 0.4745098, g: 0.2784314, b: 0.18039216, a: 1}
   DisplayImage: {fileID: 0}
