@@ -222,7 +222,7 @@ namespace Cadenza
                     else
                     {
                         this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x,
-                                Mathf.Lerp(this.pillars[i].transform.position.y, -2.0f, this.pillarLerpTime/2.0f), 
+                                Mathf.Lerp(this.pillars[i].transform.position.y, -3.5f, this.pillarLerpTime/2.0f), 
                                 this.pillars[i].transform.position.z);
                     }
                 }
@@ -338,7 +338,7 @@ namespace Cadenza
                 for(int i = 0; i < 11; i++)
                 {
                     this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x,
-                                Mathf.Lerp(this.pillars[i].transform.position.y, -2.0f, this.pillarLerpTime/2.0f), 
+                                Mathf.Lerp(this.pillars[i].transform.position.y, -3.5f, this.pillarLerpTime/2.0f), 
                                 this.pillars[i].transform.position.z);
                 }
                 this.pillarLerpTime += Time.deltaTime;
@@ -360,7 +360,7 @@ namespace Cadenza
             for(int i = 0; i < 11; i++)
             {
                 this.pillars[i].transform.position = new Vector3(this.pillars[i].transform.position.x,
-                                Mathf.Lerp(this.pillars[i].transform.position.y, -2.0f, this.pillarLerpTime/2.0f), 
+                                Mathf.Lerp(this.pillars[i].transform.position.y, -3.5f, this.pillarLerpTime/2.0f), 
                                 this.pillars[i].transform.position.z);
             }
 
