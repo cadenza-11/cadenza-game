@@ -27965,6 +27965,10 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1009994784907975596, guid: 2108139b1ca52f1499c39036f069e533, type: 3}
+      propertyPath: projectile
+      value: 
+      objectReference: {fileID: 2973747285425476140, guid: 48f8e4d8da302d0458cbd13ba1fed16e, type: 3}
+    - target: {fileID: 1009994784907975596, guid: 2108139b1ca52f1499c39036f069e533, type: 3}
       propertyPath: currentHealth
       value: 100
       objectReference: {fileID: 0}

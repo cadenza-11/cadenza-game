@@ -24,7 +24,7 @@ public class DanceShooterProjectile : MonoBehaviour
     void FixedUpdate()
     {
         this.timer += Time.deltaTime;
-        if(this.timer <= 0.5f)
+        if(this.timer <= 0.35f)
         {
             this.p3 = this.target.Character.transform.position;
             this.CalculateCurvePoints(this.p0, this.p3, out this.p1, out this.p2);
