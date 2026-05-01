@@ -6,13 +6,13 @@
             <ui:VisualElement name="c_PlayerInfoRight" class="indiv_info">
                 <ui:Label text="player name" name="update_PlayerName" class="indiv_name"/>
                 <ui:Label text="Instrument" name="update_Instrument" class="indiv_instrument"/>
-                <ui:Label text="1000000" name="update_TotalScore" style="position: absolute; bottom: 10px;"/>
+                <ui:Label text="0" name="update_TotalScore" style="position: absolute; bottom: 10px;"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="c_Stats" class="indiv_stats">
             <ui:VisualElement name="c_ScoringSys" style="flex-grow: 1; width: 100%;">
                 <ui:VisualElement name="stat_Streak" class="indiv_stat_line">
-                    <ui:Label text="Max Streak" name="txt_HighestStreak"/>
+                    <ui:Label text="Hits" name="txt_HighestStreak"/>
                     <ui:VisualElement name="spacer" class="score_spacer"/>
                     <ui:Label text="0" name="update_HighestStreak"/>
                 </ui:VisualElement>
