@@ -25,6 +25,8 @@ namespace Cadenza
             GameManager.PhaseEntered += this.OnPhaseEntered;
             GameManager.PhaseExited += this.OnPhaseExit;
             BeatSystem.BeatPlayed += this.onBeat;
+            this.maxHealth = 50 * PlayerSystem.PlayerCount;
+            this.currentHealth = this.maxHealth;
         }
 
         protected override void OnDestroy()

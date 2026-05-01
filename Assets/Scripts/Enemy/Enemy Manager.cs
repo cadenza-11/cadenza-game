@@ -86,7 +86,7 @@ namespace Cadenza
         public static void GruntPhase()
         {
             //chooses a random number between 8 and 15 for the number of grunts spawned
-            for(int i = 0; i < Random.Range(8, 16); i++)
+            for(int i = 0; i < Random.Range(2 * PlayerSystem.PlayerCount, 4 * PlayerSystem.PlayerCount); i++)
             {
                 Vector3 position = new Vector3(Random.Range(-7.0f, 7.0f), 6, Random.Range(1.0f, 10.0f));
                 Instantiate(singleton.gruntPrefab, position, Quaternion.identity);
