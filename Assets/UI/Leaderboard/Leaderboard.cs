@@ -79,12 +79,16 @@ public class Leaderboard : UIPanel, IInteractable
         if (row == null)
             return;
 
-        string playerClassText = TeamSystem.AvailableClasses != null &&
-            TeamSystem.AvailableClasses.TryGetCharacterByID(playerDef.ClassID, out var characterClass)
-                ? $" ({characterClass.Name})"
-                : string.Empty;
+        var portrait = row.Q<VisualElement>("player-portrait");
+        if (portrait != null &&
+            TeamSystem.AvailableClasses != null &&
+            TeamSystem.AvailableClasses.TryGetCharacterByID(playerDef.ClassID, out var characterClass) &&
+            characterClass.HeadshotPortrait != null)
+        {
+            portrait.style.backgroundImage = characterClass.HeadshotPortrait;
+        }
 
-        SetLabelText(row, "player-name", $"{playerDef.Name}{playerClassText}");
+        SetLabelText(row, "player-name", playerDef.Name);
         SetLabelText(row, "player-score", $"{playerResult.ScoreTotal:F2}");
         SetLabelText(row, "player-score-label", "score");
         SetLabelText(row, "player-bad", $"Bad: {CreateScoreClassPercentageText(playerResult, ScoreClass.Bad)}");
@@ -106,6 +110,7 @@ public class Leaderboard : UIPanel, IInteractable
         SetLabelText(row, "player-perfect", string.Empty);
         SetLabelText(row, "player-deaths", string.Empty);
         SetLabelText(row, "player-hits", string.Empty);
+        ClearBackgroundImage(row, "player-portrait");
     }
 
     private static string CreateScoreClassPercentageText(ResultsDef playerResult, ScoreClass scoreClass)
@@ -122,6 +127,13 @@ public class Leaderboard : UIPanel, IInteractable
         var label = container.Q<Label>(labelName);
         if (label != null)
             label.text = text;
+    }
+
+    private static void ClearBackgroundImage(VisualElement container, string elementName)
+    {
+        var element = container.Q<VisualElement>(elementName);
+        if (element != null)
+            element.style.backgroundImage = StyleKeyword.None;
     }
 
     public void OnInteract(Player player)
