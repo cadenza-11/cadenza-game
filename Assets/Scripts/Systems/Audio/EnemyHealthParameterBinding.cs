@@ -7,7 +7,7 @@ namespace Cadenza
     {
         [SerializeField]
         [Tooltip("Global FMOD parameter to drive with this enemy's normalized health.")]
-        private string parameterName;
+        public string parameterName;
 
         private Enemy enemy;
         private float lastSentValue = float.NaN;

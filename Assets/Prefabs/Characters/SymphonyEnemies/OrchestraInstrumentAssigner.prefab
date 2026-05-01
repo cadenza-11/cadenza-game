@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7970583323110153256
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4422878219369841313}
+  - component: {fileID: 1826857797638373667}
+  m_Layer: 0
+  m_Name: OrchestraInstrumentAssigner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4422878219369841313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7970583323110153256}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.45266, y: 7.13828, z: 10.94}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1826857797638373667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7970583323110153256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78d4615ac01ef45d4930a219246239f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  instrumentTypes:
+  - FMODParameterName: 
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 3ababb4002b33f840a03121c4c2efd5e, type: 3}
+  - FMODParameterName: 
+    InstrumentPrefab: {fileID: 919132149155446097, guid: 33f08e5add5a5664d9c48dd40ca16eda, type: 3}
+  - FMODParameterName: 
+    InstrumentPrefab: {fileID: 919132149155446097, guid: bd2fc34376d0c8840819f132aba6aaf3, type: 3}
+  - FMODParameterName: 
+    InstrumentPrefab: {fileID: 919132149155446097, guid: f2a2cd53895c1aa4498edf9649944ee5, type: 3}

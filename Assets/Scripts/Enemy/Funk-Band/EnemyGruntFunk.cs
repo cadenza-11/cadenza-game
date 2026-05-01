@@ -8,6 +8,7 @@ namespace Cadenza
     public class EnemyGruntFunk : Enemy
     {
         [SerializeField] private float moveTimer = -1;
+        [SerializeField] public GameObject handBone;
         private bool continueMelee;
         [SerializeField] private int moveDir = -1;
         private EnemyState mainState;
@@ -28,6 +29,8 @@ namespace Cadenza
             this.meleeTimer = 0;
             BeatSystem.BeatPlayed += this.onBeat;
             this.RandomMainState();
+
+            OrchestraInstrumentAssigner.AssignInstrument(this);
         }
 
         private void onBeat()
@@ -94,7 +97,7 @@ namespace Cadenza
             {
                 this.curState = EnemyState.Idle;
             }
-            if(this.meleeTimer == 1)
+            if (this.meleeTimer == 1)
             {
                 this.MeleeAttack();
             }
@@ -115,7 +118,7 @@ namespace Cadenza
         private void Update()
         {
             this.stateTimer += Time.deltaTime;
-            if(this.stateTimer >= 10f)
+            if (this.stateTimer >= 10f)
             {
                 this.stateTimer = 0f;
                 this.RandomMainState();
@@ -179,7 +182,7 @@ namespace Cadenza
             this.curAngle = (float)Math.Atan2(toTarget.y, toTarget.x);
             Vector3 moveDir = new Vector3(this.speed * (float)Math.Cos(this.curAngle), this.rb.linearVelocity.y, this.speed * (float)Math.Sin(this.curAngle));
             this.FindNearestPlayerDist();
-            if(this.nearestPlayerDist >= 3f || this.nearestPlayerDist <= 1f)
+            if (this.nearestPlayerDist >= 3f || this.nearestPlayerDist <= 1f)
             {
                 this.rb.linearVelocity = moveDir;
             }
