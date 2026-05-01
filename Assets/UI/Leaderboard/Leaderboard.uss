@@ -10,20 +10,21 @@
 
 .leaderboard-root {
     flex-grow: 1;
-    background-color: var(--leaderboard-bg);
-    border-top-width: 10px;
-    border-right-width: 10px;
-    border-bottom-width: 10px;
-    border-left-width: 10px;
-    border-top-color: var(--leaderboard-border);
-    border-right-color: var(--leaderboard-border);
-    border-bottom-color: var(--leaderboard-border);
-    border-left-color: var(--leaderboard-border);
+    background-color: rgba(0, 0, 0, 0);
+    -unity-text-outline-width: 4px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    border-left-color: rgba(255, 255, 255, 0);
+    border-right-color: rgba(255, 255, 255, 0);
+    border-top-color: rgba(255, 255, 255, 0);
+    border-bottom-color: rgba(255, 255, 255, 0);
+    border-top-width: 15px;
+    border-right-width: 15px;
+    border-bottom-width: 15px;
+    border-left-width: 15px;
     padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&guid=e3265ab4bf004d28a9537516768c1c75&type=3#LiberationSans");
+    padding-right: 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
 }
 
 .leaderboard-ribbon {
@@ -88,7 +89,7 @@
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;
-    background-color: var(--leaderboard-card-bg);
+    background-color: rgba(82, 82, 82, 0.89);
 }
 
 .result-foldout {
@@ -119,11 +120,19 @@ Toggle:hover {
 }
 
 .player-stats {
+    flex-direction: row;
     margin-top: 10px;
     padding-left: 16px;
 }
 
+.player-result-slot {
+    flex-grow: 1;
+    flex-basis: 0;
+    margin-right: 8px;
+}
+
 .player-result {
+    flex-grow: 1;
     margin-bottom: 8px;
     padding-top: 8px;
     padding-right: 10px;
@@ -145,27 +154,42 @@ Toggle:hover {
 }
 
 .player-name {
-    flex-grow: 1;
     color: var(--leaderboard-text);
-    font-size: 21px;
     -unity-font-style: bold;
+    font-size: 30px;
+    -unity-text-generator: advanced;
+    flex-shrink: 1;
+    flex-grow: 0;
+    margin-bottom: 15px;
+    -unity-text-auto-size: best-fit 10px 60px;
+    -unity-text-align: upper-center;
 }
 
 .player-score {
-    color: var(--leaderboard-accent);
-    font-size: 19px;
     -unity-font-style: bold;
+    flex-shrink: 1;
+    flex-grow: 0;
+    align-self: center;
+    font-size: 80px;
+    -unity-text-generator: advanced;
+    -unity-text-auto-size: best-fit 10px 70px;
+    position: relative;
+    top: auto;
+    right: auto;
+    color: rgb(255, 255, 255);
 }
 
 .player-metrics {
     flex-direction: row;
+    flex-wrap: wrap;
     margin-top: 4px;
 }
 
 .player-metric {
     margin-right: 16px;
     color: var(--leaderboard-muted);
-    font-size: 18px;
+    font-size: 30px;
+    -unity-text-outline-width: 2px;
 }
 
 .player-empty {
@@ -177,4 +201,73 @@ Toggle:hover {
     transition: transform 1.5s;
     transition-property: translate;
     transition-timing-function: ease-out;
+}
+
+.background {
+    flex-grow: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(255, 255, 255);
+    -unity-material: url("project://database/Assets/Art/UI%20Backgrounds/Background%20Effects.shadergraph?fileID=-876546973899608171&guid=0f93fb7ab9325194bb8d5beaccf76fac&type=3#Background Effects") prop("_flipY" 1) prop("_enablePulse" 0) prop("_Background_Color" rgb(238, 104, 110)) prop("_Accent_Color" rgb(255, 72, 90)) prop("_Lightening_Color" rgb(52, 24, 190)) prop("_Halo_Color" rgb(127, 93, 159));
+    filter: blur(5);
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+
+.background-outline {
+    flex-grow: 1;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    scale: 1.01 1.01;
+    border-top-width: 15px;
+    border-right-width: 15px;
+    border-bottom-width: 15px;
+    border-left-width: 15px;
+    border-top-left-radius: 70px;
+    border-top-right-radius: 70px;
+    border-bottom-right-radius: 70px;
+    border-bottom-left-radius: 70px;
+}
+
+.score-container {
+    flex-grow: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.score-text {
+    -unity-text-align: upper-right;
+    -unity-font-style: italic;
+    color: rgba(255, 255, 255, 0.35);
+    top: -10px;
+    -unity-text-outline-width: 1px;
+}
+
+.score-label {
+    -unity-font-style: italic;
+    color: rgb(132, 132, 132);
+}
+
+.team-score {
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    font-size: 80px;
+}
+
+.team-score-container {
+    align-items: center;
+    flex-grow: 1;
 }

@@ -1,10 +1,12 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Leaderboard/Leaderboard.uss?fileID=7433441132597879392&amp;guid=3f42ba80f02f44f7ad4de0e876123bbf&amp;type=3#Leaderboard"/>
     <ui:VisualElement name="root" class="leaderboard-root">
+        <ui:VisualElement name="Background" class="background" style="filter: blur(4); border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-left-radius: 60px; border-top-right-radius: 60px; border-bottom-right-radius: 60px; border-bottom-left-radius: 60px;"/>
+        <ui:VisualElement name="Background-Outline" class="background-outline"/>
         <ui:VisualElement name="ribbon" class="leaderboard-ribbon">
             <ui:Button name="b_Exit" class="leaderboard-exit"/>
-            <ui:Label text="Past Performances" class="leaderboard-title"/>
+            <ui:Label text="Past Performances" name="" picking-mode="Ignore" class="leaderboard-title" style="position: absolute; left: 0; right: 0; -unity-text-align: upper-center;"/>
         </ui:VisualElement>
-        <ui:ScrollView name="results" scroll-deceleration-rate="0.2" vertical-scroller-visibility="AlwaysVisible" horizontal-scroller-visibility="Hidden" class="leaderboard-results"/>
+        <ui:ScrollView name="results" scroll-deceleration-rate="0.2" horizontal-scroller-visibility="Hidden" class="leaderboard-results"/>
     </ui:VisualElement>
 </ui:UXML>

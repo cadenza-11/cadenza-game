@@ -1,0 +1,20 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Leaderboard/Leaderboard.uss?fileID=7433441132597879392&amp;guid=3f42ba80f02f44f7ad4de0e876123bbf&amp;type=3#Leaderboard"/>
+    <ui:VisualElement name="player-result-line" class="player-result">
+        <ui:Label text="PlayerName" name="player-name" class="player-name"/>
+        <ui:VisualElement name="player-metrics" class="player-metrics" style="flex-direction: row;">
+            <ui:VisualElement name="description" style="flex-grow: 1;">
+                <ui:Label text="Hits:" name="player-hits" class="player-metric"/>
+                <ui:Label text="Deaths:" name="player-deaths" class="player-metric" style="margin-bottom: 16px;"/>
+                <ui:Label text="Bad:" name="player-bad" class="player-metric" style="color: rgba(255, 0, 0, 0.84);"/>
+                <ui:Label text="OK:" name="player-ok" class="player-metric" style="color: rgba(255, 147, 0, 0.84);"/>
+                <ui:Label text="Great:" name="player-great" class="player-metric" style="color: rgba(255, 229, 0, 0.84);"/>
+                <ui:Label text="Perfect:" name="player-perfect" class="player-metric" style="color: rgba(38, 255, 0, 0.84);"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="score" class="score-container">
+                <ui:Label text="80.25" name="player-score" class="player-score"/>
+                <ui:Label text="score" name="player-score-label" class="score-text"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

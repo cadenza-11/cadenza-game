@@ -74,43 +74,54 @@ public class Leaderboard : UIPanel, IInteractable
         this.Show();
     }
 
-    private VisualElement CreatePlayerStatsLine(Results.PlayerDef playerDef, ResultsDef playerResult)
+    private void PopulatePlayerStatsLine(VisualElement row, Results.PlayerDef playerDef, ResultsDef playerResult)
     {
+        if (row == null)
+            return;
+
         string playerClassText = TeamSystem.AvailableClasses != null &&
             TeamSystem.AvailableClasses.TryGetCharacterByID(playerDef.ClassID, out var characterClass)
                 ? $" ({characterClass.Name})"
                 : string.Empty;
 
-        var row = new VisualElement();
-        row.AddToClassList("player-result");
-
-        var header = new VisualElement();
-        header.AddToClassList("player-header");
-
-        var playerName = new Label($"{playerDef.Name}{playerClassText}");
-        playerName.AddToClassList("player-name");
-        header.Add(playerName);
-
-        var score = new Label($"Score: {playerResult.ScoreTotal:F2}");
-        score.AddToClassList("player-score");
-        header.Add(score);
-
-        row.Add(header);
-
-        var metrics = new VisualElement();
-        metrics.AddToClassList("player-metrics");
-        metrics.Add(this.CreateMetricLabel($"Hits: {playerResult.Hits}"));
-        metrics.Add(this.CreateMetricLabel($"Deaths: {playerResult.Deaths}"));
-        row.Add(metrics);
-
-        return row;
+        SetLabelText(row, "player-name", $"{playerDef.Name}{playerClassText}");
+        SetLabelText(row, "player-score", $"{playerResult.ScoreTotal:F2}");
+        SetLabelText(row, "player-score-label", "score");
+        SetLabelText(row, "player-bad", $"Bad: {CreateScoreClassPercentageText(playerResult, ScoreClass.Bad)}");
+        SetLabelText(row, "player-ok", $"OK: {CreateScoreClassPercentageText(playerResult, ScoreClass.OK)}");
+        SetLabelText(row, "player-great", $"Great: {CreateScoreClassPercentageText(playerResult, ScoreClass.Great)}");
+        SetLabelText(row, "player-perfect", $"Perfect: {CreateScoreClassPercentageText(playerResult, ScoreClass.Perfect)}");
+        SetLabelText(row, "player-deaths", $"Deaths: {playerResult.Deaths}");
+        SetLabelText(row, "player-hits", $"Hits: {playerResult.Hits}");
     }
 
-    private Label CreateMetricLabel(string text)
+    private static void ClearPlayerStatsLine(VisualElement row)
     {
-        var label = new Label(text);
-        label.AddToClassList("player-metric");
-        return label;
+        SetLabelText(row, "player-name", string.Empty);
+        SetLabelText(row, "player-score", string.Empty);
+        SetLabelText(row, "player-score-label", string.Empty);
+        SetLabelText(row, "player-bad", string.Empty);
+        SetLabelText(row, "player-ok", string.Empty);
+        SetLabelText(row, "player-great", string.Empty);
+        SetLabelText(row, "player-perfect", string.Empty);
+        SetLabelText(row, "player-deaths", string.Empty);
+        SetLabelText(row, "player-hits", string.Empty);
+    }
+
+    private static string CreateScoreClassPercentageText(ResultsDef playerResult, ScoreClass scoreClass)
+    {
+        float percentage = playerResult.Hits == 0
+            ? 0f
+            : (float)playerResult.GetCount(scoreClass) / playerResult.Hits * 100f;
+
+        return $"{percentage:F0}%";
+    }
+
+    private static void SetLabelText(VisualElement container, string labelName, string text)
+    {
+        var label = container.Q<Label>(labelName);
+        if (label != null)
+            label.text = text;
     }
 
     public void OnInteract(Player player)
@@ -166,31 +177,63 @@ public class Leaderboard : UIPanel, IInteractable
         int rank = 1;
         foreach (var result in this.results)
         {
+            // Fill header.
             string time = UI.GetHumanizedTime(result.Timestamp);
             string teamName = string.IsNullOrEmpty(result.TeamName) ? "Unnamed Team" : result.TeamName;
             string levelName = string.IsNullOrEmpty(result.LevelName) ? "Unnamed Level" : result.LevelName;
             var resultLine = this.resultLineAsset.CloneTree().Q<VisualElement>("result-entry");
             var foldout = resultLine.Q<Foldout>("result-foldout");
+
+            // Fill team stats.
+            var teamStats = resultLine.Q<VisualElement>("team-stats");
+            if (foldout == null || teamStats == null)
+                continue;
+
+            SetLabelText(teamStats, "team-score", $"{result.OverallScore:F2}");
+            SetLabelText(teamStats, "team-rank", ScoreSystem.GetGradeLetter(result.OverallScore));
+
+            // Fill player stats.
             var playerStats = resultLine.Q<VisualElement>("player-stats");
 
             if (foldout == null || playerStats == null)
                 continue;
 
+            var playerStatsLines = playerStats.Query<VisualElement>("player-result-slot").ToList();
+            foreach (var playerStatsLine in playerStatsLines)
+                ClearPlayerStatsLine(playerStatsLine);
+
             this.resultFoldouts.Add(foldout);
-            foldout.text = $"#{rank}. {teamName} in {levelName} ({time})";
+            foldout.text = $"#{rank}. {teamName} vs. {levelName} ({time})";
             rank++;
 
+            int playerStatsLineIndex = 0;
             foreach ((var playerDef, var playerResult) in result.PlayerResults.OrderBy(entry => entry.Key.ID))
-                playerStats.Add(this.CreatePlayerStatsLine(playerDef, playerResult));
-
-            if (playerStats.childCount == 0)
             {
-                var empty = new Label("No player stats recorded.");
-                empty.AddToClassList("player-empty");
-                playerStats.Add(empty);
+                if (playerStatsLineIndex >= playerStatsLines.Count)
+                    break;
+
+                this.PopulatePlayerStatsLine(playerStatsLines[playerStatsLineIndex], playerDef, playerResult);
+                playerStatsLineIndex++;
             }
 
             this.resultsElement.Add(resultLine);
+        }
+
+        // Keep only one foldout open at a time, close other foldouts if one is opened.
+        List<Foldout> allFoldouts = this.resultsElement.Query<Foldout>().ToList();
+        foreach (var foldout in allFoldouts)
+        {
+            foldout.RegisterValueChangedCallback(evt =>
+            {
+                if (evt.newValue)
+                {
+                    foreach (var other in allFoldouts)
+                    {
+                        if (other != foldout)
+                            other.value = false;
+                    }
+                }
+            });
         }
     }
 

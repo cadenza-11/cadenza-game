@@ -1,8 +1,24 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="PlayerResultLine" src="project://database/Assets/UI/Leaderboard/PlayerResultLine.uxml?fileID=9197481963319205126&amp;guid=fa4eb868c0214c97b1b4fbf89d282410&amp;type=3#PlayerResultLine"/>
     <Style src="project://database/Assets/UI/Leaderboard/Leaderboard.uss?fileID=7433441132597879392&amp;guid=3f42ba80f02f44f7ad4de0e876123bbf&amp;type=3#Leaderboard"/>
     <ui:VisualElement name="result-entry" focusable="true" class="result-entry">
         <ui:Foldout name="result-foldout" text="Result" value="false" focusable="true" class="result-foldout">
-            <ui:VisualElement name="player-stats" class="player-stats"/>
+            <ui:VisualElement name="team-stats" style="flex-grow: 1; flex-direction: row;">
+                <ui:VisualElement class="team-score-container">
+                    <ui:Label text="0" name="team-score" class="team-score"/>
+                    <ui:Label text="Team Score" name="" class="score-label"/>
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 1; align-items: center;">
+                    <ui:Label text="A" name="team-rank" class="team-score"/>
+                    <ui:Label text="Rank" class="score-label"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="player-stats" class="player-stats">
+                <ui:Instance template="PlayerResultLine" name="player-result-slot" class="player-result-slot"/>
+                <ui:Instance template="PlayerResultLine" name="player-result-slot" class="player-result-slot"/>
+                <ui:Instance template="PlayerResultLine" name="player-result-slot" class="player-result-slot"/>
+                <ui:Instance template="PlayerResultLine" name="player-result-slot" class="player-result-slot"/>
+            </ui:VisualElement>
         </ui:Foldout>
     </ui:VisualElement>
 </ui:UXML>
