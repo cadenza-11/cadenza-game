@@ -131,7 +131,7 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
 
   deployToSteamMain:
-    name: Deploy to Steam
+    name: Deploy to Steam Main
     needs: buildForAllSupportedPlatforms
     runs-on: ubuntu-latest
     if: github.event.inputs.deploy_steam_main == 'true'
@@ -169,8 +169,8 @@ jobs:
           depot2InstallScriptPath: StandaloneOSX/install_script.vdf
           releaseBranch: prerelease
 
-    deployToSteamDemo:
-    name: Deploy to Steam
+  deployToSteamDemo:
+    name: Deploy to Steam Demo
     needs: buildForAllSupportedPlatforms
     runs-on: ubuntu-latest
     if: github.event.inputs.deploy_steam_demo == 'true'
@@ -207,7 +207,6 @@ jobs:
           depot2Path: StandaloneOSX
           depot2InstallScriptPath: StandaloneOSX/install_script.vdf
           releaseBranch: prerelease
-
 
   release:
       permissions:
